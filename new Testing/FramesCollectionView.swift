@@ -94,8 +94,26 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
                 delay = 9999
             }
             textField.text = String(delay)
-            self.project!.setFrameDelay(frame: self.project!.FrameSelected, delay: delay)
+            //self.project!.setFrameDelay(frame: self.project!.FrameSelected, delay: delay)
          }
+    }
+    
+    
+    @objc func doneSetDelay() {
+        endEditing(true)
+        if delayField.filed.text == "" {
+            delayField.filed.text = String(project!.information.frames[project!.FrameSelected].delay)
+        } else {
+            project?.addAction(action: ["ToolID" : "\(Actions.changeFrameDelay.rawValue)","frame" : "\(project!.FrameSelected)", "from" : "\(project!.information.frames[project!.FrameSelected].delay)", "to" : delayField.filed.text!])
+            
+            project!.setFrameDelay(frame: project!.FrameSelected, delay: Int(delayField.filed.text!)!)
+        }
+        
+    }
+    
+    @objc func cancelSetDelay() {
+        endEditing(true)
+        delayField.filed.text = String(project!.information.frames[project!.FrameSelected].delay)
     }
     
     init(proj : ProjectWork) {
@@ -103,7 +121,6 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
         
         super.init(frame : .zero)
         self.translatesAutoresizingMaskIntoConstraints = false
-        
         
         delayField = TextField(frame: CGRect(x: 12, y: 72, width: 80, height: 36))
         delayField.small = true
@@ -113,10 +130,12 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
         delayField.setFIeldDelegate(delegate: self)
         delayField.filed.keyboardType = .numberPad
         
-        
-       // cloneButton.setbgColor(color: ProjectStyle.uiRedColor)
-        //cloneButton.setShadowColor(color: ProjectStyle.uiRedColor.withAlphaComponent(0.75))
-        //cloneButton.setIconColor(color: .white)
+        let bar = UIToolbar()
+        let done = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneSetDelay))
+        let cancel = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(cancelSetDelay))
+        bar.items = [done,cancel]
+        bar.sizeToFit()
+        delayField.filed.inputAccessoryView = bar
         
         self.addSubview(list)
         self.addSubview(delayField)
@@ -140,10 +159,5 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    deinit {
-        print("frame Control deiniting")
-        
     }
 }

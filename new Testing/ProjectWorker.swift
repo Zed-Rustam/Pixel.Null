@@ -129,8 +129,6 @@ class ProjectWork{
         do {
             let data = try JSONEncoder().encode(projectInfo)
             try String(data: data, encoding: .utf8)!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("main.txt"), atomically: true, encoding: .utf8)
-            
-            //try getFrameFromLayers(frame : 0, size: projectSize).pngData()?.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frame-0").appendingPathComponent("preview.png"))
         } catch {
             print(error.localizedDescription)
         }
@@ -639,6 +637,8 @@ class ProjectWork{
             case .selectionChange:
                 delegate.updateSelection(select: loadActionWas(actionNum: projectInfo.actionList.lastActiveAction),isSelected: Bool(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["wasSelected"]!)!)
             
+            case .changeFrameDelay:
+                setFrameDelay(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!, delay: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["from"]!)!)
             default:
                 break
             }
@@ -853,6 +853,9 @@ class ProjectWork{
             case .selectionChange:
                 delegate.updateSelection(select: loadAction(actionNum: projectInfo.actionList.lastActiveAction + 1), isSelected: Bool(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["nowSelected"]!)!)
                 
+            case .changeFrameDelay:
+                setFrameDelay(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!, delay: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["to"]!)!)
+                
             default:
                 break
             }
@@ -925,4 +928,5 @@ enum Actions : Int {
     case frameClone = 9 //done
     case layerVisibleChange = 10 //done
     case selectionChange = 11 //done
+    case changeFrameDelay = 12 //done
 }

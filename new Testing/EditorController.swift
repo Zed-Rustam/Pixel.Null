@@ -18,7 +18,6 @@ class EditorController : UIViewController {
         scr.addSubview(content)
         content.leftAnchor.constraint(equalTo: scr.leftAnchor, constant: 12).isActive = true
         content.widthAnchor.constraint(equalToConstant: self.view.frame.width - 24).isActive = true
-        //content.rightAnchor.constraint(equalTo: scr.rightAnchor, constant: 12).isActive = true
         content.topAnchor.constraint(equalTo: scr.topAnchor, constant: 12).isActive = true
 
         return scr
@@ -54,7 +53,24 @@ class EditorController : UIViewController {
                 """
 
                     Also, if you want to paint a picture and will not use frames, then you can swipe up the bar and the line with frames will disappear, and the workspace will increase.
-                    In addition, the bar on the right has 2 buttons. The top one starts the animation with the help of which you can see your animation in the workspace. Pressing the button again stops the animation. And the bottom button opens the menu for working with layers and frames.
+                    In addition, the bar on the right has 2 buttons. The top one starts the animation with the help of which you can see your animation in the workspace. Pressing the button again stops the animation. And the bottom button opens the frames and layers editor.
+
+                """, fortt: UIFont(name: "Rubik-Regular", size: 16)!),
+            UIImageView(image: #imageLiteral(resourceName: "frame_editor"))
+                .setContentMove(mode: .scaleAspectFit)
+                .setSize(size: CGSize(width: 200, height: 200 * 2.1653))
+                .Corners(round: 8),
+            UILabel()
+                .setTextColor(color: ProjectStyle.uiEnableColor)
+                .appendText(text: "frames and layers editor", fortt: UIFont(name: "Rubik-Regular", size: 10)!),
+            UILabel()
+                .setTextColor(color: ProjectStyle.uiEnableColor)
+                .setBreakMode(mode: .byWordWrapping)
+                .setMaxWidth(width: view.frame.width - 24)
+                .appendText(text: """
+
+                    In this menu you can add / delete / move / clone frames and layers. You can also change properties such as frame duration and layer transparency.
+
                 """, fortt: UIFont(name: "Rubik-Regular", size: 16)!)
         ])
         

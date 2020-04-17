@@ -66,14 +66,6 @@ class FrameList : UICollectionView, UICollectionViewDataSource, UICollectionView
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        //collectionView.dequeueReusableCell(withReuseIdentifier: "Frame", for: indexPath) as! FrameCell
-                //print("here 2")
-       // (cell as! FrameCell).preview?.image = nil
-
-
-    }
-    
     init(frame : CGRect, proj : ProjectWork){
         project = proj
         layout = ListLayout()

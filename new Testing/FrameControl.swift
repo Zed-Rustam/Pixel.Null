@@ -41,6 +41,7 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
         layers.checkFrame()
         
         preview.image = project.getFrame(frame: to, size: project.projectSize)
+        frames.delayField.filed.text = String(project.information.frames[project.FrameSelected].delay)
     }
     
     func changeLayer(frame: Int, from: Int, to: Int) {
@@ -207,7 +208,6 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
     
     var delegate : FrameControlDelegate? = nil
     
-    private var dismissKeyboard : UITapGestureRecognizer!
     var preview : FramePreview!
     var project : ProjectWork!
     
@@ -250,17 +250,6 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
         layers.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
         layers.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
         layers.topAnchor.constraint(equalTo: layerText.bottomAnchor, constant: 0).isActive = true
-
-        dismissKeyboard = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard(sender:)))
-        dismissKeyboard.cancelsTouchesInView = false
-        dismissKeyboard.delegate = self
-        view.addGestureRecognizer(dismissKeyboard)
-    }
-    
-    @objc func hideKeyboard(sender : UITapGestureRecognizer){
-        if !frames.delayField.frame.contains(sender.location(in: self.view)) {
-            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to:nil, from:nil, for:nil)
-        }
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {

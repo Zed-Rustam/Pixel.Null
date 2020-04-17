@@ -111,7 +111,6 @@ class CircleButton : UIView, UIGestureRecognizerDelegate {
     }
     
     @objc func tap(sender : UILongPressGestureRecognizer) {
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to:nil, from:nil, for:nil)
 
         switch sender.state {
         case .began:

@@ -237,7 +237,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
           case .began:
               print("was start touch")
               if (CGRect(x: symmetry.offset.x + symmetry.startX * symmetry.scale - 16, y: symmetry.offset.y - 32 - 16, width: 32, height: 32).contains(sender.location(in: self)) ||
-                CGRect(x: symmetry.offset.x + symmetry.startX * symmetry.scale - 16, y: symmetry.offset.y + project.projectSize.height * symmetry.scale, width: 32, height: 24).contains(sender.location(in: self))
+                CGRect(x: symmetry.offset.x + symmetry.startX * symmetry.scale - 16, y: symmetry.offset.y + project.projectSize.height * symmetry.scale + 16, width: 32, height: 24).contains(sender.location(in: self))
                 ) && isVerticalSymmeyry {
                 symmetryChangeVertical = true
             }

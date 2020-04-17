@@ -102,9 +102,9 @@ required init?(coder: NSCoder) {
         line2.layer.add(move2, forKey: "test2")
         line2.layer.transform = CATransform3DMakeRotation(0, 0, 0, 1)
         line2.layer.position.y += 3
-    }
+        }
     
-}
+    }
 }
 
 class FrameWorker : UIView {

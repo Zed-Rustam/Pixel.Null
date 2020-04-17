@@ -97,8 +97,6 @@ class FramesCollection : UICollectionView, UICollectionViewDataSource, UICollect
     }
     
     @objc func tapGesture(sender : UITapGestureRecognizer){
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to:nil, from:nil, for:nil)
-
            if sender.state == .ended && canMove {
               if let item = indexPathForItem(at: sender.location(in: sender.view)) {
                   if item.item != project?.FrameSelected {
@@ -109,8 +107,6 @@ class FramesCollection : UICollectionView, UICollectionViewDataSource, UICollect
     }
     
     @objc func longPressGesture(sender : UILongPressGestureRecognizer){
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to:nil, from:nil, for:nil)
-
         let point = CGPoint(x: sender.location(in: self).x, y: 30)
         if canMove {
             switch sender.state {
