@@ -1,2 +1,2 @@
 # Pixel.Null
-IOS Pixel Art Editor
+IOS pixel art editor

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15702" systemVersion="19D76" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Action" representedClassName="Action" syncable="YES" codeGenerationType="class">
+        <attribute name="actionID" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="Frame" representedClassName="Frame" syncable="YES" codeGenerationType="class">
+        <relationship name="layers" optional="YES" toMany="YES" minCount="1" maxCount="16" deletionRule="Nullify" destinationEntity="Layer"/>
+    </entity>
+    <entity name="Layer" representedClassName="Layer" syncable="YES" codeGenerationType="class">
+        <attribute name="image" attributeType="Binary"/>
+        <attribute name="locked" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="transparent" attributeType="Float" defaultValueString="1" usesScalarValueType="YES"/>
+        <attribute name="visible" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="Project" representedClassName="Project" syncable="YES" codeGenerationType="class">
+        <attribute name="height" attributeType="Integer 16" minValueString="1" maxValueString="512" usesScalarValueType="YES"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="version" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="width" attributeType="Integer 16" minValueString="1" maxValueString="512" usesScalarValueType="YES"/>
+        <relationship name="frames" optional="YES" toMany="YES" minCount="1" maxCount="256" deletionRule="Nullify" destinationEntity="Frame"/>
+        <relationship name="lastActions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Action">
+            <userInfo>
+                <entry key="key" value="value"/>
+            </userInfo>
+        </relationship>
+    </entity>
+    <elements>
+        <element name="Project" positionX="-46.0625" positionY="-225.62109375" width="128" height="133"/>
+        <element name="Frame" positionX="139.4453125" positionY="-152.203125" width="128" height="58"/>
+        <element name="Layer" positionX="348.54296875" positionY="-127.15625" width="128" height="103"/>
+        <element name="Action" positionX="82.03515625" positionY="-57.58203125" width="128" height="58"/>
+    </elements>
+</model>
