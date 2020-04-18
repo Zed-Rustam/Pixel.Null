@@ -28,6 +28,20 @@ extension UIStackView {
     }
 }
 extension UIView {
+    
+    func setViewSize(size : CGSize) -> UIView {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.widthAnchor.constraint(equalToConstant: size.width).isActive = true
+        self.heightAnchor.constraint(equalToConstant: size.height).isActive = true
+        
+        return self
+    }
+    
+    func Shadow(clr : UIColor, rad : CGFloat, opas : Float) -> UIView{
+         self.setShadow(color: clr, radius: rad, opasity: opas)
+         return self
+     }
+    
     func addFullSizeView(view : UIView) -> UIView {
         translatesAutoresizingMaskIntoConstraints = false
         addSubview(view)
@@ -100,6 +114,7 @@ extension UIImageView {
         
         return self
     }
+    
     func setWidthAnchor(constaint : CGFloat, layout : NSLayoutAnchor<NSLayoutDimension>) -> UIImageView {
         widthAnchor.constraint(equalTo: layout, constant: constaint).isActive = true
         return self

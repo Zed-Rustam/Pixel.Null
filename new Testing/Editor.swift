@@ -85,6 +85,12 @@ class Editor : UIViewController {
         toolBar.reLayout()
     }
     
+    override func viewDidLayoutSubviews() {
+        control.setPosition()
+        toolBar.setPosition()
+    }
+    
+    
     @objc func appMovedToBackground() {
         project.save()
         project.savePreview(frame: project.FrameSelected)

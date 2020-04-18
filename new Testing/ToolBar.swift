@@ -9,8 +9,29 @@
 import UIKit
 
 class ToolBar : UIView {
+    
+    private var isHide = false
+
+    lazy private var swipeUpGesture : UISwipeGestureRecognizer = {
+        let swipe = UISwipeGestureRecognizer(target: self, action: #selector(swipe(sender:)))
+        swipe.delaysTouchesBegan = false
+        //swipe.numberOfTouchesRequired = 1
+        swipe.direction = .up
+        
+        return swipe
+    }()
+    
+    lazy private var swipeDownGesture : UISwipeGestureRecognizer = {
+        let swipe = UISwipeGestureRecognizer(target: self, action: #selector(swipe(sender:)))
+        swipe.delaysTouchesBegan = false
+        //swipe.numerOfTouchesRequired = 1
+        swipe.direction = .down
+        
+        return swipe
+    }()
+    
     lazy private var toolCollection : ToolBarCollection = {
-        let collection = ToolBarCollection(frame: self.bounds, tools: [-3,-2,0,1,2,3,4,5,6,-4,-1,-5])
+        let collection = ToolBarCollection(frame: self.bounds, tools: [-3,-2,0,1,2,3,4,5,6,7,-4,-5,-1])
         collection.barDelegate = self
         collection.translatesAutoresizingMaskIntoConstraints = false
         
@@ -26,6 +47,8 @@ class ToolBar : UIView {
         let mainView = UIView()
         mainView.translatesAutoresizingMaskIntoConstraints = false
         
+        let topview = UIView()
+
         let bgv = UIView()
         bgv.setCorners(corners: 16)
         bgv.backgroundColor = ProjectStyle.uiBackgroundColor
@@ -42,7 +65,8 @@ class ToolBar : UIView {
         stack.leftAnchor.constraint(equalTo: bgv.leftAnchor, constant: 0).isActive = true
         stack.rightAnchor.constraint(equalTo: bgv.rightAnchor, constant: 0).isActive = true
         stack.bottomAnchor.constraint(equalTo: bgv.bottomAnchor, constant: 0).isActive = true
-        
+        //stack.topAnchor.constraint(equalTo: bgv.topAnchor, constant: 12).isActive = true
+
         toolCollection.leftAnchor.constraint(equalTo: stack.safeAreaLayoutGuide.leftAnchor, constant: 0).isActive = true
         toolCollection.rightAnchor.constraint(equalTo: stack.safeAreaLayoutGuide.rightAnchor, constant: 0).isActive = true
         toolCollection.bottomAnchor.constraint(equalTo: bgv.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
@@ -53,8 +77,18 @@ class ToolBar : UIView {
         bgv.rightAnchor.constraint(equalTo: mainView.rightAnchor, constant: 0).isActive = true
         bgv.bottomAnchor.constraint(equalTo: mainView.bottomAnchor, constant: 0).isActive = true
         bgv.topAnchor.constraint(equalTo: mainView.topAnchor, constant: 0).isActive = true
+        
+        mainView.addSubview(topview)
+        
+        topview.translatesAutoresizingMaskIntoConstraints = false
+        topview.topAnchor.constraint(equalTo: mainView.topAnchor, constant: 8).isActive = true
+        topview.centerXAnchor.constraint(equalTo: mainView.centerXAnchor, constant: 0).isActive = true
+        topview.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        topview.heightAnchor.constraint(equalToConstant: 4).isActive = true
+        topview.backgroundColor = ProjectStyle.uiEnableColor
+        topview.setCorners(corners: 2)
 
-        mainView.heightAnchor.constraint(equalTo: stack.heightAnchor, constant: 0).isActive = true
+        mainView.heightAnchor.constraint(equalTo: stack.heightAnchor, constant: 16).isActive = true
         return mainView
     }()
     private var nowSelected = 2
@@ -64,6 +98,47 @@ class ToolBar : UIView {
     func reLayout(){
         toolCollection.collectionViewLayout.invalidateLayout()
     }
+    
+    @objc private func swipe(sender : UISwipeGestureRecognizer) {
+        print(sender.direction)
+        if sender.direction == .up && isHide {
+            isHide = false
+            UIView.animate(withDuration: 0.25, animations: {
+                self.frame.origin.y -= 42
+            })
+        }
+        if sender.direction == .down && !isHide {
+            isHide = true
+            UIView.animate(withDuration: 0.25, animations: {
+                self.frame.origin.y += 42
+            })
+        }
+        
+        UIView.animate(withDuration: 0.25, animations: {
+            self.hideItems()
+        })
+        
+    }
+    func hideItems() {
+        if isHide {
+            print("start hidding")
+            for i in (toolCollection.collectionViewLayout as! ToolBarLayout).columnsCount..<toolCollection.tools.count {
+                toolCollection.cellForItem(at: IndexPath(item: i, section: 0))?.alpha = 0
+            }
+        } else {
+            for i in (toolCollection.collectionViewLayout as! ToolBarLayout).columnsCount..<toolCollection.tools.count {
+                toolCollection.cellForItem(at: IndexPath(item: i, section: 0))?.alpha = 1
+            }
+        }
+    }
+    func setPosition() {
+        if isHide {
+            self.frame.origin.y += 42
+        }
+        toolCollection.layoutIfNeeded()
+        UIView.animate(withDuration: 0.0, animations: {
+            self.hideItems()
+        })    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -83,6 +158,9 @@ class ToolBar : UIView {
         bg.setShadow(color: ProjectStyle.uiShadowColor, radius: 8, opasity: 0.25)
         
         self.heightAnchor.constraint(equalTo: bg.heightAnchor, constant: 48).isActive = true
+        
+        addGestureRecognizer(swipeUpGesture)
+        addGestureRecognizer(swipeDownGesture)
     }
     
     

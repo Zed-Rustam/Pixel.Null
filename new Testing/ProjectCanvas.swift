@@ -439,6 +439,9 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
             targetLayer = newLay
             targetImage.image = targetLayer
             
+            delegate?.updateFrame(frame: project.FrameSelected)
+            delegate?.updateLayer(layer: project.LayerSelected)
+            
             barDelegate?.UnDoReDoAction()
         }
     }
@@ -577,7 +580,6 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 ActionLayer = UIImage(size : project.projectSize)
                 actionImage.image = ActionLayer
                 
-                delegate?.updateCanvas()
                 delegate?.updateFrame(frame: project.FrameSelected)
                 delegate?.updateLayer(layer: project.LayerSelected)
                 
@@ -740,7 +742,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                     
                     let wasImg = project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected)
                     
-                    targetLayer = UIImage.merge(images: [targetLayer,ActionLayer])
+                    targetLayer = UIImage.merge(images: [ActionLayer])
                     targetImage.image = targetLayer
                     
                     project.addAction(action :["ToolID" : "\(Actions.drawing.rawValue)", "frame" : "\(project.FrameSelected)", "layer" : "\(project.LayerSelected)"])

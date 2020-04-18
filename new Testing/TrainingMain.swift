@@ -11,7 +11,7 @@ import UIKit
 
 class TrainingMain : UIViewController {
     weak var navigation : UINavigationController? = nil
-    private var menus : [String] = ["Editor","Layers","Frames","Pencil", "Erase", "Transform","Gradient","Fill"]
+    private var menus : [String] = ["Editor","Layers","Frames","Pencil", "Erase", "Transform","Gradient","Fill","Symmetry","Selection"]
     
     lazy private var scroll : UIScrollView = {
         let scr = UIScrollView()
@@ -102,6 +102,10 @@ extension TrainingMain : UITableViewDelegate, UITableViewDataSource {
                 cell.textLabel!.text = menus[6]
                 case 4:
                 cell.textLabel!.text = menus[7]
+                case 5:
+                cell.textLabel!.text = menus[8]
+                case 6:
+                cell.textLabel!.text = menus[9]
             default:
                 break
             }
@@ -129,7 +133,7 @@ extension TrainingMain : UITableViewDelegate, UITableViewDataSource {
         case 0:
             return 3
         case 1:
-            return 5
+            return 7
         default:
             return 0
         }
@@ -190,6 +194,12 @@ extension TrainingMain : UITableViewDelegate, UITableViewDataSource {
             case 0:
                 let pencil = PencilController()
                 navigation?.pushViewController(pencil, animated: true)
+                
+                let cell = tableView.cellForRow(at: indexPath)
+                cell?.setSelected(false, animated: true)
+            case 5:
+                let symmetry = SymmetryController()
+                navigation?.pushViewController(symmetry, animated: true)
                 
                 let cell = tableView.cellForRow(at: indexPath)
                 cell?.setSelected(false, animated: true)

@@ -65,9 +65,15 @@ class Pencil : Tool {
        
         switch Int(size) % 2 {
            case 0:
+            if points.count == 0 || points[points.count - 1] != CGPoint(x: CGFloat(Double(Int(point.x))), y: CGFloat(Int(point.y))) {
                 points.append(CGPoint(x: CGFloat(Double(Int(point.x))), y: CGFloat(Int(point.y))))
+                points.append(CGPoint(x: CGFloat(Double(Int(point.x))), y: CGFloat(Int(point.y))))
+            }
            case 1:
+            if points.count == 0 || points[points.count - 1] != CGPoint(x: CGFloat(Double(Int(point.x)) + 0.5), y: CGFloat(Int(point.y)) + 0.5) {
                 points.append(CGPoint(x: CGFloat(Double(Int(point.x)) + 0.5), y: CGFloat(Int(point.y)) + 0.5))
+                points.append(CGPoint(x: CGFloat(Double(Int(point.x)) + 0.5), y: CGFloat(Int(point.y)) + 0.5))
+            }
            default:
                 break
         }
@@ -257,12 +263,6 @@ class Fill : Tool {
     func setStartPoint(point : CGPoint){
         points.removeAll()
     }
-        
-    
-   
-    
-    
-    
     
     func getChanged(imgSize : CGSize,pixel : CGPoint) -> Bool? {
        if CGRect(origin: .zero, size: imgSize).contains(pixel) {

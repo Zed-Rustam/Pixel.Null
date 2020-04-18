@@ -23,7 +23,6 @@ class FastActionBar : UIView {
         view.addSubview(stack)
         stack.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
         stack.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor, constant: -76).isActive = true
-        //stack.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
         stack.topAnchor.constraint(equalTo: view.topAnchor, constant: 6).isActive = true
 
         return view

@@ -36,6 +36,7 @@ class CreateDialog : UIView{
         field.setHelpText(help: "Width")
         field.filed.delegate = widthdel
         field.translatesAutoresizingMaskIntoConstraints = false
+        
 
         return field
     }()

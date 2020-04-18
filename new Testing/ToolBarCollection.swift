@@ -56,12 +56,12 @@ extension ToolBarCollection : UICollectionViewDataSource {
 class ToolBarLayout : UICollectionViewLayout {
     private var attributes : [UICollectionViewLayoutAttributes] = []
     private var contentHeight = 0
-    private var spacing : Int = 6
-    private var offsetWidth : Int = 8
-    private var offsetBottom : Int = 8
-    private var offsetTop : Int = 8
-
-    private var itemSize : Int = 32
+    private var spacing : Int = 0
+    private var offsetWidth : Int = 0
+    private var offsetBottom : Int = 0
+    private var offsetTop : Int = 0
+    var columnsCount = 0
+    private var itemSize : Int = 36
     
     var contentWidth : Int {
         return Int(collectionView!.bounds.width)
@@ -75,15 +75,10 @@ class ToolBarLayout : UICollectionViewLayout {
        
         attributes.removeAll()
         
-        var columnsCount = ((Int(collectionView!.bounds.width) - offsetWidth * 2) / (itemSize))
+        columnsCount = ((Int(collectionView!.bounds.width)) / (itemSize))
         print(columnsCount)
         
-        spacing = ((Int(collectionView!.bounds.width) - offsetWidth * 2) - (itemSize * columnsCount)) / (columnsCount - 1)
-        
-        if spacing < 8 {
-            columnsCount -= 1
-            spacing = ((Int(collectionView!.bounds.width) - offsetWidth * 2) - (itemSize * columnsCount)) / (columnsCount - 1)
-        }
+        offsetWidth = Int(CGFloat(Int(collectionView!.bounds.width) - (columnsCount) * itemSize) / 2.0)
         
         print("spacing : \(spacing)")
         
@@ -91,22 +86,20 @@ class ToolBarLayout : UICollectionViewLayout {
                 
         for item in 0..<collectionView!.numberOfItems(inSection: 0){
             let index = IndexPath(item: item, section: 0)
-            let frame = CGRect(x: offsetWidth + (itemSize + spacing) * (item % columnsCount) - spacing / 2, y: offsetTop + (itemSize + spacing) * (item / columnsCount) - spacing / 2, width: itemSize + spacing, height: itemSize + spacing)
+            let frame = CGRect(x: offsetWidth + itemSize * (item % columnsCount), y: offsetTop + (itemSize) * (item / columnsCount), width: itemSize, height: itemSize)
             let attribute = UICollectionViewLayoutAttributes(forCellWith: index)
             attribute.frame = frame
             attributes.append(attribute)
         }
-        contentHeight = itemSize + spacing + itemSize * (collectionView!.numberOfItems(inSection: 0) / columnsCount) + spacing * (collectionView!.numberOfItems(inSection: 0) / columnsCount) + offsetTop + offsetBottom
-        
-        //print("now \(contentHeight)")
-        //collectionView!.removeConstraint(collectionView!.heightAnchor.constraint(equalTo: collectionView!.heightAnchor))
+        contentHeight = Int(CGFloat(itemSize) * CGFloat(ceil(CGFloat(collectionView!.numberOfItems(inSection: 0)) / CGFloat(columnsCount))))
+        print("Very very check")
+
+        print(contentHeight)
         collectionView?.constraints.forEach({item in
             if item.firstAttribute == .height {
-                item.constant = CGFloat(contentHeight)
+                item.constant = CGFloat(contentHeight) + 8
             }
         })
-        //collectionView!.heightAnchor.constraint(equalToConstant: CGFloat(contentHeight)).isActive = true
-        //(collectionView!.numberOfItems(inSection: 0) / columnsCount) * (itemSize + spacing) + offsetTop  + (collectionView!.numberOfItems(inSection: 0) % columnsCount != 0 ? (itemSize + spacing) : 0) + offsetBottom + 48 + 12
     }
     
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
