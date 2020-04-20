@@ -27,12 +27,15 @@ class CircleButton : UIView, UIGestureRecognizerDelegate {
         }
         set {
             enabled = newValue
-            switch newValue {
-            case true:
-                icon.tintColor = ProjectStyle.uiEnableColor
-            case false:
-                icon.tintColor = ProjectStyle.uiDisableColor
-            }
+            UIView.animate(withDuration: 0.2, animations: {
+                switch newValue {
+                case true:
+                    self.icon.tintColor = ProjectStyle.uiEnableColor
+                case false:
+                    self.icon.tintColor = ProjectStyle.uiDisableColor
+                }
+            })
+            
         }
     }
     

@@ -104,7 +104,7 @@ class ProjectWork{
         selectedLayer = 0
         selectedFrame = 0
                 
-        projectInfo = ProjectInfo(version: 0, width: Int(projSize.width), height: Int(projSize.height), bgColor: UIColor.toHex(color: bgColor),frames:  [ProjectFrame(frameID: 0, delay: 100, layers: [ProjectLayer(layerID: 0, visible: true, locked: false, transparent: 1.0)])], actionList: ActionList(actions: [], lastActiveAction: -1, maxCount: 16))
+        projectInfo = ProjectInfo(version: 0, width: Int(projSize.width), height: Int(projSize.height), bgColor: UIColor.toHex(color: bgColor),frames:  [ProjectFrame(frameID: 0, delay: 100, layers: [ProjectLayer(layerID: 0, visible: true, locked: false, transparent: 1.0)])], actionList: ActionList(actions: [], lastActiveAction: -1, maxCount: 64))
              
         let folder = ProjectWork.getDocumentsDirectory().appendingPathComponent(name)
         do {
@@ -181,7 +181,7 @@ class ProjectWork{
     }
     
     private func loadAction(actionNum : Int) -> UIImage{
-        let img = UIImage(data: try! Data(contentsOf: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(projectName).appendingPathComponent("actions").appendingPathComponent("action-\(actionNum).png")))!
+        let img = UIImage(data: try! Data(contentsOf: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(projectName).appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: actionNum)).png")))!
         return img
     }
     
@@ -191,18 +191,18 @@ class ProjectWork{
     }
     
     private func loadActionWas(actionNum : Int) -> UIImage{
-        let img = UIImage(data: try! Data(contentsOf: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(projectName).appendingPathComponent("actions").appendingPathComponent("action-\(actionNum)-was.png")))!
+        let img = UIImage(data: try! Data(contentsOf: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(projectName).appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: actionNum))-was.png")))!
         return img
     }
     
     private func loadActionMiniature(actionNum : Int,size : CGSize) -> UIImage{
-        let img = UIImage.miniature(imageAt: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(projectName).appendingPathComponent("actions").appendingPathComponent("action-\(actionNum).png"), to: size, scale: UIScreen.main.scale)
+        let img = UIImage.miniature(imageAt: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(projectName).appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: actionNum)).png"), to: size, scale: UIScreen.main.scale)
         
         return img
     }
     
     private func loadActionMiniatureWas(actionNum : Int,size : CGSize) -> UIImage{
-        let img = UIImage.miniature(imageAt: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(projectName).appendingPathComponent("actions").appendingPathComponent("action-\(actionNum)-was.png"), to: size, scale: UIScreen.main.scale)
+        let img = UIImage.miniature(imageAt: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(projectName).appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: actionNum))-was.png"), to: size, scale: UIScreen.main.scale)
         
         return img
     }
@@ -609,7 +609,7 @@ class ProjectWork{
                 
                 print("now frameID : \(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].frameID) and last : \(Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["lastID"]!)!)")
                 
-                try! FileManager.default.copyItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(projectInfo.actionList.lastActiveAction)"), to: getProjectDirectory().appendingPathComponent("frame-\(Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["lastID"]!)!)"))
+                try! FileManager.default.copyItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: projectInfo.actionList.lastActiveAction))"), to: getProjectDirectory().appendingPathComponent("frame-\(Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["lastID"]!)!)"))
                 
                 let lastSelect = FrameSelected
                 FrameSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!
@@ -778,7 +778,6 @@ class ProjectWork{
                     }
                 }
                 
-                
             case .frameClone:
                 cloneFrame(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!)
                 delegate.addFrame(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)! + 1)
@@ -880,28 +879,72 @@ class ProjectWork{
     }
     
     func addAction(action : [String : String]){
+        var mutableAction = action
         if projectInfo.actionList.lastActiveAction < projectInfo.actionList.actions.count - 1 {
             for _ in projectInfo.actionList.lastActiveAction + 1..<projectInfo.actionList.actions.count {
-                removeAction()
+                removeActionLast()
             }
         }
-        
-        projectInfo.actionList.actions.append(action)
+        if projectInfo.actionList.actions.count == projectInfo.actionList.maxCount {
+            removeActionFirst()
+            projectInfo.actionList.lastActiveAction -= 1
+        }
+        if projectInfo.actionList.actions.count > 0 {
+        mutableAction["ActionID"] = "\((getActionID(action: projectInfo.actionList.actions.count - 1) + 1) % projectInfo.actionList.maxCount)"
+        } else {
+            mutableAction["ActionID"] = "\(0)"
+        }
+        projectInfo.actionList.actions.append(mutableAction)
         projectInfo.actionList.lastActiveAction += 1
         save()
+        var actionIDs : [Int] = []
+        for i in 0..<projectInfo.actionList.actions.count {
+            actionIDs.append(getActionID(action: i))
+        }
+        print("\(actionIDs) : \(projectInfo.actionList.lastActiveAction)")
     }
     
-    private func removeAction(){
-        
+    private func removeActionLast(){
         switch Actions(rawValue : Int(projectInfo.actionList.actions[projectInfo.actionList.actions.count - 1]["ToolID"]!)!)! {
-        case Actions.drawing:
-            try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(projectInfo.actionList.actions.count - 1).png"))
-            try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(projectInfo.actionList.actions.count - 1)-was.png"))
+        case .drawing, .selectionChange:
+            try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: projectInfo.actionList.actions.count - 1)).png"))
+            try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: projectInfo.actionList.actions.count - 1))-was.png"))
+        case .layerDelete:
+            try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: projectInfo.actionList.actions.count - 1)).png"))
+        case .frameDelete:
+           try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: projectInfo.actionList.actions.count - 1))"))
         default:
             break
         }
         projectInfo.actionList.actions.removeLast()
         save()
+    }
+    
+    private func removeActionFirst(){
+        switch Actions(rawValue : Int(projectInfo.actionList.actions[0]["ToolID"]!)!)! {
+        case .drawing, .selectionChange:
+            try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: 0)).png"))
+            try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: 0))-was.png"))
+        case .layerDelete:
+            try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: 0)).png"))
+        case .frameDelete:
+           try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: 0))"))
+        default:
+            break
+        }
+        projectInfo.actionList.actions.removeFirst()
+        save()
+    }
+    
+    func getActionID(action : Int) -> Int{
+        return Int(projectInfo.actionList.actions[action]["ActionID"]!)!
+    }
+    func getNextActionID() -> Int {
+        if projectInfo.actionList.actions.count > 0 {
+            return (Int(projectInfo.actionList.actions[projectInfo.actionList.actions.count - 1]["ActionID"]!)!) % projectInfo.actionList.maxCount
+        } else {
+            return 0
+        }
     }
     
     func createGif() -> CGImageSource{
@@ -952,7 +995,7 @@ struct ProjectLayer : Codable {
 struct ActionList : Codable {
     var actions : [[String : String]] = []
     var lastActiveAction : Int = -1
-    var maxCount = 16
+    var maxCount = 8
 }
 
 enum Actions : Int {

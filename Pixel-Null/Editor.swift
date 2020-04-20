@@ -53,7 +53,6 @@ class Editor : UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(appMovedToBackground), name: UIApplication.willResignActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(rotate), name: UIDevice.orientationDidChangeNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(close), name: UIApplication.willTerminateNotification, object: nil)
 
         view.addSubview(toolBar)
         
@@ -74,14 +73,12 @@ class Editor : UIViewController {
         
         view.backgroundColor = ProjectStyle.uiBackgroundColor
     }
-    @objc func rotate() {
-        //toolBar.reLayout()
-
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        print("end Editor")
+        NotificationCenter.default.removeObserver(self, name: UIApplication.willResignActiveNotification, object: nil)
     }
-    @objc func close() {
-        print("now exit")
-        project.save()
-        //toolBar.reLayout()
+    @objc func rotate() {
 
     }
     
@@ -263,6 +260,7 @@ extension Editor {
         }
         
         toolBar.isUserInteractionEnabled = false
+        toolBar.animationStart()
         timer = CADisplayLink(target: self, selector: #selector(setFrame(_:)))
         canvas.startAnimationMode()
         timer.add(to: .main, forMode: .common)
@@ -272,6 +270,8 @@ extension Editor {
    
     func stopAnimation() {
         toolBar.isUserInteractionEnabled = true
+        toolBar.animationStop()
+
         timer.invalidate()
         project.FrameSelected = nowFrameIndex
         

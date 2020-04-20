@@ -47,8 +47,6 @@ class ToolBar : UIView {
         let mainView = UIView()
         mainView.translatesAutoresizingMaskIntoConstraints = false
         
-        let topview = UIView()
-
         let bgv = UIView()
         bgv.setCorners(corners: 16)
         bgv.backgroundColor = ProjectStyle.uiBackgroundColor
@@ -78,19 +76,26 @@ class ToolBar : UIView {
         bgv.bottomAnchor.constraint(equalTo: mainView.bottomAnchor, constant: 0).isActive = true
         bgv.topAnchor.constraint(equalTo: mainView.topAnchor, constant: 0).isActive = true
         
-        mainView.addSubview(topview)
+        mainView.addSubview(swipeView)
         
-        topview.translatesAutoresizingMaskIntoConstraints = false
-        topview.topAnchor.constraint(equalTo: mainView.topAnchor, constant: 8).isActive = true
-        topview.centerXAnchor.constraint(equalTo: mainView.centerXAnchor, constant: 0).isActive = true
-        topview.widthAnchor.constraint(equalToConstant: 36).isActive = true
-        topview.heightAnchor.constraint(equalToConstant: 4).isActive = true
-        topview.backgroundColor = ProjectStyle.uiEnableColor
-        topview.setCorners(corners: 2)
-
+        swipeView.topAnchor.constraint(equalTo: mainView.topAnchor, constant: 8).isActive = true
+        swipeView.centerXAnchor.constraint(equalTo: mainView.centerXAnchor, constant: 0).isActive = true
+       
         mainView.heightAnchor.constraint(equalTo: stack.heightAnchor, constant: 16).isActive = true
         return mainView
     }()
+    
+    lazy private var swipeView : UIView = {
+        let topview = UIView()
+        topview.setCorners(corners: 2)
+        topview.backgroundColor = ProjectStyle.uiEnableColor
+        topview.translatesAutoresizingMaskIntoConstraints = false
+        topview.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        topview.heightAnchor.constraint(equalToConstant: 4).isActive = true
+
+        return topview
+    }()
+    
     private var nowSelected = 2
     weak var project : ProjectWork!
     weak var delegate : FrameControlDelegate!
@@ -131,6 +136,23 @@ class ToolBar : UIView {
             }
         }
     }
+    
+    func animationStart(){
+        for i in 0..<toolCollection.tools.count {
+            (toolCollection.cellForItem(at: IndexPath(item: i, section: 0)) as! ToolButton).getButton().isEnabled = false
+            swipeView.backgroundColor = ProjectStyle.uiDisableColor
+        }
+        subBar.updateButtons(btns: [])
+    }
+    func animationStop(){
+        for i in 0..<toolCollection.tools.count {
+            (toolCollection.cellForItem(at: IndexPath(item: i, section: 0)) as! ToolButton).getButton().isEnabled = true
+            swipeView.backgroundColor = ProjectStyle.uiEnableColor
+        }
+        (toolCollection.cellForItem(at: IndexPath(item: toolCollection.tools.firstIndex(of: nowSelected)!, section: 0)) as! ToolButton).getButton().delegate()
+        //toolCollection.reloadData()
+    }
+    
     func setPosition() {
         if isHide {
             self.frame.origin.y += 42
@@ -197,7 +219,7 @@ extension ToolBar : ToolBarDelegate {
     }
     
     func wasChangedTool(newTool: Int) {
-        if newTool != nowSelected {
+        //if newTool != nowSelected {
             let lastCell = toolCollection.cellForItem(at: IndexPath(item: toolCollection.tools.firstIndex(of: nowSelected)!, section: 0)) as! ToolButton
             lastCell.getButton().setIconColor(color: ProjectStyle.uiEnableColor)
             
@@ -205,7 +227,7 @@ extension ToolBar : ToolBarDelegate {
             
             let nowCell = toolCollection.cellForItem(at: IndexPath(item: toolCollection.tools.firstIndex(of: nowSelected)!, section: 0)) as! ToolButton
             nowCell.getButton().setIconColor(color: ProjectStyle.uiSelectColor)
-        }
+       //}
     }
     
     func updateButtons(btns : [UIView]) {

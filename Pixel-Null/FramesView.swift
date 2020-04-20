@@ -19,13 +19,17 @@ class FramesView : UIView {
             btn.setIcon(ic: self.isPlay ? #imageLiteral(resourceName: "pause_icon") : #imageLiteral(resourceName: "play_icon"))
             if self.isPlay {
                 self.list.tapgesture.isEnabled = false
-                self.list.layers?.alpha = 0
+                UIView.animate(withDuration: 0.2, animations: {
+                    self.list.layers?.alpha = 0
+                })
                 self.editor?.control.layers.settingsButton.isEnabled = false
                 self.editor!.startAnimation()
             } else {
                 self.editor?.control.layers.settingsButton.isEnabled = true
                 self.list.tapgesture.isEnabled = true
-                self.list.layers?.alpha = 1
+                UIView.animate(withDuration: 0.2, animations: {
+                    self.list.layers?.alpha = 1
+                })
                 self.editor!.stopAnimation()
             }
         }

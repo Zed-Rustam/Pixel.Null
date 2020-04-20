@@ -28,7 +28,7 @@ class LayersCollectionView : UIView {
             if self!.list.canMove {
                 self!.project?.addAction(action: ["ToolID" : "\(Actions.layerDelete.rawValue)","frame" : "\(self!.project!.FrameSelected)", "layer" : "\(self!.project!.LayerSelected)"])
                 
-                try! self!.project?.getLayer(frame: self!.project!.FrameSelected, layer: self!.project!.LayerSelected).pngData()?.write(to: self!.project!.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(self!.project!.information.actionList.actions.count - 1).png"))
+                try! self!.project?.getLayer(frame: self!.project!.FrameSelected, layer: self!.project!.LayerSelected).pngData()?.write(to: self!.project!.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(self!.project!.getNextActionID()).png"))
                 
                 self!.list.frameDelegate?.deleteLayer(frame: self!.project!.FrameSelected, layer: self!.project!.LayerSelected)
                 

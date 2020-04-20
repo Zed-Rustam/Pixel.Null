@@ -30,7 +30,7 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
                
                self!.project?.addAction(action: ["ToolID" : "\(Actions.frameDelete.rawValue)", "frame" : "\(self!.project!.FrameSelected)", "lastID" : "\(self!.project!.information.frames[self!.project!.FrameSelected].frameID)", "frameStruct" : frameJson])
                
-               try! FileManager.default.copyItem(at: self!.project!.getProjectDirectory().appendingPathComponent("frame-\(self!.project!.information.frames[self!.project!.FrameSelected].frameID)"), to: self!.project!.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(self!.project!.information.actionList.actions.count - 1)"))
+            try! FileManager.default.copyItem(at: self!.project!.getProjectDirectory().appendingPathComponent("frame-\(self!.project!.information.frames[self!.project!.FrameSelected].frameID)"), to: self!.project!.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(self!.project!.getNextActionID())"))
                
                self!.list.frameDelegate?.deleteFrame(frame: self!.project!.FrameSelected)
            }

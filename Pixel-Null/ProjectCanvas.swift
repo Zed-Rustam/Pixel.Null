@@ -435,9 +435,9 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
             
             project.addAction(action :["ToolID" : "\(Actions.selectionChange.rawValue)", "wasSelected" : "true", "nowSelected" : "true"])
 
-            try! selectionLayer.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.information.actionList.actions.count - 1)-was.png"))
+            try! selectionLayer.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
             
-            try! selection.reverse(select: selectionLayer).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.information.actionList.actions.count - 1).png"))
+            try! selection.reverse(select: selectionLayer).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID()).png"))
             
             selectionLayer = selection.reverse(select: selectionLayer)
             
@@ -451,11 +451,11 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
     func clearSelect() {
      if isSelected {
         project.addAction(action :["ToolID" : "\(Actions.selectionChange.rawValue)", "wasSelected" : "true", "nowSelected" : "false"])
-        try! selectionLayer.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.information.actionList.actions.count - 1)-was.png"))
+        try! selectionLayer.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
         
         selectionLayer = UIImage(size: project.projectSize)
         
-        try! selectionLayer.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.information.actionList.actions.count - 1).png"))
+        try! selectionLayer.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID()).png"))
         
         selectionImage.image = selectionLayer
         
@@ -473,9 +473,9 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
 
             try! newLay.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("frame-\(project.information.frames[project.FrameSelected].frameID)").appendingPathComponent("layer-\(project.information.frames[project.FrameSelected].layers[project.LayerSelected].layerID).png"))
             
-            try! targetLayer.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.information.actionList.actions.count - 1)-was.png"))
+            try! targetLayer.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
             
-            try! newLay.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.information.actionList.actions.count - 1).png"))
+            try! newLay.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID()).png"))
             
             targetLayer = newLay
             targetImage.image = targetLayer
@@ -614,9 +614,9 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 
                 try! UIImage.merge(images: [project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected),ActionLayer])!.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("frame-\(project.information.frames[project.FrameSelected].frameID)").appendingPathComponent("layer-\(project.information.frames[project.FrameSelected].layers[project.LayerSelected].layerID).png"))
                 
-                try! wasImg.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.information.actionList.actions.count - 1)-was.png"))
+                try! wasImg.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
                 
-                try! project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.information.actionList.actions.count - 1).png"))
+                try! project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID()).png"))
                 
                 ActionLayer = UIImage(size : project.projectSize)
                 actionImage.image = ActionLayer
@@ -664,9 +664,9 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 
                 try! UIImage.merge(images: [ActionLayer])!.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("frame-\(project.information.frames[project.FrameSelected].frameID)").appendingPathComponent("layer-\(project.information.frames[project.FrameSelected].layers[project.LayerSelected].layerID).png"))
                 
-                try! wasImg.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.information.actionList.actions.count - 1)-was.png"))
+                try! wasImg.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
                 
-                try! project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.information.actionList.actions.count - 1).png"))
+                try! project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID()).png"))
                 
                 ActionLayer = UIImage(size : project.projectSize)
                 actionImage.image = ActionLayer
@@ -712,9 +712,9 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 
                 try! UIImage.merge(images: [targetLayer])!.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("frame-\(project.information.frames[project.FrameSelected].frameID)").appendingPathComponent("layer-\(project.information.frames[project.FrameSelected].layers[project.LayerSelected].layerID).png"))
                 
-                try! wasImg.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.information.actionList.actions.count - 1)-was.png"))
+                try! wasImg.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
                 
-                try! project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.information.actionList.actions.count - 1).png"))
+                try! project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID()).png"))
                 
                 ActionLayer = UIImage(size : project.projectSize)
                 actionImage.image = ActionLayer
@@ -755,9 +755,9 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 
                 try! UIImage.merge(images: [project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected),ActionLayer])!.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("frame-\(project.information.frames[project.FrameSelected].frameID)").appendingPathComponent("layer-\(project.information.frames[project.FrameSelected].layers[project.LayerSelected].layerID).png"))
                 
-                try! wasImg.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.information.actionList.actions.count - 1)-was.png"))
+                try! wasImg.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
                 
-                try! project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.information.actionList.actions.count - 1).png"))
+                try! project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID()).png"))
                 
                 ActionLayer = UIImage(size : project.projectSize)
                 actionImage.image = ActionLayer
@@ -790,9 +790,9 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                     
                     try! UIImage.merge(images: [targetLayer])!.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("frame-\(project.information.frames[project.FrameSelected].frameID)").appendingPathComponent("layer-\(project.information.frames[project.FrameSelected].layers[project.LayerSelected].layerID).png"))
                     
-                    try! wasImg.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.information.actionList.actions.count - 1)-was.png"))
+                    try! wasImg.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
                     
-                    try! project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.information.actionList.actions.count - 1).png"))
+                    try! project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID()).png"))
                     
                     ActionLayer = UIImage(size : project.projectSize)
                     actionImage.image = ActionLayer
@@ -835,9 +835,9 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 project.addAction(action :["ToolID" : "\(Actions.selectionChange.rawValue)", "wasSelected" : "\(isSelected)", "nowSelected" : "true"])
                 isSelected = true
                 
-                try! selection.lastSelection?.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.information.actionList.actions.count - 1)-was.png"))
+                try! selection.lastSelection?.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
                 
-                try! selectionLayer.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.information.actionList.actions.count - 1).png"))
+                try! selectionLayer.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID()).png"))
                 
                 try! selectionLayer.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("selection.png"))
                 
