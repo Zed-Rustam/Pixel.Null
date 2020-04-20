@@ -779,17 +779,21 @@ class Gradient : Tool {
         
         let context = UIGraphicsGetCurrentContext()!
         context.setShouldAntialias(false)
-        if stepCount == 0 {
-        let gradient = CGGradient(colorSpace: CGColorSpaceCreateDeviceRGB(), colorComponents: makeArray(), locations: nil, count: 2)!
-        context.drawLinearGradient(gradient, start: startPoint, end: endPoint, options: [.drawsBeforeStartLocation,.drawsAfterEndLocation])
-        } else {
-            drawStepGradient(context: context)
-        }
         
         var myImage = UIGraphicsGetImageFromCurrentImageContext()!
         
-        context.rotate(by: -getAngle(p1: startPoint, p2: endPoint))
-        context.translateBy(x: -startPoint.x , y: -startPoint.y)
+        if stepCount == 0 {
+        let gradient = CGGradient(colorSpace: CGColorSpaceCreateDeviceRGB(), colorComponents: makeArray(), locations: nil, count: 2)!
+        context.drawLinearGradient(gradient, start: startPoint, end: endPoint, options: [.drawsBeforeStartLocation,.drawsAfterEndLocation])
+            
+            myImage = UIGraphicsGetImageFromCurrentImageContext()!
+        } else {
+            drawStepGradient(context: context)
+            
+            context.rotate(by: -getAngle(p1: startPoint, p2: endPoint))
+            context.translateBy(x: -startPoint.x , y: -startPoint.y)
+            myImage = UIGraphicsGetImageFromCurrentImageContext()!
+        }
         
         context.clear(CGRect(origin: .zero, size: image.size))
         myImage.draw(at: .zero)

@@ -11,12 +11,13 @@ import UIKit
 
 class LayersView : UIView {
     private unowned var project : ProjectWork
-    lazy private var settingsButton : CircleButton = {
+    
+    lazy var settingsButton : CircleButton = {
         let btn = CircleButton(icon: #imageLiteral(resourceName: "settings_icon"), frame: .zero)
         btn.corners = 8
-        btn.delegate = {[weak self] in
-            self!.project.savePreview(frame: self!.project.FrameSelected)
-            self!.frameControlDelegate?.openFrameControl(project: self!.project)
+        btn.delegate = {[unowned self] in
+            self.project.savePreview(frame: self.project.FrameSelected)
+            self.frameControlDelegate?.openFrameControl(project: self.project)
         }
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.heightAnchor.constraint(equalToConstant: 36).isActive = true

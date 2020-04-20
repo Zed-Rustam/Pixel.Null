@@ -6,6 +6,8 @@
 //  Copyright © 2020 Zed Null. All rights reserved.
 //
 
+import ImageIO
+import MobileCoreServices
 import UIKit
 
 class ProjectWork{
@@ -51,6 +53,16 @@ class ProjectWork{
         }
     }
     
+    var animationDelay : Int {
+        get{
+            var sum = 0
+            for i in projectInfo.frames {
+                sum += i.delay
+            }
+            return sum
+        }
+    }
+    
     var projectName : String {
         get{
             return name
@@ -82,6 +94,7 @@ class ProjectWork{
     private func rename(){
         
     }
+    
     
     init(ProjectName projName : String, ProjectSize projSize : CGSize, bgColor : UIColor){
         
@@ -891,28 +904,27 @@ class ProjectWork{
         save()
     }
     
-//    func createGif() -> Data{
-//            let fileProperties: CFDictionary = [kCGImagePropertyGIFDictionary as String: [kCGImagePropertyGIFLoopCount as String: 0]]  as CFDictionary
-//            let frameProperties: CFDictionary = [kCGImagePropertyGIFDictionary as String: [(kCGImagePropertyGIFDelayTime as String): 0.1]] as CFDictionary
-//            
-//            let documentsDirectoryURL: URL? = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-//            let fileURL: URL? = documentsDirectoryURL?.appendingPathComponent("animated.gif")
-//            
-//            if let url = fileURL as CFURL? {
-//                if let destination = CGImageDestinationCreateWithURL(url, kUTTypeGIF, images.count, nil) {
-//                    CGImageDestinationSetProperties(destination, fileProperties)
-//                    for image in images {
-//                        if let cgImage = image.cgImage {
-//                            CGImageDestinationAddImage(destination, cgImage, frameProperties)
-//                        }
-//                    }
-//                    if !CGImageDestinationFinalize(destination) {
-//                        print("Failed to finalize the image destination")
-//                    }
-//                    print("Url = \(fileURL!)")
-//                }
-//            }
-//        }
+    func createGif() -> CGImageSource{
+        let fileProperties: CFDictionary = [kCGImagePropertyGIFDictionary as String: [kCGImagePropertyGIFLoopCount as String: 0]]  as CFDictionary
+        let resData : CFMutableData = CFDataCreateMutable(nil, .zero)
+        
+        if let destination = CGImageDestinationCreateWithURL(getProjectDirectory().appendingPathComponent("anime.png") as CFURL, kUTTypePNG, projectInfo.frames.count, nil) {
+            CGImageDestinationSetProperties(destination, fileProperties)
+            for image in 0..<projectInfo.frames.count {
+                let frameImg = getFrame(frame: image, size: projectSize).cgImage!
+                
+                let frameProperties: CFDictionary = [kCGImagePropertyGIFDictionary as String: [(kCGImagePropertyGIFDelayTime as String): CGFloat(projectInfo.frames[image].delay) / 1000.0, kCGImagePropertyHasAlpha : true, kCGImagePropertyGIFImageColorMap : false]] as CFDictionary
+
+                CGImageDestinationAddImage(destination, frameImg, frameProperties)
+            }
+            
+            if !CGImageDestinationFinalize(destination) {
+               print("Failed to finalize the image destination")
+            }
+        }
+        return CGImageSourceCreateWithData(resData, nil)!
+
+    }
 }
 
 struct ProjectInfo : Codable {

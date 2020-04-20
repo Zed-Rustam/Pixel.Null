@@ -8,11 +8,13 @@
 
 import UIKit
 class Editor : UIViewController {
-    
+    private var timer = CADisplayLink(target: self, selector: #selector(setFrame(_:)))
     private var project : ProjectWork!
     var canvas : ProjectCanvas!
-    private var control : ProjectControl!
-    
+    var control : ProjectControl!
+    private var animationTime : Int = 0
+    private var nowFrameIndex : Int = 0
+
     lazy private var toolBar : ToolBar = {
         let tb = ToolBar(frame: .zero)
         tb.setData(project: project, delegate: self)
@@ -33,7 +35,9 @@ class Editor : UIViewController {
         control?.updateInfo()
     }
     
-    
+    deinit {
+        timer.invalidate()
+    }
     override func viewDidLoad() {
         control = ProjectControl(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 94 + UIApplication.shared.windows[0].safeAreaInsets.top), proj: project)
         control.updateInfo()
@@ -42,6 +46,7 @@ class Editor : UIViewController {
         canvas.delegate = self
         
         control.setCanvas(canvas: canvas)
+        control.frames.editor = self
         
         view.addSubview(canvas)
         view.addSubview(control)
@@ -117,7 +122,7 @@ extension Editor : FrameControlDelegate{
         frameControl.isModalInPresentation = true
         show(frameControl, sender: self)
     }
-      
+    
     func updateEditor() {
         control.updateInfo()
         canvas.updateLayers()
@@ -246,6 +251,61 @@ extension Editor : ToolSettingsDelegate {
     }
 }
 
+extension Editor {
+    func startAnimation() {
+        //if timer {
+        //timer.invalidate()
+        project.savePreview(frame: project.FrameSelected)
+        nowFrameIndex = project.FrameSelected
+        
+        for i in 0..<project.FrameSelected {
+            animationTime += project.information.frames[i].delay
+        }
+        
+        toolBar.isUserInteractionEnabled = false
+        timer = CADisplayLink(target: self, selector: #selector(setFrame(_:)))
+        canvas.startAnimationMode()
+        timer.add(to: .main, forMode: .common)
+        //} else {
+        //}
+    }
+   
+    func stopAnimation() {
+        toolBar.isUserInteractionEnabled = true
+        timer.invalidate()
+        project.FrameSelected = nowFrameIndex
+        
+        control.frames.list.reloadData()
+        control.layers.list.reloadData()
+        canvas.endAnimationMode()
+    }
+    
+    @objc func setFrame(_ displayLink: CADisplayLink) {
+        print(displayLink.duration)
+        animationTime += Int(displayLink.duration * 1000)
+        if animationTime >= project.animationDelay {
+            animationTime = animationTime % project.animationDelay
+            //nowFrameIndex = 0
+        }
+        
+        var nowTime = 0
+        for i in 0..<project.information.frames.count {
+            nowTime += project.information.frames[i].delay
+            if nowTime >= animationTime && nowTime - project.information.frames[i].delay < animationTime && i != nowFrameIndex {
+                print("currect frame : \(i)")
+                project.FrameSelected = i
+                control.frames.list.reloadItems(at: [IndexPath(item: i, section: 0),IndexPath(item: nowFrameIndex, section: 0)])
+                nowFrameIndex = i
+                canvas.setImageFromAnimation(img: project.getFrame(frame: i, size: project.projectSize))
+                break
+            } else if nowTime >= animationTime {
+                break
+            }
+        }
+    }
+    
+    
+}
 protocol FrameControlDelegate : class {
     func openFrameControl(project : ProjectWork)
     func updateEditor()

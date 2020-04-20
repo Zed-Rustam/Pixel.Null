@@ -9,16 +9,35 @@
 import UIKit
 
 class FramesView : UIView {
+    private var isPlay : Bool = false
     private unowned var project : ProjectWork
     lazy private var playButton : CircleButton = {
         let btn = CircleButton(icon: #imageLiteral(resourceName: "play_icon"), frame: .zero)
         btn.corners = 8
+        btn.delegate = {[unowned self] in
+            self.isPlay.toggle()
+            btn.setIcon(ic: self.isPlay ? #imageLiteral(resourceName: "pause_icon") : #imageLiteral(resourceName: "play_icon"))
+            if self.isPlay {
+                self.list.tapgesture.isEnabled = false
+                self.list.layers?.alpha = 0
+                self.editor?.control.layers.settingsButton.isEnabled = false
+                self.editor!.startAnimation()
+            } else {
+                self.editor?.control.layers.settingsButton.isEnabled = true
+                self.list.tapgesture.isEnabled = true
+                self.list.layers?.alpha = 1
+                self.editor!.stopAnimation()
+            }
+        }
         
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
         btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        
         return btn
     }()
+    weak var editor : Editor? = nil
+    
     private var array : FrameList
     
     var list : FrameList{
@@ -46,7 +65,6 @@ class FramesView : UIView {
         
         playButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -8).isActive = true
         playButton.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
-        
         array.leftAnchor.constraint(equalTo: leftAnchor, constant: 0).isActive = true
         array.rightAnchor.constraint(equalTo: playButton.leftAnchor, constant: -8).isActive = true
         array.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true

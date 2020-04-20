@@ -27,7 +27,15 @@ class ProjectFullImage : UIViewController {
     func setProject(proj : ProjectWork){
         self.proj = proj
         project.image = proj.getFrame(frame: 0, size: proj.projectSize)
-        //project.image = UIImage.gifImageWithURL(proj.getProjectDirectory().appendingPathComponent("animated.gif", isDirectory: false).absoluteString)
+        
+        DispatchQueue.global().async {
+            let img = UIImage.animatedImageWithSource(proj.createGif())
+            
+            DispatchQueue.main.async {
+                self.project.image = img
+                self.project.startAnimating()
+            }
+        }
         project.backgroundColor = proj.backgroundColor
     }
     

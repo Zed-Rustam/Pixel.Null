@@ -51,7 +51,6 @@ class EditorController : UIViewController {
                 .setMaxWidth(width: view.frame.width - 24)
             .appendText(text:
                 """
-
                     Also, if you want to paint a picture and will not use frames, then you can swipe up the bar and the line with frames will disappear, and the workspace will increase.
                     In addition, the bar on the right has 2 buttons. The top one starts the animation with the help of which you can see your animation in the workspace. Pressing the button again stops the animation. And the bottom button opens the frames and layers editor.
 

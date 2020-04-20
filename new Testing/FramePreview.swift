@@ -62,6 +62,7 @@ class FramePreview : UIView {
         picToImg = image
         
         img = UIImageView(image: picToImg!)
+
         
         bgVisible = UIView(frame: CGRect(origin: .zero, size: frame.size))
         bgVisible.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.25)
@@ -80,7 +81,7 @@ class FramePreview : UIView {
         bg.contentMode = .scaleAspectFill
         bg.layer.magnificationFilter = CALayerContentsFilter.nearest
         
-        img.contentMode = .scaleAspectFill
+        img.contentMode = .scaleAspectFit
         img.layer.magnificationFilter = CALayerContentsFilter.nearest
         
         self.layer.cornerRadius = 8

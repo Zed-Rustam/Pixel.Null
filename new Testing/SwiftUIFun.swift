@@ -89,16 +89,17 @@ extension UILabel {
         return self
     }
     
-    func appendText(text : String, fortt : UIFont) -> UILabel {
+    func appendText(text : String, fortt : UIFont, textClr : UIColor? = nil) -> UILabel {
         translatesAutoresizingMaskIntoConstraints = false
         var string = NSMutableAttributedString()
         
-
         if self.attributedText != nil {
             string = NSMutableAttributedString(attributedString: self.attributedText!)
         }
         
-        string.append(NSMutableAttributedString(string:text, attributes:[NSAttributedString.Key.font : fortt]))
+        let color = textClr == nil ? self.textColor : textClr
+        
+        string.append(NSMutableAttributedString(string:text, attributes:[NSAttributedString.Key.font : fortt, NSAttributedString.Key.foregroundColor : color as Any]))
         
         self.attributedText = string
         

@@ -13,10 +13,14 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
     private var targetLayer : UIImage!
     private var fgLayers : UIImage?
     private var ActionLayer : UIImage!
+    private var framesLayer : UIImage?
 
     var selectionLayer : UIImage!
+    
+    private var isAnimation : Bool = false
 
     private var bg : UIImageView!
+    private var framesImage : UIImageView!
     private var bgImage : UIImageView!
     private var targetImage : UIImageView!
     private var fgImage : UIImageView!
@@ -73,6 +77,16 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
     func updateLayers(){
         var imgs : [UIImage] = []
         
+        for i in project.FrameSelected - 2...project.FrameSelected + 2 {
+            if i >= 0 && i < project.information.frames.count && i != project.FrameSelected{
+                imgs.append(project.getFrame(frame: i, size: project.projectSize).withAlpha(pow(0.5,CGFloat(abs(project.FrameSelected - i)))))
+            }
+        }
+        
+        framesLayer = UIImage.merge(images: imgs)
+        
+        imgs.removeAll()
+        
         for i in 0..<project.LayerSelected {
             if project.information.frames[project.FrameSelected].layers[project.LayerSelected - i - 1].visible {
                 imgs.append(project.getLayer(frame: project.FrameSelected, layer: (project.LayerSelected - i - 1)).withAlpha(CGFloat(project.information.frames[project.FrameSelected].layers[project.LayerSelected - i - 1].transparent)))
@@ -94,6 +108,8 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         targetLayer = project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected).withAlpha(
             project.information.frames[project.FrameSelected].layers[project.LayerSelected].visible ? CGFloat(project.information.frames[project.FrameSelected].layers[project.LayerSelected].transparent) : 0)
         
+        framesImage?.image = framesLayer
+
         bgImage?.image = bgLayers
         targetImage?.image = targetLayer
         fgImage?.image = fgLayers
@@ -148,6 +164,11 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         fgImage.layer.magnificationFilter = CALayerContentsFilter.nearest
         fgImage.contentMode = .scaleAspectFit
         
+        framesImage = UIImageView(frame: CGRect(x: 0, y: 0, width: project.projectSize.width, height: project.projectSize.height))
+        framesImage.image = framesLayer
+        framesImage.layer.magnificationFilter = CALayerContentsFilter.nearest
+        framesImage.contentMode = .scaleAspectFit
+        
         selectionImage = UIImageView(frame: CGRect(x: 0, y: 0, width: project.projectSize.width, height: project.projectSize.height))
         selectionImage.image = selectionLayer
         selectionImage.layer.magnificationFilter = CALayerContentsFilter.nearest
@@ -196,7 +217,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
 
         self.addSubview(bg)
   
-
+        bg.addSubview(framesImage)
         bg.addSubview(bgImage)
         bg.addSubview(targetImage)
         bg.addSubview(actionImage)
@@ -230,6 +251,27 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         self.translatesAutoresizingMaskIntoConstraints = false
     }
     
+    
+    func startAnimationMode(){
+        bgImage.image = nil
+        framesImage.image = nil
+        targetImage.image = nil
+        fgImage.image = nil
+        selectionImage.image = nil
+        actionImage.image = nil
+        actionRecognizer.isEnabled = false
+        isAnimation = true
+    }
+    
+    func endAnimationMode(){
+        updateLayers()
+        actionRecognizer.isEnabled = true
+        isAnimation = false
+    }
+    
+    func setImageFromAnimation(img : UIImage) {
+        bgImage.image = img
+    }
     
     @objc private func touch(sender : UILongPressGestureRecognizer) {
 
@@ -292,8 +334,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         selectionImage.layer.add(anim, forKey: "test")
     }
     func checkActions(){
-        if !isScaling && !isMoving {
-            print("tes")
+        if !isScaling && !isMoving && !isAnimation {
             actionRecognizer.isEnabled = true
         }
     }

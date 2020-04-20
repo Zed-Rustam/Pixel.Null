@@ -68,7 +68,6 @@ class TrainingMain : UIViewController {
     }
 }
 
-
 extension TrainingMain : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Table")!
@@ -175,7 +174,6 @@ extension TrainingMain : UITableViewDelegate, UITableViewDataSource {
         return 24
     }
     
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section {
         case 0:
@@ -203,6 +201,12 @@ extension TrainingMain : UITableViewDelegate, UITableViewDataSource {
                 
                 let cell = tableView.cellForRow(at: indexPath)
                 cell?.setSelected(false, animated: true)
+            case 3:
+                let gradient = GradientController()
+                navigation?.pushViewController(gradient, animated: true)
+                
+                let cell = tableView.cellForRow(at: indexPath)
+                cell?.setSelected(false, animated: true)
             default:
                 break
             }
@@ -210,7 +214,4 @@ extension TrainingMain : UITableViewDelegate, UITableViewDataSource {
             break
         }
     }
-    
 }
-
-

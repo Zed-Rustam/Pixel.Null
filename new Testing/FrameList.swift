@@ -9,7 +9,7 @@
 import UIKit
 
 class FrameList : UICollectionView, UICollectionViewDataSource, UICollectionViewDelegate {
-    private var tapgesture : UITapGestureRecognizer!
+    var tapgesture : UITapGestureRecognizer!
     weak var layers : LayerList? = nil
     weak var canvas : ProjectCanvas?
     var selectedCell : FrameCell? = nil
