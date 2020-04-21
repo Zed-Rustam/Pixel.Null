@@ -29,6 +29,8 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
 
     private var grid : GridView!
     private var symmetry : SymmetryView!
+    private var transformView : TransformView!
+    
     private var symmetryChangeVertical = false
     private var symmetryChangeHorizontal = false
 
@@ -186,6 +188,10 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         symmetry.startY = project.projectSize.height / 2.0
         symmetry.isHorizontal = false
         symmetry.isVertical = false
+        
+        
+        
+        transformView = TransformView(frame: self.bounds)
         //grid.project = project
         
         scaleRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(onScale(sender:)))
@@ -207,10 +213,17 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         addGestureRecognizer(scaleRecognizer)
         addGestureRecognizer(moveRecognizer)
         addGestureRecognizer(actionRecognizer)
+        
         let gest = UILongPressGestureRecognizer(target: self, action: #selector(touch(sender:)))
         gest.minimumPressDuration = 0
         addGestureRecognizer(gest)
         
+        let transformGest = UILongPressGestureRecognizer(target: self, action: #selector(transformGesture(sender:)))
+        transformGest.minimumPressDuration = 0
+        addGestureRecognizer(transformGest)
+        transformGest.isEnabled = false
+        move.setImage(image: targetLayer, startpos: .zero, selection: nil)
+        transformView.alpha = 0
         
         
         //addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(symmetry.touch(sender:))))
@@ -226,8 +239,8 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         
         self.addSubview(grid)
         self.addSubview(symmetry)
+        self.addSubview(transformView)
 
-        
         bg.transform = CGAffineTransform(scaleX: scale, y: scale)
         (grid.layer as! GridLayer).gridScale = scale
         (grid.layer as! GridLayer).startPos = CGPoint(x: 0, y: (frame.height - project.projectSize.height * scale) / 2)
@@ -271,6 +284,40 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
     
     func setImageFromAnimation(img : UIImage) {
         bgImage.image = img
+    }
+    
+    @objc private func transformGesture(sender : UILongPressGestureRecognizer) {
+        switch sender.state {
+        case .began:
+            transformView.getTransformMode(location: sender.location(in: transformView))
+        case .changed:
+            switch transformView.activeMode {
+            case .move:
+                transformView.move(nextLocation: sender.location(in: transformView))
+            case .scaleUpLeft, .up, .down, .left, .right, .scaleUpRight, .scaleDownLeft, .scaleDownRight:
+                transformView.resize(nextLocation: sender.location(in: transformView))
+            case .rotate:
+                transformView.rotate(nextLocation: sender.location(in: transformView))
+            default:
+                break
+            }
+           // case .changed:
+
+            ActionLayer = move.drawOn(position: transformView.position, rotation: transformView.angle,rotateCenter: CGPoint(x: transformView.lastSize.width, y: transformView.lastSize.height))
+            actionImage.image = ActionLayer
+                
+            
+        case .ended:
+            switch transformView.activeMode {
+                case .scaleUpLeft, .up, .down, .left, .right, .scaleUpRight, .scaleDownLeft, .scaleDownRight:
+                    transformView.finishReSize()
+            default:
+                break
+            }
+        
+        default:
+            break
+        }
     }
     
     @objc private func touch(sender : UILongPressGestureRecognizer) {
@@ -333,6 +380,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         
         selectionImage.layer.add(anim, forKey: "test")
     }
+    
     func checkActions(){
         if !isScaling && !isMoving && !isAnimation {
             actionRecognizer.isEnabled = true
@@ -414,6 +462,9 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 symmetry.scale = scale
                 symmetry.setNeedsDisplay()
                 
+                transformView.offset = offset
+                transformView.scale = scale
+                transformView.setNeedsDisplay()
                 sender.scale = 1.0
                 
             case .ended:
@@ -559,6 +610,9 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 symmetry.offset = offset
                 symmetry.setNeedsDisplay()
                 
+                transformView.offset = offset
+                transformView.setNeedsDisplay()
+                
             case .ended:
                 isMoving = false
                 checkActions()
@@ -678,55 +732,6 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
 
             case .cancelled:
                 targetImage.isHidden = false
-                ActionLayer = UIImage(size : project.projectSize)
-                actionImage.image = ActionLayer
-            default:
-                break
-            }
-        case 2:
-            switch sender.state {
-            case .began:
-                location.x = CGFloat(floor(location.x))
-                location.y = CGFloat(floor(location.y))
-                
-                targetLayer = targetLayer.cut(image: isSelected ? selectionLayer : nil)
-                targetImage.image = targetLayer
-                
-                move.setImage(image: project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected), startpos: location,selection: isSelected ? selectionLayer : nil)
-                ActionLayer = move.drawOn(move: location)
-                actionImage.image = ActionLayer
-                
-            case .changed:
-                location.x = CGFloat(floor(location.x))
-                location.y = CGFloat(floor(location.y))
-                ActionLayer = move.drawOn(move: location)
-                actionImage.image = ActionLayer
-                
-            case .ended:
-                let wasImg = project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected)
-                          
-                targetLayer = UIImage.merge(images: [targetLayer,ActionLayer])
-                targetImage.image = targetLayer
-                
-                project.addAction(action :["ToolID" : "\(Actions.drawing.rawValue)", "frame" : "\(project.FrameSelected)", "layer" : "\(project.LayerSelected)"])
-                
-                try! UIImage.merge(images: [targetLayer])!.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("frame-\(project.information.frames[project.FrameSelected].frameID)").appendingPathComponent("layer-\(project.information.frames[project.FrameSelected].layers[project.LayerSelected].layerID).png"))
-                
-                try! wasImg.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
-                
-                try! project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID()).png"))
-                
-                ActionLayer = UIImage(size : project.projectSize)
-                actionImage.image = ActionLayer
-                
-                delegate?.updateCanvas()
-                delegate?.updateFrame(frame: project.FrameSelected)
-                delegate?.updateLayer(layer: project.LayerSelected)
-                barDelegate?.UnDoReDoAction()
-
-            case .cancelled:
-                targetLayer = project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected)
-                targetImage.image = targetLayer
                 ActionLayer = UIImage(size : project.projectSize)
                 actionImage.image = ActionLayer
             default:

@@ -75,7 +75,7 @@ class ToolButton : UICollectionViewCell {
             button.delegate = {//[weak self] in
                 
             }
-        case -3:
+        case -3: 
             button.setIcon(ic: #imageLiteral(resourceName: "undo_icon"))
             button.setIconColor(color: ProjectStyle.uiEnableColor)
             button.delegate = {[weak self] in

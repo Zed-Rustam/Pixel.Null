@@ -11,22 +11,22 @@ import ImageIO
 import MobileCoreServices
 
 class ProjectStyle {
-//    static var uiBackgroundColor = UIColor(r: 255, g: 241, b: 233, a: 255)
-//    static var uiDisableColor = UIColor(r: 230, g: 209, b: 203, a: 255)
-//    static var uiEnableColor = UIColor(r: 201, g: 170, b: 160, a: 255)
-//    static var uiSelectColor = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1)
-//    static var uiShadowColor = UIColor(r: 201, g: 170, b: 160, a: 150).withAlphaComponent(0.5)
-//    static var uiRedColor = UIColor(r: 186, g: 33, b: 0, a: 255)
-
-    //dark mode :D
-    static var uiBackgroundColor = UIColor(r: 45, g: 46, b: 49, a: 255)
-    static var uiDisableColor = UIColor(r: 80, g: 81, b: 90, a: 255)
-    static var uiEnableColor = UIColor(r: 119, g: 120, b: 133, a: 255)
+    static var uiBackgroundColor = UIColor(r: 255, g: 241, b: 233, a: 255)
+    static var uiDisableColor = UIColor(r: 230, g: 209, b: 203, a: 255)
+    static var uiEnableColor = UIColor(r: 201, g: 170, b: 160, a: 255)
     static var uiSelectColor = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1)
-    static var uiShadowColor = UIColor(r: 24, g: 25, b: 28, a: 255)
+    static var uiShadowColor = UIColor(r: 201, g: 170, b: 160, a: 150).withAlphaComponent(0.5)
     static var uiRedColor = UIColor(r: 186, g: 33, b: 0, a: 255)
 
-    static var bgImage = UIImage.merge(images: [UIImage(named: "Background1")!.withTintColor(ProjectStyle.uiEnableColor),UIImage(named: "Background2")!.withTintColor(ProjectStyle.uiDisableColor)])
+    //dark mode :D
+//    static var uiBackgroundColor = UIColor(r: 45, g: 46, b: 49, a: 255)
+//    static var uiDisableColor = UIColor(r: 80, g: 81, b: 90, a: 255)
+//    static var uiEnableColor = UIColor(r: 119, g: 120, b: 133, a: 255)
+//    static var uiSelectColor = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1)
+//    static var uiShadowColor = UIColor(r: 24, g: 25, b: 28, a: 255)
+//    static var uiRedColor = UIColor(r: 186, g: 33, b: 0, a: 255)
+
+    static var bgImage = UIImage.merge(images: [UIImage(named: "Background1")!.withTintColor(ProjectStyle.uiBackgroundColor),UIImage(named: "Background2")!.withTintColor(ProjectStyle.uiDisableColor)])
 }
 
 extension UIImage {
@@ -95,19 +95,17 @@ extension UIImage {
         let b = CGFloat(data[pixelInfo+2]) / CGFloat(255.0)
         let a = CGFloat(data[pixelInfo+3]) / CGFloat(255.0)
 
+        //print("red \(r) gereen \(g) blue \(b) alpha \(a)")
         return UIColor(red: r, green: g, blue: b, alpha: a)
     }
     
-    func getColorsArray() -> [UInt8] {
-        var array : [UInt8] = []
+    func getColorsArray() -> [pixelData] {
+        var array : [pixelData] = []
         
         let data: UnsafePointer<UInt8> = CFDataGetBytePtr(self.cgImage!.dataProvider!.data)
         
         for i in 0..<Int(self.size.width * self.size.height) {
-            array.append(data[i * 4])
-            array.append(data[i * 4 + 1])
-            array.append(data[i * 4 + 2])
-            array.append(data[i * 4 + 3])
+            array.append(pixelData(a: data[i * 4 + 3],b: data[i * 4 + 2], g: data[i * 4 + 1], r: data[i * 4]))
         }
         
         return array

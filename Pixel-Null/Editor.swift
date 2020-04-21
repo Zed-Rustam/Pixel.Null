@@ -271,6 +271,7 @@ extension Editor {
     func stopAnimation() {
         toolBar.isUserInteractionEnabled = true
         toolBar.animationStop()
+        toolBar.UnDoReDoAction()
 
         timer.invalidate()
         project.FrameSelected = nowFrameIndex

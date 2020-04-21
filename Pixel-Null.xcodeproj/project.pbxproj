@@ -94,6 +94,7 @@
 		95DC555023EDF8280011FA2A /* CIrcleColorSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95DC554F23EDF8280011FA2A /* CIrcleColorSlider.swift */; };
 		95DC555223EF3FEA0011FA2A /* ColorSelectDialog2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95DC555123EF3FEA0011FA2A /* ColorSelectDialog2.swift */; };
 		95FC4151240A8ECE00B7F315 /* LayerList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95FC4150240A8ECE00B7F315 /* LayerList.swift */; };
+		95FFC435244DA3C40011A5DC /* TransformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95FFC434244DA3C40011A5DC /* TransformView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -187,6 +188,7 @@
 		95DC554F23EDF8280011FA2A /* CIrcleColorSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIrcleColorSlider.swift; sourceTree = "<group>"; };
 		95DC555123EF3FEA0011FA2A /* ColorSelectDialog2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSelectDialog2.swift; sourceTree = "<group>"; };
 		95FC4150240A8ECE00B7F315 /* LayerList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayerList.swift; sourceTree = "<group>"; };
+		95FFC434244DA3C40011A5DC /* TransformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransformView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -302,6 +304,7 @@
 				957D04132408510800E58210 /* ProjectControl.swift */,
 				9537B1A4243E48A80083BE27 /* Grid */,
 				95C0EDD22448B0F20012D60D /* Symmetry */,
+				95FFC436244DA3CD0011A5DC /* Transform */,
 			);
 			name = Editor;
 			sourceTree = "<group>";
@@ -464,6 +467,14 @@
 			name = Project;
 			sourceTree = "<group>";
 		};
+		95FFC436244DA3CD0011A5DC /* Transform */ = {
+			isa = PBXGroup;
+			children = (
+				95FFC434244DA3C40011A5DC /* TransformView.swift */,
+			);
+			name = Transform;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -589,6 +600,7 @@
 				95A799612443A3E200F7BBE2 /* ThemeSelect.swift in Sources */,
 				9570657524164C350044FC39 /* FrameList.swift in Sources */,
 				95560A1F23C79ACC00581482 /* ProjectsActions.swift in Sources */,
+				95FFC435244DA3C40011A5DC /* TransformView.swift in Sources */,
 				957D04142408510800E58210 /* ProjectControl.swift in Sources */,
 				959BCFBB241FECB900B27CFB /* PalleteEditor.swift in Sources */,
 				9570657E2417EA6C0044FC39 /* FramesCollection.swift in Sources */,

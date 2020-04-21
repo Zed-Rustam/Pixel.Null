@@ -8,6 +8,13 @@
 
 import UIKit
 
+struct pixelData : Equatable {
+    var a : UInt8
+    var b : UInt8
+    var g : UInt8
+    var r : UInt8
+}
+
 class Tool {
 }
 
@@ -239,17 +246,7 @@ extension CGPoint {
 }
 
 class Fill : Tool {
-    
-    private struct line {
-        var start : CGPoint
-        var lenght : Int
-    }
-    private enum orientation {
-        case horizontal
-        case vertical
-    }
-
-    var color : UIColor = .red
+    var color : UIColor = .blue
     var colorForChange : UIColor = .clear
 
     func setSettings(fillColor : UIColor){
@@ -257,252 +254,105 @@ class Fill : Tool {
     }
     
     private var points : [CGPoint] = []
-
-    private var changedColors: [Bool] = []
     
     func setStartPoint(point : CGPoint){
         points.removeAll()
     }
     
-    func getChanged(imgSize : CGSize,pixel : CGPoint) -> Bool? {
-       if CGRect(origin: .zero, size: imgSize).contains(pixel) {
-           let startIndex: Int = ((Int(imgSize.width) * Int(pixel.y)) + Int(pixel.x))
-           
-           return changedColors[startIndex]
-       } else {
-           return nil
-       }
-    }
-    
-    func changeChanged(imgSize : CGSize,pixel : CGPoint) {
-        let startIndex: Int = ((Int(imgSize.width) * Int(pixel.y)) + Int(pixel.x))
-        changedColors[startIndex] = false
-    }
 
     
-    private func fillH(from : CGPoint, imageSize : CGSize,canvas : CGContext){
+    private func fillH(from : CGPoint, imageSize : CGSize){
         var pos = from
-        var start = from
-        var end = from
 
         var wasAddUp = false
         var wasAddDown = false
-
-        if getChanged(imgSize: imageSize, pixel: from) == false {
+        
+        if getPixelData(imgSize: imageSize, point: from) != colorForChange.getPixelData() {
             return
         }
         
-        changeChanged(imgSize: imageSize, pixel: pos)
-               
-        if getChanged(imgSize: imageSize, pixel: pos.offset(x: 0, y: -1)) == true {
+        setPixelData(imgSize: imageSize, point: pos, color: color.getPixelData())
+        
+        if getPixelData(imgSize: imageSize, point: pos.offset(x: 0, y: -1)) == colorForChange.getPixelData() {
             points.append(pos.offset(x: 0, y: -1))
             wasAddUp = true
         }
-        if getChanged(imgSize: imageSize, pixel: pos.offset(x: 0, y: 1)) == true {
+        if getPixelData(imgSize: imageSize, point: pos.offset(x: 0, y: 1)) == colorForChange.getPixelData() {
             points.append(pos.offset(x: 0, y: 1))
             wasAddDown = true
         }
         
-        DispatchQueue.init(label: "first").async {
-            //some actions
-        }
-        
-        DispatchQueue.init(label: "second").async {
-            //some actions
-        }
-        
-        
-        while getChanged(imgSize: imageSize, pixel: pos.offset(x: -1, y: 0)) == true {
+        while getPixelData(imgSize: imageSize, point: pos.offset(x: -1, y: 0)) == colorForChange.getPixelData() {
             
-            if !wasAddUp && getChanged(imgSize: imageSize, pixel: pos.offset(x: -1, y: -1)) == true {
+            if !wasAddUp && getPixelData(imgSize: imageSize, point: pos.offset(x: -1, y: -1)) == colorForChange.getPixelData() {
                 points.append(pos.offset(x: -1, y: -1))
                 wasAddUp = true
-            } else if getChanged(imgSize: imageSize, pixel: pos.offset(x: -1, y: -1)) != true {
+            } else if getPixelData(imgSize: imageSize, point: pos.offset(x: -1, y: -1)) != colorForChange.getPixelData() {
                 wasAddUp = false
             }
-            if !wasAddDown && getChanged(imgSize: imageSize, pixel: pos.offset(x: -1, y: 1)) == true {
+            if !wasAddDown && getPixelData(imgSize: imageSize, point: pos.offset(x: -1, y: 1)) == colorForChange.getPixelData() {
                 points.append(pos.offset(x: -1, y: 1))
                 wasAddDown = true
-            } else if getChanged(imgSize: imageSize, pixel: pos.offset(x: -1, y: 1)) != true {
+            } else if getPixelData(imgSize: imageSize, point: pos.offset(x: -1, y: 1)) != colorForChange.getPixelData() {
                 wasAddDown = false
             }
             
             pos = pos.offset(x: -1, y: 0)
-            changeChanged(imgSize: imageSize, pixel: pos)
+            setPixelData(imgSize: imageSize, point: pos, color: color.getPixelData())
+            
         }
-        start = pos
-        //canvas.fill(CGRect(x: pos.x, y: pos.y, width: from.x - pos.x, height: 1))
         
         pos = from
         wasAddUp = false
         wasAddDown = false
 
-        while getChanged(imgSize: imageSize, pixel: pos.offset(x: 1, y: 0)) == true {
-            if !wasAddUp && getChanged(imgSize: imageSize, pixel: pos.offset(x: 1, y: -1)) == true {
+        while getPixelData(imgSize: imageSize, point: pos.offset(x: 1, y: 0)) == colorForChange.getPixelData() {
+            if !wasAddUp && getPixelData(imgSize: imageSize, point: pos.offset(x: 1, y: -1)) == colorForChange.getPixelData() {
                 points.append(pos.offset(x: 1, y: -1))
                 wasAddUp = true
-            } else if getChanged(imgSize: imageSize, pixel: pos.offset(x: 1, y: -1)) != true {
+            } else if getPixelData(imgSize: imageSize, point: pos.offset(x: 1, y: -1)) != colorForChange.getPixelData() {
                 wasAddUp = false
             }
             
-            if !wasAddDown && getChanged(imgSize: imageSize, pixel: pos.offset(x: 1, y: 1)) == true {
+            if !wasAddDown && getPixelData(imgSize: imageSize, point: pos.offset(x: 1, y: 1)) == colorForChange.getPixelData() {
                 points.append(pos.offset(x: 1, y: 1))
                 wasAddDown = true
-            } else if getChanged(imgSize: imageSize, pixel: pos.offset(x: 1, y: 1)) != true {
+            } else if getPixelData(imgSize: imageSize, point: pos.offset(x: 1, y: 1)) != colorForChange.getPixelData() {
                 wasAddDown = false
             }
             
             pos = pos.offset(x: 1, y: 0)
-            changeChanged(imgSize: imageSize, pixel: pos)
-        }
-        end = pos
-        //print(end.x - start.x + 1)
-        canvas.fill(CGRect(x: start.x, y: start.y, width: end.x - start.x + 1, height: 1))
-
-    }
-    
-    private func fillV(from : CGPoint, imageSize : CGSize,canvas : CGContext){
-        var pos = from
-        var start = from
-        var end = from
-
-        var wasAddUp = false
-        var wasAddDown = false
-
-        if getChanged(imgSize: imageSize, pixel: from) == false {
-            return
-        }
-        
-        changeChanged(imgSize: imageSize, pixel: pos)
-               
-        if getChanged(imgSize: imageSize, pixel: pos.offset(x: -1, y: 0)) == true {
-            points.append(pos.offset(x: -1, y: 0))
-            wasAddUp = true
-        }
-        if getChanged(imgSize: imageSize, pixel: pos.offset(x: 1, y: 0)) == true {
-            points.append(pos.offset(x: 1, y: 0))
-            wasAddDown = true
-        }
-        
-        DispatchQueue.init(label: "first").async {
-            //some actions
-        }
-        
-        DispatchQueue.init(label: "second").async {
-            //some actions
-        }
-        
-        
-        while getChanged(imgSize: imageSize, pixel: pos.offset(x: 0, y: -1)) == true {
-            
-            if !wasAddUp && getChanged(imgSize: imageSize, pixel: pos.offset(x: -1, y: -1)) == true {
-                points.append(pos.offset(x: -1, y: -1))
-                wasAddUp = true
-            } else if getChanged(imgSize: imageSize, pixel: pos.offset(x: -1, y: -1)) != true {
-                wasAddUp = false
-            }
-            if !wasAddDown && getChanged(imgSize: imageSize, pixel: pos.offset(x: 1, y: -1)) == true {
-                points.append(pos.offset(x: 1, y: -1))
-                wasAddDown = true
-            } else if getChanged(imgSize: imageSize, pixel: pos.offset(x: 1, y: -1)) != true {
-                wasAddDown = false
-            }
-            
-            pos = pos.offset(x: 0, y: -1)
-            changeChanged(imgSize: imageSize, pixel: pos)
-        }
-        start = pos
-        //canvas.fill(CGRect(x: pos.x, y: pos.y, width: from.x - pos.x, height: 1))
-        
-        pos = from
-        wasAddUp = false
-        wasAddDown = false
-
-        while getChanged(imgSize: imageSize, pixel: pos.offset(x: 0, y: 1)) == true {
-            if !wasAddUp && getChanged(imgSize: imageSize, pixel: pos.offset(x: -1, y: 1)) == true {
-                points.append(pos.offset(x: -1, y: 1))
-                wasAddUp = true
-            } else if getChanged(imgSize: imageSize, pixel: pos.offset(x: -1, y: 1)) != true {
-                wasAddUp = false
-            }
-            
-            if !wasAddDown && getChanged(imgSize: imageSize, pixel: pos.offset(x: 1, y: 1)) == true {
-                points.append(pos.offset(x: 1, y: 1))
-                wasAddDown = true
-            } else if getChanged(imgSize: imageSize, pixel: pos.offset(x: 1, y: 1)) != true {
-                wasAddDown = false
-            }
-            
-            pos = pos.offset(x: 0, y: 1)
-            changeChanged(imgSize: imageSize, pixel: pos)
-        }
-        end = pos
-        canvas.fill(CGRect(x: start.x, y: start.y, width: 1, height: end.y - start.y + 1))
-    }
-
-    func makeStroke(imageSize : CGSize,from : CGPoint){
-        var pos = from
-        while getChanged(imgSize: imageSize, pixel: pos.offset(x: -1, y: 0)) == true {
-            pos = pos.offset(x: -1, y: 0)
-            //changeColor(imgSize: imageSize, pixel: pos)
-        }
-        
-        let realStart = pos
-        
-        var newPos = realStart
-        
-        while(newPos != realStart) {
-            switch getMoving(point: newPos) {
-            case 0:
-                newPos = newPos.offset(x: 0, y: -1)
-                points.append(newPos)
-            default:
-                break
-            }
+            setPixelData(imgSize: imageSize, point: pos, color: color.getPixelData())
         }
     }
     
-    func getMoving(point : CGPoint) -> Int {
-        return 0
+    private var imageData : [pixelData] = []
+    
+    func getPixelData(imgSize : CGSize, point : CGPoint) -> pixelData? {
+        if point.x < 0 || point.x >= imgSize.width || point.y < 0 || point.y >= imgSize.height {return nil}
+        return imageData[Int(imgSize.width * point.y + point.x)]
+    }
+    
+    func setPixelData(imgSize : CGSize, point : CGPoint, color : pixelData) {
+        imageData[Int(imgSize.width * point.y + point.x)] = color
     }
     
     func drawOn(image : UIImage,point : CGPoint, selection : UIImage?) -> UIImage{
         colorForChange = image.getColor(point: point)
 
+        imageData = image.getColorsArray()
+        
         points.removeAll()
-        changedColors.removeAll()
-        changedColors = .init(repeating: false, count: Int(image.size.width) * Int(image.size.height))
-        for y in 0..<Int(image.size.height) {
-            for x in 0..<Int(image.size.width) {
-                if image.getColor(point: CGPoint(x: x, y: y)) == colorForChange {
-                    changedColors[Int(image.size.width) * y + x] = true
-                }
-                
-            }
-        }
         print("now start")
         
-        if image.getColor(point: point) != color {
+        if getPixelData(imgSize: image.size, point: point) != color.getPixelData() {
             points.append(point)
             
-            UIGraphicsBeginImageContextWithOptions(image.size, false, 1)
-                               
-            let context = UIGraphicsGetCurrentContext()!
-            image.draw(at: .zero)
-            
-            context.setFillColor(color.cgColor)
-            
-            
             while points.count > 0 {
-                fillH(from: points.remove(at: 0), imageSize: image.size, canvas: context)
+                fillH(from: points.remove(at: 0), imageSize: image.size)
             }
             
-            selection?.draw(at: .zero, blendMode: .destinationIn, alpha: 1)
-            
-            let myImage = UIGraphicsGetImageFromCurrentImageContext()!
-            UIGraphicsEndImageContext()
-             
-            return myImage
+            return imageFromARGB32Bitmap(pixels: imageData, width: UInt(image.size.width), height: UInt(image.size.height))
         } else {
             return image
         }
@@ -715,6 +565,8 @@ class Move : Tool {
     private var offset : CGPoint = .zero
     var wasStart : Bool = false
     
+    var imageData : [pixelData] = []
+    
     func setImage(image : UIImage, startpos : CGPoint,selection : UIImage?) {
         UIGraphicsBeginImageContextWithOptions(image.size, false, 1)
                
@@ -724,21 +576,46 @@ class Move : Tool {
 
         UIGraphicsEndImageContext()
         moveImage = moveImg
+        
+        imageData = moveImg!.getColorsArray()
+        
         wasStart = true
         offset = startpos
     }
     
-    func drawOn(move : CGPoint) -> UIImage{
+    func getPixelData(data : [pixelData],x : Int, y : Int) -> pixelData? {
+        if x < 0 || x >= Int(moveImage.size.width) || y < 0 || y >= Int(moveImage.size.height) {
+            return nil
+        }
+
+        return data[Int(moveImage.size.width) * y + x]
+    }
+    func setPixelData( data : inout [pixelData],x : Int, y : Int,pixel : pixelData?) {
+        if x < 0 || x >= Int(moveImage.size.width) || y < 0 || y >= Int(moveImage.size.height) || pixel == nil {
+            return
+        }
+        data[Int(moveImage.size.width) * y + x] = pixel!
+    }
+    
+    func drawOn(position : CGRect, rotation : CGFloat, rotateCenter : CGPoint) -> UIImage{
         wasStart = true
         UIGraphicsBeginImageContextWithOptions(moveImage.size, false, 1)
+        let context = UIGraphicsGetCurrentContext()!
+        context.setShouldAntialias(false)
+        context.setAllowsAntialiasing(false)
+        context.interpolationQuality = .none
+
+        context.translateBy(x: rotateCenter.x, y: rotateCenter.y)
+        context.rotate(by: rotation)
+        context.translateBy(x: -rotateCenter.x, y: -rotateCenter.y)
         
-        moveImage.draw(at: CGPoint(x: move.x - offset.x, y: move.y - offset.y))
-        
-        let myImage = UIGraphicsGetImageFromCurrentImageContext()
+        moveImage.draw(in: position)
+ 
+        let myImage = UIGraphicsGetImageFromCurrentImageContext()!
 
         UIGraphicsEndImageContext()
-                
-        return myImage!
+ 
+        return myImage
     }
 }
 
@@ -844,4 +721,31 @@ class Gradient : Tool {
         context.setBlendMode(.normal)
         context.fill(CGRect(x: ceil(CGFloat(stepCount + 1) * oneStep) - 0.5, y: -CGFloat(radius), width: CGFloat(radius), height: CGFloat(radius * 2)))
     }
+}
+
+func imageFromARGB32Bitmap(pixels:[pixelData], width:UInt, height:UInt)->UIImage {
+    let bitsPerComponent:UInt = 8
+    let bitsPerPixel:UInt = 32
+    
+    assert(pixels.count == Int(width * height))
+    
+    var data = pixels // Copy to mutable []
+    let providerRef = CGDataProvider(
+        data: NSData(bytes: &data, length: data.count * MemoryLayout<pixelData>.size)
+        )
+
+    let cgim = CGImage(
+        width: Int(width),
+        height: Int(height),
+        bitsPerComponent: Int(bitsPerComponent),
+        bitsPerPixel: Int(bitsPerPixel),
+        bytesPerRow: Int(width * UInt(MemoryLayout<pixelData>.size)),
+        space: CGColorSpaceCreateDeviceRGB(),
+        bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedFirst.rawValue),
+        provider: providerRef!,
+        decode: nil,
+        shouldInterpolate: true,
+        intent: .defaultIntent
+        )
+    return UIImage(cgImage: cgim!)
 }
