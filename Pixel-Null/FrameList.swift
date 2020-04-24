@@ -15,16 +15,24 @@ class FrameList : UICollectionView, UICollectionViewDataSource, UICollectionView
     var selectedCell : FrameCell? = nil
     
     func changeSelect(newSelect: FrameCell) {
+        let itemIndex = indexPath(for: newSelect)!.item
+        
+        canvas?.transformView.needToSave = false
+        canvas?.resetTransform()
+        
+        let itemNew = cellForItem(at: IndexPath(item: itemIndex, section: 0)) as! FrameCell
+        
         selectedCell?.setSelect(isSelect: false, animate: true)
         
-        let newCell = cellForItem(at: IndexPath(item: indexPath(for: newSelect)!.item, section: 0)) as! FrameCell
+        let newCell = cellForItem(at: IndexPath(item: indexPath(for: itemNew)!.item, section: 0)) as! FrameCell
         newCell.setSelect(isSelect: true, animate: true)
         selectedCell = newCell
         
         project.savePreview(frame: project.FrameSelected)
         
-        project.FrameSelected = indexPath(for: newSelect)!.item
+        project.FrameSelected = indexPath(for: itemNew)!.item
         project.LayerSelected = 0
+        
         layers?.updateFrame()
         canvas?.updateLayers()
     }

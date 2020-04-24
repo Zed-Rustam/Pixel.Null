@@ -16,9 +16,18 @@ class TransformView : UIView {
     var offset : CGPoint = .zero
     var activeMode : TransformMode = .none
     var startPosition : CGPoint = .zero
+        
+    var startInformation : (position : CGRect, angle : Int) = (.zero,0)
+    
     var lastSize : CGSize = .zero
     var rotateDelegate : (CGFloat)->() = {angle in}
+    var resizeDelegate : (CGSize)->() = {size in}
+    var lastToolSelected = 0
+    var lastSelect : UIImage? = nil
+    var needToSave : Bool = true
     
+    weak var canvas : ProjectCanvas? = nil
+        
     enum TransformMode {
         case move
         case scaleUpLeft
@@ -41,6 +50,7 @@ class TransformView : UIView {
         var endy : Int = 0
             
         if isSelected {
+            lastSelect = image
             let data = image.getColorsArray()
             let group = DispatchGroup()
             
@@ -99,6 +109,7 @@ class TransformView : UIView {
             
             group.wait()
         } else {
+            lastSelect = UIImage(size: image.size)
             startx = 0
             starty = 0
             endx = Int(image.size.width) - 1
@@ -106,15 +117,37 @@ class TransformView : UIView {
         }
         
         position = CGRect(x: startx, y: starty, width: endx - startx + 1, height: endy - starty + 1)
+        startInformation = (position,0)
+        
         lastSize = CGSize(width: ((position.origin.x + position.size.width / 2.0)), height: ((position.origin.y + position.size.height / 2.0)))
-
+        
+        resizeDelegate(position.size)
+        rotateDelegate(0)
+        
         setNeedsDisplay()
     }
     
     func setAngle(newAngle : CGFloat){
         angle += Int(newAngle)
+        angle = realAngle
+        
+        if angle >= 360 {
+            angle -= 360
+        }
+        
         rotateDelegate(CGFloat(angle))
         setNeedsDisplay()
+    }
+    
+    var realAngle : Int {
+        get{
+            return angle >= 0 ? angle : 360 + angle
+        }
+    }
+    var isChanged : Bool {
+        get{
+            return !(startInformation.position == position && startInformation.angle == angle)
+        }
     }
     
     func getTransformMode(location : CGPoint) {
@@ -156,7 +189,7 @@ class TransformView : UIView {
     
     func rotate(nextLocation : CGPoint) {
         angle = Int(floor(Degress(getAngle(centerPoint: CGPoint(x: offset.x + lastSize.width * scale, y: offset.y + lastSize.height * scale), touchPoint: nextLocation))))
-        rotateDelegate(CGFloat(angle))
+        rotateDelegate(CGFloat(realAngle))
         
         setNeedsDisplay()
     }
@@ -168,6 +201,7 @@ class TransformView : UIView {
         resPoint = resPoint.applying(CGAffineTransform(translationX: lastSize.width * scale + offset.x, y: lastSize.height * scale + offset.y))
         return resPoint
        }
+    
     func getRotateLocation(point : CGPoint,centerRotate : CGPoint) -> CGPoint {
         var resPoint = point
         resPoint = resPoint.applying(CGAffineTransform(translationX: -centerRotate.x, y: -centerRotate.y))
@@ -247,6 +281,8 @@ class TransformView : UIView {
         }
         
         startPosition = nowLocation
+        
+        resizeDelegate(position.size)
         setNeedsDisplay()
     }
     
@@ -312,13 +348,14 @@ class TransformView : UIView {
         
     }
     
-    override init(frame: CGRect) {
+    init(frame: CGRect, canvas c : ProjectCanvas) {
         super.init(frame: frame)
+        
+        canvas = c
         isOpaque = false
         isUserInteractionEnabled = true
-        //lastSize = position.size
         lastSize = CGSize(width: ((position.origin.x + position.width / 2.0)), height: ((position.origin.y + position.height / 2.0)))
-
+        
     }
     
     required init?(coder: NSCoder) {

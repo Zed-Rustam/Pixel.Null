@@ -18,6 +18,9 @@ class LayerList : UICollectionView, UICollectionViewDataSource, UICollectionView
     var selectedCell : LayerCell? = nil
     
     func changeSelect(newSelect: LayerCell) {
+        canvas?.transformView.needToSave = true
+        canvas?.resetTransform()
+        
         selectedCell?.setSelect(isSelect: false, animate: true)
         
         let newCell = cellForItem(at: IndexPath(item: indexPath(for: newSelect)!.item, section: 0)) as! LayerCell
@@ -29,9 +32,16 @@ class LayerList : UICollectionView, UICollectionViewDataSource, UICollectionView
     }
     
     func changeVisible(item: LayerCell) {
-        project.changeLayerVisible(layer: indexPath(for: item)!.item, isVisible: !project.layerVisible(layer: indexPath(for: item)!.item))
+        let itemIndex = indexPath(for: item)!.item
+        canvas?.resetTransform()
+        
+        let reloadItem = self.cellForItem(at: IndexPath(item: itemIndex, section: 0)) as! LayerCell
+        
+        reloadItem.preview!.setVisible(isVisible: !reloadItem.preview!.isVisible, anim: true)
+        project.changeLayerVisible(layer: indexPath(for: reloadItem)!.item, isVisible: !project.layerVisible(layer: indexPath(for: reloadItem)!.item))
+
         canvas?.updateLayers()
-        project.addAction(action: ["ToolID" : "\(Actions.layerVisibleChange.rawValue)", "frame" : "\(project.FrameSelected)", "layer" : "\(indexPath(for: item)!.item)"])
+        project.addAction(action: ["ToolID" : "\(Actions.layerVisibleChange.rawValue)", "frame" : "\(project.FrameSelected)", "layer" : "\(indexPath(for: reloadItem)!.item)"])
         
         (list?.cellForItem(at: IndexPath(item: project.FrameSelected, section: 0)) as? FrameCell)?.preview?.image = canvas?.getPreview()
         //list?.reloadData()
@@ -44,8 +54,13 @@ class LayerList : UICollectionView, UICollectionViewDataSource, UICollectionView
     func updateFrame(){
         selectedCell?.setSelect(isSelect: false, animate: false)
         selectedCell = nil
-        reloadData()
+        performBatchUpdates(nil, completion: {isEnd in
+            if isEnd {
+                self.reloadData()
+            }
+        })
     }
+    
     
     func setProject(proj : ProjectWork){
         project = proj
@@ -76,6 +91,7 @@ class LayerList : UICollectionView, UICollectionViewDataSource, UICollectionView
         cell.setVisible(visible: project.layerVisible(layer: indexPath.item))
         cell.setSelect(isSelect: (indexPath.item == project.LayerSelected) ? true : false, animate: false)
         if indexPath.item == project.LayerSelected {
+            print("was selected cell")
             selectedCell = cell
         }
         return cell
@@ -120,7 +136,6 @@ class LayerList : UICollectionView, UICollectionViewDataSource, UICollectionView
             if let item = indexPathForItem(at: sender.location(in: sender.view)) {
                 let cell = cellForItem(at: item) as! LayerCell
                 
-                cell.preview!.setVisible(isVisible: !cell.preview!.isVisible, anim: true)
                 changeVisible(item: cell)
                 
                 let impactFeedbackgenerator = UIImpactFeedbackGenerator (style: .heavy)

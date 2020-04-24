@@ -79,6 +79,9 @@ class ToolButton : UICollectionViewCell {
             button.setIcon(ic: #imageLiteral(resourceName: "undo_icon"))
             button.setIconColor(color: ProjectStyle.uiEnableColor)
             button.delegate = {[weak self] in
+                let editor = self!.delegate as! Editor
+                editor.canvas.resetTransform()
+                
                 self!.project.unDo(delegate: self!.delegate)
                 self!.barDelegate.UnDoReDoAction()
             }
@@ -86,6 +89,9 @@ class ToolButton : UICollectionViewCell {
             button.setIcon(ic: #imageLiteral(resourceName: "redo_icon"))
             button.setIconColor(color: ProjectStyle.uiEnableColor)
             button.delegate = {[weak self] in
+                let editor = self!.delegate as! Editor
+                editor.canvas.resetTransform()
+                
                 self!.project.reDo(delegate: self!.delegate)
                 self!.barDelegate.UnDoReDoAction()
             }
@@ -94,10 +100,12 @@ class ToolButton : UICollectionViewCell {
           button.setIcon(ic: #imageLiteral(resourceName: "cancel_icon"))
           button.setIconColor(color: ProjectStyle.uiEnableColor)
           button.delegate = {[weak self] in
+            let editor = self!.delegate as! Editor
+            editor.canvas.resetTransform()
+            
               self!.project.save()
               self!.project.savePreview(frame: self!.project.FrameSelected)
               
-              let editor = self!.delegate as! Editor
               editor.gallery?.updateProjectView(proj: self!.project)
               editor.dismiss(animated: true, completion: nil)
           }
@@ -166,40 +174,18 @@ class ToolButton : UICollectionViewCell {
                 //editor.canvas.reverseSelection()
             }
             
-            let angleInfo =
-                UILabel()
-                    .setTextColor(color: ProjectStyle.uiEnableColor)
-                    .setFont(font: UIFont(name: "Rubik-Bold", size: 14)!)
-                    .setText(text: "360°")
-            
-            angleInfo.translatesAutoresizingMaskIntoConstraints = false
-            angleInfo.heightAnchor.constraint(equalToConstant: 36).isActive = true
-            angleInfo.widthAnchor.constraint(equalToConstant: 42).isActive = true
-            angleInfo.textAlignment = .center
-            
-            let addAngle = CircleButton(icon: #imageLiteral(resourceName: "add_2_icon"), frame: .zero)
-            addAngle.widthAnchor.constraint(equalToConstant: 28).isActive = true
-            addAngle.heightAnchor.constraint(equalToConstant: 28).isActive = true
-            addAngle.setShadowColor(color: .clear)
-            addAngle.delegate = {
-                editor.canvas.updateTransformRotate(num: 1)
-            }
-            let deleteAngle = CircleButton(icon: #imageLiteral(resourceName: "delete_icon"), frame: .zero)
-            deleteAngle.widthAnchor.constraint(equalToConstant: 28).isActive = true
-            deleteAngle.heightAnchor.constraint(equalToConstant: 28).isActive = true
-            deleteAngle.setShadowColor(color: .clear)
-            deleteAngle.delegate = {
-                editor.canvas.updateTransformRotate(num: -1)
-            }
-            
-            
-            editor.canvas.transformView.rotateDelegate = {angle in
-                angleInfo.text = "\(Int(round(angle)))°"
+            let finish = CircleButton(icon: #imageLiteral(resourceName: "save_icon"), frame: .zero)
+            finish.widthAnchor.constraint(equalToConstant: 36).isActive = true
+            finish.heightAnchor.constraint(equalToConstant: 36).isActive = true
+            finish.setShadowColor(color: .clear)
+            finish.delegate = {[weak self] in
+                //editor.canvas.finishTransform()
+                editor.toolBar.clickTool(tool: editor.canvas.transformView.lastToolSelected)
             }
             
             
             self!.barDelegate.wasChangedTool(newTool: 2)
-            self!.barDelegate.updateButtons(btns: [flipV,flipH,block,addAngle,angleInfo,deleteAngle])
+            self!.barDelegate.updateButtons(btns: [flipV,flipH,block,finish])
             self!.button.setIconColor(color: ProjectStyle.uiSelectColor)
            }
         
@@ -290,7 +276,7 @@ class ToolButton : UICollectionViewCell {
                 put.heightAnchor.constraint(equalToConstant: 36).isActive = true
                 put.setShadowColor(color: .clear)
                
-                put.delegate = {
+                put.delegate = {[weak self] in
                     editor.canvas.selectTool(newTool: 2)
                     self!.barDelegate.wasChangedTool(newTool: 2)
                 }
@@ -376,6 +362,16 @@ class ToolButton : UICollectionViewCell {
                                             impactFeedbackgenerator.impactOccurred()
                   //(self!.delegate as! ToolSettingsDelegate).openGradientSettings()
               }
+        case 8:
+            button.setIcon(ic: #imageLiteral(resourceName: "picker_icon"))
+            button.setIconColor(color: ProjectStyle.uiEnableColor)
+            button.delegate = {[weak self] in
+                let editor = self!.delegate as! Editor
+                editor.canvas.selectTool(newTool: 8)
+                self!.barDelegate.wasChangedTool(newTool: 8)
+                self!.barDelegate.updateButtons(btns: [])
+                self!.button.setIconColor(color: ProjectStyle.uiSelectColor)
+            }
             
         default:
             break

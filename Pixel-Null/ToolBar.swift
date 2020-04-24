@@ -31,7 +31,7 @@ class ToolBar : UIView {
     }()
     
     lazy private var toolCollection : ToolBarCollection = {
-        let collection = ToolBarCollection(frame: self.bounds, tools: [-6,-3,-2,0,1,2,3,4,5,6,7,-4,-5,-1])
+        let collection = ToolBarCollection(frame: self.bounds, tools: [-6,-3,-2,0,1,2,3,4,5,6,7,8,-4,-5,-1])
         collection.barDelegate = self
         collection.translatesAutoresizingMaskIntoConstraints = false
         
@@ -231,6 +231,11 @@ extension ToolBar : ToolBarDelegate {
             nowCell.getButton().setIconColor(color: ProjectStyle.uiSelectColor)
        //}
     }
+    
+    func clickTool(tool : Int) {
+        (toolCollection.cellForItem(at: IndexPath(item: toolCollection.tools.firstIndex(of: tool)!, section: 0)) as! ToolButton).getButton().delegate()
+    }
+    
     
     func updateButtons(btns : [UIView]) {
         subBar.updateButtons(btns: btns)

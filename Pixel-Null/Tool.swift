@@ -605,7 +605,7 @@ class Erase : Tool {
 
 class Move : Tool {
     private var moveImage : UIImage!
-    private var selectionImage : UIImage!
+    var selectionImage : UIImage!
     private var offset : CGPoint = .zero
     var wasStart : Bool = false
     var realSize : CGSize = .zero
@@ -621,6 +621,7 @@ class Move : Tool {
     
     func flipImage(flipX : Bool, flipY : Bool) {
         moveImage = moveImage.flip(xFlip: flipX, yFlip: flipY)
+        selectionImage = selectionImage.flip(xFlip: flipX, yFlip: flipY)
     }
     
     func getPixelData(data : [pixelData],x : Int, y : Int) -> pixelData? {

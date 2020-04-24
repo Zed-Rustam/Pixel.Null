@@ -16,7 +16,6 @@ class LayersView : UIView {
         let btn = CircleButton(icon: #imageLiteral(resourceName: "settings_icon"), frame: .zero)
         btn.corners = 8
         btn.delegate = {[unowned self] in
-            self.project.savePreview(frame: self.project.FrameSelected)
             self.frameControlDelegate?.openFrameControl(project: self.project)
         }
         btn.translatesAutoresizingMaskIntoConstraints = false

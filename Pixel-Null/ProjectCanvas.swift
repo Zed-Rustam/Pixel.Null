@@ -45,7 +45,8 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
     private var animationDelta = 0.05
     
     weak var barDelegate : ToolBarDelegate? = nil
-        
+    weak var editor : Editor? = nil
+
     private var isScaling = false
     private var isMoving = false
     var isVerticalSymmeyry = false
@@ -113,8 +114,10 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         targetLayer = project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected).withAlpha(
             project.information.frames[project.FrameSelected].layers[project.LayerSelected].visible ? CGFloat(project.information.frames[project.FrameSelected].layers[project.LayerSelected].transparent) : 0)
         
+        selectionLayer = project.loadSelection()
+        
+        selectionImage.image = selectionLayer
         framesImage?.image = framesLayer
-
         bgImage?.image = bgLayers
         targetImage?.image = targetLayer
         fgImage?.image = fgLayers
@@ -140,6 +143,13 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         k = project.projectSize.height / project.projectSize.width
         
         bg = UIImageView(frame: frame)
+        
+        
+        selectionImage = UIImageView(frame: CGRect(x: 0, y: 0, width: project.projectSize.width, height: project.projectSize.height))
+        selectionImage.image = selectionLayer
+        selectionImage.layer.magnificationFilter = CALayerContentsFilter.nearest
+        selectionImage.contentMode = .scaleAspectFit
+        selectionImage.alpha = 0.5
         
         updateLayers()
         
@@ -174,12 +184,6 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         framesImage.layer.magnificationFilter = CALayerContentsFilter.nearest
         framesImage.contentMode = .scaleAspectFit
         
-        selectionImage = UIImageView(frame: CGRect(x: 0, y: 0, width: project.projectSize.width, height: project.projectSize.height))
-        selectionImage.image = selectionLayer
-        selectionImage.layer.magnificationFilter = CALayerContentsFilter.nearest
-        selectionImage.contentMode = .scaleAspectFit
-        selectionImage.alpha = 0.5
-        
         grid = GridView(frame: self.bounds)
         grid.gridSize = project.projectSize
         grid.alpha = 0
@@ -194,7 +198,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         
         
         
-        transformView = TransformView(frame: self.bounds)
+        transformView = TransformView(frame: self.bounds,canvas: self)
         //grid.project = project
         
         scaleRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(onScale(sender:)))
@@ -268,8 +272,10 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
     
     func transformFlip(flipX : Bool, flipY : Bool) {
         move.flipImage(flipX: flipX, flipY: flipY)
-        ActionLayer = move.drawOn(position: transformView.position, rotation:   transformView.Radians(CGFloat(transformView.angle)),rotateCenter: CGPoint(x: transformView.lastSize.width, y: transformView.lastSize.height))
+        ActionLayer = move.drawOn(position: transformView.position, rotation: transformView.Radians(CGFloat(transformView.angle)),rotateCenter: CGPoint(x: transformView.lastSize.width, y: transformView.lastSize.height))
         actionImage.image = ActionLayer
+        selectionLayer = move.drawSelectionOn(position: transformView.position, rotation: transformView.Radians(CGFloat(transformView.angle)), rotateCenter: CGPoint(x: transformView.lastSize.width, y: transformView.lastSize.height))
+        selectionImage.image = selectionLayer
     }
     
     func selectTool(newTool : Int){
@@ -291,16 +297,30 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 
                 transformView.alpha = 1
                 transformGest.isEnabled = true
+                editor?.showTransform(isShow: true)
             }
             
             if selectedTool == 2 {
+                if transformView.needToSave {
+                    finishTransform()
+                } else {
+                   transformView.needToSave = true
+                    finishTransform(needUpdateControl: false)
+                }
                 transformView.alpha = 0
                 transformGest.isEnabled = false
                 ActionLayer = UIImage(size: project.projectSize)
                 actionImage.image = ActionLayer
+                editor?.showTransform(isShow: false)
             }
             
             selectedTool = newTool
+        }
+    }
+    
+    func resetTransform() {
+        if selectedTool == 2 {
+            self.editor?.toolBar.clickTool(tool: transformView.lastToolSelected)
         }
     }
     
@@ -337,7 +357,6 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
     
 
     @objc func transformGesture(sender : UILongPressGestureRecognizer) {
-        print("some transforming")
         switch sender.state {
         case .began:
             transformView.getTransformMode(location: sender.location(in: transformView))
@@ -372,11 +391,60 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         }
     }
     
+    
+    func closeTransform(){
+        
+    }
+    
+    func finishTransform(needUpdateControl : Bool = true){
+        if transformView.isChanged {
+            print("changed")
+            let wasImg = project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected)
+            
+            targetLayer = UIImage.merge(images: [targetLayer,ActionLayer])
+            targetImage.image = targetLayer
+            
+            project.addAction(action :["ToolID" : "\(Actions.transform.rawValue)", "frame" : "\(project.FrameSelected)", "layer" : "\(project.LayerSelected)"])
+            
+            try! UIImage.merge(images: [targetLayer,ActionLayer])!.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("frame-\(project.information.frames[project.FrameSelected].frameID)").appendingPathComponent("layer-\(project.information.frames[project.FrameSelected].layers[project.LayerSelected].layerID).png"))
+            try! UIImage.merge(images: [selectionLayer])!.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("selection.png"))
+            
+            try! wasImg.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
+            try! project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID()).png"))
+            
+            try! transformView.lastSelect!.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-select-\(project.getNextActionID())-was.png"))
+            try! project.loadSelection().pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-select-\(project.getNextActionID()).png"))
+            
+            ActionLayer = UIImage(size : project.projectSize)
+            actionImage.image = ActionLayer
+            delegate?.updateCanvas()
+            
+            delegate?.updateFrame(frame: project.FrameSelected)
+            if needUpdateControl {
+                delegate?.updateLayer(layer: project.LayerSelected)
+            }
+            
+            barDelegate?.UnDoReDoAction()
+        } else {
+            print("dont changed")
+            clearTransform()
+        }
+    }
+    
+    func clearTransform() {
+        ActionLayer = move.drawOn(position: transformView.startInformation.position, rotation: 0, rotateCenter: .zero)
+        
+        targetLayer = UIImage.merge(images: [targetLayer,ActionLayer])!
+        targetImage.image = targetLayer
+        
+        ActionLayer = UIImage(size: project.projectSize)
+        actionImage.image = ActionLayer
+        editor?.showTransform(isShow: false)
+    }
+    
     @objc private func touch(sender : UILongPressGestureRecognizer) {
-
           switch sender.state {
           case .began:
-              print("was start touch")
               if (CGRect(x: symmetry.offset.x + symmetry.startX * symmetry.scale - 16, y: symmetry.offset.y - 32 - 16, width: 32, height: 32).contains(sender.location(in: self)) ||
                 CGRect(x: symmetry.offset.x + symmetry.startX * symmetry.scale - 16, y: symmetry.offset.y + project.projectSize.height * symmetry.scale + 16, width: 32, height: 24).contains(sender.location(in: self))
                 ) && isVerticalSymmeyry {
@@ -391,7 +459,6 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
             
           case .changed:
             if symmetryChangeVertical {
-                print("some actions is doing there")
                 symmetry.startX = ceil((sender.location(in: self).x - offset.x) / scale * 2) / 2.0
                 if symmetry.startX < 0 {
                     symmetry.startX = 0
@@ -401,7 +468,6 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
             }
             
             if symmetryChangeHorizontal {
-                print("some actions is doing there")
                 symmetry.startY = ceil((sender.location(in: self).y - offset.y) / scale * 2) / 2.0
                 if symmetry.startY < 0 {
                     symmetry.startY = 0
@@ -419,7 +485,6 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
               break
           }
       }
-    
     
     override func layoutSubviews() {
         let anim = CABasicAnimation(keyPath: #keyPath(CALayer.opacity))
@@ -525,8 +590,9 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
 
             default:
                 break
+            }
         }
-        }
+            
         else {
             isScaling = false
             checkActions()
