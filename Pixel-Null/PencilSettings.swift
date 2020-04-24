@@ -22,29 +22,12 @@ class PencilSettings : UIViewController {
        let btn = CircleButton(icon: #imageLiteral(resourceName: "select_icon"), frame:.zero)
         btn.setShadowColor(color: .clear)
         btn.delegate = {[weak self] in
-            self!.delegate?.setPenSettings(penSize: Int(self!.penSizeInput.filed.text ?? "1")!, penColor: self!.penColor.color, penSmooth: Int(self!.penSmoothInput.filed.text ?? "0")!, pixPerfect: self!.pixelPerfectToggle.isCheck)
+            self!.delegate?.setPenSettings(penSize: Int(self!.penSizeInput.filed.text ?? "1")!, penSmooth: Int(self!.penSmoothInput.filed.text ?? "0")!, pixPerfect: self!.pixelPerfectToggle.isCheck)
             self!.dismiss(animated: true, completion: nil)
         }
         return btn
     }()
-    
-    lazy private var penColor : ColorSelector = {
-        let color = ColorSelector()
-        color.translatesAutoresizingMaskIntoConstraints = false
-        color.widthAnchor.constraint(equalToConstant: 48).isActive = true
-        color.heightAnchor.constraint(equalToConstant: 48).isActive = true
-        color.delegate = {[weak self] in
-            let colorPicker = ColorSelectorController()
-            colorPicker.setColor(clr: color.color)
-            colorPicker.delegate = {res in
-                color.color = res
-                self!.startInfo.penColor = res
-            }
-            self!.show(colorPicker, sender: self!)
-        }
-        return color
-    }()
-    
+        
     lazy private var penSizeSlider : SliderView = {
         let slider = SliderView()
         slider.translatesAutoresizingMaskIntoConstraints = false
@@ -205,34 +188,6 @@ class PencilSettings : UIViewController {
         stack.addArrangedSubview(pixelPerfectToggle)
         return stack
     }()
-
-    lazy private var penColorTitle : UIView = {
-        let bg = UIView()
-        bg.backgroundColor =  ProjectStyle.uiDisableColor.withAlphaComponent(0.25)
-        bg.translatesAutoresizingMaskIntoConstraints = false
-        bg.setCorners(corners: 12)
-        bg.heightAnchor.constraint(equalToConstant: 48).isActive = true
-        
-        let text = UILabel()
-        text.text = "Pen color"
-        text.textAlignment = .left
-        text.font = UIFont(name:  "Rubik-Medium", size: 24)
-        text.textColor = ProjectStyle.uiEnableColor
-        text.translatesAutoresizingMaskIntoConstraints = false
-        
-        bg.addSubview(text)
-        bg.addSubview(penColor)
-        
-        text.leftAnchor.constraint(equalTo: bg.leftAnchor, constant: 12).isActive = true
-        text.topAnchor.constraint(equalTo: bg.topAnchor, constant: 0).isActive = true
-        text.bottomAnchor.constraint(equalTo: bg.bottomAnchor, constant: 0).isActive = true
-        text.rightAnchor.constraint(equalTo: bg.rightAnchor, constant: -60).isActive = true
-        
-        penColor.rightAnchor.constraint(equalTo: bg.rightAnchor, constant: 0).isActive = true
-        penColor.topAnchor.constraint(equalTo: bg.topAnchor, constant: 0).isActive = true
-
-        return bg
-    }()
     
     lazy private var colorsView : UIStackView = {
         let stack = UIStackView()
@@ -252,8 +207,6 @@ class PencilSettings : UIViewController {
         stack.setCustomSpacing(12, after: penSmoothStack)
         stack.addArrangedSubview(pixelPerfectStack)
         stack.setCustomSpacing(12, after: pixelPerfectStack)
-        stack.addArrangedSubview(penColorTitle)
-        stack.setCustomSpacing(12, after: penColorTitle)
 
         return stack
     }()
@@ -291,10 +244,10 @@ class PencilSettings : UIViewController {
     
     weak var delegate : ToolSettingsDelegate? = nil
     
-    var startInfo : (penSize : Int,penColor : UIColor, penSmooth : Int, pixelPerfect : Bool) = (1,.red,0,false)
+    var startInfo : (penSize : Int, penSmooth : Int, pixelPerfect : Bool) = (1,0,false)
     
-    func setSettings(penSize : Int, penColor : UIColor, penSmooth : Int, pixelPerfect : Bool) {
-        startInfo = (penSize,penColor, penSmooth, pixelPerfect)
+    func setSettings(penSize : Int, penSmooth : Int, pixelPerfect : Bool) {
+        startInfo = (penSize, penSmooth, pixelPerfect)
     }
     
     override func viewDidLoad() {
@@ -364,7 +317,5 @@ class PencilSettings : UIViewController {
         penSmoothInput.filed.text = "\(startInfo.penSmooth)"
         
         pixelPerfectToggle.isCheck = startInfo.pixelPerfect
-        
-        self.penColor.color = startInfo.penColor
     }
 }

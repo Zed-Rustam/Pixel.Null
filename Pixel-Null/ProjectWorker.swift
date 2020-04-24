@@ -1011,4 +1011,5 @@ enum Actions : Int {
     case layerVisibleChange = 10 //done
     case selectionChange = 11 //done
     case changeFrameDelay = 12 //done
+    case transform = 13 //done
 }

@@ -22,6 +22,11 @@ class Editor : UIViewController {
         
         return tb
     }()
+    
+    override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge {
+        return .bottom
+    }
+    
     private var longTap : UILongPressGestureRecognizer!
     weak var gallery : GalleryControl? = nil
     
@@ -38,6 +43,7 @@ class Editor : UIViewController {
     deinit {
         timer.invalidate()
     }
+    
     override func viewDidLoad() {
         control = ProjectControl(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 94 + UIApplication.shared.windows[0].safeAreaInsets.top), proj: project)
         control.updateInfo()
@@ -75,11 +81,15 @@ class Editor : UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        print("end Editor")
         NotificationCenter.default.removeObserver(self, name: UIApplication.willResignActiveNotification, object: nil)
     }
     @objc func rotate() {
 
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        toolBar.layoutIfNeeded()
+        toolBar.wasChangedTool(newTool: 0)
     }
     
     override func viewWillLayoutSubviews() {
@@ -100,6 +110,17 @@ class Editor : UIViewController {
 }
 
 extension Editor : FrameControlDelegate{
+    func openColorSelector() {
+        let pallete = ProjectPallete()
+        pallete.modalPresentationStyle = .formSheet
+        self.show(pallete, sender: nil)
+    }
+    
+    
+    func changeMainColor(color: UIColor) {
+        canvas.selectorColor = color
+    }
+    
     
     func updateSelection(select: UIImage, isSelected : Bool) {
         canvas.isSelected = isSelected
@@ -131,9 +152,7 @@ extension Editor : FrameControlDelegate{
     
     func updateLayer(layer : Int){
         UIView.animate(withDuration: 0.0, animations: {
-             //self.control.layers?.list.performBatchUpdates({
                 self.control.layers.list.reloadItems(at: [IndexPath(item: layer, section: 0)])
-             //})
         })
     }
     
@@ -215,7 +234,7 @@ extension Editor : ToolSettingsDelegate {
         let pencilSettings = PencilSettings()
         pencilSettings.modalPresentationStyle = .pageSheet
         pencilSettings.delegate = self
-        pencilSettings.setSettings(penSize: Int(canvas.pen.size), penColor: UIColor(hex: canvas.pen.color)!, penSmooth: canvas.pen.smooth, pixelPerfect: canvas.pen.pixPerfect)
+        pencilSettings.setSettings(penSize: Int(canvas.pen.size), penSmooth: canvas.pen.smooth, pixelPerfect: canvas.pen.pixPerfect)
         self.show(pencilSettings, sender: self)
     }
     func openEraseSettings() {
@@ -235,8 +254,7 @@ extension Editor : ToolSettingsDelegate {
     func setEraseSettings(eraseSize : Int) {
         canvas.erase.size = Double(eraseSize)
     }
-    func setPenSettings(penSize: Int,penColor: UIColor, penSmooth: Int, pixPerfect : Bool) {
-        canvas.pen.color = UIColor.toHex(color: penColor)
+    func setPenSettings(penSize: Int, penSmooth: Int, pixPerfect : Bool) {
         canvas.pen.size = Double(penSize)
         canvas.pen.smooth = penSmooth
         canvas.pen.pixPerfect = pixPerfect
@@ -327,6 +345,9 @@ protocol FrameControlDelegate : class {
     func deleteLayer(layer : Int)
     func deleteFrame(frame : Int)
     func updateCanvas()
+    
+    func changeMainColor(color : UIColor)
+    func openColorSelector()
 }
 
 protocol ToolSettingsDelegate : class{
@@ -334,7 +355,7 @@ protocol ToolSettingsDelegate : class{
     func openEraseSettings()
     func openGradientSettings()
     
-    func setPenSettings(penSize : Int, penColor : UIColor, penSmooth : Int, pixPerfect : Bool)
+    func setPenSettings(penSize : Int, penSmooth : Int, pixPerfect : Bool)
     func setEraseSettings(eraseSize : Int)
     func setGradientSettings(stepCount : Int,startColor : UIColor, endColor : UIColor)
 }

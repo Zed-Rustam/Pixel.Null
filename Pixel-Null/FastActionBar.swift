@@ -21,8 +21,8 @@ class FastActionBar : UIView {
         
         
         view.addSubview(stack)
-        stack.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
-        stack.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor, constant: -76).isActive = true
+        stack.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 6).isActive = true
+        stack.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor, constant: -12).isActive = true
         stack.topAnchor.constraint(equalTo: view.topAnchor, constant: 6).isActive = true
 
         return view
@@ -32,7 +32,7 @@ class FastActionBar : UIView {
         let stack = UIStackView()
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .horizontal
-        stack.alignment = .leading
+        stack.alignment = .center
         stack.distribution = .fillProportionally
         stack.heightAnchor.constraint(equalToConstant: 36).isActive = true
         stack.isUserInteractionEnabled = true

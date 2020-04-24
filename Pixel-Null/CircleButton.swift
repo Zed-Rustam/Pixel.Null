@@ -38,7 +38,7 @@ class CircleButton : UIView, UIGestureRecognizerDelegate {
             
         }
     }
-    
+
     var corners : CGFloat {
         get{
             return bg.layer.cornerRadius
@@ -63,10 +63,12 @@ class CircleButton : UIView, UIGestureRecognizerDelegate {
         icon.image = ic.withRenderingMode(.alwaysTemplate)
     }
     
-    init(icon ic : UIImage,frame: CGRect) {
+    init(icon ic : UIImage,frame: CGRect, icScale : CGFloat = 0.5) {
         //bg = UIView(frame: frame)
         
         super.init(frame: frame)
+        
+        iconScale = icScale
         
         addSubview(bg)
         addSubview(icon)

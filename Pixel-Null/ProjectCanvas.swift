@@ -18,7 +18,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
     var selectionLayer : UIImage!
     
     private var isAnimation : Bool = false
-
+    
     private var bg : UIImageView!
     private var framesImage : UIImageView!
     private var bgImage : UIImageView!
@@ -29,7 +29,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
 
     private var grid : GridView!
     private var symmetry : SymmetryView!
-    private var transformView : TransformView!
+    var transformView : TransformView!
     
     private var symmetryChangeVertical = false
     private var symmetryChangeHorizontal = false
@@ -37,6 +37,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
     private var scaleRecognizer : UIPinchGestureRecognizer!
     private var actionRecognizer : UILongPressGestureRecognizer!
     private var moveRecognizer : UIPanGestureRecognizer!
+    lazy private var transformGest = UILongPressGestureRecognizer(target: self, action: #selector(transformGesture(sender:)))
 
     private var scale : CGFloat = 1.0
     private var offset : CGPoint = .zero
@@ -51,6 +52,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
     var isHorizontalSymmetry = false
 
     var isSelected = false
+    var selectorColor : UIColor = .black
     
     var isGridVIsible : Bool {
         get{
@@ -70,6 +72,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
     var gradient = Gradient()
     var fill = Fill()
     var selection = Selection()
+    var square = Square()
 
     var selectedTool : Int = 0
     
@@ -218,11 +221,11 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         gest.minimumPressDuration = 0
         addGestureRecognizer(gest)
         
-        let transformGest = UILongPressGestureRecognizer(target: self, action: #selector(transformGesture(sender:)))
+        
         transformGest.minimumPressDuration = 0
         addGestureRecognizer(transformGest)
         transformGest.isEnabled = false
-        move.setImage(image: targetLayer, startpos: .zero, selection: nil)
+        //move.setImage(image: targetLayer, startpos: .zero, selection: nil)
         transformView.alpha = 0
         
         
@@ -259,11 +262,47 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
             }
         }
         
-        
         self.layer.masksToBounds = true
         self.translatesAutoresizingMaskIntoConstraints = false
     }
     
+    func transformFlip(flipX : Bool, flipY : Bool) {
+        move.flipImage(flipX: flipX, flipY: flipY)
+        ActionLayer = move.drawOn(position: transformView.position, rotation:   transformView.Radians(CGFloat(transformView.angle)),rotateCenter: CGPoint(x: transformView.lastSize.width, y: transformView.lastSize.height))
+        actionImage.image = ActionLayer
+    }
+    
+    func selectTool(newTool : Int){
+        if selectedTool != newTool {
+            print("newTool : \(newTool) nowTool : \(selectedTool)")
+            if newTool == 2 {
+                transformView.offset = offset
+                transformView.scale = scale
+                transformView.angle = 0
+                transformView.setRect(image: UIImage.merge(images: [selectionLayer])!, isSelected: isSelected)
+                move.setImage(image: targetLayer.inner(image: isSelected ? selectionLayer : nil).getImageFromRect(rect: transformView.position), startpos: .zero, selection: selectionLayer.getImageFromRect(rect: transformView.position),size: project.projectSize)
+                
+                //actionImage.image =
+                targetLayer = targetLayer.cut(image: isSelected ? selectionLayer : nil)
+                targetImage.image = targetLayer
+                
+                ActionLayer = move.drawOn(position: transformView.position, rotation: transformView.Radians(CGFloat(transformView.angle)),rotateCenter: CGPoint(x: transformView.lastSize.width, y: transformView.lastSize.height))
+                actionImage.image = ActionLayer
+                
+                transformView.alpha = 1
+                transformGest.isEnabled = true
+            }
+            
+            if selectedTool == 2 {
+                transformView.alpha = 0
+                transformGest.isEnabled = false
+                ActionLayer = UIImage(size: project.projectSize)
+                actionImage.image = ActionLayer
+            }
+            
+            selectedTool = newTool
+        }
+    }
     
     func startAnimationMode(){
         bgImage.image = nil
@@ -286,7 +325,19 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         bgImage.image = img
     }
     
-    @objc private func transformGesture(sender : UILongPressGestureRecognizer) {
+    func updateTransformRotate(num : Int) {
+        transformView.setAngle(newAngle: CGFloat(num))
+        
+        ActionLayer = move.drawOn(position: transformView.position, rotation: transformView.Radians(CGFloat(transformView.angle)),rotateCenter: CGPoint(x: transformView.lastSize.width, y: transformView.lastSize.height))
+        actionImage.image = ActionLayer
+        
+        selectionLayer = move.drawSelectionOn(position: transformView.position, rotation: transformView.Radians(CGFloat(transformView.angle)),rotateCenter: CGPoint(x: transformView.lastSize.width, y: transformView.lastSize.height))
+        selectionImage.image = selectionLayer
+    }
+    
+
+    @objc func transformGesture(sender : UILongPressGestureRecognizer) {
+        print("some transforming")
         switch sender.state {
         case .began:
             transformView.getTransformMode(location: sender.location(in: transformView))
@@ -301,11 +352,12 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
             default:
                 break
             }
-           // case .changed:
 
-            ActionLayer = move.drawOn(position: transformView.position, rotation: transformView.angle,rotateCenter: CGPoint(x: transformView.lastSize.width, y: transformView.lastSize.height))
+            ActionLayer = move.drawOn(position: transformView.position, rotation: transformView.Radians(CGFloat(transformView.angle)),rotateCenter: CGPoint(x: transformView.lastSize.width, y: transformView.lastSize.height))
             actionImage.image = ActionLayer
-                
+            
+            selectionLayer = move.drawSelectionOn(position: transformView.position, rotation: transformView.Radians(CGFloat(transformView.angle)),rotateCenter: CGPoint(x: transformView.lastSize.width, y: transformView.lastSize.height))
+            selectionImage.image = selectionLayer
             
         case .ended:
             switch transformView.activeMode {
@@ -377,7 +429,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         anim.autoreverses = true
         anim.repeatCount = .infinity
         anim.timingFunction = .init(name: .easeInEaseOut)
-        
+
         selectionImage.layer.add(anim, forKey: "test")
     }
     
@@ -648,14 +700,14 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 location.x = CGFloat(floor(location.x))
                 location.y = CGFloat(floor(location.y))
                 pen.setStartPoint(point: location)
-                ActionLayer = pen.drawOn(image: ActionLayer, point: location,selection: isSelected ? selectionLayer : nil, symmetry: getSymmetry())
-                ActionLayer = pen.drawOn(image: ActionLayer, point: location,selection: isSelected ? selectionLayer : nil, symmetry: getSymmetry())
+                ActionLayer = pen.drawOn(image: ActionLayer, point: location,selection: isSelected ? selectionLayer : nil, symmetry: getSymmetry(),color: selectorColor)
+                ActionLayer = pen.drawOn(image: ActionLayer, point: location,selection: isSelected ? selectionLayer : nil, symmetry: getSymmetry(), color: selectorColor)
                 actionImage.image = ActionLayer
             case .changed:
                 location.x = CGFloat(floor(location.x))
                 location.y = CGFloat(floor(location.y))
 
-                ActionLayer = pen.drawOn(image: ActionLayer, point: location,selection: isSelected ? selectionLayer : nil, symmetry: getSymmetry())
+                ActionLayer = pen.drawOn(image: ActionLayer, point: location,selection: isSelected ? selectionLayer : nil, symmetry: getSymmetry(), color: selectorColor)
                 
                 actionImage.image = ActionLayer
             case .ended:
@@ -784,7 +836,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 location.x = CGFloat(floor(location.x))
                 location.y = CGFloat(floor(location.y))
                 if actionImage.bounds.contains(location) {
-                    ActionLayer = fill.drawOn(image: targetLayer, point: location,selection: isSelected ? selectionLayer : nil)
+                    ActionLayer = fill.drawOn(image: targetLayer, point: location,selection: isSelected ? selectionLayer : nil, fillColor: selectorColor)
                     
                     let wasImg = project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected)
                     
@@ -851,6 +903,51 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
             case .cancelled:
                 selectionLayer = project.loadSelection()
                 selectionImage.image = selectionLayer
+            default:
+                break
+            }
+            
+        case 7:
+            switch sender.state {
+            case .began:
+                location.x = CGFloat(floor(location.x))
+                location.y = CGFloat(floor(location.y))
+                square.setStartPoint(point: location)
+                ActionLayer = square.drawOn(image: ActionLayer, point: location, color: selectorColor, symmetry: getSymmetry(), selection: isSelected ? selectionLayer : nil)
+                actionImage.image = ActionLayer
+            case .changed:
+                location.x = CGFloat(floor(location.x))
+                location.y = CGFloat(floor(location.y))
+
+                ActionLayer = square.drawOn(image: ActionLayer, point: location, color: selectorColor, symmetry: getSymmetry(), selection: isSelected ? selectionLayer : nil)
+                
+                actionImage.image = ActionLayer
+            case .ended:
+                let wasImg = project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected)
+                          
+                targetLayer = UIImage.merge(images: [targetLayer,ActionLayer])
+                targetImage.image = targetLayer
+                
+                project.addAction(action :["ToolID" : "\(Actions.drawing.rawValue)", "frame" : "\(project.FrameSelected)", "layer" : "\(project.LayerSelected)"])
+                
+                try! UIImage.merge(images: [project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected),ActionLayer])!.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("frame-\(project.information.frames[project.FrameSelected].frameID)").appendingPathComponent("layer-\(project.information.frames[project.FrameSelected].layers[project.LayerSelected].layerID).png"))
+                
+                try! wasImg.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
+                
+                try! project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID()).png"))
+                
+                ActionLayer = UIImage(size : project.projectSize)
+                actionImage.image = ActionLayer
+                
+                delegate?.updateFrame(frame: project.FrameSelected)
+                delegate?.updateLayer(layer: project.LayerSelected)
+                
+                barDelegate?.UnDoReDoAction()
+
+            case .cancelled:
+                ActionLayer = UIImage(size : project.projectSize)
+                actionImage.image = ActionLayer
+                print("was cancel")
             default:
                 break
             }

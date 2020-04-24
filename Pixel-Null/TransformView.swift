@@ -9,13 +9,15 @@
 import UIKit
 
 class TransformView : UIView {
+    
     var scale : CGFloat = 1
-    var angle : CGFloat = 0
+    var angle : Int = 0
     var position : CGRect = CGRect(x: 0, y: 0, width: 32, height: 32)
     var offset : CGPoint = .zero
     var activeMode : TransformMode = .none
     var startPosition : CGPoint = .zero
     var lastSize : CGSize = .zero
+    var rotateDelegate : (CGFloat)->() = {angle in}
     
     enum TransformMode {
         case move
@@ -29,6 +31,90 @@ class TransformView : UIView {
         case down
         case rotate
         case none
+    }
+    
+    func setRect(image : UIImage, isSelected : Bool) {
+        
+        var startx : Int = 0
+        var starty : Int = 0
+        var endx : Int = 0
+        var endy : Int = 0
+            
+        if isSelected {
+            let data = image.getColorsArray()
+            let group = DispatchGroup()
+            
+            group.enter()
+            group.enter()
+            group.enter()
+            group.enter()
+
+            DispatchQueue.global(qos: .userInteractive).async {
+                outFor : for y in 0..<Int(image.size.height) {
+                    for x in 0..<Int(image.size.width) {
+                        if data[Int(image.size.width) * y + x].a > 0 {
+                            starty = y
+                            break outFor
+                        }
+                    }
+                }
+                group.leave()
+            }
+            
+            DispatchQueue.global(qos: .userInteractive).async {
+                outFor : for y in (0..<Int(image.size.height)).reversed() {
+                    for x in 0..<Int(image.size.width) {
+                        if data[Int(image.size.width) * y + x].a > 0 {
+                            endy = y
+                            break outFor
+                        }
+                    }
+                }
+                group.leave()
+            }
+            
+            DispatchQueue.global(qos: .userInteractive).async {
+                outFor : for x in 0..<Int(image.size.width) {
+                    for y in 0..<Int(image.size.height) {
+                        if data[Int(image.size.width) * y + x].a > 0 {
+                            startx = x
+                            break outFor
+                        }
+                    }
+                }
+                group.leave()
+            }
+            
+            DispatchQueue.global(qos: .userInteractive).async {
+                outFor : for x in (0..<Int(image.size.width)).reversed() {
+                    for y in 0..<Int(image.size.height) {
+                        if data[Int(image.size.width) * y + x].a > 0 {
+                            endx = x
+                            break outFor
+                        }
+                    }
+                }
+                group.leave()
+            }
+            
+            group.wait()
+        } else {
+            startx = 0
+            starty = 0
+            endx = Int(image.size.width) - 1
+            endy = Int(image.size.height) - 1
+        }
+        
+        position = CGRect(x: startx, y: starty, width: endx - startx + 1, height: endy - starty + 1)
+        lastSize = CGSize(width: ((position.origin.x + position.size.width / 2.0)), height: ((position.origin.y + position.size.height / 2.0)))
+
+        setNeedsDisplay()
+    }
+    
+    func setAngle(newAngle : CGFloat){
+        angle += Int(newAngle)
+        rotateDelegate(CGFloat(angle))
+        setNeedsDisplay()
     }
     
     func getTransformMode(location : CGPoint) {
@@ -69,21 +155,23 @@ class TransformView : UIView {
     }
     
     func rotate(nextLocation : CGPoint) {
-        angle = getAngle(centerPoint: CGPoint(x: offset.x + lastSize.width * scale, y: offset.y + lastSize.height * scale), touchPoint: nextLocation)
+        angle = Int(floor(Degress(getAngle(centerPoint: CGPoint(x: offset.x + lastSize.width * scale, y: offset.y + lastSize.height * scale), touchPoint: nextLocation))))
+        rotateDelegate(CGFloat(angle))
+        
         setNeedsDisplay()
     }
     
     func getResultLocation(point : CGPoint) -> CGPoint {
         var resPoint = point
         resPoint = resPoint.applying(CGAffineTransform(translationX: -lastSize.width * scale - offset.x, y: -lastSize.height * scale - offset.y))
-        resPoint = resPoint.applying(CGAffineTransform(rotationAngle: -angle))
+        resPoint = resPoint.applying(CGAffineTransform(rotationAngle: Radians(CGFloat(-angle))))
         resPoint = resPoint.applying(CGAffineTransform(translationX: lastSize.width * scale + offset.x, y: lastSize.height * scale + offset.y))
         return resPoint
        }
     func getRotateLocation(point : CGPoint,centerRotate : CGPoint) -> CGPoint {
         var resPoint = point
         resPoint = resPoint.applying(CGAffineTransform(translationX: -centerRotate.x, y: -centerRotate.y))
-        resPoint = resPoint.applying(CGAffineTransform(rotationAngle: angle))
+        resPoint = resPoint.applying(CGAffineTransform(rotationAngle: Radians(CGFloat(angle))))
         resPoint = resPoint.applying(CGAffineTransform(translationX: centerRotate.x, y: centerRotate.y))
      return resPoint
     }
@@ -97,8 +185,9 @@ class TransformView : UIView {
         position.origin.y += nowLocation.y - startPosition.y
         
         lastSize = CGSize(width: ((position.origin.x + position.size.width / 2.0)), height: ((position.origin.y + position.size.height / 2.0)))
-
         startPosition = nowLocation
+        
+        
         setNeedsDisplay()
     }
     
@@ -182,7 +271,7 @@ class TransformView : UIView {
         let context = UIGraphicsGetCurrentContext()!
         context.clear(self.bounds)
         context.translateBy(x: offset.x + lastSize.width * scale, y: offset.y + lastSize.height * scale)
-        context.rotate(by: angle)
+        context.rotate(by: Radians(CGFloat(angle)))
         context.translateBy(x: -lastSize.width * scale - offset.x, y: -lastSize.height * scale - offset.y)
 
         context.setStrokeColor(ProjectStyle.uiSelectColor.cgColor)

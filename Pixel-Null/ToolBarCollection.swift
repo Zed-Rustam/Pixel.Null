@@ -20,7 +20,8 @@ class ToolBarCollection : UICollectionView {
         
         super.init(frame: frame, collectionViewLayout: layout)
         register(ToolButton.self, forCellWithReuseIdentifier: "Tool")
-        
+        register(SelectionButton.self, forCellWithReuseIdentifier: "Color")
+
         self.delegate = self
         self.dataSource = self
         
@@ -34,8 +35,8 @@ class ToolBarCollection : UICollectionView {
     }
 }
 
-extension ToolBarCollection : UICollectionViewDelegate {
-
+extension ToolBarCollection : UICollectionViewDelegate{
+    
 }
 
 extension ToolBarCollection : UICollectionViewDataSource {
@@ -44,12 +45,22 @@ extension ToolBarCollection : UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Tool", for: indexPath) as! ToolButton
-        cell.setToolID(id: tools[indexPath.item])
-        cell.project = project
-        cell.delegate = editorDelegate
-        cell.barDelegate = barDelegate
-        return cell
+        if tools[indexPath.item] == -6 {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Color", for: indexPath) as! SelectionButton
+            cell.delegate = editorDelegate
+               //cell.setToolID(id: tools[indexPath.item])
+               //cell.project = project
+               //cell.delegate = editorDelegate
+               //cell.barDelegate = barDelegate
+               return cell
+        } else {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Tool", for: indexPath) as! ToolButton
+            cell.setToolID(id: tools[indexPath.item])
+            cell.project = project
+            cell.delegate = editorDelegate
+            cell.barDelegate = barDelegate
+            return cell
+        }
     }
 }
 

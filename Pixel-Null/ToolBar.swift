@@ -31,7 +31,7 @@ class ToolBar : UIView {
     }()
     
     lazy private var toolCollection : ToolBarCollection = {
-        let collection = ToolBarCollection(frame: self.bounds, tools: [-3,-2,0,1,2,3,4,5,6,7,-4,-5,-1])
+        let collection = ToolBarCollection(frame: self.bounds, tools: [-6,-3,-2,0,1,2,3,4,5,6,7,-4,-5,-1])
         collection.barDelegate = self
         collection.translatesAutoresizingMaskIntoConstraints = false
         
@@ -96,7 +96,7 @@ class ToolBar : UIView {
         return topview
     }()
     
-    private var nowSelected = 2
+    private var nowSelected = 0
     weak var project : ProjectWork!
     weak var delegate : FrameControlDelegate!
     
@@ -118,35 +118,37 @@ class ToolBar : UIView {
                 self.frame.origin.y += 42
             })
         }
-        
         UIView.animate(withDuration: 0.25, animations: {
             self.hideItems()
         })
-        
     }
     func hideItems() {
         if isHide {
             print("start hidding")
-            for i in (toolCollection.collectionViewLayout as! ToolBarLayout).columnsCount..<toolCollection.tools.count {
-                toolCollection.cellForItem(at: IndexPath(item: i, section: 0))?.alpha = 0
+            if (toolCollection.collectionViewLayout as! ToolBarLayout).columnsCount < toolCollection.tools.count{
+                for i in (toolCollection.collectionViewLayout as! ToolBarLayout).columnsCount..<toolCollection.tools.count {
+                    toolCollection.cellForItem(at: IndexPath(item: i, section: 0))?.alpha = 0
+                }
             }
-        } else {
-            for i in (toolCollection.collectionViewLayout as! ToolBarLayout).columnsCount..<toolCollection.tools.count {
-                toolCollection.cellForItem(at: IndexPath(item: i, section: 0))?.alpha = 1
+    } else {
+            if (toolCollection.collectionViewLayout as! ToolBarLayout).columnsCount < toolCollection.tools.count {
+                for i in (toolCollection.collectionViewLayout as! ToolBarLayout).columnsCount..<toolCollection.tools.count {
+                    toolCollection.cellForItem(at: IndexPath(item: i, section: 0))?.alpha = 1
+                }
             }
         }
     }
     
     func animationStart(){
         for i in 0..<toolCollection.tools.count {
-            (toolCollection.cellForItem(at: IndexPath(item: i, section: 0)) as! ToolButton).getButton().isEnabled = false
+            (toolCollection.cellForItem(at: IndexPath(item: i, section: 0)) as? ToolButton)?.getButton().isEnabled = false
             swipeView.backgroundColor = ProjectStyle.uiDisableColor
         }
         subBar.updateButtons(btns: [])
     }
     func animationStop(){
         for i in 0..<toolCollection.tools.count {
-            (toolCollection.cellForItem(at: IndexPath(item: i, section: 0)) as! ToolButton).getButton().isEnabled = true
+            (toolCollection.cellForItem(at: IndexPath(item: i, section: 0)) as? ToolButton)?.getButton().isEnabled = true
             swipeView.backgroundColor = ProjectStyle.uiEnableColor
         }
         (toolCollection.cellForItem(at: IndexPath(item: toolCollection.tools.firstIndex(of: nowSelected)!, section: 0)) as! ToolButton).getButton().delegate()
@@ -181,10 +183,10 @@ class ToolBar : UIView {
         
         self.heightAnchor.constraint(equalTo: bg.heightAnchor, constant: 48).isActive = true
         
+        
         addGestureRecognizer(swipeUpGesture)
         addGestureRecognizer(swipeDownGesture)
     }
-    
     
     func setData(project proj : ProjectWork, delegate del : FrameControlDelegate){
         project = proj

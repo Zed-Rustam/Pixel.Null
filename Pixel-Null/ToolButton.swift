@@ -36,7 +36,7 @@ class ToolButton : UICollectionViewCell {
             button.setIconColor(color: ProjectStyle.uiEnableColor)
             button.delegate = {[weak self] in
                 let editor = self!.delegate as! Editor
-                editor.canvas.selectedTool = -5
+                editor.canvas.selectTool(newTool: -5)
                 self!.barDelegate.wasChangedTool(newTool: -5)
                 
                 let btnVert = CircleButton(icon: #imageLiteral(resourceName: "symmetry_vertical_icon"), frame: .zero)
@@ -106,7 +106,7 @@ class ToolButton : UICollectionViewCell {
             button.setIconColor(color: ProjectStyle.uiEnableColor)
             button.delegate = {[weak self] in
                 let editor = self!.delegate as! Editor
-                editor.canvas.selectedTool = 0
+                editor.canvas.selectTool(newTool: 0)
                 self!.barDelegate.wasChangedTool(newTool: 0)
                 self!.barDelegate.updateButtons(btns: [])
                 self!.button.setIconColor(color: ProjectStyle.uiSelectColor)
@@ -123,7 +123,7 @@ class ToolButton : UICollectionViewCell {
             button.setIconColor(color: ProjectStyle.uiEnableColor)
             button.delegate = {[weak self] in
                 let editor = self!.delegate as! Editor
-                editor.canvas.selectedTool = 1
+                editor.canvas.selectTool(newTool: 1)
                 self!.barDelegate.wasChangedTool(newTool: 1)
                 self!.barDelegate.updateButtons(btns: [])
                 self!.button.setIconColor(color: ProjectStyle.uiSelectColor)
@@ -140,18 +140,75 @@ class ToolButton : UICollectionViewCell {
            button.setIconColor(color: ProjectStyle.uiEnableColor)
            button.delegate = {[weak self] in
                let editor = self!.delegate as! Editor
-               editor.canvas.selectedTool = 2
+               editor.canvas.selectTool(newTool: 2)
+            
+            let flipV = CircleButton(icon: #imageLiteral(resourceName: "flip_horizontal_icon"), frame: .zero)
+            flipV.widthAnchor.constraint(equalToConstant: 36).isActive = true
+            flipV.heightAnchor.constraint(equalToConstant: 36).isActive = true
+            flipV.setShadowColor(color: .clear)
+            flipV.delegate = {
+                editor.canvas.transformFlip(flipX: true, flipY: false)
+            }
+            
+            let flipH = CircleButton(icon: #imageLiteral(resourceName: "flip_vertical_icon"), frame: .zero)
+            flipH.widthAnchor.constraint(equalToConstant: 36).isActive = true
+            flipH.heightAnchor.constraint(equalToConstant: 36).isActive = true
+            flipH.setShadowColor(color: .clear)
+            flipH.delegate = {
+                editor.canvas.transformFlip(flipX: false, flipY: true)
+            }
+            
+            let block = CircleButton(icon: #imageLiteral(resourceName: "block_icon"), frame: .zero)
+            block.widthAnchor.constraint(equalToConstant: 36).isActive = true
+            block.heightAnchor.constraint(equalToConstant: 36).isActive = true
+            block.setShadowColor(color: .clear)
+            block.delegate = {
+                //editor.canvas.reverseSelection()
+            }
+            
+            let angleInfo =
+                UILabel()
+                    .setTextColor(color: ProjectStyle.uiEnableColor)
+                    .setFont(font: UIFont(name: "Rubik-Bold", size: 14)!)
+                    .setText(text: "360°")
+            
+            angleInfo.translatesAutoresizingMaskIntoConstraints = false
+            angleInfo.heightAnchor.constraint(equalToConstant: 36).isActive = true
+            angleInfo.widthAnchor.constraint(equalToConstant: 42).isActive = true
+            angleInfo.textAlignment = .center
+            
+            let addAngle = CircleButton(icon: #imageLiteral(resourceName: "add_2_icon"), frame: .zero)
+            addAngle.widthAnchor.constraint(equalToConstant: 28).isActive = true
+            addAngle.heightAnchor.constraint(equalToConstant: 28).isActive = true
+            addAngle.setShadowColor(color: .clear)
+            addAngle.delegate = {
+                editor.canvas.updateTransformRotate(num: 1)
+            }
+            let deleteAngle = CircleButton(icon: #imageLiteral(resourceName: "delete_icon"), frame: .zero)
+            deleteAngle.widthAnchor.constraint(equalToConstant: 28).isActive = true
+            deleteAngle.heightAnchor.constraint(equalToConstant: 28).isActive = true
+            deleteAngle.setShadowColor(color: .clear)
+            deleteAngle.delegate = {
+                editor.canvas.updateTransformRotate(num: -1)
+            }
+            
+            
+            editor.canvas.transformView.rotateDelegate = {angle in
+                angleInfo.text = "\(Int(round(angle)))°"
+            }
+            
+            
             self!.barDelegate.wasChangedTool(newTool: 2)
-            self!.barDelegate.updateButtons(btns: [])
+            self!.barDelegate.updateButtons(btns: [flipV,flipH,block,addAngle,angleInfo,deleteAngle])
             self!.button.setIconColor(color: ProjectStyle.uiSelectColor)
            }
-            
+        
         case 3:
           button.setIcon(ic: #imageLiteral(resourceName: "gradient_icon"))
           button.setIconColor(color: ProjectStyle.uiEnableColor)
           button.delegate = {[weak self] in
               let editor = self!.delegate as! Editor
-              editor.canvas.selectedTool = 3
+              editor.canvas.selectTool(newTool: 3)
             self!.barDelegate.wasChangedTool(newTool: 3)
             self!.barDelegate.updateButtons(btns: [])
             self!.button.setIconColor(color: ProjectStyle.uiSelectColor)
@@ -162,24 +219,23 @@ class ToolButton : UICollectionViewCell {
                                           impactFeedbackgenerator.impactOccurred()
                 (self!.delegate as! ToolSettingsDelegate).openGradientSettings()
             }
-            
+        
         case 4:
             button.setIcon(ic: #imageLiteral(resourceName: "fill_icon"))
             button.setIconColor(color: ProjectStyle.uiEnableColor)
             button.delegate = {[weak self] in
                 let editor = self!.delegate as! Editor
-                editor.canvas.selectedTool = 4
+                editor.canvas.selectTool(newTool: 4)
                 self!.barDelegate.wasChangedTool(newTool: 4)
                 self!.barDelegate.updateButtons(btns: [])
                 self!.button.setIconColor(color: ProjectStyle.uiSelectColor)
             }
-            button.longPressDelegate = {//[weak self] in
+            button.longPressDelegate = {
                   let impactFeedbackgenerator = UIImpactFeedbackGenerator (style: .heavy)
                                             impactFeedbackgenerator.prepare()
                                             impactFeedbackgenerator.impactOccurred()
-                 // (self!.delegate as! ToolSettingsDelegate).openGradientSettings()
-              }
-            
+            }
+
         case 5:
             button.setIcon(ic: #imageLiteral(resourceName: "grid_icon"))
             button.setIconColor(color: ProjectStyle.uiEnableColor)
@@ -199,7 +255,7 @@ class ToolButton : UICollectionViewCell {
 
             button.delegate = {[weak self] in
                 let editor = self!.delegate as! Editor
-                editor.canvas.selectedTool = 6
+                editor.canvas.selectTool(newTool: 6)
                 self!.barDelegate.wasChangedTool(newTool: 6)
                 
                 let reverse = CircleButton(icon: #imageLiteral(resourceName: "reverse_selection_icon"), frame: .zero)
@@ -235,7 +291,7 @@ class ToolButton : UICollectionViewCell {
                 put.setShadowColor(color: .clear)
                
                 put.delegate = {
-                    editor.canvas.selectedTool = 2
+                    editor.canvas.selectTool(newTool: 2)
                     self!.barDelegate.wasChangedTool(newTool: 2)
                 }
                 
@@ -249,11 +305,71 @@ class ToolButton : UICollectionViewCell {
             button.setIconColor(color: ProjectStyle.uiEnableColor)
             button.delegate = {[weak self] in
                 let editor = self!.delegate as! Editor
-                editor.canvas.selectedTool = 7
-              self!.barDelegate.wasChangedTool(newTool: 7)
-              self!.barDelegate.updateButtons(btns: [])
-              self!.button.setIconColor(color: ProjectStyle.uiSelectColor)
+                editor.canvas.selectTool(newTool: 7)
+                self!.barDelegate.wasChangedTool(newTool: 7)
+                self!.button.setIconColor(color: ProjectStyle.uiSelectColor)
+                
+                let rect = CircleButton(icon: #imageLiteral(resourceName: "rectangle_icon"), frame: .zero)
+                rect.widthAnchor.constraint(equalToConstant: 36).isActive = true
+                rect.heightAnchor.constraint(equalToConstant: 36).isActive = true
+                rect.setShadowColor(color: .clear)
+                
+                let oval = CircleButton(icon: #imageLiteral(resourceName: "circle_icon"), frame: .zero)
+                oval.widthAnchor.constraint(equalToConstant: 36).isActive = true
+                oval.heightAnchor.constraint(equalToConstant: 36).isActive = true
+                oval.setShadowColor(color: .clear)
+                
+                let line = CircleButton(icon: #imageLiteral(resourceName: "line_icon"), frame: .zero)
+                line.widthAnchor.constraint(equalToConstant: 36).isActive = true
+                line.heightAnchor.constraint(equalToConstant: 36).isActive = true
+                line.setShadowColor(color: .clear)
+                
+                let block = CircleButton(icon: editor.canvas.square.isFixed ? #imageLiteral(resourceName: "block_icon") : #imageLiteral(resourceName: "unblock_icon"), frame: .zero)
+                block.setIconColor(color: editor.canvas.square.isFixed ? ProjectStyle.uiSelectColor : ProjectStyle.uiEnableColor)
+                block.widthAnchor.constraint(equalToConstant: 36).isActive = true
+                block.heightAnchor.constraint(equalToConstant: 36).isActive = true
+                block.setShadowColor(color: .clear)
+                
+                block.delegate = {
+                    editor.canvas.square.isFixed.toggle()
+                    block.setIcon(ic: editor.canvas.square.isFixed ? #imageLiteral(resourceName: "block_icon") : #imageLiteral(resourceName: "unblock_icon"))
+                    block.setIconColor(color: editor.canvas.square.isFixed ? ProjectStyle.uiSelectColor : ProjectStyle.uiEnableColor)
+                }
+                
+                switch editor.canvas.square.squareType {
+                case .rectangle:
+                    rect.setIconColor(color: ProjectStyle.uiSelectColor)
+                case .oval:
+                    oval.setIconColor(color: ProjectStyle.uiSelectColor)
+                case .line:
+                    line.setIconColor(color: ProjectStyle.uiSelectColor)
+                }
+                
+                line.delegate = {
+                    line.setIconColor(color: ProjectStyle.uiSelectColor)
+                    rect.setIconColor(color: ProjectStyle.uiEnableColor)
+                    oval.setIconColor(color: ProjectStyle.uiEnableColor)
+
+                    editor.canvas.square.squareType = .line
+                }
+                oval.delegate = {
+                    line.setIconColor(color: ProjectStyle.uiEnableColor)
+                    rect.setIconColor(color: ProjectStyle.uiEnableColor)
+                    oval.setIconColor(color: ProjectStyle.uiSelectColor)
+                    
+                    editor.canvas.square.squareType = .oval
+                }
+                rect.delegate = {
+                    line.setIconColor(color: ProjectStyle.uiEnableColor)
+                    rect.setIconColor(color: ProjectStyle.uiSelectColor)
+                    oval.setIconColor(color: ProjectStyle.uiEnableColor)
+                    
+                    editor.canvas.square.squareType = .rectangle
+                }
+
+                self!.barDelegate.updateButtons(btns: [rect,oval,line,block])
             }
+            
             button.longPressDelegate = {[weak self] in
                   let impactFeedbackgenerator = UIImpactFeedbackGenerator (style: .heavy)
                                             impactFeedbackgenerator.prepare()
@@ -264,5 +380,40 @@ class ToolButton : UICollectionViewCell {
         default:
             break
         }
+    }
+}
+
+class SelectionButton : UICollectionViewCell, UIGestureRecognizerDelegate {
+    weak var delegate : FrameControlDelegate? = nil
+    lazy var colorSelector : ColorSelector = {
+        let color = ColorSelector()
+        color.translatesAutoresizingMaskIntoConstraints = false
+        color.widthAnchor.constraint(equalToConstant: 24).isActive = true
+        color.heightAnchor.constraint(equalToConstant: 24).isActive = true
+        color.color = .black
+        color.background.setCorners(corners: 6)
+        //color.setCorners(corners: 0)
+        color.delegate = {[weak self] in
+            self!.delegate?.openColorSelector()
+        }
+        return color
+    }()
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        isUserInteractionEnabled = true
+        isExclusiveTouch = true
+        
+        contentView.addSubview(colorSelector)
+        colorSelector.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 6).isActive = true
+        colorSelector.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6).isActive = true
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }

@@ -33,7 +33,7 @@ extension UIColor{
     
     func getPixelData() -> pixelData {
         let clr = CIColor(color: self)
-        return pixelData(a: UInt8(clr.alpha * 255),b: UInt8(clr.red * 255), g: UInt8(clr.green * 255), r: UInt8(clr.blue * 255))
+        return pixelData(a: UInt8(clr.alpha * 255),r: UInt8(clr.red * 255), g: UInt8(clr.green * 255), b: UInt8(clr.blue * 255))
     }
     
     static func random() -> UIColor {

@@ -10,6 +10,7 @@ import UIKit
 
 class MainViewController: UIViewController {
     var controllers : [UIViewController] = []
+    
     lazy var nav : NavigationView = {
         let navig = NavigationView(ics:[#imageLiteral(resourceName: "book_icon"),#imageLiteral(resourceName: "news_icon"),#imageLiteral(resourceName: "gallery_icon"),#imageLiteral(resourceName: "pallete_icon"),#imageLiteral(resourceName: "settings_icon")])
         navig.translatesAutoresizingMaskIntoConstraints = false

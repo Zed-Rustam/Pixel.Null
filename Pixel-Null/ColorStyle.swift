@@ -90,9 +90,9 @@ extension UIImage {
 
         let pixelInfo: Int = ((Int(self.size.width) * Int(point.y)) + Int(point.x)) * 4
 
-        let r = CGFloat(data[pixelInfo]) / CGFloat(255.0)
+        let b = CGFloat(data[pixelInfo]) / CGFloat(255.0)
         let g = CGFloat(data[pixelInfo+1]) / CGFloat(255.0)
-        let b = CGFloat(data[pixelInfo+2]) / CGFloat(255.0)
+        let r = CGFloat(data[pixelInfo+2]) / CGFloat(255.0)
         let a = CGFloat(data[pixelInfo+3]) / CGFloat(255.0)
 
         //print("red \(r) gereen \(g) blue \(b) alpha \(a)")
@@ -105,12 +105,25 @@ extension UIImage {
         let data: UnsafePointer<UInt8> = CFDataGetBytePtr(self.cgImage!.dataProvider!.data)
         
         for i in 0..<Int(self.size.width * self.size.height) {
-            array.append(pixelData(a: data[i * 4 + 3],b: data[i * 4 + 2], g: data[i * 4 + 1], r: data[i * 4]))
+            array.append(pixelData(a: data[i * 4 + 3],
+                                   r: data[i * 4 + 2],
+                                   g: data[i * 4 + 1],
+                                   b: data[i * 4]))
         }
         
         return array
     }
     
+    func getImageFromRect(rect : CGRect) -> UIImage {
+        UIGraphicsBeginImageContext(rect.size)
+        
+        self.draw(at: CGPoint(x: -rect.origin.x, y: -rect.origin.y))
+        
+        let resImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        
+        return resImage
+    }
     static func animatedGif(from images: [UIImage]) {
         let fileProperties: CFDictionary = [kCGImagePropertyGIFDictionary as String: [kCGImagePropertyGIFLoopCount as String: 0]]  as CFDictionary
         let frameProperties: CFDictionary = [kCGImagePropertyGIFDictionary as String: [(kCGImagePropertyGIFDelayTime as String): 0.1]] as CFDictionary
@@ -330,4 +343,35 @@ extension UIImage {
             return UIImage(size: self.size)!
         }
     }
+    
+    func inner(image : UIImage?) -> UIImage {
+        if image != nil {
+        UIGraphicsBeginImageContextWithOptions(image!.size, false, 1)
+            self.draw(at: .zero)
+            image!.draw(at: .zero, blendMode: .destinationIn, alpha: 1)
+        let moveImg = UIGraphicsGetImageFromCurrentImageContext()
+
+        UIGraphicsEndImageContext()
+        
+        return moveImg!
+        } else {
+            return self
+        }
+    }
+    
+    func flip(xFlip : Bool, yFlip : Bool) -> UIImage {
+        UIGraphicsBeginImageContext(self.size)
+        let context = UIGraphicsGetCurrentContext()!
+        
+        context.translateBy(x: self.size.width / 2.0, y: self.size.height / 2.0)
+        context.scaleBy(x: xFlip ? -1 : 1, y: yFlip ? -1 : 1)
+        context.translateBy(x: -self.size.width / 2.0, y: -self.size.height / 2.0)
+
+        self.draw(at: .zero)
+        let result = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        
+        return result
+    }
+    
 }

@@ -20,7 +20,7 @@ class ColorSelector : UIView{
     }()
     
     var delegate : ()->() = {}
-    
+
     var color : UIColor {
         get { return foreground.backgroundColor! }
         set { foreground.backgroundColor = newValue }
@@ -72,3 +72,4 @@ class ColorSelector : UIView{
         super.init(coder : coder)
     }
 }
+

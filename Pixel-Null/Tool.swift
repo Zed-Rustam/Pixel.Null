@@ -10,9 +10,9 @@ import UIKit
 
 struct pixelData : Equatable {
     var a : UInt8
-    var b : UInt8
-    var g : UInt8
     var r : UInt8
+    var g : UInt8
+    var b : UInt8
 }
 
 class Tool {
@@ -21,13 +21,11 @@ class Tool {
 class Pencil : Tool {
     
     var size : Double = 1
-    var color : String = UIColor.toHex(color: UIColor.red)
     var smooth : Int = 0
     var pixPerfect : Bool = false
     
-    func setSettings(penSize : Int, penColor : UIColor, smth : Int, pixelPerf : Bool){
+    func setSettings(penSize : Int, smth : Int, pixelPerf : Bool){
         size = Double(penSize)
-        color = UIColor.toHex(color: penColor)
         smooth = smth
         pixPerfect = pixelPerf
     }
@@ -68,7 +66,7 @@ class Pencil : Tool {
         }
     }
     
-    func drawOn(image : UIImage,point : CGPoint, selection : UIImage?, symmetry : CGPoint) -> UIImage{
+    func drawOn(image : UIImage,point : CGPoint, selection : UIImage?, symmetry : CGPoint,color : UIColor) -> UIImage{
        
         switch Int(size) % 2 {
            case 0:
@@ -137,8 +135,7 @@ class Pencil : Tool {
         
         UIGraphicsEndImageContext()
                 
-        return myImage.withTintColor(UIColor(hex: color)!)
-
+        return myImage.withTintColor(color)
     }
 }
 
@@ -254,13 +251,7 @@ class Fill : Tool {
     }
     
     private var points : [CGPoint] = []
-    
-    func setStartPoint(point : CGPoint){
-        points.removeAll()
-    }
-    
 
-    
     private func fillH(from : CGPoint, imageSize : CGSize){
         var pos = from
 
@@ -272,7 +263,7 @@ class Fill : Tool {
         }
         
         setPixelData(imgSize: imageSize, point: pos, color: color.getPixelData())
-        
+
         if getPixelData(imgSize: imageSize, point: pos.offset(x: 0, y: -1)) == colorForChange.getPixelData() {
             points.append(pos.offset(x: 0, y: -1))
             wasAddUp = true
@@ -327,7 +318,8 @@ class Fill : Tool {
     }
     
     private var imageData : [pixelData] = []
-    
+    private var resultData : [pixelData] = []
+
     func getPixelData(imgSize : CGSize, point : CGPoint) -> pixelData? {
         if point.x < 0 || point.x >= imgSize.width || point.y < 0 || point.y >= imgSize.height {return nil}
         return imageData[Int(imgSize.width * point.y + point.x)]
@@ -335,15 +327,17 @@ class Fill : Tool {
     
     func setPixelData(imgSize : CGSize, point : CGPoint, color : pixelData) {
         imageData[Int(imgSize.width * point.y + point.x)] = color
+        resultData[Int(imgSize.width * point.y + point.x)] = pixelData(a: 255, r: 0, g: 0, b: 0)
     }
     
-    func drawOn(image : UIImage,point : CGPoint, selection : UIImage?) -> UIImage{
+    func drawOn(image : UIImage,point : CGPoint, selection : UIImage?, fillColor : UIColor) -> UIImage{
         colorForChange = image.getColor(point: point)
-
+        color = fillColor
+        
         imageData = image.getColorsArray()
+        resultData = .init(repeating: pixelData(a: 0, r: 0, g: 0, b: 0), count: imageData.count)
         
         points.removeAll()
-        print("now start")
         
         if getPixelData(imgSize: image.size, point: point) != color.getPixelData() {
             points.append(point)
@@ -351,9 +345,25 @@ class Fill : Tool {
             while points.count > 0 {
                 fillH(from: points.remove(at: 0), imageSize: image.size)
             }
+            let resImg = imageFromARGB32Bitmap(pixels: resultData, width: UInt(image.size.width), height: UInt(image.size.height)).withTintColor(color)
             
-            return imageFromARGB32Bitmap(pixels: imageData, width: UInt(image.size.width), height: UInt(image.size.height))
+            UIGraphicsBeginImageContext(image.size)
+            
+            resImg.draw(at: .zero)
+            selection?.draw(at: .zero, blendMode: .destinationIn, alpha: 1)
+            
+            var returnImage = UIGraphicsGetImageFromCurrentImageContext()!
+            
+            UIGraphicsGetCurrentContext()!.clear(CGRect(origin: .zero, size: image.size))
+            
+            image.draw(at: .zero)
+            returnImage.draw(at: .zero)
+            returnImage = UIGraphicsGetImageFromCurrentImageContext()!
+            
+            UIGraphicsEndImageContext()
+            return returnImage
         } else {
+            print("dont")
             return image
         }
     }
@@ -369,23 +379,7 @@ class Square : Tool {
         case line
     }
     
-    var size : Double = 1
-    var color : String = UIColor.toHex(color: UIColor.red)
-    var smooth : Int = 0
-    var pixPerfect : Bool = false
-    
-    func setSettings(penSize : Int, penColor : UIColor, smth : Int, pixelPerf : Bool){
-        size = Double(penSize)
-        color = UIColor.toHex(color: penColor)
-        smooth = smth
-        pixPerfect = pixelPerf
-    }
-    
-    private var points : [CGPoint] = []
-    
-    func setStartPoint(point : CGPoint){
-        points.removeAll()
-    }
+    var isFixed = false
     
     func normalise(radius : Double) -> Double {
         if radius <= 2 {
@@ -400,57 +394,106 @@ class Square : Tool {
         }
     }
     
-   
-    func pixelPerfect(){
-       main : while true {
-            if points.count > 3 {
-                for i in 3...points.count {
-                    if abs(points[i - 3].x - points[i - 1].x) > 1 || abs(points[i - 3].y - points[i - 1].y) > 1 {
-                        
-                    } else {
-                        points.remove(at:i - 2)
-                        continue main
-                    }
-                }
-            }
-            break main
+    var size : Double = 1
+    
+    var squareType : SquareType = .rectangle
+    
+    private var startPoint : CGPoint = .zero
+    
+    func setStartPoint(point : CGPoint) {
+        switch Int(size) % 2 {
+           case 0:
+            startPoint = point
+           case 1:
+            startPoint = CGPoint(x: point.x + 0.5, y: point.y + 0.5)
+           default:
+                break
         }
     }
     
-    func drawOn(image : UIImage,point : CGPoint) -> UIImage{
-       
-        if CGPoint(x: Int(points.last!.x),y : Int(points.last!.y)) != CGPoint(x: point.x, y: point.y){
-            switch Int(size) % 2 {
-               case 0:
-                    points.append(CGPoint(x: CGFloat(Double(Int(point.x))), y: CGFloat(Int(point.y))))
-               case 1:
-                    points.append(CGPoint(x: CGFloat(Double(Int(point.x)) + 0.5), y: CGFloat(Int(point.y)) + 0.5))
-               default:
-                    break
-            }
+    func setSettings(penSize : Int){
+        size = Double(penSize)
+    }
+    
+    func drawOn(image : UIImage,point : CGPoint, color : UIColor,symmetry : CGPoint,selection : UIImage?) -> UIImage{
+        
+        var endPoint = CGPoint.zero
+        
+        switch Int(size) % 2 {
+           case 0:
+            endPoint = point
+           case 1:
+            endPoint = CGPoint(x: point.x + 0.5, y: point.y + 0.5)
+           default:
+                break
         }
-
-        if pixPerfect {
-            pixelPerfect()
+        
+        if isFixed {
+            let width = endPoint.x - startPoint.x
+            let height = endPoint.y - startPoint.y
+            
+            let finalSize = max(abs(width),abs(height))
+            
+            endPoint = CGPoint(x: startPoint.x + finalSize * (width / abs(width)), y: startPoint.y + finalSize * (height / abs(height)))
         }
         
         UIGraphicsBeginImageContextWithOptions(image.size, false, 1)
         
         let context = UIGraphicsGetCurrentContext()!
-        context.setStrokeColor(UIColor.black.cgColor)
+        context.setStrokeColor(color.cgColor)
         context.setShouldAntialias(false)
         context.setLineCap(.round)
         context.setLineJoin(.round)
+        context.setLineWidth(CGFloat(normalise(radius: size)))
         
-        context.clear(CGRect(origin: .zero ,size: image.size))
-        context.setLineWidth(CGFloat(normalise(radius : size)))
-        context.addLines(between: points)
+        switch squareType {
+        case .rectangle:
+            context.addRect(CGRect(x: min(startPoint.x,endPoint.x), y: min(startPoint.y,endPoint.y), width: abs(endPoint.x - startPoint.x), height: abs(endPoint.y - startPoint.y)))
+            
+        case .oval:
+            context.addEllipse(in: CGRect(x: min(startPoint.x,endPoint.x), y: min(startPoint.y,endPoint.y), width: abs(endPoint.x - startPoint.x), height: abs(endPoint.y - startPoint.y)))
+            
+        case .line:
+            context.addLines(between: [startPoint,endPoint])
+        }
         context.strokePath()
         
-        let myImage = UIGraphicsGetImageFromCurrentImageContext()
+        var myImage = UIGraphicsGetImageFromCurrentImageContext()!
+        
+        if symmetry.x != 0 {
+            context.clear(CGRect(origin: .zero ,size: image.size))
+            context.translateBy(x: image.size.width, y: 0)
+            context.scaleBy(x: -1, y: 1)
+            myImage.draw(in: CGRect(x: (image.size.width / 2.0 - symmetry.x) * 2, y: 0, width: myImage.size.width, height: myImage.size.height))
+
+
+            myImage = UIImage.merge(images: [myImage,UIImage(cgImage : context.makeImage()!)])!
+            context.scaleBy(x: -1, y: 1)
+            context.translateBy(x:  -image.size.width, y: 0)
+        }
+        
+        if symmetry.y != 0 {
+            context.clear(CGRect(origin: .zero ,size: image.size))
+            context.translateBy(x: 0, y: image.size.height)
+            context.scaleBy(x: 1, y: -1)
+            
+            myImage.draw(in: CGRect(x: 0, y: (image.size.height / 2.0 - symmetry.y) * 2, width: myImage.size.width, height: myImage.size.height))
+            
+            myImage = UIImage.merge(images: [myImage,UIImage(cgImage : context.makeImage()!)])!
+            context.scaleBy(x: 1, y: -1)
+            context.translateBy(x: 0, y: -image.size.height)
+        }
+        
+        context.clear(CGRect(origin: .zero ,size: image.size))
+        myImage.draw(at: .zero)
+        selection?.draw(at: .zero, blendMode: .destinationIn, alpha: 1)
+
+        myImage = UIGraphicsGetImageFromCurrentImageContext()!
+        
+    
         UIGraphicsEndImageContext()
                 
-        return myImage!.withTintColor(UIColor(hex: color)!)
+        return myImage.withTintColor(color)
 
     }
 }
@@ -562,25 +605,22 @@ class Erase : Tool {
 
 class Move : Tool {
     private var moveImage : UIImage!
+    private var selectionImage : UIImage!
     private var offset : CGPoint = .zero
     var wasStart : Bool = false
+    var realSize : CGSize = .zero
     
-    var imageData : [pixelData] = []
-    
-    func setImage(image : UIImage, startpos : CGPoint,selection : UIImage?) {
-        UIGraphicsBeginImageContextWithOptions(image.size, false, 1)
-               
-        image.draw(at: .zero)
-        selection?.draw(at: .zero, blendMode: .destinationIn, alpha: 1)
-        let moveImg = UIGraphicsGetImageFromCurrentImageContext()
+    func setImage(image : UIImage, startpos : CGPoint,selection : UIImage?,size : CGSize) {
 
-        UIGraphicsEndImageContext()
-        moveImage = moveImg
-        
-        imageData = moveImg!.getColorsArray()
-        
+        realSize = size
+        moveImage = image
+        selectionImage = selection ?? UIImage(size: moveImage.size)
         wasStart = true
         offset = startpos
+    }
+    
+    func flipImage(flipX : Bool, flipY : Bool) {
+        moveImage = moveImage.flip(xFlip: flipX, yFlip: flipY)
     }
     
     func getPixelData(data : [pixelData],x : Int, y : Int) -> pixelData? {
@@ -599,7 +639,10 @@ class Move : Tool {
     
     func drawOn(position : CGRect, rotation : CGFloat, rotateCenter : CGPoint) -> UIImage{
         wasStart = true
-        UIGraphicsBeginImageContextWithOptions(moveImage.size, false, 1)
+        UIGraphicsBeginImageContextWithOptions(realSize, false, 1)
+        let flipX = position.size.width < 0
+        let flipY = position.size.height < 0
+
         let context = UIGraphicsGetCurrentContext()!
         context.setShouldAntialias(false)
         context.setAllowsAntialiasing(false)
@@ -609,13 +652,37 @@ class Move : Tool {
         context.rotate(by: rotation)
         context.translateBy(x: -rotateCenter.x, y: -rotateCenter.y)
         
-        moveImage.draw(in: position)
+        moveImage.flip(xFlip: flipX, yFlip: flipY).draw(in: CGRect(x: min(position.origin.x,position.origin.x + position.size.width), y: min(position.origin.y,position.origin.y + position.size.height), width: position.width, height: position.height))
  
         let myImage = UIGraphicsGetImageFromCurrentImageContext()!
 
         UIGraphicsEndImageContext()
  
         return myImage
+    }
+    
+    func drawSelectionOn(position : CGRect, rotation : CGFloat, rotateCenter : CGPoint) -> UIImage{
+        wasStart = true
+       UIGraphicsBeginImageContextWithOptions(realSize, false, 1)
+       let flipX = position.size.width < 0
+       let flipY = position.size.height < 0
+
+       let context = UIGraphicsGetCurrentContext()!
+       context.setShouldAntialias(false)
+       context.setAllowsAntialiasing(false)
+       context.interpolationQuality = .none
+
+       context.translateBy(x: rotateCenter.x, y: rotateCenter.y)
+       context.rotate(by: rotation)
+       context.translateBy(x: -rotateCenter.x, y: -rotateCenter.y)
+       
+       selectionImage.flip(xFlip: flipX, yFlip: flipY).draw(in: CGRect(x: min(position.origin.x,position.origin.x + position.size.width), y: min(position.origin.y,position.origin.y + position.size.height), width: position.width, height: position.height))
+
+       let myImage = UIGraphicsGetImageFromCurrentImageContext()!
+
+       UIGraphicsEndImageContext()
+
+       return myImage
     }
 }
 
