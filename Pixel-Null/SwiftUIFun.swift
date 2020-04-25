@@ -37,6 +37,16 @@ extension UIView {
         return self
     }
     
+    func addSubviewFullSize(view : UIView, paddings : (left : CGFloat,right : CGFloat,top : CGFloat,bottom : CGFloat) = (0,0,0,0)) {
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        addSubview(view)
+        view.leftAnchor.constraint(equalTo: leftAnchor, constant: paddings.left).isActive = true
+        view.rightAnchor.constraint(equalTo: rightAnchor, constant: paddings.right).isActive = true
+        view.topAnchor.constraint(equalTo: topAnchor, constant: paddings.top).isActive = true
+        view.bottomAnchor.constraint(equalTo: bottomAnchor, constant: paddings.bottom).isActive = true
+    }
+    
     func Shadow(clr : UIColor, rad : CGFloat, opas : Float) -> UIView{
          self.setShadow(color: clr, radius: rad, opasity: opas)
          return self

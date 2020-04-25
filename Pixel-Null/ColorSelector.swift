@@ -23,7 +23,11 @@ class ColorSelector : UIView{
 
     var color : UIColor {
         get { return foreground.backgroundColor! }
-        set { foreground.backgroundColor = newValue }
+        set {
+            UIView.animate(withDuration: 0.25, animations: {
+                self.foreground.backgroundColor = newValue
+            })
+        }
     }
     
     override init(frame: CGRect) {

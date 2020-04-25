@@ -25,6 +25,7 @@
 		954AABB423BBEC3D00F52955 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954AABB323BBEC3D00F52955 /* MainViewController.swift */; };
 		954AABB923BBEC4100F52955 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 954AABB823BBEC4100F52955 /* Assets.xcassets */; };
 		954BB2DE240D72B50008B9D5 /* Tool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954BB2DD240D72B50008B9D5 /* Tool.swift */; };
+		954C32782453A71000E520A4 /* PalleteCollectionV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954C32772453A71000E520A4 /* PalleteCollectionV2.swift */; };
 		955145D52405589100524FF9 /* ProjectCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955145D42405589100524FF9 /* ProjectCanvas.swift */; };
 		955145D724055D1000524FF9 /* Editor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955145D624055D1000524FF9 /* Editor.swift */; };
 		9555908923F5D580000EF96B /* GalleryControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9555908823F5D580000EF96B /* GalleryControl.swift */; };
@@ -121,6 +122,7 @@
 		954AABBB23BBEC4100F52955 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		954AABBD23BBEC4100F52955 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		954BB2DD240D72B50008B9D5 /* Tool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tool.swift; sourceTree = "<group>"; };
+		954C32772453A71000E520A4 /* PalleteCollectionV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PalleteCollectionV2.swift; sourceTree = "<group>"; };
 		955145D42405589100524FF9 /* ProjectCanvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCanvas.swift; sourceTree = "<group>"; };
 		955145D624055D1000524FF9 /* Editor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Editor.swift; sourceTree = "<group>"; };
 		9555908823F5D580000EF96B /* GalleryControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryControl.swift; sourceTree = "<group>"; };
@@ -412,6 +414,7 @@
 				959BCFB7241EC64100B27CFB /* PalleteFull.swift */,
 				959BCFBE241FEFA300B27CFB /* PalleteWorker.swift */,
 				959BCFC2242254F100B27CFB /* FullColor.swift */,
+				954C32772453A71000E520A4 /* PalleteCollectionV2.swift */,
 			);
 			name = "Colors Pallete";
 			sourceTree = "<group>";
@@ -589,6 +592,7 @@
 				95560A1323C2EA3100581482 /* a.swift in Sources */,
 				959BCFBF241FEFA300B27CFB /* PalleteWorker.swift in Sources */,
 				9571F63D244503E200BCBA38 /* EditorController.swift in Sources */,
+				954C32782453A71000E520A4 /* PalleteCollectionV2.swift in Sources */,
 				95560A1723C4302900581482 /* GalleryCells.swift in Sources */,
 				959DC1132430AD38001A79DF /* PencilSettings.swift in Sources */,
 				95DC554C23EC9A820011FA2A /* ColorSelectDialog1.swift in Sources */,

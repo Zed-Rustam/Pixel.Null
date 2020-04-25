@@ -95,6 +95,15 @@ class ProjectWork{
         
     }
     
+    var projectPallete : [String] {
+        get{
+            return projectInfo.pallete.colors
+        }
+        set{
+            projectInfo.pallete.colors = newValue
+        }
+    }
+    
     
     init(ProjectName projName : String, ProjectSize projSize : CGSize, bgColor : UIColor){
         
@@ -104,7 +113,7 @@ class ProjectWork{
         selectedLayer = 0
         selectedFrame = 0
                 
-        projectInfo = ProjectInfo(version: 0, width: Int(projSize.width), height: Int(projSize.height), bgColor: UIColor.toHex(color: bgColor),frames:  [ProjectFrame(frameID: 0, delay: 100, layers: [ProjectLayer(layerID: 0, visible: true, locked: false, transparent: 1.0)])], actionList: ActionList(actions: [], lastActiveAction: -1, maxCount: 64))
+        projectInfo = ProjectInfo(version: 0, width: Int(projSize.width), height: Int(projSize.height), bgColor: UIColor.toHex(color: bgColor),frames:  [ProjectFrame(frameID: 0, delay: 100, layers: [ProjectLayer(layerID: 0, visible: true, locked: false, transparent: 1.0)])], actionList: ActionList(actions: [], lastActiveAction: -1, maxCount: 64), pallete: try! JSONDecoder().decode(Pallete.self, from: NSDataAsset(name: "Default pallete")!.data))
              
         let folder = ProjectWork.getDocumentsDirectory().appendingPathComponent(name)
         do {
@@ -1045,6 +1054,7 @@ struct ProjectInfo : Codable {
     var bgColor : String
     var frames : [ProjectFrame]
     var actionList : ActionList
+    var pallete : Pallete
 }
 
 struct ProjectFrame : Codable {

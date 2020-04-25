@@ -13,10 +13,12 @@ class CircleButton : UIView, UIGestureRecognizerDelegate {
     private var bg = UIView()
     
     private var enabled = true
-    var delegate : ()->() = {}
     var longPressDelegate : ()->() = {}
     
+    var delegate : ()->() = {}
     private var panGesture : UILongPressGestureRecognizer!
+    
+    
     private var longPanGesture : UILongPressGestureRecognizer!
     
     private var iconScale : CGFloat = 0.5
@@ -139,7 +141,6 @@ class CircleButton : UIView, UIGestureRecognizerDelegate {
                 UIView.animate(withDuration: 0.25){
                     self.icon.transform = CGAffineTransform(scaleX: 1, y: 1)
                 }
-
                 delegate()
             }
         case .cancelled:

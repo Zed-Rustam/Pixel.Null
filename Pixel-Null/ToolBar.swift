@@ -104,6 +104,10 @@ class ToolBar : UIView {
         toolCollection.collectionViewLayout.invalidateLayout()
     }
     
+    func updateSelectedColor(newColor : UIColor) {
+        (toolCollection.cellForItem(at: IndexPath(item: 0, section: 0)) as! SelectionButton).colorSelector.color = newColor
+    }
+    
     @objc private func swipe(sender : UISwipeGestureRecognizer) {
         print(sender.direction)
         if sender.direction == .up && isHide {

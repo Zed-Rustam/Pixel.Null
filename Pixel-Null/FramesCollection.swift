@@ -173,7 +173,6 @@ class FramesCollection : UICollectionView, UICollectionViewDataSource, UICollect
     }
     
     func collectionView(_ collectionView: UICollectionView, targetIndexPathForMoveFromItemAt originalIndexPath: IndexPath, toProposedIndexPath proposedIndexPath: IndexPath) -> IndexPath {
-        print("\(originalIndexPath.item)     \(proposedIndexPath.item)")
         if originalIndexPath.item != proposedIndexPath.item {
             moveCellIndex = proposedIndexPath
         }
@@ -194,6 +193,7 @@ class FramesCollection : UICollectionView, UICollectionViewDataSource, UICollect
         if sourceIndexPath.item != destinationIndexPath.item {
             project?.addAction(action: ["ToolID" : "\(Actions.frameReplace.rawValue)", "from" : "\(sourceIndexPath.item)", "to" : "\(destinationIndexPath.item)"])
         }
+        
         frameDelegate?.updateFramePosition(from: sourceIndexPath.item, to: destinationIndexPath.item)
     }
     
