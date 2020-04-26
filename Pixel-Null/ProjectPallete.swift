@@ -263,7 +263,6 @@ class ProjectPallete : UIViewController {
         return btn
     }()
 
-    
     override func viewDidLoad() {
         view.addSubview(collection)
         view.addSubview(palleteBar)

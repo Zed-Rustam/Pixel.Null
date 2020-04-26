@@ -113,18 +113,30 @@ class Editor : UIViewController {
 }
 
 extension Editor : FrameControlDelegate{
+    
+    //открываем окно паллитры проекта
     func openColorSelector() {
         let pallete = ProjectPallete()
+        
+        //начальный цвет
         pallete.startColor = canvas.selectorColor
+        
+        //проект для доступа к паллитре
         pallete.project = project
+        
+        //при завершении выбора
+        pallete.selectDelegate = {[unowned self] in
+            self.canvas.selectorColor = $0
+            self.toolBar.updateSelectedColor(newColor: $0)
+        }
         pallete.modalPresentationStyle = .formSheet
         
         self.show(pallete, sender: nil)
     }
     
-    
     func changeMainColor(color: UIColor) {
         canvas.selectorColor = color
+        toolBar.updateSelectedColor(newColor: color)
     }
     
     
@@ -235,6 +247,7 @@ extension Editor : FrameControlDelegate{
     }
 }
 
+
 extension Editor : ToolSettingsDelegate {
     func openPencilSettings() {
         let pencilSettings = PencilSettings()
@@ -274,8 +287,6 @@ extension Editor : ToolSettingsDelegate {
 
 extension Editor {
     func startAnimation() {
-        //if timer {
-        //timer.invalidate()
         project.savePreview(frame: project.FrameSelected)
         nowFrameIndex = project.FrameSelected
         
@@ -288,8 +299,6 @@ extension Editor {
         timer = CADisplayLink(target: self, selector: #selector(setFrame(_:)))
         canvas.startAnimationMode()
         timer.add(to: .main, forMode: .common)
-        //} else {
-        //}
     }
    
     func stopAnimation() {
@@ -331,6 +340,7 @@ extension Editor {
     
     
 }
+
 protocol FrameControlDelegate : class {
     func openFrameControl(project : ProjectWork)
     func updateEditor()
@@ -365,3 +375,4 @@ protocol ToolSettingsDelegate : class{
     func setEraseSettings(eraseSize : Int)
     func setGradientSettings(stepCount : Int,startColor : UIColor, endColor : UIColor)
 }
+

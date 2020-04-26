@@ -1042,9 +1042,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 location.y = CGFloat(floor(location.y))
                 if actionImage.bounds.contains(location) {
                     let color = project.getFrame(frame: project.FrameSelected, size: project.projectSize).getPixelColor(pos: location)
-                    print("\(location)   \(color.getPixelData())")
-                    editor?.toolBar.updateSelectedColor(newColor: color)
-                    self.selectorColor = color
+                    delegate?.changeMainColor(color: color)
                 }
             default:
                 break
