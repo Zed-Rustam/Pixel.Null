@@ -19,6 +19,8 @@ class ProjectView : UIView{
     private var blurView : UIVisualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterial))
     weak var superController : UIViewController? = nil
     
+    private var tapGesture = UITapGestureRecognizer(target: self, action: #selector(onTap(sender:)))
+    
     var image : UIImage {
         get{
             _image.image!
@@ -45,6 +47,9 @@ class ProjectView : UIView{
         self.addSubview(blurView)
         self.addSubview(title)
         self.backgroundColor = .clear
+        
+        tapGesture = UITapGestureRecognizer(target: self, action: #selector(onTap(sender:)))
+        addGestureRecognizer(tapGesture)
         
         setCorners(corners: CGFloat(rounded))        
     }
@@ -88,9 +93,9 @@ class ProjectView : UIView{
         title.font = UIFont(name:  "Rubik-Medium", size: 10)
     }
     
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        delegate?.projectOpen(proj: proj)
-    }
+      @objc func onTap(sender : UITapGestureRecognizer){
+          delegate?.projectOpen(proj: proj)
+      }
 }
 
 extension ProjectView : UIContextMenuInteractionDelegate {

@@ -18,7 +18,8 @@ class TransformView : UIView {
     var startPosition : CGPoint = .zero
         
     var startInformation : (position : CGRect, angle : Int) = (.zero,0)
-    
+    var lastInformation : (position : CGRect, angle : Int) = (.zero,0)
+
     var lastSize : CGSize = .zero
     var rotateDelegate : (CGFloat)->() = {angle in}
     var resizeDelegate : (CGSize)->() = {size in}
@@ -118,6 +119,7 @@ class TransformView : UIView {
         
         position = CGRect(x: startx, y: starty, width: endx - startx + 1, height: endy - starty + 1)
         startInformation = (position,0)
+        lastInformation = startInformation
         
         lastSize = CGSize(width: ((position.origin.x + position.size.width / 2.0)), height: ((position.origin.y + position.size.height / 2.0)))
         

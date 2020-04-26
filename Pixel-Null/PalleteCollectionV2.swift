@@ -70,13 +70,18 @@ class PalleteCollectionV2 : UICollectionView {
             updateInteractiveMovementTargetPosition(sender.location(in: self))
             
         case .ended:
-            endInteractiveMovement()
-            isMoving = false
-   
+            performBatchUpdates({
+                endInteractiveMovement()
+            }, completion: {isEnd in
+                self.isMoving = false
+            })
             
         case .cancelled:
-            cancelInteractiveMovement()
-            isMoving = false
+            performBatchUpdates({
+                cancelInteractiveMovement()
+            }, completion: {isEnd in
+                self.isMoving = false
+            })
  
             
         default:

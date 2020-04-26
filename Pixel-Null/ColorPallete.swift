@@ -81,7 +81,7 @@ class ColorPallete : UIView {
         addInteraction(UIContextMenuInteraction(delegate: self))
         
         tapGesture = UITapGestureRecognizer(target: self, action: #selector(onTap(sender:)))
-        self.addGestureRecognizer(tapGesture)
+        addGestureRecognizer(tapGesture)
     }
     
     @objc func onTap(sender : UITapGestureRecognizer){

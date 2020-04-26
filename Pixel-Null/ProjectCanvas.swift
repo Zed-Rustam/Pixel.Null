@@ -355,7 +355,6 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         selectionImage.image = selectionLayer
     }
     
-
     @objc func transformGesture(sender : UILongPressGestureRecognizer) {
         switch sender.state {
         case .began:
@@ -385,12 +384,25 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
             default:
                 break
             }
+            transformView.lastInformation = (transformView.position,transformView.angle)
         
+        case .cancelled:
+            transformView.position = transformView.lastInformation.position
+            transformView.angle = transformView.lastInformation.angle
+            transformView.rotateDelegate(CGFloat(transformView.angle))
+            transformView.resizeDelegate(transformView.position.size)
+
+            transformView.setNeedsDisplay()
+            
+            ActionLayer = move.drawOn(position: transformView.position, rotation: transformView.Radians(CGFloat(transformView.angle)),rotateCenter: CGPoint(x: transformView.lastSize.width, y: transformView.lastSize.height))
+            actionImage.image = ActionLayer
+            
+            selectionLayer = move.drawSelectionOn(position: transformView.position, rotation: transformView.Radians(CGFloat(transformView.angle)),rotateCenter: CGPoint(x: transformView.lastSize.width, y: transformView.lastSize.height))
+            selectionImage.image = selectionLayer
         default:
             break
         }
     }
-    
     
     func closeTransform(){
         
@@ -501,6 +513,9 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
     func checkActions(){
         if !isScaling && !isMoving && !isAnimation {
             actionRecognizer.isEnabled = true
+            if selectedTool == 2 {
+                transformGest.isEnabled = true
+            }
         }
     }
 
@@ -526,6 +541,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 isScaling = true
                 scale *= sender.scale
                 actionRecognizer.isEnabled = false
+                transformGest.isEnabled = false
                 //let lastOffset = offset
                 
                 let xk = sender.scale * bg.frame.width -  bg.frame.width
@@ -674,7 +690,8 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
             case .changed:
                 isMoving = true
                 actionRecognizer.isEnabled = false
-                
+                transformGest.isEnabled = false
+
                 offset.x += sender.translation(in: self).x
                 offset.y += sender.translation(in: self).y
                 
