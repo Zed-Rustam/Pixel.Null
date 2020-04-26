@@ -21,7 +21,7 @@ class GridCollection : UICollectionView, UICollectionViewDelegate, UICollectionV
     private var moveCell : Color? = nil
     private var moveIndexCell : ColorCell? = nil
 
-    weak var delegateEditor : PalleteEditorDelegate? = nil
+    //weak var delegateEditor : PalleteEditorDelegate? = nil
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return pallete.colors.count
@@ -158,7 +158,6 @@ class GridCollection : UICollectionView, UICollectionViewDelegate, UICollectionV
         } else if sourceIndexPath.item == select {
             select = destinationIndexPath.item
         }
-        delegateEditor?.moveColor(from: sourceIndexPath.item, to: destinationIndexPath.item)
     }
     
     func setNewSelect(newSelect : Int){

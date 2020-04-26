@@ -366,9 +366,12 @@ class PalleteColorCell : UICollectionViewCell {
         selectStroke.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 0).isActive = true
         setVisible(visible: false, withAnim: false)
         
-        contentView.setShadow(color: ProjectStyle.uiShadowColor, radius: 4, opasity: 0.5)
         contentView.layer.shouldRasterize = true
         contentView.layer.rasterizationScale = UIScreen.main.scale
+    }
+    
+    override func layoutSubviews() {
+        contentView.setShadow(color: ProjectStyle.uiShadowColor, radius: 4, opasity: 0.5)
     }
     
     required init?(coder: NSCoder) {

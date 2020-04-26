@@ -11,7 +11,6 @@ import UIKit
 class PalleteCreateController : UIViewController {
     lazy private var colors : GridCollection = {
         let clrs = GridCollection(frame: .zero, pallete: pallete)
-        clrs.delegateEditor = self
         clrs.addViewInTop(view: name)
         clrs.translatesAutoresizingMaskIntoConstraints = false
         
@@ -56,19 +55,6 @@ class PalleteCreateController : UIViewController {
     
     private var pallete : PalleteWorker!
     private var nameDelegate : TextFieldDelegate!
-    lazy private var editBar : PalleteEditBar = {
-        let bar = PalleteEditBar(frame: .zero)
-        bar.delegate = self
-        bar.list = colors
-        bar.controller = self
-        bar.pallete = pallete
-        
-        bar.translatesAutoresizingMaskIntoConstraints = false
-        bar.widthAnchor.constraint(equalToConstant: 156).isActive = true
-        bar.heightAnchor.constraint(equalToConstant: 48).isActive = true
-
-        return bar
-    }()
     
     weak var delegate : PalleteGalleryDelegate? = nil
     
@@ -119,7 +105,6 @@ class PalleteCreateController : UIViewController {
         self.view.addSubview(colors)
         self.view.addSubview(createButton)
         self.view.addSubview(cancelButton)
-        self.view.addSubview(editBar)
 
         colors.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 0).isActive = true
         colors.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: 0).isActive = true
@@ -132,9 +117,6 @@ class PalleteCreateController : UIViewController {
         cancelButton.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 8).isActive = true
         cancelButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 14).isActive = true
 
-        editBar.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 8).isActive = true
-        editBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -8).isActive = true
-
         name.leftAnchor.constraint(equalTo: cancelButton.rightAnchor, constant: 8).isActive = true
         name.rightAnchor.constraint(equalTo: createButton.leftAnchor, constant: -8).isActive = true
         name.topAnchor.constraint(equalTo: view.topAnchor, constant: 8).isActive = true
@@ -145,49 +127,4 @@ class PalleteCreateController : UIViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to:nil, from:nil, for:nil)
     }
-}
-extension PalleteCreateController : PalleteEditorDelegate {
-    func moveColor(from: Int, to: Int) {
-        pallete.moveColor(from: from, to: to)
-        print("will move")
-        colors.reloadData()
-    }
-    
-    func addColor(color: Int, newValue: String) {
-            pallete.addColor(newColor: newValue)
-            self.colors.performBatchUpdates({
-                self.colors.insertItems(at: [IndexPath(item: self.pallete.colors.count - 1, section: 0)])
-            })
-    }
-    
-    func deleteColor(color: Int) {
-        if pallete.colors.count > 1 {
-            pallete.deleteColor(index: color)
-            colors.select = color == pallete.colors.count ? color - 1 : color
-            
-            UIView.animate(withDuration: 0.2, animations: {
-                self.colors.performBatchUpdates({
-                    self.colors.deleteItems(at: [IndexPath(item: color, section: 0)])
-                }, completion: {isEnd in
-                     UIView.animate(withDuration: 0.2, animations: {
-                        self.colors.reloadItems(at: [IndexPath(item: self.colors.select, section: 0)])
-                    })
-                })
-            })
-        }
-    }
-    
-    func cloneColor(color: Int) {
-            pallete.cloneColor(index: color)
-            colors.performBatchUpdates({
-                colors.insertItems(at: [IndexPath(item: color + 1, section: 0)])
-            })
-    }
-    
-    func changeColor(color: Int, newValue: String) {
-            pallete.updateColor(index: color, color: newValue)
-            colors.reloadItems(at: [IndexPath(item: color, section: 0)])
-    }
-    
-    
 }

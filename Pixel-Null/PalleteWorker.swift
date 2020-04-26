@@ -25,6 +25,9 @@ class PalleteWorker {
         get {
             return pallete.colors
         }
+        set{
+            pallete.colors = newValue
+        }
     }
     
     var colorPallete : Pallete {

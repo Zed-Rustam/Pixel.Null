@@ -112,10 +112,12 @@ class PalleteCollection : UIViewController, UICollectionViewDelegate, UICollecti
 
 extension PalleteCollection : PalleteGalleryDelegate {
        func palleteOpen(item: ColorPallete) {
-           let editor = PalleteEditor()
-           editor.isModalInPresentation = true
-           editor.pallete = item.pallete
-           editor.delegate = self
+            let editor = PalleteEditor()
+            editor.isModalInPresentation = true
+            editor.pallete = item.pallete
+            editor.delegate = {[unowned self] in
+                self.collection.reloadData()
+            }
            
            show(editor, sender: self)
        }
