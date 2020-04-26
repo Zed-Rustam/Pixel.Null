@@ -15,7 +15,7 @@ class Editor : UIViewController {
     private var animationTime : Int = 0
     private var nowFrameIndex : Int = 0
 
-    lazy private var toolBar : ToolBar = {
+    lazy var toolBar : ToolBar = {
         let tb = ToolBar(frame: .zero)
         tb.setData(project: project, delegate: self)
         tb.translatesAutoresizingMaskIntoConstraints = false
@@ -102,6 +102,9 @@ class Editor : UIViewController {
         toolBar.setPosition()
     }
     
+    func showTransform(isShow : Bool) {
+        //todo
+    }
     
     @objc func appMovedToBackground() {
         project.save()
@@ -112,7 +115,10 @@ class Editor : UIViewController {
 extension Editor : FrameControlDelegate{
     func openColorSelector() {
         let pallete = ProjectPallete()
+        pallete.startColor = canvas.selectorColor
+        pallete.project = project
         pallete.modalPresentationStyle = .formSheet
+        
         self.show(pallete, sender: nil)
     }
     

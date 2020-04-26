@@ -17,6 +17,8 @@ class PalleteCollectionV2 : UICollectionView {
     private var selectedColor = 0
     
     private var isMoving = false
+    private var isFinish = false
+    
     private var moveCell : PalleteColorCell? = nil
     
     func setEnableMoving(enable : Bool) {
@@ -85,6 +87,7 @@ class PalleteCollectionV2 : UICollectionView {
             updateInteractiveMovementTargetPosition(sender.location(in: self))
             
         case .ended:
+            isFinish = true
             performBatchUpdates({
                 endInteractiveMovement()
             }, completion: {isEnd in
@@ -93,10 +96,12 @@ class PalleteCollectionV2 : UICollectionView {
                 },completion: {isEnd in
                     self.isMoving = false
                     self.moveCell = nil
+                    self.isFinish = false
                 })
             })
             
         case .cancelled:
+            isFinish = true
             performBatchUpdates({
                 cancelInteractiveMovement()
             }, completion: {isEnd in
@@ -105,6 +110,7 @@ class PalleteCollectionV2 : UICollectionView {
                 },completion: {isEnd in
                     self.isMoving = false
                     self.moveCell = nil
+                    self.isFinish = false
                 })
             })
  
@@ -126,7 +132,7 @@ extension PalleteCollectionV2 : UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if isMoving && moveCell != nil{
+        if isFinish && moveCell != nil{
             return moveCell!
         }
         
