@@ -25,7 +25,7 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
        btn.setIconColor(color: .white)
        
        btn.delegate = {[weak self] in
-           if(self!.list.canMove) {
+        if(self!.list.canMove && self!.project!.information.frames.count > 1) {
                let frameJson = String(data: try! JSONEncoder().encode(self!.project!.information.frames[self!.project!.FrameSelected]), encoding: .utf8)!
                
                self!.project?.addAction(action: ["ToolID" : "\(Actions.frameDelete.rawValue)", "frame" : "\(self!.project!.FrameSelected)", "lastID" : "\(self!.project!.information.frames[self!.project!.FrameSelected].frameID)", "frameStruct" : frameJson])

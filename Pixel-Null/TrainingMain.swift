@@ -11,7 +11,7 @@ import UIKit
 
 class TrainingMain : UIViewController {
     weak var navigation : UINavigationController? = nil
-    private var menus : [String] = ["Editor","Layers","Frames","Pencil", "Erase", "Transform","Gradient","Fill","Symmetry","Selection"]
+    private var menus : [String] = ["Editor","Layers","Frames","Pencil", "Erase", "Transform","Gradient","Fill","Symmetry","Selection","Square"]
     
     lazy private var scroll : UIScrollView = {
         let scr = UIScrollView()
@@ -105,6 +105,8 @@ extension TrainingMain : UITableViewDelegate, UITableViewDataSource {
                 cell.textLabel!.text = menus[8]
                 case 6:
                 cell.textLabel!.text = menus[9]
+                case 7:
+                cell.textLabel!.text = menus[10]
             default:
                 break
             }
@@ -132,7 +134,7 @@ extension TrainingMain : UITableViewDelegate, UITableViewDataSource {
         case 0:
             return 3
         case 1:
-            return 7
+            return 8
         default:
             return 0
         }
@@ -192,6 +194,26 @@ extension TrainingMain : UITableViewDelegate, UITableViewDataSource {
             case 0:
                 let pencil = PencilController()
                 navigation?.pushViewController(pencil, animated: true)
+                
+                let cell = tableView.cellForRow(at: indexPath)
+                cell?.setSelected(false, animated: true)
+            case 1:
+               let eraser = EraseController()
+               navigation?.pushViewController(eraser, animated: true)
+               
+               let cell = tableView.cellForRow(at: indexPath)
+               cell?.setSelected(false, animated: true)
+                
+            case 6:
+                let select = SelectionController()
+                navigation?.pushViewController(select, animated: true)
+                
+                let cell = tableView.cellForRow(at: indexPath)
+                cell?.setSelected(false, animated: true)
+                
+            case 4:
+                let fill = FillController()
+                navigation?.pushViewController(fill, animated: true)
                 
                 let cell = tableView.cellForRow(at: indexPath)
                 cell?.setSelected(false, animated: true)

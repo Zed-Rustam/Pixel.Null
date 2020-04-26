@@ -185,7 +185,7 @@ class ToolButton : UICollectionViewCell {
             
             
             self!.barDelegate.wasChangedTool(newTool: 2)
-            self!.barDelegate.updateButtons(btns: [flipV,flipH,block,finish])
+            self!.barDelegate.updateButtons(btns: [flipV,flipH,finish])
             self!.button.setIconColor(color: ProjectStyle.uiSelectColor)
            }
         

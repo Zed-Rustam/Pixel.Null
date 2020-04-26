@@ -25,7 +25,7 @@ class LayersCollectionView : UIView {
         btn.setShadowColor(color: ProjectStyle.uiRedColor.withAlphaComponent(0.75))
         btn.setIconColor(color: .white)
         btn.delegate = {[weak self] in
-            if self!.list.canMove {
+            if (self!.list.canMove && self!.project!.information.frames[self!.project!.FrameSelected].layers.count > 1) {
                 self!.project?.addAction(action: ["ToolID" : "\(Actions.layerDelete.rawValue)","frame" : "\(self!.project!.FrameSelected)", "layer" : "\(self!.project!.LayerSelected)"])
                 
                 try! self!.project?.getLayer(frame: self!.project!.FrameSelected, layer: self!.project!.LayerSelected).pngData()?.write(to: self!.project!.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(self!.project!.getNextActionID()).png"))
