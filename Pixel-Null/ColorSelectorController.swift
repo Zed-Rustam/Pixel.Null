@@ -142,10 +142,10 @@ class ColorSelectorController : UIViewController, NavigationProtocol {
         dialog2.topAnchor.constraint(equalTo: topBar.bottomAnchor, constant: 12).isActive = true
         dialog2.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -12).isActive = true
         
-        dialog3.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 12).isActive = true
-        dialog3.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -12).isActive = true
+        dialog3.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 6).isActive = true
+        dialog3.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -6).isActive = true
         dialog3.topAnchor.constraint(equalTo: topBar.bottomAnchor, constant: 12).isActive = true
-        dialog3.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -12).isActive = true
+        dialog3.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
         
         //dialog1.setColor(color: startcolor)
         //dialog2.setValues(color: startcolor)

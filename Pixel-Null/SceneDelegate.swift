@@ -25,10 +25,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let training = TrainingController()
 
         maincontroller.setControllers(menus:
-                                    training,
-                                    Controller2(),
                                     gallery,
                                     pallete,
+                                    training,
                                     settings)
         
         window = UIWindow(windowScene: winscene)

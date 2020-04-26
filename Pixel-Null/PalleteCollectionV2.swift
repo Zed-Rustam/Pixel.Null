@@ -17,6 +17,15 @@ class PalleteCollectionV2 : UICollectionView {
     private var selectedColor = 0
     
     private var isMoving = false
+    private var moveCell : PalleteColorCell? = nil
+    
+    func setEnableMoving(enable : Bool) {
+        if enable && gestureRecognizers == nil || !gestureRecognizers!.contains(moveGesture) {
+            addGestureRecognizer(moveGesture)
+        } else if !enable {
+            removeGestureRecognizer(moveGesture)
+        }
+    }
     
     var moving : Bool {
         get{
@@ -63,6 +72,12 @@ class PalleteCollectionV2 : UICollectionView {
         case .began:
             if let cell = indexPathForItem(at: sender.location(in: self)) {
                 beginInteractiveMovementForItem(at: cell)
+                moveCell = cellForItem(at: cell) as? PalleteColorCell
+                
+                UIView.animate(withDuration: 0.25, animations: {
+                    self.moveCell!.contentView.transform = CGAffineTransform(scaleX: 1.25, y: 1.25)
+                })
+                
                 isMoving = true
             }
             
@@ -73,14 +88,24 @@ class PalleteCollectionV2 : UICollectionView {
             performBatchUpdates({
                 endInteractiveMovement()
             }, completion: {isEnd in
-                self.isMoving = false
+                UIView.animate(withDuration: 0.25, animations: {
+                    self.moveCell!.contentView.transform = CGAffineTransform(scaleX: 1, y: 1)
+                },completion: {isEnd in
+                    self.isMoving = false
+                    self.moveCell = nil
+                })
             })
             
         case .cancelled:
             performBatchUpdates({
                 cancelInteractiveMovement()
             }, completion: {isEnd in
-                self.isMoving = false
+                UIView.animate(withDuration: 0.25, animations: {
+                    self.moveCell!.contentView.transform = CGAffineTransform(scaleX: 1, y: 1)
+                },completion: {isEnd in
+                    self.isMoving = false
+                    self.moveCell = nil
+                })
             })
  
             
@@ -101,6 +126,10 @@ extension PalleteCollectionV2 : UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if isMoving && moveCell != nil{
+            return moveCell!
+        }
+        
         let cell = dequeueReusableCell(withReuseIdentifier: "Color", for: indexPath) as! PalleteColorCell
         cell.color = UIColor(hex: colors[indexPath.item])!
         cell.setVisible(visible: selectedColor == indexPath.item ? true : false, withAnim: false)
@@ -184,8 +213,8 @@ class PalleteCollectionLayout : UICollectionViewLayout {
     //size of item
     private var itemSize : CGFloat = 44
     
-    private var topOffset : CGFloat = 60
-    private var bottomOffset : CGFloat = 60
+    var topOffset : CGFloat = 60
+    var bottomOffset : CGFloat = 60
 
     //attributes of items
     private var attributes : [UICollectionViewLayoutAttributes] = []

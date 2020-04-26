@@ -65,15 +65,30 @@ class PalletesDialog: UIView {
         return mainview
     }()
     
+    lazy private var collection : PalleteCollectionV2 = {
+        let clrs = PalleteCollectionV2(colors: .init(repeating: "#FF00FFFF", count: 100))
+        clrs.setEnableMoving(enable: false)
+        clrs.layer.masksToBounds = true
+        
+        (clrs.collectionViewLayout as! PalleteCollectionLayout).topOffset = 16
+        return clrs
+    }()
     
     init() {
         super.init(frame: .zero)
 
+        addSubview(collection)
         addSubview(PalleteBar)
         
         PalleteBar.leftAnchor.constraint(equalTo: leftAnchor, constant: 0).isActive = true
         PalleteBar.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
         PalleteBar.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
+               
+        collection.leftAnchor.constraint(equalTo: leftAnchor, constant: 0).isActive = true
+        collection.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
+        collection.topAnchor.constraint(equalTo: PalleteBar.bottomAnchor, constant: -8).isActive = true
+        collection.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
+
         
         translatesAutoresizingMaskIntoConstraints = false
         // Do any additional setup after loading the view.

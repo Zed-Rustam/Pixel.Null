@@ -12,7 +12,7 @@ class MainViewController: UIViewController {
     var controllers : [UIViewController] = []
     
     lazy var nav : NavigationView = {
-        let navig = NavigationView(ics:[#imageLiteral(resourceName: "book_icon"),#imageLiteral(resourceName: "news_icon"),#imageLiteral(resourceName: "gallery_icon"),#imageLiteral(resourceName: "pallete_icon"),#imageLiteral(resourceName: "settings_icon")])
+        let navig = NavigationView(ics:[#imageLiteral(resourceName: "gallery_icon"),#imageLiteral(resourceName: "pallete_icon"),#imageLiteral(resourceName: "book_icon"),#imageLiteral(resourceName: "settings_icon")])
         navig.translatesAutoresizingMaskIntoConstraints = false
         
         if UIApplication.shared.windows[0].safeAreaInsets.bottom / 2 > 0 {
@@ -22,7 +22,7 @@ class MainViewController: UIViewController {
             navig.setNavigationCorners(top: 16, bottom: 16)
         }
         navig.listener = self
-        navig.select = 2
+        navig.select = 0
         return navig
     }()
     
@@ -47,13 +47,13 @@ class MainViewController: UIViewController {
         self.view.addSubview(controllers[1].view)
         self.view.addSubview(controllers[2].view)
         self.view.addSubview(controllers[3].view)
-        self.view.addSubview(controllers[4].view)
+        //self.view.addSubview(controllers[4].view)
         
-        controllers[0].view.isHidden = true
+        controllers[0].view.isHidden = false
         controllers[1].view.isHidden = true
-        controllers[2].view.isHidden = false
+        controllers[2].view.isHidden = true
         controllers[3].view.isHidden = true
-        controllers[4].view.isHidden = true
+        //controllers[4].view.isHidden = true
 
         self.view.addSubview(nav)
        }
