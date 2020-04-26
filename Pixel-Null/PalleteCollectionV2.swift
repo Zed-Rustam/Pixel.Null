@@ -73,50 +73,59 @@ class PalleteCollectionV2 : UICollectionView {
         switch sender.state {
         case .began:
             if let cell = indexPathForItem(at: sender.location(in: self)) {
-                beginInteractiveMovementForItem(at: cell)
-                moveCell = cellForItem(at: cell) as? PalleteColorCell
-                
-                UIView.animate(withDuration: 0.25, animations: {
-                    self.moveCell!.contentView.transform = CGAffineTransform(scaleX: 1.25, y: 1.25)
-                })
-                
-                isMoving = true
+               
+                print("check item moving : \(cell.item)")
+                if !isMoving {
+                    print("start moving")
+
+                    beginInteractiveMovementForItem(at: cell)
+                    moveCell = cellForItem(at: cell) as? PalleteColorCell
+                    
+                    UIView.animate(withDuration: 0.25, animations: {
+                        self.moveCell!.contentView.transform = CGAffineTransform(scaleX: 1.25, y: 1.25)
+                    })
+                    isMoving = true
+                }
             }
             
         case .changed:
-            updateInteractiveMovementTargetPosition(sender.location(in: self))
+                updateInteractiveMovementTargetPosition(sender.location(in: self))
             
         case .ended:
-            isFinish = true
-            performBatchUpdates({
-                endInteractiveMovement()
-            }, completion: {isEnd in
-                UIView.animate(withDuration: 0.25, animations: {
-                    self.moveCell!.contentView.transform = CGAffineTransform(scaleX: 1, y: 1)
-                },completion: {isEnd in
-                    self.isMoving = false
-                    self.moveCell = nil
-                    self.isFinish = false
+            if isMoving {
+                isFinish = true
+                UIView.animate(withDuration: 0.1, animations: {
+                    self.performBatchUpdates({
+                        self.endInteractiveMovement()
+                    }, completion: {isEnd in
+                        UIView.animate(withDuration: 0.1, animations: {
+                            self.moveCell!.contentView.transform = CGAffineTransform(scaleX: 1, y: 1)
+                        })
+                        print("animation is End.")
+                        self.isMoving = false
+                        self.isFinish = false
+                        self.moveCell = nil
+                    })
                 })
-            })
-            
-        case .cancelled:
-            isFinish = true
-            performBatchUpdates({
-                cancelInteractiveMovement()
-            }, completion: {isEnd in
-                UIView.animate(withDuration: 0.25, animations: {
-                    self.moveCell!.contentView.transform = CGAffineTransform(scaleX: 1, y: 1)
-                },completion: {isEnd in
-                    self.isMoving = false
-                    self.moveCell = nil
-                    self.isFinish = false
-                })
-            })
- 
+            }
             
         default:
-            break
+            if isMoving {
+                isFinish = true
+                UIView.animate(withDuration: 0.1, animations: {
+                    self.performBatchUpdates({
+                        self.cancelInteractiveMovement()
+                    }, completion: {isEnd in
+                        UIView.animate(withDuration: 0.1, animations: {
+                            self.moveCell!.contentView.transform = CGAffineTransform(scaleX: 1, y: 1)
+                        },completion: {isEnd in
+                            self.moveCell = nil
+                            self.isMoving = false
+                            self.isFinish = false
+                        })
+                    })
+                })
+            }
         }
     }
     
@@ -133,6 +142,7 @@ extension PalleteCollectionV2 : UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if isFinish && moveCell != nil{
+            print("returned move cell")
             return moveCell!
         }
         
@@ -169,6 +179,7 @@ extension PalleteCollectionV2 : UICollectionViewDelegate {
         } else if selectedColor < sourceIndexPath.item && selectedColor >= destinationIndexPath.item {
             selectedColor += 1
         }
+        print("changed complete")
     }
 }
 
