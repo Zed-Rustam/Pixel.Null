@@ -133,6 +133,6 @@ class SymmetryController : UIViewController {
     
     override func viewDidLayoutSubviews() {
            content.layoutIfNeeded()
-           scroll.contentSize.height = content.frame.height + 64
+           scroll.contentSize.height = content.frame.height + 12
        }
 }

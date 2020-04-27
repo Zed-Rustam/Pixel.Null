@@ -29,6 +29,20 @@ class ProjectStyle {
     static var bgImage = UIImage.merge(images: [UIImage(named: "Background1")!.withTintColor(ProjectStyle.uiEnableColor),UIImage(named: "Background2")!.withTintColor(ProjectStyle.uiDisableColor)])
 }
 
+func getAppColor(color : Theme) -> UIColor{
+    return UIColor(named: color.rawValue)!
+}
+
+
+enum Theme : String {
+    case background = "backgroundColor"
+    case enable = "enableColor"
+    case disable = "disableColor"
+    case shadow = "shadowColor"
+    case select = "selectColor"
+    case red = "redColor"
+}
+
 extension UIImage {
     
     convenience init?(size : CGSize){

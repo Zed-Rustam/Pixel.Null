@@ -391,7 +391,8 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
             transformView.angle = transformView.lastInformation.angle
             transformView.rotateDelegate(CGFloat(transformView.angle))
             transformView.resizeDelegate(transformView.position.size)
-
+            transformView.lastSize = CGSize(width: ((transformView.lastInformation.position.origin.x + transformView.lastInformation.position.size.width / 2.0)), height: ((transformView.lastInformation.position.origin.y + transformView.lastInformation.position.size.height / 2.0)))
+            
             transformView.setNeedsDisplay()
             
             ActionLayer = move.drawOn(position: transformView.position, rotation: transformView.Radians(CGFloat(transformView.angle)),rotateCenter: CGPoint(x: transformView.lastSize.width, y: transformView.lastSize.height))

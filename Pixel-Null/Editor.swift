@@ -23,6 +23,66 @@ class Editor : UIViewController {
         return tb
     }()
     
+    lazy var transformSize : UIView = {
+        let mainView = UIView()
+        mainView.translatesAutoresizingMaskIntoConstraints = false
+        mainView.setShadow(color: ProjectStyle.uiShadowColor, radius: 8, opasity: 0.25)
+        
+        let bg = UIView()
+        bg.backgroundColor = ProjectStyle.uiBackgroundColor
+        bg.setCorners(corners: 8)
+        bg.translatesAutoresizingMaskIntoConstraints = false
+        
+        mainView.addSubviewFullSize(view: bg)
+        
+        let title = UILabel()
+        title.translatesAutoresizingMaskIntoConstraints = false
+        title.textColor = ProjectStyle.uiEnableColor
+        title.text = "1024x1024"
+        title.font = UIFont(name: "Rubik-Bold", size: 16)
+        title.textAlignment = .center
+        
+        self.canvas.transformView.resizeDelegate = {size in
+            title.text = "\(Int(size.width))x\(Int(size.height))"
+        }
+        
+        mainView.addSubviewFullSize(view: title)
+        
+        mainView.widthAnchor.constraint(equalToConstant: 132).isActive = true
+        mainView.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        return mainView
+    }()
+
+    lazy var transformAngle : UIView = {
+        let mainView = UIView()
+        mainView.translatesAutoresizingMaskIntoConstraints = false
+        mainView.setShadow(color: ProjectStyle.uiShadowColor, radius: 8, opasity: 0.25)
+        
+        let bg = UIView()
+        bg.backgroundColor = ProjectStyle.uiBackgroundColor
+        bg.setCorners(corners: 8)
+        bg.translatesAutoresizingMaskIntoConstraints = false
+        
+        mainView.addSubviewFullSize(view: bg)
+        
+        let title = UILabel()
+        title.translatesAutoresizingMaskIntoConstraints = false
+        title.textColor = ProjectStyle.uiEnableColor
+        title.text = "0°"
+        title.font = UIFont(name: "Rubik-Bold", size: 16)
+        title.textAlignment = .center
+        
+        self.canvas.transformView.rotateDelegate = {angle in
+            title.text = "\(Int(angle))°"
+        }
+        
+        mainView.addSubviewFullSize(view: title)
+        
+        mainView.widthAnchor.constraint(equalToConstant: 132).isActive = true
+        mainView.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        return mainView
+    }()
+    
     override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge {
         return .bottom
     }
@@ -61,7 +121,9 @@ class Editor : UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(rotate), name: UIDevice.orientationDidChangeNotification, object: nil)
 
         view.addSubview(toolBar)
-        
+        view.addSubview(transformSize)
+        view.addSubview(transformAngle)
+
         toolBar.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
         toolBar.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
         toolBar.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
@@ -76,6 +138,12 @@ class Editor : UIViewController {
         control.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
         control.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
         control.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 108).isActive = true
+        
+        transformSize.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 6).isActive = true
+        transformSize.topAnchor.constraint(equalTo: control.bottomAnchor, constant: 6).isActive = true
+        
+        transformAngle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 6).isActive = true
+        transformAngle.topAnchor.constraint(equalTo: transformSize.bottomAnchor, constant: 6).isActive = true
         
         view.backgroundColor = ProjectStyle.uiBackgroundColor
     }
@@ -103,7 +171,10 @@ class Editor : UIViewController {
     }
     
     func showTransform(isShow : Bool) {
-        //todo
+        UIView.animate(withDuration: 0.2, animations: {
+            self.transformSize.alpha = isShow ? 1 : 0
+            self.transformAngle.alpha = isShow ? 1 : 0
+        })
     }
     
     @objc func appMovedToBackground() {

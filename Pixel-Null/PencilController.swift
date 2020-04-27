@@ -172,7 +172,6 @@ class PencilController : UIViewController {
             """
 
                 Using the pencil tool, you can draw curved lines, a stroke, and just draw like a brush.
-
             """, attributes:normal)
         
         label.textColor = ProjectStyle.uiEnableColor
@@ -246,7 +245,7 @@ class PencilController : UIViewController {
     
     override func viewDidLayoutSubviews() {
         stack.layoutIfNeeded()
-        scroll.contentSize.height = stack.frame.height + 64
+        scroll.contentSize.height = stack.frame.height + 12
         print(stack.frame.height)
     }
 }

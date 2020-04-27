@@ -16,11 +16,13 @@ class PalleteCollectionV2 : UICollectionView {
     
     private var selectedColor = 0
     
+    //показывает происходит ли сейчас перемещение, для того, что бы можно было отключить другие действия с паллитрой
     private var isMoving = false
+    //нужен чтобы при прекращении перемещения передать ячейку, которая перемещалась
     private var isFinish = false
     
     private var moveCell : PalleteColorCell? = nil
-    
+    //вкл/выкл перемещение
     func setEnableMoving(enable : Bool) {
         if enable && gestureRecognizers == nil || !gestureRecognizers!.contains(moveGesture) {
             addGestureRecognizer(moveGesture)
@@ -41,11 +43,12 @@ class PalleteCollectionV2 : UICollectionView {
         }
     }
     
+    //делегат, который вызывается при выборе цвета и передает цвет
     var colorDelegate : (UIColor) -> () = {color in}
     
     lazy private var moveGesture : UILongPressGestureRecognizer = {
         let gesture = UILongPressGestureRecognizer(target: self, action: #selector(onLongPress(sender:)))
-        gesture.minimumPressDuration = 0.25
+        gesture.minimumPressDuration = 0.35
         
         return gesture
     }()
@@ -67,17 +70,14 @@ class PalleteCollectionV2 : UICollectionView {
         layer.masksToBounds = false
         
         addGestureRecognizer(moveGesture)
+        setShadow(color: ProjectStyle.uiShadowColor, radius: 4, opasity: 0.5)
     }
     
     @objc func onLongPress(sender : UILongPressGestureRecognizer) {
         switch sender.state {
         case .began:
             if let cell = indexPathForItem(at: sender.location(in: self)) {
-               
-                print("check item moving : \(cell.item)")
                 if !isMoving {
-                    print("start moving")
-
                     beginInteractiveMovementForItem(at: cell)
                     moveCell = cellForItem(at: cell) as? PalleteColorCell
                     
@@ -94,14 +94,13 @@ class PalleteCollectionV2 : UICollectionView {
         case .ended:
             if isMoving {
                 isFinish = true
-                UIView.animate(withDuration: 0.1, animations: {
+                UIView.animate(withDuration: 0.15, animations: {
                     self.performBatchUpdates({
                         self.endInteractiveMovement()
                     }, completion: {isEnd in
-                        UIView.animate(withDuration: 0.1, animations: {
+                        UIView.animate(withDuration: 0.15, animations: {
                             self.moveCell!.contentView.transform = CGAffineTransform(scaleX: 1, y: 1)
                         })
-                        print("animation is End.")
                         self.isMoving = false
                         self.isFinish = false
                         self.moveCell = nil
@@ -112,11 +111,11 @@ class PalleteCollectionV2 : UICollectionView {
         default:
             if isMoving {
                 isFinish = true
-                UIView.animate(withDuration: 0.1, animations: {
+                UIView.animate(withDuration: 0.15, animations: {
                     self.performBatchUpdates({
                         self.cancelInteractiveMovement()
                     }, completion: {isEnd in
-                        UIView.animate(withDuration: 0.1, animations: {
+                        UIView.animate(withDuration: 0.15, animations: {
                             self.moveCell!.contentView.transform = CGAffineTransform(scaleX: 1, y: 1)
                         },completion: {isEnd in
                             self.moveCell = nil
@@ -132,7 +131,6 @@ class PalleteCollectionV2 : UICollectionView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
 }
 
 extension PalleteCollectionV2 : UICollectionViewDataSource {
@@ -142,7 +140,6 @@ extension PalleteCollectionV2 : UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if isFinish && moveCell != nil{
-            print("returned move cell")
             return moveCell!
         }
         
@@ -179,7 +176,6 @@ extension PalleteCollectionV2 : UICollectionViewDelegate {
         } else if selectedColor < sourceIndexPath.item && selectedColor >= destinationIndexPath.item {
             selectedColor += 1
         }
-        print("changed complete")
     }
 }
 
@@ -369,7 +365,7 @@ class PalleteColorCell : UICollectionViewCell {
         
         contentView.addSubview(colorView)
         contentView.addSubview(selectStroke)
-        
+
         colorView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 0).isActive = true
         colorView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 0).isActive = true
         
@@ -377,12 +373,9 @@ class PalleteColorCell : UICollectionViewCell {
         selectStroke.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 0).isActive = true
         setVisible(visible: false, withAnim: false)
         
+        isOpaque = true
         contentView.layer.shouldRasterize = true
         contentView.layer.rasterizationScale = UIScreen.main.scale
-    }
-    
-    override func layoutSubviews() {
-        contentView.setShadow(color: ProjectStyle.uiShadowColor, radius: 4, opasity: 0.5)
     }
     
     required init?(coder: NSCoder) {

@@ -42,7 +42,7 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = ProjectStyle.uiBackgroundColor
-
+        
         self.view.addSubview(controllers[0].view)
         self.view.addSubview(controllers[1].view)
         self.view.addSubview(controllers[2].view)
@@ -63,6 +63,12 @@ class MainViewController: UIViewController {
         nav.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -4).isActive = true
         nav.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -4).isActive = true
         nav.heightAnchor.constraint(equalToConstant: 64 + CGFloat(UIApplication.shared.windows[0].safeAreaInsets.bottom / 2)).isActive = true
+        
+        let edges = UIEdgeInsets(top: 0, left: 0, bottom: nav.frame.height - CGFloat(UIApplication.shared.windows[0].safeAreaInsets.bottom / 2) , right: 0)
+        
+        controllers.forEach({
+            $0.additionalSafeAreaInsets = edges
+        })
     }
 }
 

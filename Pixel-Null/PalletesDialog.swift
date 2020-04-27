@@ -66,7 +66,7 @@ class PalletesDialog: UIView {
     }()
     
     lazy private var collection : PalleteCollectionV2 = {
-        let clrs = PalleteCollectionV2(colors: .init(repeating: "#FF00FFFF", count: 100))
+        let clrs = PalleteCollectionV2(colors: try! JSONDecoder().decode(Pallete.self, from: NSDataAsset(name: "Default pallete")!.data).colors)
         clrs.setEnableMoving(enable: false)
         clrs.layer.masksToBounds = true
         

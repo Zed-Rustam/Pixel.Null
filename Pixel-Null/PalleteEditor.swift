@@ -195,6 +195,6 @@ class PalleteEditor : UIViewController {
         exitButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 6).isActive = true
         
         palleteEditBap.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -6).isActive = true
-        palleteEditBap.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 6).isActive = true
+        palleteEditBap.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -6).isActive = true
     }
 }

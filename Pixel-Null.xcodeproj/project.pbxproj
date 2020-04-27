@@ -89,6 +89,7 @@
 		95C727A623EB637800ED1A28 /* Rubik-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 95C7279C23EB637700ED1A28 /* Rubik-BlackItalic.ttf */; };
 		95C727A723EB637800ED1A28 /* Rubik-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 95C7279D23EB637700ED1A28 /* Rubik-MediumItalic.ttf */; };
 		95C727A823EB637800ED1A28 /* Rubik-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 95C7279E23EB637800ED1A28 /* Rubik-BoldItalic.ttf */; };
+		95D01F1C2456BEBE006C8394 /* TitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95D01F1B2456BEBE006C8394 /* TitleView.swift */; };
 		95DC554C23EC9A820011FA2A /* ColorSelectDialog1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95DC554B23EC9A820011FA2A /* ColorSelectDialog1.swift */; };
 		95DC554E23EC9D2A0011FA2A /* ColorSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95DC554D23EC9D2A0011FA2A /* ColorSelector.swift */; };
 		95DC555023EDF8280011FA2A /* CIrcleColorSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95DC554F23EDF8280011FA2A /* CIrcleColorSlider.swift */; };
@@ -187,6 +188,7 @@
 		95C7279C23EB637700ED1A28 /* Rubik-BlackItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-BlackItalic.ttf"; sourceTree = "<group>"; };
 		95C7279D23EB637700ED1A28 /* Rubik-MediumItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-MediumItalic.ttf"; sourceTree = "<group>"; };
 		95C7279E23EB637800ED1A28 /* Rubik-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-BoldItalic.ttf"; sourceTree = "<group>"; };
+		95D01F1B2456BEBE006C8394 /* TitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleView.swift; sourceTree = "<group>"; };
 		95DC554B23EC9A820011FA2A /* ColorSelectDialog1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSelectDialog1.swift; sourceTree = "<group>"; };
 		95DC554D23EC9D2A0011FA2A /* ColorSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorSelector.swift; sourceTree = "<group>"; };
 		95DC554F23EDF8280011FA2A /* CIrcleColorSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIrcleColorSlider.swift; sourceTree = "<group>"; };
@@ -263,12 +265,12 @@
 				955145D32405587700524FF9 /* Editor */,
 				95C1233B241E088800775377 /* Colors Pallete */,
 				959217AC23FD719800DE61EE /* Gallery */,
+				95D01F1A2456BE38006C8394 /* Controls */,
 				95560A2023C8D64100581482 /* fonts */,
 				95C7278123EB37D700ED1A28 /* Create Dialog */,
 				95C7278223EB37EA00ED1A28 /* Color Dialog */,
 				95D4559923CED016007E7505 /* Project */,
 				95C7278723EB583D00ED1A28 /* ColorStyle.swift */,
-				95C7278523EB577900ED1A28 /* CircleButton.swift */,
 				95782CDF23CD8F3000C2772F /* TextFieldDelegate.swift */,
 				954AABAF23BBEC3D00F52955 /* AppDelegate.swift */,
 				954AABB123BBEC3D00F52955 /* SceneDelegate.swift */,
@@ -278,10 +280,7 @@
 				954AABBA23BBEC4100F52955 /* LaunchScreen.storyboard */,
 				954AABBD23BBEC4100F52955 /* Info.plist */,
 				95560A1223C2EA3100581482 /* a.swift */,
-				95782CDD23CB928200C2772F /* TextFIeld.swift */,
 				9540F1BB2431A2C5008D1657 /* NavigationView.swift */,
-				9540F1BD243330D1008D1657 /* SliderView.swift */,
-				9523F2C52435F46300725214 /* ToggleView.swift */,
 			);
 			path = "Pixel-Null";
 			sourceTree = "<group>";
@@ -441,10 +440,7 @@
 				95C7278323EB384200ED1A28 /* ColorSelectorController.swift */,
 				95DC554B23EC9A820011FA2A /* ColorSelectDialog1.swift */,
 				95DC555123EF3FEA0011FA2A /* ColorSelectDialog2.swift */,
-				95DC554D23EC9D2A0011FA2A /* ColorSelector.swift */,
-				9540F1BF2433DDB7008D1657 /* ColorSlider.swift */,
 				9540F1C12434CA97008D1657 /* CircleSelector.swift */,
-				95DC554F23EDF8280011FA2A /* CIrcleColorSlider.swift */,
 				959A532F24431C5300F6BF80 /* PalletesDialog.swift */,
 			);
 			name = "Color Dialog";
@@ -465,6 +461,21 @@
 				95C7279923EB637600ED1A28 /* Rubik-Regular.ttf */,
 			);
 			path = Rubik;
+			sourceTree = "<group>";
+		};
+		95D01F1A2456BE38006C8394 /* Controls */ = {
+			isa = PBXGroup;
+			children = (
+				9540F1BD243330D1008D1657 /* SliderView.swift */,
+				95DC554D23EC9D2A0011FA2A /* ColorSelector.swift */,
+				9523F2C52435F46300725214 /* ToggleView.swift */,
+				95DC554F23EDF8280011FA2A /* CIrcleColorSlider.swift */,
+				9540F1BF2433DDB7008D1657 /* ColorSlider.swift */,
+				95782CDD23CB928200C2772F /* TextFIeld.swift */,
+				95C7278523EB577900ED1A28 /* CircleButton.swift */,
+				95D01F1B2456BEBE006C8394 /* TitleView.swift */,
+			);
+			name = Controls;
 			sourceTree = "<group>";
 		};
 		95D4559923CED016007E7505 /* Project */ = {
@@ -572,6 +583,7 @@
 				95A89E3523FA3E7E00DC796C /* FrameWorker.swift in Sources */,
 				95A626B12444616D007E75F3 /* TrainingMain.swift in Sources */,
 				95578E0523D4C0B200D8DDF2 /* CreateDIalogController.swift in Sources */,
+				95D01F1C2456BEBE006C8394 /* TitleView.swift in Sources */,
 				9537B1A1243C6C880083BE27 /* GridView.swift in Sources */,
 				9537B1AF2442666E0083BE27 /* SettingsTableView.swift in Sources */,
 				9540F1BE243330D2008D1657 /* SliderView.swift in Sources */,

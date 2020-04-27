@@ -132,7 +132,7 @@ class EditorController : UIViewController {
     
     override func viewDidLayoutSubviews() {
         content.layoutIfNeeded()
-        scroll.contentSize.height = content.frame.height + 64 + 12
+        scroll.contentSize.height = content.frame.height + 12
         print(content.frame.height)
     }
 }
