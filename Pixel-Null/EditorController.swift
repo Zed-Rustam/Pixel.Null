@@ -125,7 +125,6 @@ class EditorController : UIViewController {
         scroll.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
         scroll.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
         scroll.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
-        //scroll.contentSize.height = content.frame.height + 6400
 
         view.backgroundColor = ProjectStyle.uiBackgroundColor
     }

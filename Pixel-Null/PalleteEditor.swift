@@ -174,6 +174,10 @@ class PalleteEditor : UIViewController {
     
     var delegate : () -> () = {}
     
+    override func viewDidAppear(_ animated: Bool) {
+        colors.selectItem(at: IndexPath(item: 0, section: 0), animated: true, scrollPosition: .left)
+    }
+    
     override func viewDidLoad() {
         view.backgroundColor = ProjectStyle.uiBackgroundColor
 

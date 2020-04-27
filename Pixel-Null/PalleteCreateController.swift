@@ -269,6 +269,9 @@ class PalleteCreateController : UIViewController {
         self.view.isUserInteractionEnabled = true
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        colors.selectItem(at: IndexPath(item: 0, section: 0), animated: true, scrollPosition: .left)
+    }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to:nil, from:nil, for:nil)
     }

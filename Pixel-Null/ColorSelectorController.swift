@@ -139,10 +139,10 @@ class ColorSelectorController : UIViewController, NavigationProtocol {
 
        
 
-        view.addSubview(topBar)
         view.addSubview(dialog1)
         view.addSubview(dialog2)
         view.addSubview(dialog3)
+        view.addSubview(topBar)
 
         topBar.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 12).isActive = true
         topBar.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -12).isActive = true
@@ -157,7 +157,7 @@ class ColorSelectorController : UIViewController, NavigationProtocol {
         dialog2.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 12).isActive = true
         dialog2.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -12).isActive = true
         dialog2.topAnchor.constraint(equalTo: topBar.bottomAnchor, constant: 12).isActive = true
-        dialog2.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -12).isActive = true
+        dialog2.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
         
         dialog3.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 6).isActive = true
         dialog3.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -6).isActive = true
@@ -176,31 +176,9 @@ class ColorSelectorController : UIViewController, NavigationProtocol {
         dialog2.setValues(color: startcolor)
         dialog2.isHidden = true
         dialog3.isHidden = true
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
-    override func viewDidLayoutSubviews() {
-        
-    }
-    
-    @objc func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            print(view.frame.height - (dialog2.hexText.frame.origin.y + dialog2.hexText.frame.height))
-            print(keyboardSize.height)
-            let size = keyboardSize.origin.y + keyboardSize.height - view.frame.height
-            print(size)
-                if view.frame.height - (dialog2.hexText.frame.origin.y + dialog2.hexText.frame.height) <= keyboardSize.height + size && dialog2.hexText.filed.isEditing {
-                self.view.frame.origin.y -= (self.view.frame.height - keyboardSize.height) - (dialog2.hexText.frame.origin.y)
-                } else {
-                    self.view.frame.origin.y = 0
-                }
-        
-        }
-    }
-
-    @objc func keyboardWillHide(notification: NSNotification) {
-        self.view.frame.origin.y = 0
+    override func viewDidAppear(_ animated: Bool) {
+        dialog3.collection.selectItem(at: IndexPath(item: 0, section: 0), animated: true, scrollPosition: .left)
     }
 }

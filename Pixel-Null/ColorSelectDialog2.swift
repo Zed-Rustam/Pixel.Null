@@ -5,6 +5,8 @@ class ColorSelectDialog2 : UIView {
     lazy private var redSlider : ColorSlider = {
         let slider = ColorSlider(startColor: .black, endColor: .red, orientation: .horizontal)
         slider.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        slider.preview = .down
+        
         slider.delegate = {position in
             self.nowred = position
             self.redSliderText.filed.text = String(Int(255 * position))
@@ -28,6 +30,13 @@ class ColorSelectDialog2 : UIView {
         text.widthAnchor.constraint(equalToConstant: 72).isActive = true
         text.heightAnchor.constraint(equalToConstant: 36).isActive = true
 
+        let bar = UIToolbar()
+        let done = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneSetDelay))
+        bar.items = [done]
+        bar.sizeToFit()
+        
+        text.filed.inputAccessoryView = bar
+        
         return text
     }()
     
@@ -95,6 +104,13 @@ class ColorSelectDialog2 : UIView {
         text.widthAnchor.constraint(equalToConstant: 72).isActive = true
         text.heightAnchor.constraint(equalToConstant: 36).isActive = true
 
+        let bar = UIToolbar()
+        let done = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneSetDelay))
+        bar.items = [done]
+        bar.sizeToFit()
+        
+        text.filed.inputAccessoryView = bar
+        
         return text
     }()
     
@@ -110,6 +126,12 @@ class ColorSelectDialog2 : UIView {
         text.widthAnchor.constraint(equalToConstant: 72).isActive = true
         text.heightAnchor.constraint(equalToConstant: 36).isActive = true
 
+        let bar = UIToolbar()
+        let done = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneSetDelay))
+        bar.items = [done]
+        bar.sizeToFit()
+        
+        text.filed.inputAccessoryView = bar
         return text
     }()
     
@@ -124,6 +146,14 @@ class ColorSelectDialog2 : UIView {
         text.translatesAutoresizingMaskIntoConstraints = false
         text.widthAnchor.constraint(equalToConstant: 72).isActive = true
         text.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        
+        let bar = UIToolbar()
+        let done = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneSetDelay))
+        bar.items = [done]
+        bar.sizeToFit()
+        
+        text.filed.inputAccessoryView = bar
+        
         return text
     }()
     
@@ -135,8 +165,19 @@ class ColorSelectDialog2 : UIView {
        text.setFIeldDelegate(delegate: hexDelegate)
        text.translatesAutoresizingMaskIntoConstraints = false
        text.heightAnchor.constraint(equalToConstant: 48).isActive = true
+        
+        let bar = UIToolbar()
+        let done = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneSetDelay))
+        bar.items = [done]
+        bar.sizeToFit()
+        
+        text.filed.inputAccessoryView = bar
        return text
     }()
+    
+    @objc func doneSetDelay() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to:nil, from:nil, for:nil)
+    }
 
     lazy private var greenSlider : ColorSlider = {
         let slider  = ColorSlider(startColor: .black, endColor: .green, orientation: .horizontal)
@@ -193,7 +234,7 @@ class ColorSelectDialog2 : UIView {
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .horizontal
         stack.spacing = 12
-        stack.alignment = .center
+        stack.alignment = .fill
         stack.distribution = .fill
                
         stack.addArrangedSubview(hexText)
@@ -289,6 +330,21 @@ class ColorSelectDialog2 : UIView {
         self.hexText.filed.text = UIColor.toHex(color: self.result.color)
     })
 
+    //lazy private var keyboardBar
+    lazy private var scroll : UIScrollView = {
+       let scrl = UIScrollView()
+        scrl.translatesAutoresizingMaskIntoConstraints = false
+        scrl.layer.masksToBounds = true
+        //scrl.addSubview(stack)
+        //stack.leadingAnchor.constraint(equalTo: scrl.leadingAnchor, constant: 0).isActive = true
+        //stack.trailingAnchor.constraint(equalTo: scrl.trailingAnchor, constant: 0).isActive = true
+        //stack.topAnchor.constraint(equalTo: scrl.topAnchor, constant: 0).isActive = true
+        //stack.bottomAnchor.constraint(equalTo: scrl.bottomAnchor, constant: 0).isActive = true
+        //stack.widthAnchor.constraint(equalTo: scrl.widthAnchor, constant: 0).isActive = true
+        //stack.widthAnchor.constraint(equalTo: scrl.widthAnchor, constant: 0).isActive = true
+
+        return scrl
+    }()
     private var nowred : CGFloat = 0.0
     private var nowgreen : CGFloat = 0.0
     private var nowblue : CGFloat = 0.0
@@ -302,7 +358,7 @@ class ColorSelectDialog2 : UIView {
         mainStack.distribution = .fill
         mainStack.translatesAutoresizingMaskIntoConstraints = false
         
-        mainStack.addArrangedSubview(redStack)
+        //mainStack.addArrangedSubview(redStack)
         mainStack.addArrangedSubview(greenStack)
         mainStack.addArrangedSubview(blueStack)
         mainStack.addArrangedSubview(alphaStack)
@@ -377,20 +433,90 @@ class ColorSelectDialog2 : UIView {
     
     override init(frame : CGRect) {
         super.init(frame: frame)
-        addSubview(stack)
+        addSubview(scroll)
+        scroll.addSubview(redSliderText)
+        scroll.addSubview(greenSliderText)
+        scroll.addSubview(blueSliderText)
+        scroll.addSubview(alphaSliderText)
+
+        scroll.addSubview(greenSlider)
+        scroll.addSubview(blueSlider)
+        scroll.addSubview(alphaSlider)
+        scroll.addSubview(redSlider)
+
+        scroll.addSubview(hexText)
+        scroll.addSubview(result)
+
+        redSliderText.leftAnchor.constraint(equalTo: scroll.leftAnchor, constant: 0).isActive = true
+        redSliderText.topAnchor.constraint(equalTo: scroll.topAnchor, constant: 0).isActive = true
+        
+        greenSliderText.leftAnchor.constraint(equalTo: scroll.leftAnchor, constant: 0).isActive = true
+        greenSliderText.topAnchor.constraint(equalTo: redSliderText.bottomAnchor, constant: 12).isActive = true
+        
+        blueSliderText.leftAnchor.constraint(equalTo: scroll.leftAnchor, constant: 0).isActive = true
+        blueSliderText.topAnchor.constraint(equalTo: greenSliderText.bottomAnchor, constant: 12).isActive = true
+        
+        alphaSliderText.leftAnchor.constraint(equalTo: scroll.leftAnchor, constant: 0).isActive = true
+        alphaSliderText.topAnchor.constraint(equalTo: blueSliderText.bottomAnchor, constant: 12).isActive = true
+        
+        redSlider.leftAnchor.constraint(equalTo: redSliderText.rightAnchor, constant: 8).isActive = true
+        redSlider.topAnchor.constraint(equalTo: scroll.topAnchor, constant: 3).isActive = true
+        redSlider.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
+        
+        greenSlider.leftAnchor.constraint(equalTo: greenSliderText.rightAnchor, constant: 8).isActive = true
+        greenSlider.topAnchor.constraint(equalTo: greenSliderText.topAnchor, constant: 3).isActive = true
+        greenSlider.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
+        
+        blueSlider.leftAnchor.constraint(equalTo: blueSliderText.rightAnchor, constant: 8).isActive = true
+        blueSlider.topAnchor.constraint(equalTo: blueSliderText.topAnchor, constant: 3).isActive = true
+        blueSlider.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
+        
+        alphaSlider.leftAnchor.constraint(equalTo: alphaSliderText.rightAnchor, constant: 8).isActive = true
+        alphaSlider.topAnchor.constraint(equalTo: alphaSliderText.topAnchor, constant: 3).isActive = true
+        alphaSlider.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
+        
+        hexText.leftAnchor.constraint(equalTo: leftAnchor, constant: 0).isActive = true
+        hexText.topAnchor.constraint(equalTo: alphaSliderText.bottomAnchor, constant: 12).isActive = true
+        hexText.rightAnchor.constraint(equalTo: result.leftAnchor, constant: -8).isActive = true
+        
+        result.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
+        result.topAnchor.constraint(equalTo: alphaSliderText.bottomAnchor, constant: 12).isActive = true
+        
         translatesAutoresizingMaskIntoConstraints = false
-        stack.leftAnchor.constraint(equalTo: leftAnchor, constant: 0).isActive = true
-        stack.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
-        stack.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
-    }
-    
-    
-    override func layoutSubviews() {
+        scroll.leftAnchor.constraint(equalTo: leftAnchor, constant: 0).isActive = true
+        scroll.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
+        scroll.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
+        scroll.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardChange(sender:)), name: UIApplication.keyboardWillShowNotification, object: nil)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHide(sender:)), name: UIApplication.keyboardWillHideNotification, object: nil)
+// NotificationCenter.default.addObserver(self, selector: #selector(rotate), name: UIDevice.orientationDidChangeNotification, object: nil)
         
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to:nil, from:nil, for:nil)
+    @objc func keyboardChange(sender : NSNotification) {
+        let info = sender.userInfo!
+        let rect: CGRect = info[UIResponder.keyboardFrameBeginUserInfoKey] as! CGRect
+ 
+        if hexText.filed.isFirstResponder && hexText.frame.origin.y + hexText.frame.height + 12 > scroll.frame.height - rect.height  {
+            scroll.contentOffset = CGPoint(x: 0, y: 96)
+        } else {
+            scroll.contentOffset = .zero
+        }
+    }
+    
+    @objc func keyboardHide(sender : NSNotification) {
+        let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        scroll.contentInset = contentInsets;
+        scroll.scrollIndicatorInsets = contentInsets;
+        scroll.contentOffset = .zero
+    }
+    
+    override func layoutSubviews() {
+        //layoutIfNeeded()
+        
+        scroll.contentSize.height = 240
     }
     
     required init?(coder: NSCoder) {

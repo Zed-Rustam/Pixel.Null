@@ -22,6 +22,7 @@ class PalleteCollectionV2 : UICollectionView {
     private var isFinish = false
     
     private var moveCell : PalleteColorCell? = nil
+
     //вкл/выкл перемещение
     func setEnableMoving(enable : Bool) {
         if enable && gestureRecognizers == nil || !gestureRecognizers!.contains(moveGesture) {
@@ -71,6 +72,7 @@ class PalleteCollectionV2 : UICollectionView {
         
         addGestureRecognizer(moveGesture)
         setShadow(color: ProjectStyle.uiShadowColor, radius: 4, opasity: 0.5)
+        isPrefetchingEnabled = false
     }
     
     @objc func onLongPress(sender : UILongPressGestureRecognizer) {
@@ -154,9 +156,6 @@ extension PalleteCollectionV2 : UICollectionViewDataSource {
 extension PalleteCollectionV2 : UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if selectedColor != indexPath.item {
-            let cell = cellForItem(at: IndexPath(item: selectedColor, section: 0)) as? PalleteColorCell
-            cell?.setVisible(visible: false, withAnim: true)
-            
             selectedColor = indexPath.item
             
             let cellnew = cellForItem(at: indexPath) as! PalleteColorCell
@@ -164,6 +163,12 @@ extension PalleteCollectionV2 : UICollectionViewDelegate {
         }
         
         colorDelegate(UIColor(hex: colors[selectedColor])!)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        print("deselect")
+        let cellnew = cellForItem(at: indexPath) as? PalleteColorCell
+        cellnew?.setVisible(visible: false, withAnim: true)
     }
     
     func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {

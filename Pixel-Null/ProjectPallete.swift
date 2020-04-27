@@ -292,4 +292,8 @@ class ProjectPallete : UIViewController {
 
         view.backgroundColor = ProjectStyle.uiBackgroundColor
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        collection.selectItem(at: IndexPath(item: 0, section: 0), animated: true, scrollPosition: .left)
+    }
 }

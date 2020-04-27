@@ -118,6 +118,8 @@ class NavigationView : UIView {
     }
     
     @objc private func press(sender : UILongPressGestureRecognizer) {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to:nil, from:nil, for:nil)
+
         switch sender.state {
         case .began:
             if iconStack.bounds.contains(sender.location(in: iconStack)) {
