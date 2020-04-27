@@ -60,7 +60,6 @@
 		959A533024431C5300F6BF80 /* PalletesDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959A532F24431C5300F6BF80 /* PalletesDialog.swift */; };
 		959BCFB8241EC64100B27CFB /* PalleteFull.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959BCFB7241EC64100B27CFB /* PalleteFull.swift */; };
 		959BCFBB241FECB900B27CFB /* PalleteEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959BCFBA241FECB900B27CFB /* PalleteEditor.swift */; };
-		959BCFBD241FECEA00B27CFB /* GridCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959BCFBC241FECE900B27CFB /* GridCollection.swift */; };
 		959BCFBF241FEFA300B27CFB /* PalleteWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959BCFBE241FEFA300B27CFB /* PalleteWorker.swift */; };
 		959BCFC3242254F100B27CFB /* FullColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959BCFC2242254F100B27CFB /* FullColor.swift */; };
 		959DC1132430AD38001A79DF /* PencilSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959DC1122430AD38001A79DF /* PencilSettings.swift */; };
@@ -159,7 +158,6 @@
 		959A532F24431C5300F6BF80 /* PalletesDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PalletesDialog.swift; sourceTree = "<group>"; };
 		959BCFB7241EC64100B27CFB /* PalleteFull.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PalleteFull.swift; sourceTree = "<group>"; };
 		959BCFBA241FECB900B27CFB /* PalleteEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PalleteEditor.swift; sourceTree = "<group>"; };
-		959BCFBC241FECE900B27CFB /* GridCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridCollection.swift; sourceTree = "<group>"; };
 		959BCFBE241FEFA300B27CFB /* PalleteWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PalleteWorker.swift; sourceTree = "<group>"; };
 		959BCFC2242254F100B27CFB /* FullColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullColor.swift; sourceTree = "<group>"; };
 		959DC1122430AD38001A79DF /* PencilSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PencilSettings.swift; sourceTree = "<group>"; };
@@ -380,7 +378,6 @@
 			isa = PBXGroup;
 			children = (
 				959BCFBA241FECB900B27CFB /* PalleteEditor.swift */,
-				959BCFBC241FECE900B27CFB /* GridCollection.swift */,
 			);
 			name = PalleteEditor;
 			sourceTree = "<group>";
@@ -617,7 +614,6 @@
 				959DC1132430AD38001A79DF /* PencilSettings.swift in Sources */,
 				95DC554C23EC9A820011FA2A /* ColorSelectDialog1.swift in Sources */,
 				955145D724055D1000524FF9 /* Editor.swift in Sources */,
-				959BCFBD241FECEA00B27CFB /* GridCollection.swift in Sources */,
 				958C0C1C241961DE007B9C95 /* LayerCollection.swift in Sources */,
 				959A533024431C5300F6BF80 /* PalletesDialog.swift in Sources */,
 				95560A1523C42EE500581482 /* ProjectView.swift in Sources */,

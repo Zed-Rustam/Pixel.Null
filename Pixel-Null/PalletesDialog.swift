@@ -70,9 +70,15 @@ class PalletesDialog: UIView {
         clrs.setEnableMoving(enable: false)
         clrs.layer.masksToBounds = true
         
+        clrs.colorDelegate = {[unowned self] in
+            self.colorSelected = $0
+        }
+        
         (clrs.collectionViewLayout as! PalleteCollectionLayout).topOffset = 16
         return clrs
     }()
+   
+    lazy var colorSelected : UIColor = collection.getSelectItemColor()
     
     init() {
         super.init(frame: .zero)

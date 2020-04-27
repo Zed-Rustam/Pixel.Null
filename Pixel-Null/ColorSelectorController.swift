@@ -29,6 +29,9 @@ class ColorSelectorController : UIViewController, NavigationProtocol {
         if(!self!.dialog2.isHidden) {
             self!.delegate(self!.dialog2.result.color)
         }
+        if(!self!.dialog3.isHidden) {
+            self!.delegate(self!.dialog3.colorSelected)
+        }
         self!.dismiss(animated: true)
         }
         
@@ -99,12 +102,26 @@ class ColorSelectorController : UIViewController, NavigationProtocol {
     
     func onSelectChange(select: Int, lastSelect: Int) {
         if(select == 0) {
-            dialog1.setColor(color: dialog2.result.color)
+            switch lastSelect {
+            case 1:
+                dialog1.setColor(color: dialog2.result.color)
+            case 2:
+                dialog1.setColor(color: dialog3.colorSelected)
+            default:
+                break
+            }
             dialog1.isHidden = false
             dialog2.isHidden = true
             dialog3.isHidden = true
         } else if select == 1 {
-            dialog2.setValues(color: dialog1.selectedColorShow.color)
+            switch lastSelect {
+            case 0:
+                dialog2.setValues(color: dialog1.selectedColorShow.color)
+            case 2:
+                dialog2.setValues(color: dialog3.colorSelected)
+            default:
+                break
+            }
             dialog2.isHidden = false
             dialog1.isHidden = true
             dialog3.isHidden = true
