@@ -179,8 +179,8 @@ class ToolButton : UICollectionViewCell {
             finish.heightAnchor.constraint(equalToConstant: 36).isActive = true
             finish.setShadowColor(color: .clear)
             finish.delegate = {[weak self] in
+                editor.finishTransform()
                 //editor.canvas.finishTransform()
-                editor.toolBar.clickTool(tool: editor.canvas.transformView.lastToolSelected)
             }
             
             

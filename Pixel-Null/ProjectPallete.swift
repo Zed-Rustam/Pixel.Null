@@ -286,10 +286,10 @@ class ProjectPallete : UIViewController {
         
         selectedColor.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 6).isActive = true
         selectedColor.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -6).isActive = true
-
+        
         palleteEditBap.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -6).isActive = true
         palleteEditBap.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -6).isActive = true
-
+        
         view.backgroundColor = ProjectStyle.uiBackgroundColor
     }
     

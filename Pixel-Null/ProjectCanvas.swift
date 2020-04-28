@@ -1042,7 +1042,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 location.x = CGFloat(floor(location.x))
                 location.y = CGFloat(floor(location.y))
                 if actionImage.bounds.contains(location) {
-                    let color = project.getFrame(frame: project.FrameSelected, size: project.projectSize).getPixelColor(pos: location)
+                    let color = project.getFrameFromLayers(frame: project.FrameSelected, size: project.projectSize).getPixelColor(pos: location)
                     delegate?.changeMainColor(color: color)
                 }
             default:

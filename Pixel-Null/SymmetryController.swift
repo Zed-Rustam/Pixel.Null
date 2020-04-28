@@ -115,7 +115,7 @@ class SymmetryController : UIViewController {
             .appendText(text: " Gradient ", fortt: UIFont(name: "Rubik-Bold", size: 16)!)
             .appendText(text: "and", fortt: UIFont(name: "Rubik-Regular", size: 16)!)
             .appendText(text: " Transform ", fortt: UIFont(name: "Rubik-Bold", size: 16)!)
-            .appendText(text: "tools.\n\n", fortt: UIFont(name: "Rubik-Regular", size: 16)!),
+            .appendText(text: "tools.", fortt: UIFont(name: "Rubik-Regular", size: 16)!),
         ])
         
         return stack
@@ -133,6 +133,6 @@ class SymmetryController : UIViewController {
     
     override func viewDidLayoutSubviews() {
            content.layoutIfNeeded()
-           scroll.contentSize.height = content.frame.height + 12
+           scroll.contentSize.height = content.frame.height + 24
        }
 }

@@ -88,6 +88,8 @@ class ColorSelectorController : UIViewController, NavigationProtocol {
         return mainView
     }()
     
+    
+    
     var delegate : (UIColor)->() = {color in}
     
     func setColor(clr : UIColor) {
@@ -95,11 +97,7 @@ class ColorSelectorController : UIViewController, NavigationProtocol {
         dialog1.setColor(color: clr)
         dialog2.setValues(color: clr)
     }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
-    }
-    
+
     func onSelectChange(select: Int, lastSelect: Int) {
         if(select == 0) {
             switch lastSelect {
@@ -173,7 +171,9 @@ class ColorSelectorController : UIViewController, NavigationProtocol {
         dialog1.setColor(color: startcolor)
         dialog1.lastSelectedColorShow.color = startcolor
         
+        dialog2.lastresult.color = startcolor
         dialog2.setValues(color: startcolor)
+        
         dialog2.isHidden = true
         dialog3.isHidden = true
     }

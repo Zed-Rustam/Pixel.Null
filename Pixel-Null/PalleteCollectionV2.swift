@@ -203,7 +203,6 @@ extension PalleteCollectionV2 : PalleteCollectionDelegate {
     func deleteSelectedColor() {
         if colors.count > 1 {
             colors.remove(at: selectedColor)
-            
             performBatchUpdates({
                 deleteItems(at: [IndexPath(item: selectedColor, section: 0)])
                 if self.selectedColor >= self.colors.count {
@@ -211,6 +210,7 @@ extension PalleteCollectionV2 : PalleteCollectionDelegate {
                 }
             }, completion: {isEnd in
                 (self.cellForItem(at: IndexPath(item: self.selectedColor, section: 0)) as! PalleteColorCell).setVisible(visible: true)
+                self.selectItem(at: IndexPath(item: self.selectedColor, section: 0), animated: true, scrollPosition: .left)
             })
         }
     }

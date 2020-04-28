@@ -75,6 +75,7 @@ class PalletesDialog: UIView {
         }
         
         (clrs.collectionViewLayout as! PalleteCollectionLayout).topOffset = 16
+        (clrs.collectionViewLayout as! PalleteCollectionLayout).bottomOffset = 16
         return clrs
     }()
    

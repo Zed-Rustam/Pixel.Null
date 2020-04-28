@@ -164,13 +164,14 @@ class ColorSelectDialog2 : UIView {
        text.small = false
        text.setFIeldDelegate(delegate: hexDelegate)
        text.translatesAutoresizingMaskIntoConstraints = false
-       text.heightAnchor.constraint(equalToConstant: 48).isActive = true
+       text.heightAnchor.constraint(equalToConstant: 42).isActive = true
         
         let bar = UIToolbar()
         let done = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneSetDelay))
         bar.items = [done]
         bar.sizeToFit()
         
+        text.filed.font = UIFont(name: "Rubik-Medium", size: 20)
         text.filed.inputAccessoryView = bar
        return text
     }()
@@ -224,9 +225,40 @@ class ColorSelectDialog2 : UIView {
     var result : ColorSelector = {
         let res  = ColorSelector(frame: .zero)
         res.translatesAutoresizingMaskIntoConstraints = false
-        res.widthAnchor.constraint(equalToConstant: 48).isActive = true
-        res.heightAnchor.constraint(equalToConstant: 48).isActive = true
+        res.widthAnchor.constraint(equalToConstant: 42).isActive = true
+        res.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        
+        res.background.layer.maskedCorners = [.layerMinXMinYCorner,.layerMinXMaxYCorner]
         return res
+    }()
+    
+    var lastresult : ColorSelector = {
+        let res  = ColorSelector(frame: .zero)
+        res.translatesAutoresizingMaskIntoConstraints = false
+        res.widthAnchor.constraint(equalToConstant: 42).isActive = true
+        res.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        
+        res.background.layer.maskedCorners = [.layerMaxXMinYCorner,.layerMaxXMaxYCorner]
+        return res
+    }()
+    
+    lazy private var results : UIView = {
+        let mainview = UIView()
+        mainview.translatesAutoresizingMaskIntoConstraints = false
+        
+        mainview.addSubview(lastresult)
+        mainview.addSubview(result)
+
+        result.leftAnchor.constraint(equalTo: mainview.leftAnchor, constant: 0).isActive = true
+        result.topAnchor.constraint(equalTo: mainview.topAnchor, constant: 0).isActive = true
+
+        lastresult.topAnchor.constraint(equalTo: mainview.topAnchor, constant: 0).isActive = true
+        lastresult.leftAnchor.constraint(equalTo: result.rightAnchor, constant: 0).isActive = true
+
+        mainview.widthAnchor.constraint(equalToConstant: 84).isActive = true
+        mainview.heightAnchor.constraint(equalToConstant: 42).isActive = true
+
+        return mainview
     }()
     
     lazy private var resultStack : UIStackView = {
@@ -445,7 +477,7 @@ class ColorSelectDialog2 : UIView {
         scroll.addSubview(redSlider)
 
         scroll.addSubview(hexText)
-        scroll.addSubview(result)
+        scroll.addSubview(results)
 
         redSliderText.leftAnchor.constraint(equalTo: scroll.leftAnchor, constant: 0).isActive = true
         redSliderText.topAnchor.constraint(equalTo: scroll.topAnchor, constant: 0).isActive = true
@@ -477,11 +509,11 @@ class ColorSelectDialog2 : UIView {
         
         hexText.leftAnchor.constraint(equalTo: leftAnchor, constant: 0).isActive = true
         hexText.topAnchor.constraint(equalTo: alphaSliderText.bottomAnchor, constant: 12).isActive = true
-        hexText.rightAnchor.constraint(equalTo: result.leftAnchor, constant: -8).isActive = true
+        hexText.rightAnchor.constraint(equalTo: results.leftAnchor, constant: -8).isActive = true
         
-        result.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
-        result.topAnchor.constraint(equalTo: alphaSliderText.bottomAnchor, constant: 12).isActive = true
-        
+        results.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
+        results.topAnchor.constraint(equalTo: alphaSliderText.bottomAnchor, constant: 12).isActive = true
+                
         translatesAutoresizingMaskIntoConstraints = false
         scroll.leftAnchor.constraint(equalTo: leftAnchor, constant: 0).isActive = true
         scroll.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true

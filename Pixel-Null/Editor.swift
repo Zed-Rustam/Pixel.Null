@@ -177,6 +177,17 @@ class Editor : UIViewController {
         })
     }
     
+    func finishTransform() {
+        showTransform(isShow: false)
+        //canvas.finishTransform()
+        toolBar.clickTool(tool: canvas.transformView.lastToolSelected)
+    }
+    
+    func cancelTransform() {
+        showTransform(isShow: false)
+        canvas.clearTransform()
+    }
+    
     @objc func appMovedToBackground() {
         project.save()
         project.savePreview(frame: project.FrameSelected)

@@ -245,7 +245,7 @@ class PencilController : UIViewController {
     
     override func viewDidLayoutSubviews() {
         stack.layoutIfNeeded()
-        scroll.contentSize.height = stack.frame.height + 12
+        scroll.contentSize.height = stack.frame.height + 24
         print(stack.frame.height)
     }
 }
