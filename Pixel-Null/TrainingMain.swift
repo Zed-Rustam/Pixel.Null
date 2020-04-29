@@ -11,30 +11,8 @@ import UIKit
 
 class TrainingMain : UIViewController {
     weak var navigation : UINavigationController? = nil
-    private var menus : [String] = ["Editor","Layers","Frames","Pencil", "Erase", "Transform","Gradient","Fill","Symmetry","Selection","Square"]
-    
-    lazy private var scroll : UIScrollView = {
-        let scr = UIScrollView()
-        scr.translatesAutoresizingMaskIntoConstraints = false
+    private var menus : [String] = ["Training","Editor","Layers","Frames","Pencil", "Erase", "Transform","Gradient","Fill","Symmetry","Selection","Square"]
         
-        let stack = UIStackView()
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.axis = .vertical
-        stack.alignment = .top
-        stack.distribution = .equalCentering
-        
-        scr.addSubview(stack)
-        stack.leftAnchor.constraint(equalTo: scr.leftAnchor, constant: 0).isActive = true
-        stack.rightAnchor.constraint(equalTo: scr.rightAnchor, constant: 0).isActive = true
-        stack.topAnchor.constraint(equalTo: scr.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
-        stack.bottomAnchor.constraint(equalTo: scr.bottomAnchor, constant: 0).isActive = true
-        
-        stack.addArrangedSubview(table)
-        table.heightAnchor.constraint(equalToConstant: 300).isActive = true
-
-        return scr
-    }()
-    
     lazy private var titleTraining : UILabel = {
        let label = UILabel()
         label.font = UIFont(name:  "Rubik-Medium", size: 48)
@@ -48,7 +26,22 @@ class TrainingMain : UIViewController {
         let tv = UITableView(frame: .zero, style: .insetGrouped)
         tv.delegate = self
         tv.dataSource = self
+        
+        let head = UILabel()
+        head.textColor = ProjectStyle.uiEnableColor
+        head.translatesAutoresizingMaskIntoConstraints = false
+        head.font = UIFont(name: "Rubik-Bold", size: 48)
+        head.text = "Training"
+        //head.heightAnchor.constraint(equalToConstant: 64).isActive = true
+        
+        let bgview = UIView()
+        bgview.addSubviewFullSize(view: head, paddings: (16,0,8,0))
+        bgview.frame.size = CGSize(width: 200, height: 76)
+        
         tv.register(UITableViewCell.self, forCellReuseIdentifier: "Table")
+        tv.register(TableTitle.self, forCellReuseIdentifier: "Title")
+        tv.tableHeaderView = bgview
+        
         tv.backgroundColor = .clear
         tv.separatorStyle = .none
         tv.translatesAutoresizingMaskIntoConstraints = false
@@ -175,7 +168,7 @@ extension TrainingMain : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 24
     }
-    
+        
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section {
         case 0:
@@ -235,5 +228,25 @@ extension TrainingMain : UITableViewDelegate, UITableViewDataSource {
         default:
             break
         }
+    }
+}
+
+class TableTitle : UITableViewCell {
+    lazy var title : UILabel = {
+        let text = UILabel()
+        text.textColor = ProjectStyle.uiEnableColor
+        text.text = "Test"
+        return text
+    }()
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        contentView.addSubview(title)
+        title.frame = bounds
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }

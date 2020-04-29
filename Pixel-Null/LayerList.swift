@@ -14,12 +14,14 @@ class LayerList : UICollectionView, UICollectionViewDataSource, UICollectionView
     private var longPressGesture : UILongPressGestureRecognizer!
     weak var canvas : ProjectCanvas?
     weak var list : FrameList?
-    
+    weak var editor : Editor?
+
     var selectedCell : LayerCell? = nil
     
     func changeSelect(newSelect: LayerCell) {
+        
         canvas?.transformView.needToSave = true
-        canvas?.resetTransform()
+        editor?.finishTransform()
         
         selectedCell?.setSelect(isSelect: false, animate: true)
         

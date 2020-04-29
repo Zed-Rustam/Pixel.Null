@@ -110,10 +110,13 @@ class Editor : UIViewController {
         control.layers.frameControlDelegate = self
         canvas = ProjectCanvas(frame: self.view.bounds, proj: project)
         canvas.delegate = self
-        
+                
         control.setCanvas(canvas: canvas)
         control.frames.editor = self
+        control.frames.list.editor = self
         
+        control.layers.list.editor = self
+
         view.addSubview(canvas)
         view.addSubview(control)
         
@@ -146,11 +149,13 @@ class Editor : UIViewController {
         transformAngle.topAnchor.constraint(equalTo: transformSize.bottomAnchor, constant: 6).isActive = true
         
         view.backgroundColor = ProjectStyle.uiBackgroundColor
+        showTransform(isShow: false)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: UIApplication.willResignActiveNotification, object: nil)
     }
+    
     @objc func rotate() {
 
     }
@@ -178,14 +183,19 @@ class Editor : UIViewController {
     }
     
     func finishTransform() {
-        showTransform(isShow: false)
-        //canvas.finishTransform()
-        toolBar.clickTool(tool: canvas.transformView.lastToolSelected)
+        if canvas.selectedTool == 2 {
+            showTransform(isShow: false)
+            toolBar.clickTool(tool: canvas.transformView.lastToolSelected)
+        }
     }
     
     func cancelTransform() {
-        showTransform(isShow: false)
-        canvas.clearTransform()
+        if canvas.selectedTool == 2 {
+            showTransform(isShow: false)
+            canvas.clearTransform()
+            canvas.transformView.needToSave = false
+            toolBar.clickTool(tool: canvas.transformView.lastToolSelected)
+        }
     }
     
     @objc func appMovedToBackground() {
@@ -221,7 +231,6 @@ extension Editor : FrameControlDelegate{
         toolBar.updateSelectedColor(newColor: color)
     }
     
-    
     func updateSelection(select: UIImage, isSelected : Bool) {
         canvas.isSelected = isSelected
         canvas.selectionLayer = select
@@ -229,8 +238,11 @@ extension Editor : FrameControlDelegate{
         try! canvas.selectionLayer.pngData()!.write(to: project.getProjectDirectory().appendingPathComponent("selection.png"))
     }
     
-    
     func openFrameControl(project: ProjectWork) {
+        
+        finishTransform()
+        project.savePreview(frame: project.FrameSelected)
+        
         let frameControl = FrameControl()
         frameControl.project = project
         frameControl.delegate = self

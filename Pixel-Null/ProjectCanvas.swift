@@ -51,7 +51,8 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
     private var isMoving = false
     var isVerticalSymmeyry = false
     var isHorizontalSymmetry = false
-
+    var isTransform = false
+    
     var isSelected = false
     var selectorColor : UIColor = .black
     
@@ -280,8 +281,8 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
     
     func selectTool(newTool : Int){
         if selectedTool != newTool {
-            print("newTool : \(newTool) nowTool : \(selectedTool)")
             if newTool == 2 {
+                isTransform = true
                 transformView.offset = offset
                 transformView.scale = scale
                 transformView.angle = 0
@@ -297,7 +298,6 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 
                 transformView.alpha = 1
                 transformGest.isEnabled = true
-                editor?.showTransform(isShow: true)
             }
             
             if selectedTool == 2 {
@@ -403,10 +403,6 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         default:
             break
         }
-    }
-    
-    func closeTransform(){
-        
     }
     
     func finishTransform(needUpdateControl : Bool = true){

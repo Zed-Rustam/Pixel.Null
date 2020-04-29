@@ -80,7 +80,7 @@ class ToolButton : UICollectionViewCell {
             button.setIconColor(color: ProjectStyle.uiEnableColor)
             button.delegate = {[weak self] in
                 let editor = self!.delegate as! Editor
-                editor.canvas.resetTransform()
+                editor.finishTransform()
                 
                 self!.project.unDo(delegate: self!.delegate)
                 self!.barDelegate.UnDoReDoAction()
@@ -90,7 +90,7 @@ class ToolButton : UICollectionViewCell {
             button.setIconColor(color: ProjectStyle.uiEnableColor)
             button.delegate = {[weak self] in
                 let editor = self!.delegate as! Editor
-                editor.canvas.resetTransform()
+                editor.finishTransform()
                 
                 self!.project.reDo(delegate: self!.delegate)
                 self!.barDelegate.UnDoReDoAction()
@@ -147,8 +147,10 @@ class ToolButton : UICollectionViewCell {
            button.setIcon(ic: #imageLiteral(resourceName: "move_icon"))
            button.setIconColor(color: ProjectStyle.uiEnableColor)
            button.delegate = {[weak self] in
-               let editor = self!.delegate as! Editor
-               editor.canvas.selectTool(newTool: 2)
+            let editor = self!.delegate as! Editor
+            editor.canvas.selectTool(newTool: 2)
+            
+            editor.showTransform(isShow: true)
             
             let flipV = CircleButton(icon: #imageLiteral(resourceName: "flip_horizontal_icon"), frame: .zero)
             flipV.widthAnchor.constraint(equalToConstant: 36).isActive = true

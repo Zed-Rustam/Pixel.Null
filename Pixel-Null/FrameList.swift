@@ -13,12 +13,13 @@ class FrameList : UICollectionView, UICollectionViewDataSource, UICollectionView
     weak var layers : LayerList? = nil
     weak var canvas : ProjectCanvas?
     var selectedCell : FrameCell? = nil
+    weak var editor : Editor? = nil
     
     func changeSelect(newSelect: FrameCell) {
         let itemIndex = indexPath(for: newSelect)!.item
-        
+ 
         canvas?.transformView.needToSave = false
-        canvas?.resetTransform()
+        editor?.finishTransform()
         
         let itemNew = cellForItem(at: IndexPath(item: itemIndex, section: 0)) as! FrameCell
         

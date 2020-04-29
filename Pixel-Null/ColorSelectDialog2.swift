@@ -366,38 +366,14 @@ class ColorSelectDialog2 : UIView {
     lazy private var scroll : UIScrollView = {
        let scrl = UIScrollView()
         scrl.translatesAutoresizingMaskIntoConstraints = false
-        scrl.layer.masksToBounds = true
-        //scrl.addSubview(stack)
-        //stack.leadingAnchor.constraint(equalTo: scrl.leadingAnchor, constant: 0).isActive = true
-        //stack.trailingAnchor.constraint(equalTo: scrl.trailingAnchor, constant: 0).isActive = true
-        //stack.topAnchor.constraint(equalTo: scrl.topAnchor, constant: 0).isActive = true
-        //stack.bottomAnchor.constraint(equalTo: scrl.bottomAnchor, constant: 0).isActive = true
-        //stack.widthAnchor.constraint(equalTo: scrl.widthAnchor, constant: 0).isActive = true
-        //stack.widthAnchor.constraint(equalTo: scrl.widthAnchor, constant: 0).isActive = true
-
+        scrl.layer.masksToBounds = false
         return scrl
     }()
+    
     private var nowred : CGFloat = 0.0
     private var nowgreen : CGFloat = 0.0
     private var nowblue : CGFloat = 0.0
     private var nowalpha : CGFloat = 0.0
-    
-    lazy private var stack : UIStackView = {
-        let mainStack = UIStackView()
-        mainStack.axis = .vertical
-        mainStack.alignment = .fill
-        mainStack.spacing = 12
-        mainStack.distribution = .fill
-        mainStack.translatesAutoresizingMaskIntoConstraints = false
-        
-        //mainStack.addArrangedSubview(redStack)
-        mainStack.addArrangedSubview(greenStack)
-        mainStack.addArrangedSubview(blueStack)
-        mainStack.addArrangedSubview(alphaStack)
-        mainStack.addArrangedSubview(resultStack)
-
-        return mainStack
-    }()
     
     func setValues(color : UIColor){
         let clr = CIColor(color: color)
