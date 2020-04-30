@@ -35,7 +35,8 @@ class LayerList : UICollectionView, UICollectionViewDataSource, UICollectionView
     
     func changeVisible(item: LayerCell) {
         let itemIndex = indexPath(for: item)!.item
-        canvas?.resetTransform()
+        canvas?.transformView.needToSave = true
+        editor?.finishTransform()
         
         let reloadItem = self.cellForItem(at: IndexPath(item: itemIndex, section: 0)) as! LayerCell
         

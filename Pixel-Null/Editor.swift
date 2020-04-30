@@ -110,7 +110,8 @@ class Editor : UIViewController {
         control.layers.frameControlDelegate = self
         canvas = ProjectCanvas(frame: self.view.bounds, proj: project)
         canvas.delegate = self
-                
+        canvas.editor = self
+        
         control.setCanvas(canvas: canvas)
         control.frames.editor = self
         control.frames.list.editor = self
@@ -331,9 +332,10 @@ extension Editor : ToolSettingsDelegate {
         let pencilSettings = PencilSettings()
         pencilSettings.modalPresentationStyle = .pageSheet
         pencilSettings.delegate = self
-        pencilSettings.setSettings(penSize: Int(canvas.pen.size), penSmooth: canvas.pen.smooth, pixelPerfect: canvas.pen.pixPerfect)
+        pencilSettings.setSettings(penSize: Int(canvas.pen.size), pixelPerfect: canvas.pen.pixPerfect)
         self.show(pencilSettings, sender: self)
     }
+    
     func openEraseSettings() {
         let eraseSettings = EraseSettings()
         eraseSettings.modalPresentationStyle = .pageSheet
@@ -341,6 +343,7 @@ extension Editor : ToolSettingsDelegate {
         eraseSettings.setSettings(eraseSize: Int(canvas.erase.size))
         self.show(eraseSettings, sender: self)
     }
+    
     func openGradientSettings() {
         let gradientSettings = GradientSettings()
         gradientSettings.modalPresentationStyle = .pageSheet
@@ -348,14 +351,16 @@ extension Editor : ToolSettingsDelegate {
         gradientSettings.setSettings(stepCount: canvas.gradient.stepCount, startColor: canvas.gradient.startColor, endColor: canvas.gradient.endColor)
         self.show(gradientSettings, sender: self)
     }
+    
     func setEraseSettings(eraseSize : Int) {
         canvas.erase.size = Double(eraseSize)
     }
-    func setPenSettings(penSize: Int, penSmooth: Int, pixPerfect : Bool) {
+    
+    func setPenSettings(penSize: Int, pixPerfect : Bool) {
         canvas.pen.size = Double(penSize)
-        canvas.pen.smooth = penSmooth
         canvas.pen.pixPerfect = pixPerfect
     }
+    
     func setGradientSettings(stepCount: Int, startColor: UIColor, endColor: UIColor) {
         canvas.gradient.stepCount = stepCount
         canvas.gradient.startColor = startColor
@@ -397,7 +402,6 @@ extension Editor {
         animationTime += Int(displayLink.duration * 1000)
         if animationTime >= project.animationDelay {
             animationTime = animationTime % project.animationDelay
-            //nowFrameIndex = 0
         }
         
         var nowTime = 0
@@ -428,23 +432,13 @@ extension Editor {
         }
     }
     
-    func cancelTransform() {
-        if canvas.selectedTool == 2 {
-            canvas.transformView.isCopyMode = false
-            showTransform(isShow: false)
-            canvas.clearTransform()
-            canvas.transformView.needToSave = false
-            toolBar.clickTool(tool: canvas.transformView.lastToolSelected)
-        }
-    }
-    
     func startTransformWithImage() {
-        canvas.transformView.isCopyMode = true
-        canvas.setTransformCopyImage()
-        canvas.isSelected = true
-        toolBar.clickTool(tool: 2)
-        //canvas.selectionLayer = image.withTintColor(ProjectStyle.uiSelectColor)
-        //canvas.transformView.setRect(image: image, isSelected: true)
+        if !canvas.selection.isSelectEmpty(select:UIImage.merge(images: [project.loadCopyImage()])!) {
+            canvas.transformView.isCopyMode = true
+            canvas.setTransformCopyImage()
+            canvas.isSelected = true
+            toolBar.clickTool(tool: 2)
+        }
     }
     
     
@@ -485,7 +479,7 @@ protocol ToolSettingsDelegate : class{
     func openEraseSettings()
     func openGradientSettings()
     
-    func setPenSettings(penSize : Int, penSmooth : Int, pixPerfect : Bool)
+    func setPenSettings(penSize : Int, pixPerfect : Bool)
     func setEraseSettings(eraseSize : Int)
     func setGradientSettings(stepCount : Int,startColor : UIColor, endColor : UIColor)
 }

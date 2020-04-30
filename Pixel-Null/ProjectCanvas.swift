@@ -315,7 +315,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
             transformGest.isEnabled = false
             ActionLayer = UIImage(size: project.projectSize)
             actionImage.image = ActionLayer
-            print("hide")
+            editor?.showTransform(isShow: false)
         }
     }
     
@@ -342,12 +342,6 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         
         transformView.alpha = 1
         transformGest.isEnabled = true
-    }
-    
-    func resetTransform() {
-        if selectedTool == 2 {
-            self.editor?.toolBar.clickTool(tool: transformView.lastToolSelected)
-        }
     }
     
     func startAnimationMode(){

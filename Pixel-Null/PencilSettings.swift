@@ -22,7 +22,7 @@ class PencilSettings : UIViewController {
        let btn = CircleButton(icon: #imageLiteral(resourceName: "select_icon"), frame:.zero)
         btn.setShadowColor(color: .clear)
         btn.delegate = {[weak self] in
-            self!.delegate?.setPenSettings(penSize: Int(self!.penSizeInput.filed.text ?? "1")!, penSmooth: Int(self!.penSmoothInput.filed.text ?? "0")!, pixPerfect: self!.pixelPerfectToggle.isCheck)
+            self!.delegate?.setPenSettings(penSize: Int(self!.penSizeInput.filed.text ?? "1")!, pixPerfect: self!.pixelPerfectToggle.isCheck)
             self!.dismiss(animated: true, completion: nil)
         }
         return btn
@@ -38,45 +38,6 @@ class PencilSettings : UIViewController {
             self!.startInfo.penSize = Int($0 * 63 + 1)
         }
         return slider
-    }()
-    
-    lazy private var penSmoothSlider : SliderView = {
-        let slider = SliderView()
-        slider.translatesAutoresizingMaskIntoConstraints = false
-        slider.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        slider.orientation = .horizontal
-        slider.delegate = {[weak self] in
-            self!.penSmoothInput.filed.text = "\(Int($0 * 64))"
-            self!.startInfo.penSmooth = Int($0 * 64)
-        }
-        return slider
-    }()
-    
-    lazy private var penSmoothStack : UIStackView = {
-           let stack = UIStackView()
-           stack.axis = .horizontal
-           stack.alignment = .center
-           stack.distribution = .fill
-           stack.spacing = 12
-           
-           stack.addArrangedSubview(penSmoothInput)
-            stack.addArrangedSubview(penSmoothSlider)
-           return stack
-       }()
-    
-    lazy private var penSmoothInput : TextField = {
-        let input = TextField()
-        input.small = true
-        input.translatesAutoresizingMaskIntoConstraints = true
-        input.filed.text = "0"
-        input.setHelpText(help: "0")
-        input.filed.delegate = penSmoothInputDelegate
-        input.filed.textAlignment = .center
-        input.filed.keyboardType = .numberPad
-        
-        input.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        input.widthAnchor.constraint(equalToConstant: 54).isActive = true
-        return input
     }()
     
     lazy private var penSizeInput : TextField = {
@@ -112,26 +73,7 @@ class PencilSettings : UIViewController {
         }
         return delegate
     }()
- 
-    lazy private var penSmoothInputDelegate : TextFieldDelegate = {
-        let delegate = TextFieldDelegate{[weak self] in
-            let num = Int($0.text!) ?? 0
-            if num > 64 {
-                self!.startInfo.penSmooth = 64
-                $0.text = "64"
-                self!.penSmoothSlider.setPosition(pos: 1)
-            } else if num < 0 {
-                $0.text = ""
-                self!.startInfo.penSmooth = 0
-                self!.penSmoothSlider.setPosition(pos: 0)
-            } else {
-                self!.penSmoothSlider.setPosition(pos: CGFloat(num) / 64)
-                self!.startInfo.penSmooth = num
-            }
-        }
-        return delegate
-    }()
-   
+    
     private var penSizeTitle : UILabel = {
         let text = UILabel()
         text.text = "Pen Width"
@@ -193,7 +135,6 @@ class PencilSettings : UIViewController {
         let stack = UIStackView()
         stack.axis = .vertical
         stack.alignment = .fill
-        //stack.spacing = 12
         stack.distribution = .fill
         stack.translatesAutoresizingMaskIntoConstraints = false
         
@@ -201,10 +142,6 @@ class PencilSettings : UIViewController {
         stack.setCustomSpacing(0, after: penSizeTitle)
         stack.addArrangedSubview(penSizeStack)
         stack.setCustomSpacing(0, after: penSizeStack)
-        stack.addArrangedSubview(penSmoothTitle)
-        stack.setCustomSpacing(0, after: penSmoothTitle)
-        stack.addArrangedSubview(penSmoothStack)
-        stack.setCustomSpacing(12, after: penSmoothStack)
         stack.addArrangedSubview(pixelPerfectStack)
         stack.setCustomSpacing(12, after: pixelPerfectStack)
 
@@ -244,10 +181,10 @@ class PencilSettings : UIViewController {
     
     weak var delegate : ToolSettingsDelegate? = nil
     
-    var startInfo : (penSize : Int, penSmooth : Int, pixelPerfect : Bool) = (1,0,false)
+    var startInfo : (penSize : Int, pixelPerfect : Bool) = (1,false)
     
-    func setSettings(penSize : Int, penSmooth : Int, pixelPerfect : Bool) {
-        startInfo = (penSize, penSmooth, pixelPerfect)
+    func setSettings(penSize : Int, pixelPerfect : Bool) {
+        startInfo = (penSize, pixelPerfect)
     }
     
     override func viewDidLoad() {
@@ -312,10 +249,6 @@ class PencilSettings : UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         penSizeSlider.setPosition(pos: CGFloat(startInfo.penSize - 1) / 63)
         penSizeInput.filed.text = "\(startInfo.penSize)"
-
-        penSmoothSlider.setPosition(pos: CGFloat(startInfo.penSmooth) / 64)
-        penSmoothInput.filed.text = "\(startInfo.penSmooth)"
-        
         pixelPerfectToggle.isCheck = startInfo.pixelPerfect
     }
 }

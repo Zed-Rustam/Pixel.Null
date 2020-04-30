@@ -20,12 +20,10 @@ class Tool {
 
 class Pencil : Tool {
     var size : Double = 1
-    var smooth : Int = 0
     var pixPerfect : Bool = false
     
-    func setSettings(penSize : Int, smth : Int, pixelPerf : Bool){
+    func setSettings(penSize : Int, pixelPerf : Bool){
         size = Double(penSize)
-        smooth = smth
         pixPerfect = pixelPerf
     }
     
@@ -81,7 +79,6 @@ class Pencil : Tool {
            default:
                 break
         }
-        //points.append(CGPoint(x: CGFloat(Double(Int(point.x)) + 0.5), y: CGFloat(Int(point.y)) + 0.5))
 
         if pixPerfect {
             pixelPerfect()

@@ -18,7 +18,8 @@ class FramesView : UIView {
             self.isPlay.toggle()
             btn.setIcon(ic: self.isPlay ? #imageLiteral(resourceName: "pause_icon") : #imageLiteral(resourceName: "play_icon"))
             if self.isPlay {
-                self.editor?.canvas.resetTransform()
+                self.editor?.canvas.transformView.needToSave = true
+                self.editor?.finishTransform()
                 
                 self.list.tapgesture.isEnabled = false
                 UIView.animate(withDuration: 0.2, animations: {

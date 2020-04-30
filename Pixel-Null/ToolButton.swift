@@ -68,6 +68,7 @@ class ToolButton : UICollectionViewCell {
                 btnCent.delegate = {
                     editor.canvas.centerizeSymmetry()
                 }
+                
                 self!.barDelegate.updateButtons(btns: [btnVert,btnHor,btnCent])
             }
 
@@ -75,7 +76,7 @@ class ToolButton : UICollectionViewCell {
             button.setIcon(ic: #imageLiteral(resourceName: "project_settings_icon"))
             button.setIconColor(color: ProjectStyle.uiEnableColor)
             button.delegate = {//[weak self] in
-                
+
             }
         case -3: 
             button.setIcon(ic: #imageLiteral(resourceName: "undo_icon"))

@@ -49,31 +49,6 @@ class PencilController : UIViewController {
                         .setFont(font: UIFont(name:  "Rubik-Regular", size: 12)!)
                 ])
                 ]),
-                text2,
-                makeStack(orientation: .horizontal, alignment: .fill, distribution: .fillEqually).addViews(views: [
-                    makeStack(orientation: .vertical, alignment: .center).addViews(views: [
-                        UIImageView(image: UIImage.gifImageWithData(NSDataAsset(name: "smoothing_x0")!.data)!)
-                            .Corners(round: 10)
-                            .setSize(size: CGSize(width: 120, height: 160))
-                            .setBackground(color: UIColor(patternImage: UIImage(cgImage: ProjectStyle.bgImage!.cgImage!, scale: 1.0/20.0, orientation: .down)))
-                            .setFilter(filter: .nearest),
-                        UILabel()
-                            .setText(text: "smoothing x0")
-                            .setTextColor(color: ProjectStyle.uiEnableColor)
-                            .setFont(font: UIFont(name:  "Rubik-Regular", size: 12)!)
-                    ]),
-                makeStack(orientation: .vertical, alignment: .center).addViews(views: [
-                    UIImageView(image: UIImage.gifImageWithData(NSDataAsset(name: "smoothing_x24")!.data))
-                        .Corners(round: 10)
-                        .setSize(size: CGSize(width: 120, height: 160))
-                        .setBackground(color: UIColor(patternImage: UIImage(cgImage: ProjectStyle.bgImage!.cgImage!, scale: 1.0/20.0, orientation: .down)))
-                        .setFilter(filter: .nearest),
-                    UILabel()
-                        .setText(text: "smoothing x24")
-                        .setTextColor(color: ProjectStyle.uiEnableColor)
-                        .setFont(font: UIFont(name:  "Rubik-Regular", size: 12)!)
-                ])
-                ]),
                 text3,
             ])
     }()
@@ -126,41 +101,7 @@ class PencilController : UIViewController {
     
         return label
     }()
-    
-    lazy private var text2 : UILabel = {
-        let label = UILabel()
         
-        
-        let bold : [NSAttributedString.Key : Any] = [NSAttributedString.Key.font : UIFont(name:  "Rubik-Bold", size: 16) as Any]
-        let normal : [NSAttributedString.Key : Any] = [NSAttributedString.Key.font : UIFont(name:  "Rubik-Regular", size: 16) as Any]
-               
-        let attributedString = NSMutableAttributedString(string:
-            """
-
-                You can also set the
-            """, attributes:normal)
-        
-        
-        attributedString.append(NSMutableAttributedString(string:" Smoothing ", attributes:bold))
-        attributedString.append(NSMutableAttributedString(string:"property to make your lines smoother. But at the same time your line will be slightly behind your finger.\n", attributes:normal))
-
-        label.textColor = ProjectStyle.uiEnableColor
-        label.font = UIFont(name:  "Rubik-Regular", size: 16)
-        
-        label.textAlignment = .justified
-        label.lineBreakMode = .byWordWrapping
-        label.numberOfLines = 0
-        
-        label.attributedText = attributedString
-        
-        label.preferredMaxLayoutWidth = self.view.frame.width - 24
-
-        
-        label.translatesAutoresizingMaskIntoConstraints = false
-    
-        return label
-    }()
-    
     lazy private var text3 : UILabel = {
         let label = UILabel()
         
