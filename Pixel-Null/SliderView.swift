@@ -74,18 +74,19 @@ class SliderView : UIView {
         bg.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -6).isActive = true
         
         bg2.frame = CGRect(x: 0, y: 0, width: 0, height: 24)
-        //bg2.leftAnchor.constraint(equalTo: bg.leftAnchor, constant: 0).isActive = true
-        //bg2.rightAnchor.constraint(equalTo: bg.rightAnchor, constant: 0).isActive = true
-        //bg2.topAnchor.constraint(equalTo: bg.topAnchor, constant: 0).isActive = true
-        //bg2.heightAnchor.constraint(equalToConstant: 18).isActive = true
-        //bg2.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        
+
         selectorView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 0).isActive = true
         selectorView.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
         selectorView.widthAnchor.constraint(equalToConstant: 30).isActive = true
         selectorView.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(reset), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
 
+    @objc func reset(){
+        setPosition(pos: nowPosition)
+    }
+    
     func getPosition() -> CGFloat {
         return nowPosition
     }
@@ -193,7 +194,12 @@ class SliderView : UIView {
         }
     }
 
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
     }
 }

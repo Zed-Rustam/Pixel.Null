@@ -51,6 +51,7 @@ class ColorSlider : UIView {
         mainview.layer.magnificationFilter = .nearest
         return mainview
     }()
+    
     lazy private var selectView : UIView = {
         let mainView = UIView()
         mainView.translatesAutoresizingMaskIntoConstraints = false
@@ -84,6 +85,7 @@ class ColorSlider : UIView {
         mainView.heightAnchor.constraint(equalToConstant: 30).isActive = true
         return mainView
     }()
+    
     lazy private var tapGesture : UILongPressGestureRecognizer = {
         let gest = UILongPressGestureRecognizer(target: self, action: #selector(tap(sender:)))
         gest.minimumPressDuration = 0
@@ -262,6 +264,15 @@ class ColorSlider : UIView {
         addGestureRecognizer(tapGesture)
         setShadow(color: ProjectStyle.uiShadowColor, radius: 8, opasity: 0.25)
 
+        NotificationCenter.default.addObserver(self, selector: #selector(reset), name: UIApplication.willEnterForegroundNotification, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
+    }
+    
+    @objc func reset(){
+        setPosition(pos: nowPosition)
     }
     
     override func layoutSubviews() {

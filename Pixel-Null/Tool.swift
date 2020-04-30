@@ -19,7 +19,6 @@ class Tool {
 }
 
 class Pencil : Tool {
-    
     var size : Double = 1
     var smooth : Int = 0
     var pixPerfect : Bool = false
@@ -145,10 +144,17 @@ class Selection : Tool {
         case draw
         case rectangle
         case ellipse
-        case fill
+        case magicTool
+        case colorFill
     }
     
-    var color : String = UIColor.toHex(color: ProjectStyle.uiSelectColor)
+    enum selectMode {
+        case add
+        case delete
+    }
+    
+    var type : SelectionType = .rectangle
+    var mode : selectMode = .add
     
     func setSettings(){
 
@@ -158,7 +164,7 @@ class Selection : Tool {
         UIGraphicsBeginImageContextWithOptions(select.size, false, 1)
         
         let context = UIGraphicsGetCurrentContext()!
-        context.setFillColor(UIColor(hex: color)!.cgColor)
+        context.setFillColor(ProjectStyle.uiSelectColor.cgColor)
         context.fill(CGRect(origin: .zero, size: select.size))
         
         select.draw(at: .zero, blendMode: .destinationOut, alpha: 1)
@@ -170,7 +176,45 @@ class Selection : Tool {
         return myImage
     }
     
+    func isSelectEmpty(select : UIImage) -> Bool {
+        let info = select.getColorsArray()
+        let group = DispatchGroup()
+        var finalResult = true
+        let partCount = 8
+        
+        for i in 0..<partCount {
+            group.enter()
+
+            DispatchQueue.global(qos: .userInteractive).async {
+                
+                for p in Int(CGFloat(i) * (CGFloat(info.count) / CGFloat(partCount)))..<Int(CGFloat(i + 1) * (CGFloat(info.count) / CGFloat(partCount)))  {
+                    if info[p].a > 0 || finalResult == false {
+                        finalResult = false
+                        break
+                    }
+                }
+                
+                group.leave()
+            }
+        }
+        
+        group.wait()
+        
+        return finalResult
+    }
+    
+    func finishSelection() -> UIImage {
+        switch mode {
+        case .add:
+            return UIImage.merge(images: [lastSelection!,nowSelection])!
+        case .delete:
+            return lastSelection!.cut(image: nowSelection)
+        }
+    }
+    
     var lastSelection : UIImage? = nil
+    var nowSelection : UIImage!
+    
     private var points : [CGPoint] = []
     
     func restart(img : UIImage, startPoint : CGPoint){
@@ -185,29 +229,49 @@ class Selection : Tool {
         UIGraphicsBeginImageContextWithOptions(image.size, false, 1)
         
         let context = UIGraphicsGetCurrentContext()!
-        context.setFillColor(UIColor(hex: color)!.cgColor)
+        
+        switch mode {
+        case .add:
+            context.setFillColor(ProjectStyle.uiSelectColor.cgColor)
+        case .delete:
+            context.setFillColor(ProjectStyle.uiRedColor.cgColor)
+        }
+        
         context.setShouldAntialias(false)
         context.setLineCap(.round)
         context.setLineJoin(.round)
-        
         context.clear(CGRect(origin: .zero ,size: image.size))
         context.setLineWidth(1)
         context.move(to: points[0])
-        for i in points {
-            context.addLine(to: i)
+
+        
+        switch type {
+        case .draw:
+            for i in points {
+                context.addLine(to: i)
+            }
+        case .rectangle:
+            context.addRect(CGRect(x: min(points[0].x,points[points.count - 1].x), y: min(points[0].y,points[points.count - 1].y), width: abs(points[points.count - 1].x - points[0].x), height: abs(points[points.count - 1].y - points[0].y)))
+          
+        case .ellipse:
+            context.addEllipse(in: CGRect(x: min(points[0].x,points[points.count - 1].x), y: min(points[0].y,points[points.count - 1].y), width: abs(points[points.count - 1].x - points[0].x), height: abs(points[points.count - 1].y - points[0].y)))
+
+        default:
+            break
         }
+        
         context.fillPath()
         
-         var myImage = UIGraphicsGetImageFromCurrentImageContext()!
+        nowSelection = UIGraphicsGetImageFromCurrentImageContext()!
         
         if symmetry.x != 0 {
             context.clear(CGRect(origin: .zero ,size: image.size))
             context.translateBy(x: image.size.width, y: 0)
             context.scaleBy(x: -1, y: 1)
-            myImage.draw(in: CGRect(x: (image.size.width / 2.0 - symmetry.x) * 2, y: 0, width: myImage.size.width, height: myImage.size.height))
+            nowSelection!.draw(in: CGRect(x: (image.size.width / 2.0 - symmetry.x) * 2, y: 0, width: nowSelection!.size.width, height: nowSelection!.size.height))
 
 
-            myImage = UIImage.merge(images: [myImage,UIImage(cgImage : context.makeImage()!)])!
+            nowSelection = UIImage.merge(images: [nowSelection!,UIImage(cgImage : context.makeImage()!)])!
             context.scaleBy(x: -1, y: 1)
             context.translateBy(x:  -image.size.width, y: 0)
         }
@@ -217,22 +281,23 @@ class Selection : Tool {
             context.translateBy(x: 0, y: image.size.height)
             context.scaleBy(x: 1, y: -1)
             
-            myImage.draw(in: CGRect(x: 0, y: (image.size.height / 2.0 - symmetry.y) * 2, width: myImage.size.width, height: myImage.size.height))
+            nowSelection!.draw(in: CGRect(x: 0, y: (image.size.height / 2.0 - symmetry.y) * 2, width: nowSelection!.size.width, height: nowSelection!.size.height))
             
-            myImage = UIImage.merge(images: [myImage,UIImage(cgImage : context.makeImage()!)])!
+            nowSelection = UIImage.merge(images: [nowSelection!,UIImage(cgImage : context.makeImage()!)])!
             context.scaleBy(x: 1, y: -1)
             context.translateBy(x: 0, y: -image.size.height)
         }
         
         context.clear(CGRect(origin: .zero, size: image.size))
-        myImage.draw(at: .zero)
         lastSelection?.draw(at: .zero)
+        nowSelection!.draw(at: .zero,blendMode: .exclusion,alpha: 1)
+        nowSelection!.draw(at: .zero,blendMode: .normal,alpha: 1)
 
         
-        myImage = UIGraphicsGetImageFromCurrentImageContext()!
+        let myImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
                 
-        return myImage.withTintColor(UIColor(hex: color)!)
+        return myImage
     }
 }
 

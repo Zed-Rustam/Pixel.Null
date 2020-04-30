@@ -69,7 +69,6 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("i'm alive!")
         switch section {
         case 0:
             return 3
@@ -135,9 +134,10 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
        let img = UIImageView(image: #imageLiteral(resourceName: "app_icon"))
         img.contentMode = .scaleToFill
         img.translatesAutoresizingMaskIntoConstraints = false
-        img.widthAnchor.constraint(equalToConstant: 108).isActive = true
-        img.heightAnchor.constraint(equalToConstant: 108).isActive = true
+        img.widthAnchor.constraint(equalToConstant: 72).isActive = true
+        img.heightAnchor.constraint(equalToConstant: 72).isActive = true
         
+        img.setShadow(color: ProjectStyle.uiShadowColor, radius: 4, opasity: 0.25)
         return img
     }()
     
@@ -162,31 +162,40 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
         tv.register(UITableViewCell.self, forCellReuseIdentifier: "Table")
         tv.separatorStyle = .none
         tv.tintColor = ProjectStyle.uiEnableColor.withAlphaComponent(0.5)
-        tv.isScrollEnabled = false
+        //tv.isScrollEnabled = false
+        
+        tv.tableHeaderView = tableTitle
         
         tv.delegate = self
         tv.dataSource = self
         return tv
     }()
     
+    lazy private var tableTitle : UIView = {
+        let bgview = UIView()
+        bgview.addSubview(icon)
+        bgview.addSubview(appTitle)
+        
+        
+        icon.centerXAnchor.constraint(equalTo: bgview.centerXAnchor, constant: 0).isActive = true
+        icon.topAnchor.constraint(equalTo: bgview.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
+        
+        appTitle.leftAnchor.constraint(equalTo: bgview.leftAnchor, constant: 12).isActive = true
+        appTitle.rightAnchor.constraint(equalTo: bgview.rightAnchor, constant: -12).isActive = true
+        appTitle.topAnchor.constraint(equalTo: icon.bottomAnchor, constant: 0).isActive = true
+        
+        bgview.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 132)
+        return bgview
+    }()
+    
     
     override func viewDidLoad() {
         
-        //navigationBar.isHidden = true
-        view.addSubview(icon)
-        view.addSubview(appTitle)
         view.addSubview(table)
-        
-        icon.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
-        icon.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
-        
-        appTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
-        appTitle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
-        appTitle.topAnchor.constraint(equalTo: icon.bottomAnchor, constant: -16).isActive = true
-        
+    
         table.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
         table.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
-        table.topAnchor.constraint(equalTo: appTitle.bottomAnchor, constant: 8).isActive = true
+        table.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
         table.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
 
 

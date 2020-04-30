@@ -124,8 +124,10 @@ class ProjectWork{
             try img.pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frame-0").appendingPathComponent("layer-0.png"))
             try img.pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frame-0").appendingPathComponent("preview.png"))
             try UIImage(size: img.size)!.pngData()!.write(to: getProjectDirectory().appendingPathComponent("selection.png"))
+            try UIImage(size: img.size)!.pngData()!.write(to: getProjectDirectory().appendingPathComponent("copy.png"))
 
             let data = try JSONEncoder().encode(projectInfo)
+            
             try String(data: data, encoding: .utf8)!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("main.txt"), atomically: true, encoding: .utf8)
         } catch {
             print(error.localizedDescription)
@@ -154,6 +156,11 @@ class ProjectWork{
         } catch {
             print(error.localizedDescription)
         }
+    }
+    
+    func loadCopyImage() -> UIImage {
+        let img = UIImage(data: try! Data(contentsOf: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(projectName).appendingPathComponent("copy.png")))!
+        return img
     }
    
     func addLayer(frame : Int, layerPlace : Int){
@@ -193,6 +200,7 @@ class ProjectWork{
         let img = UIImage(data: try! Data(contentsOf: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(projectName).appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: actionNum)).png")))!
         return img
     }
+    
     private func loadActionSelect(actionNum : Int) -> UIImage{
         let img = UIImage(data: try! Data(contentsOf: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(projectName).appendingPathComponent("actions").appendingPathComponent("action-select-\(getActionID(action: actionNum)).png")))!
         return img

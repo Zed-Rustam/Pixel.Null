@@ -43,7 +43,7 @@ class Editor : UIViewController {
         title.textAlignment = .center
         
         self.canvas.transformView.resizeDelegate = {size in
-            title.text = "\(Int(size.width))x\(Int(size.height))"
+            title.text = "\(Int(abs(size.width)))x\(Int(abs(size.height)))"
         }
         
         mainView.addSubviewFullSize(view: title)
@@ -180,22 +180,6 @@ class Editor : UIViewController {
             self.transformSize.alpha = isShow ? 1 : 0
             self.transformAngle.alpha = isShow ? 1 : 0
         })
-    }
-    
-    func finishTransform() {
-        if canvas.selectedTool == 2 {
-            showTransform(isShow: false)
-            toolBar.clickTool(tool: canvas.transformView.lastToolSelected)
-        }
-    }
-    
-    func cancelTransform() {
-        if canvas.selectedTool == 2 {
-            showTransform(isShow: false)
-            canvas.clearTransform()
-            canvas.transformView.needToSave = false
-            toolBar.clickTool(tool: canvas.transformView.lastToolSelected)
-        }
     }
     
     @objc func appMovedToBackground() {
@@ -433,6 +417,42 @@ extension Editor {
     }
     
     
+}
+
+extension Editor {
+    func finishTransform() {
+        if canvas.selectedTool == 2 {
+            showTransform(isShow: false)
+            canvas.transformView.isCopyMode = false
+            toolBar.clickTool(tool: canvas.transformView.lastToolSelected)
+        }
+    }
+    
+    func cancelTransform() {
+        if canvas.selectedTool == 2 {
+            canvas.transformView.isCopyMode = false
+            showTransform(isShow: false)
+            canvas.clearTransform()
+            canvas.transformView.needToSave = false
+            toolBar.clickTool(tool: canvas.transformView.lastToolSelected)
+        }
+    }
+    
+    func startTransformWithImage() {
+        canvas.transformView.isCopyMode = true
+        canvas.setTransformCopyImage()
+        canvas.isSelected = true
+        toolBar.clickTool(tool: 2)
+        //canvas.selectionLayer = image.withTintColor(ProjectStyle.uiSelectColor)
+        //canvas.transformView.setRect(image: image, isSelected: true)
+    }
+    
+    
+    func saveSelection(){
+        if canvas.isSelected {
+            try! project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected).inner(image : UIImage.merge(images: [canvas.selectionLayer])!).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("copy.png"))
+        }
+    }
 }
 
 protocol FrameControlDelegate : class {

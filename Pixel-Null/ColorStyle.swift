@@ -152,6 +152,7 @@ extension UIImage {
         
         return resImage
     }
+    
     static func animatedGif(from images: [UIImage]) {
         let fileProperties: CFDictionary = [kCGImagePropertyGIFDictionary as String: [kCGImagePropertyGIFLoopCount as String: 0]]  as CFDictionary
         let frameProperties: CFDictionary = [kCGImagePropertyGIFDictionary as String: [(kCGImagePropertyGIFDelayTime as String): 0.1]] as CFDictionary
@@ -174,15 +175,103 @@ extension UIImage {
             }
         }
     }
+    
+    func cutImage(img : UIImage) -> UIImage {
+        let innerRect = img.getContextRect()
+        UIGraphicsBeginImageContext(innerRect.size)
+        
+        self.draw(at: CGPoint(x: -innerRect.origin.x, y: -innerRect.origin.y))
+        img.draw(at: CGPoint(x: -innerRect.origin.x, y: -innerRect.origin.y), blendMode: .destinationIn, alpha: 1)
+        
+        let img = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        
+        return img
+    }
+    
+    func getContextRect() -> CGRect {
+        var startx : Int = 0
+        var starty : Int = 0
+        var endx : Int = 0
+        var endy : Int = 0
+        
+        let data = getColorsArray()
+        let group = DispatchGroup()
+        
+        group.enter()
+        group.enter()
+        group.enter()
+        group.enter()
+
+        DispatchQueue.global(qos: .userInteractive).async {
+            outFor : for y in 0..<Int(self.size.height) {
+                for x in 0..<Int(self.size.width) {
+                    if data[Int(self.size.width) * y + x].a > 0 {
+                        starty = y
+                        break outFor
+                    }
+                }
+            }
+            group.leave()
+        }
+        
+        DispatchQueue.global(qos: .userInteractive).async {
+            outFor : for y in (0..<Int(self.size.height)).reversed() {
+                for x in 0..<Int(self.size.width) {
+                    if data[Int(self.size.width) * y + x].a > 0 {
+                        endy = y
+                        break outFor
+                    }
+                }
+            }
+            group.leave()
+        }
+        
+        DispatchQueue.global(qos: .userInteractive).async {
+            outFor : for x in 0..<Int(self.size.width) {
+                for y in 0..<Int(self.size.height) {
+                    if data[Int(self.size.width) * y + x].a > 0 {
+                        startx = x
+                        break outFor
+                    }
+                }
+            }
+            group.leave()
+        }
+        
+        DispatchQueue.global(qos: .userInteractive).async {
+            outFor : for x in (0..<Int(self.size.width)).reversed() {
+                for y in 0..<Int(self.size.height) {
+                    if data[Int(self.size.width) * y + x].a > 0 {
+                        endx = x
+                        break outFor
+                    }
+                }
+            }
+            group.leave()
+        }
+        
+        group.wait()
+        
+        return CGRect(x: startx, y: starty, width: endx - startx + 1, height: endy - starty + 1)
+    }
 }
 
-//
-//  iOSDevCenters+GIF.swift
-//  GIF-Swift
-//
-//  Created by iOSDevCenters on 11/12/15.
-//  Copyright © 2016 iOSDevCenters. All rights reserved.
-//
+func getTintImage(image : UIImage, color : UIColor) -> UIImage {
+    UIGraphicsBeginImageContext(image.size)
+    
+    UIGraphicsGetCurrentContext()!.setFillColor(color.cgColor)
+    
+    UIGraphicsGetCurrentContext()!.addRect(CGRect(origin: .zero, size: image.size))
+    UIGraphicsGetCurrentContext()!.fillPath()
+    
+    image.draw(at: .zero, blendMode: .destinationIn, alpha: 1)
+    
+    let result = UIGraphicsGetImageFromCurrentImageContext()!
+    UIGraphicsEndImageContext()
+    return result
+}
+
 import UIKit
 import ImageIO
 // FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
@@ -197,8 +286,6 @@ fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     return false
   }
 }
-
-
 
 extension UIImage {
     

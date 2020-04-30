@@ -190,7 +190,15 @@ class NavigationView : UIView {
                 }
              }
             break
+            
         default:
+            if pressSelect != -1 {
+                UIView.animate(withDuration: 0.25, animations: {
+                    self.iconStack.arrangedSubviews[self.pressSelect].transform = CGAffineTransform(scaleX: self.pressSelect == self.select ? 1.2 : 1, y: self.pressSelect == self.select ? 1.2 : 1)
+                    
+                    (self.iconStack.arrangedSubviews[self.pressSelect] as! UIImageView).tintColor = self.pressSelect == self.select ? ProjectStyle.uiEnableColor : ProjectStyle.uiDisableColor
+                })
+            }
             break
         }
     }

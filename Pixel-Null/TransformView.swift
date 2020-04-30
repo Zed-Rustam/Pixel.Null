@@ -26,6 +26,7 @@ class TransformView : UIView {
     var lastToolSelected = 0
     var lastSelect : UIImage? = nil
     var needToSave : Bool = true
+    var isCopyMode = false
     
     weak var canvas : ProjectCanvas? = nil
         
@@ -51,7 +52,7 @@ class TransformView : UIView {
         var endy : Int = 0
             
         if isSelected {
-            lastSelect = image
+            lastSelect = image.withTintColor(ProjectStyle.uiSelectColor)
             let data = image.getColorsArray()
             let group = DispatchGroup()
             
@@ -148,7 +149,7 @@ class TransformView : UIView {
     }
     var isChanged : Bool {
         get{
-            return !(startInformation.position == position && startInformation.angle == angle)
+            return !(startInformation.position == position && startInformation.angle == angle) || isCopyMode
         }
     }
     

@@ -258,20 +258,8 @@ class ColorSelectDialog2 : UIView {
         mainview.widthAnchor.constraint(equalToConstant: 84).isActive = true
         mainview.heightAnchor.constraint(equalToConstant: 42).isActive = true
 
+        mainview.isUserInteractionEnabled = false
         return mainview
-    }()
-    
-    lazy private var resultStack : UIStackView = {
-        let stack = UIStackView()
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.axis = .horizontal
-        stack.spacing = 12
-        stack.alignment = .fill
-        stack.distribution = .fill
-               
-        stack.addArrangedSubview(hexText)
-        stack.addArrangedSubview(result)
-        return stack
     }()
     
     lazy private var hexDelegate : TextFieldDelegate = TextFieldDelegate(method: {field in

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		95023E4124252AF40098187E /* PalleteCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95023E4024252AF40098187E /* PalleteCreateController.swift */; };
+		95144C4B245AE7FB0070DDF2 /* SegmentSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95144C4A245AE7FB0070DDF2 /* SegmentSelector.swift */; };
 		951CBD50244BB8A2004DB89B /* GradientController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 951CBD4F244BB8A2004DB89B /* GradientController.swift */; };
 		9523F2C62435F46300725214 /* ToggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9523F2C52435F46300725214 /* ToggleView.swift */; };
 		9523F2C82437C4B700725214 /* EraseSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9523F2C72437C4B700725214 /* EraseSettings.swift */; };
@@ -15,7 +16,6 @@
 		9537B1A1243C6C880083BE27 /* GridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9537B1A0243C6C880083BE27 /* GridView.swift */; };
 		9537B1A6243E48C80083BE27 /* EditorLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9537B1A5243E48C80083BE27 /* EditorLayer.swift */; };
 		9537B1AB24425D920083BE27 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9537B1AA24425D920083BE27 /* SettingsController.swift */; };
-		9537B1AF2442666E0083BE27 /* SettingsTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9537B1AE2442666E0083BE27 /* SettingsTableView.swift */; };
 		9540F1BC2431A2C5008D1657 /* NavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9540F1BB2431A2C5008D1657 /* NavigationView.swift */; };
 		9540F1BE243330D2008D1657 /* SliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9540F1BD243330D1008D1657 /* SliderView.swift */; };
 		9540F1C02433DDB7008D1657 /* ColorSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9540F1BF2433DDB7008D1657 /* ColorSlider.swift */; };
@@ -103,6 +103,7 @@
 
 /* Begin PBXFileReference section */
 		95023E4024252AF40098187E /* PalleteCreateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PalleteCreateController.swift; sourceTree = "<group>"; };
+		95144C4A245AE7FB0070DDF2 /* SegmentSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentSelector.swift; sourceTree = "<group>"; };
 		951CBD4F244BB8A2004DB89B /* GradientController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientController.swift; sourceTree = "<group>"; };
 		9523F2C52435F46300725214 /* ToggleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleView.swift; sourceTree = "<group>"; };
 		9523F2C72437C4B700725214 /* EraseSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EraseSettings.swift; sourceTree = "<group>"; };
@@ -110,7 +111,6 @@
 		9537B1A0243C6C880083BE27 /* GridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridView.swift; sourceTree = "<group>"; };
 		9537B1A5243E48C80083BE27 /* EditorLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorLayer.swift; sourceTree = "<group>"; };
 		9537B1AA24425D920083BE27 /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
-		9537B1AE2442666E0083BE27 /* SettingsTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableView.swift; sourceTree = "<group>"; };
 		9540F1BB2431A2C5008D1657 /* NavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationView.swift; sourceTree = "<group>"; };
 		9540F1BD243330D1008D1657 /* SliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderView.swift; sourceTree = "<group>"; };
 		9540F1BF2433DDB7008D1657 /* ColorSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSlider.swift; sourceTree = "<group>"; };
@@ -231,7 +231,6 @@
 			isa = PBXGroup;
 			children = (
 				9537B1AA24425D920083BE27 /* SettingsController.swift */,
-				9537B1AE2442666E0083BE27 /* SettingsTableView.swift */,
 				95A799602443A3E200F7BBE2 /* ThemeSelect.swift */,
 				95A799642443B59800F7BBE2 /* MainSettingsMenu.swift */,
 			);
@@ -471,6 +470,7 @@
 				95782CDD23CB928200C2772F /* TextFIeld.swift */,
 				95C7278523EB577900ED1A28 /* CircleButton.swift */,
 				95D01F1B2456BEBE006C8394 /* TitleView.swift */,
+				95144C4A245AE7FB0070DDF2 /* SegmentSelector.swift */,
 			);
 			name = Controls;
 			sourceTree = "<group>";
@@ -582,7 +582,6 @@
 				95578E0523D4C0B200D8DDF2 /* CreateDIalogController.swift in Sources */,
 				95D01F1C2456BEBE006C8394 /* TitleView.swift in Sources */,
 				9537B1A1243C6C880083BE27 /* GridView.swift in Sources */,
-				9537B1AF2442666E0083BE27 /* SettingsTableView.swift in Sources */,
 				9540F1BE243330D2008D1657 /* SliderView.swift in Sources */,
 				958C0C1E2419653F007B9C95 /* LayersCollectionView.swift in Sources */,
 				95816A4D244B4470007C7A69 /* SymmetryController.swift in Sources */,
@@ -596,6 +595,7 @@
 				9540F1C02433DDB7008D1657 /* ColorSlider.swift in Sources */,
 				95560A2223C8EBCC00581482 /* ProjectFullImage.swift in Sources */,
 				959BCFC3242254F100B27CFB /* FullColor.swift in Sources */,
+				95144C4B245AE7FB0070DDF2 /* SegmentSelector.swift in Sources */,
 				95A51E1224444B4700A03606 /* Training.swift in Sources */,
 				9523F2EE2439E17D00725214 /* GradientSettings.swift in Sources */,
 				95A626AF24446099007E75F3 /* PencilController.swift in Sources */,

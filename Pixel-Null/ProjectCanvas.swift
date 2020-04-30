@@ -281,41 +281,67 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
     
     func selectTool(newTool : Int){
         if selectedTool != newTool {
-            if newTool == 2 {
-                isTransform = true
-                transformView.offset = offset
-                transformView.scale = scale
-                transformView.angle = 0
-                transformView.setRect(image: UIImage.merge(images: [selectionLayer])!, isSelected: isSelected)
-                move.setImage(image: targetLayer.inner(image: isSelected ? selectionLayer : nil).getImageFromRect(rect: transformView.position), startpos: .zero, selection: selectionLayer.getImageFromRect(rect: transformView.position),size: project.projectSize)
-                
-                //actionImage.image =
-                targetLayer = targetLayer.cut(image: isSelected ? selectionLayer : nil)
-                targetImage.image = targetLayer
-                
-                ActionLayer = move.drawOn(position: transformView.position, rotation: transformView.Radians(CGFloat(transformView.angle)),rotateCenter: CGPoint(x: transformView.lastSize.width, y: transformView.lastSize.height))
-                actionImage.image = ActionLayer
-                
-                transformView.alpha = 1
-                transformGest.isEnabled = true
-            }
-            
-            if selectedTool == 2 {
-                if transformView.needToSave {
-                    finishTransform()
-                } else {
-                   transformView.needToSave = true
-                    finishTransform(needUpdateControl: false)
-                }
-                transformView.alpha = 0
-                transformGest.isEnabled = false
-                ActionLayer = UIImage(size: project.projectSize)
-                actionImage.image = ActionLayer
-                editor?.showTransform(isShow: false)
-            }
-            
             selectedTool = newTool
         }
+    }
+    
+    
+    func checkTransformChangeBefore(newTool : Int) {
+        if newTool == 2 && newTool != selectedTool {
+            isTransform = true
+            transformView.offset = offset
+            transformView.scale = scale
+            transformView.angle = 0
+            transformView.setRect(image: UIImage.merge(images: [selectionLayer])!, isSelected: isSelected)
+            move.setImage(image: targetLayer.inner(image: isSelected ? selectionLayer : nil).getImageFromRect(rect: transformView.position), startpos: .zero, selection: selectionLayer.getImageFromRect(rect: transformView.position),size: project.projectSize)
+            
+            //actionImage.image =
+            targetLayer = targetLayer.cut(image: isSelected ? selectionLayer : nil)
+            targetImage.image = targetLayer
+            
+            ActionLayer = move.drawOn(position: transformView.position, rotation: transformView.Radians(CGFloat(transformView.angle)),rotateCenter: CGPoint(x: transformView.lastSize.width, y: transformView.lastSize.height))
+            actionImage.image = ActionLayer
+            
+            transformView.alpha = 1
+            transformGest.isEnabled = true
+        } else if selectedTool == 2 && selectedTool != newTool {
+            if transformView.needToSave {
+                finishTransform()
+            } else {
+               transformView.needToSave = true
+                finishTransform(needUpdateControl: false)
+            }
+            transformView.alpha = 0
+            transformGest.isEnabled = false
+            ActionLayer = UIImage(size: project.projectSize)
+            actionImage.image = ActionLayer
+            print("hide")
+        }
+    }
+    
+    func setTransformCopyImage() {
+        let imageTransform = UIImage.merge(images: [project.loadCopyImage()])!
+        
+        selectedTool = 2
+        
+        isTransform = true
+        transformView.offset = offset
+        transformView.scale = scale
+        transformView.angle = 0
+        transformView.setRect(image: getTintImage(image: imageTransform, color: ProjectStyle.uiSelectColor), isSelected: true)
+        transformView.lastSelect = selectionLayer
+
+        selectionLayer = imageTransform.withTintColor(ProjectStyle.uiSelectColor)
+        selectionImage.image = selectionLayer
+        
+        
+        move.setImage(image: imageTransform.getImageFromRect(rect: transformView.position), startpos: .zero, selection: selectionLayer.getImageFromRect(rect: transformView.position),size: project.projectSize)
+        
+        ActionLayer = move.drawOn(position: transformView.position, rotation: transformView.Radians(CGFloat(transformView.angle)),rotateCenter: CGPoint(x: transformView.lastSize.width, y: transformView.lastSize.height))
+        actionImage.image = ActionLayer
+        
+        transformView.alpha = 1
+        transformGest.isEnabled = true
     }
     
     func resetTransform() {
@@ -405,6 +431,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         }
     }
     
+    
     func finishTransform(needUpdateControl : Bool = true){
         if transformView.isChanged {
             print("changed")
@@ -438,6 +465,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
             print("dont changed")
             clearTransform()
         }
+        editor?.canvas.transformView.isCopyMode = false
     }
     
     func clearTransform() {
@@ -449,7 +477,9 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         ActionLayer = UIImage(size: project.projectSize)
         actionImage.image = ActionLayer
         editor?.showTransform(isShow: false)
+        editor?.canvas.transformView.isCopyMode = false
     }
+    
     
     @objc private func touch(sender : UILongPressGestureRecognizer) {
           switch sender.state {
@@ -615,7 +645,8 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
     func reverseSelection() {
         if isSelected {
             
-            project.addAction(action :["ToolID" : "\(Actions.selectionChange.rawValue)", "wasSelected" : "true", "nowSelected" : "true"])
+            let nowSelected = !selection.isSelectEmpty(select: selection.reverse(select: selectionLayer))
+            project.addAction(action :["ToolID" : "\(Actions.selectionChange.rawValue)", "wasSelected" : "true", "nowSelected" : "\(nowSelected)"])
 
             try! selectionLayer.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
             
@@ -627,6 +658,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
 
             selectionImage.image = selectionLayer
             barDelegate?.UnDoReDoAction()
+            isSelected = nowSelected
         }
     }
     
@@ -762,7 +794,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
     func getSymmetry() -> CGPoint {
         return CGPoint(x: !isVerticalSymmeyry ? 0 : symmetry.startX, y: !isHorizontalSymmetry ? 0 : symmetry.startY)
     }
-        
+    
     @objc private func onAction2(sender : UILongPressGestureRecognizer){
         var location = sender.location(in: actionImage)
         location.x *= (project.projectSize.width / actionImage.frame.width)
@@ -959,6 +991,11 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 selectionLayer = selection.drawOn(image: selectionLayer, point: location,symmetry: getSymmetry())
                 selectionImage.image = selectionLayer
             case .ended:
+                
+                selectionLayer = selection.finishSelection()
+                selectionImage.image = selectionLayer
+                let isselect = selection.mode == .add ? true : !selection.isSelectEmpty(select: selectionLayer)
+                
                 let anim = CABasicAnimation(keyPath: #keyPath(CALayer.opacity))
                 anim.duration = 1
                 anim.fromValue = 0.5
@@ -969,7 +1006,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 
                 selectionImage.layer.add(anim, forKey: "test")
                 
-                project.addAction(action :["ToolID" : "\(Actions.selectionChange.rawValue)", "wasSelected" : "\(isSelected)", "nowSelected" : "true"])
+                project.addAction(action :["ToolID" : "\(Actions.selectionChange.rawValue)", "wasSelected" : "\(isSelected)", "nowSelected" : "\(isselect)"])
                 isSelected = true
                 
                 try! selection.lastSelection?.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
@@ -979,6 +1016,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 try! selectionLayer.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("selection.png"))
                 
                 barDelegate?.UnDoReDoAction()
+                isSelected = isselect
 
             case .cancelled:
                 selectionLayer = project.loadSelection()

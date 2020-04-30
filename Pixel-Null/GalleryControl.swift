@@ -216,17 +216,7 @@ extension GalleryControl : ProjectActions {
         
         gallery.performBatchUpdates({
             gallery.insertItems(at: [IndexPath(item: projects.count - 1, section: 0)])
-        },completion: {isEnd in
-            let cell = self.gallery.cellForItem(at: IndexPath(item: self.projects.count - 1, section: 0)) as? GalleryCell
-            cell?.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
-            cell?.alpha = 0
-            cell?.project.alpha = 1
-            
-            UIView.animate(withDuration: 0.25,delay: 0.5, animations: {
-                cell?.transform = CGAffineTransform(scaleX: 1, y: 1)
-                cell?.alpha = 1
-            })
-        })
+        },completion: nil)
     }
     
     func projectDelete(view: ProjectView, deletedName: String) {
@@ -240,7 +230,7 @@ extension GalleryControl : ProjectActions {
                     
                     self.projects.remove(at: i)
 
-                    UIView.animate(withDuration: 0.25, delay: 1, animations: {
+                    UIView.animate(withDuration: 0.25, delay: 0, animations: {
                         cell.project.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
                         cell.project.alpha = 0
                     }, completion: {isEnd in
