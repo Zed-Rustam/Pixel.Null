@@ -235,9 +235,9 @@ class ToolButton : UICollectionViewCell {
                 self!.button.setIconColor(color: ProjectStyle.uiSelectColor)
             }
             button.longPressDelegate = {
-                  let impactFeedbackgenerator = UIImpactFeedbackGenerator (style: .heavy)
-                                            impactFeedbackgenerator.prepare()
-                                            impactFeedbackgenerator.impactOccurred()
+                    let impactFeedbackgenerator = UIImpactFeedbackGenerator (style: .heavy)
+                    impactFeedbackgenerator.prepare()
+                    impactFeedbackgenerator.impactOccurred()
             }
 
         case 5:
@@ -334,7 +334,13 @@ class ToolButton : UICollectionViewCell {
                 
                 self!.button.setIconColor(color: ProjectStyle.uiSelectColor)
             }
-            
+            button.longPressDelegate = {[unowned self] in
+                let impactFeedbackgenerator = UIImpactFeedbackGenerator (style: .heavy)
+                impactFeedbackgenerator.prepare()
+                impactFeedbackgenerator.impactOccurred()
+                
+                (self.delegate as! Editor).openSelectorSettings()
+            }
         case 7:
             button.setIcon(ic: #imageLiteral(resourceName: "sharp_icon"))
             button.setIconColor(color: ProjectStyle.uiEnableColor)

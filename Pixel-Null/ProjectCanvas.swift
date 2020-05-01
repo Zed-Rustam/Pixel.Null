@@ -319,6 +319,41 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         }
     }
     
+    func makeSelecion(img : UIImage) -> UIImage {
+        UIGraphicsBeginImageContext(project.projectSize)
+        let context = UIGraphicsGetCurrentContext()!
+
+        context.setFillColor(ProjectStyle.uiSelectColor.cgColor)
+        context.addRect(CGRect(origin: .zero, size: project.projectSize))
+        context.fillPath()
+        
+        img.draw(at: .zero,blendMode: .destinationOut,alpha: 1)
+        
+        context.setBlendMode(.sourceOut)
+        context.setFillColor(ProjectStyle.uiSelectColor.cgColor)
+        context.addRect(CGRect(origin: .zero, size: project.projectSize))
+        context.fillPath()
+        
+        let result = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        
+        return result
+    }
+    
+    func fixAlpha(image : UIImage) -> UIImage {
+        var data = image.getColorsArray()
+        
+        for i in 0..<data.count {
+            if data[i].a > 0 {
+                data[i].a = 255
+            }
+        }
+        //image.cgImage!.alphaInfo = CGImageAlphaInfo.noneSkipFirst
+        //return image
+        return imageFromARGB32Bitmap(pixels: data, width: UInt(image.size.width), height: UInt(image.size.height))
+        
+    }
+    
     func setTransformCopyImage() {
         let imageTransform = UIImage.merge(images: [project.loadCopyImage()])!
         
@@ -331,7 +366,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         transformView.setRect(image: getTintImage(image: imageTransform, color: ProjectStyle.uiSelectColor), isSelected: true)
         transformView.lastSelect = selectionLayer
 
-        selectionLayer = imageTransform.withTintColor(ProjectStyle.uiSelectColor)
+        selectionLayer = fixAlpha(image : imageTransform).withTintColor(ProjectStyle.uiSelectColor)
         selectionImage.image = selectionLayer
         
         
@@ -1070,7 +1105,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 location.x = CGFloat(floor(location.x))
                 location.y = CGFloat(floor(location.y))
                 if actionImage.bounds.contains(location) {
-                    let color = project.getFrameFromLayers(frame: project.FrameSelected, size: project.projectSize).getPixelColor(pos: location)
+                    let color = project.getFrameFromLayers(frame: project.FrameSelected, size: project.projectSize).pixelColor(x: Int(location.x), y: Int(location.y))
                     delegate?.changeMainColor(color: color)
                 }
             default:

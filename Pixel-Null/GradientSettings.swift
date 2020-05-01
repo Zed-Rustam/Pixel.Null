@@ -10,6 +10,8 @@ import UIKit
 
 class GradientSettings : UIViewController {
     
+    weak var project : ProjectWork? = nil
+    
     lazy private var exitBtn : CircleButton = {
         let btn = CircleButton(icon: #imageLiteral(resourceName: "cancel_icon"), frame: .zero)
         btn.setShadowColor(color: .clear)
@@ -34,15 +36,17 @@ class GradientSettings : UIViewController {
         color.translatesAutoresizingMaskIntoConstraints = false
         color.widthAnchor.constraint(equalToConstant: 48).isActive = true
         color.heightAnchor.constraint(equalToConstant: 48).isActive = true
-        color.delegate = {[weak self] in
-            let colorPicker = ColorSelectorController()
-            colorPicker.setColor(clr: color.color)
-            colorPicker.delegate = {res in
+        color.delegate = {[unowned self] in
+            let colorPicker = ProjectPallete()
+            colorPicker.project = self.project
+            colorPicker.startColor = color.color
+            
+            colorPicker.selectDelegate = {res in
                 color.color = res
-                self!.startInfo.startColor = res
-                (self!.gradientPreview.subviews[0] as! UIImageView).image = self!.makeImageGradient()
+                self.startInfo.startColor = res
+                (self.gradientPreview.subviews[0] as! UIImageView).image = self.makeImageGradient()
             }
-            self!.show(colorPicker, sender: self!)
+            self.show(colorPicker, sender: self)
         }
         return color
     }()
@@ -54,15 +58,17 @@ class GradientSettings : UIViewController {
            color.translatesAutoresizingMaskIntoConstraints = false
            color.widthAnchor.constraint(equalToConstant: 48).isActive = true
            color.heightAnchor.constraint(equalToConstant: 48).isActive = true
-           color.delegate = {[weak self] in
-               let colorPicker = ColorSelectorController()
-               colorPicker.setColor(clr: color.color)
-               colorPicker.delegate = {res in
+           color.delegate = {[unowned self] in
+               let colorPicker = ProjectPallete()
+               colorPicker.project = self.project
+               colorPicker.startColor = color.color
+            
+               colorPicker.selectDelegate = {res in
                     color.color = res
-                    self!.startInfo.endColor = res
-                    (self!.gradientPreview.subviews[0] as! UIImageView).image = self!.makeImageGradient()
+                    self.startInfo.endColor = res
+                    (self.gradientPreview.subviews[0] as! UIImageView).image = self.makeImageGradient()
                }
-               self!.show(colorPicker, sender: self!)
+               self.show(colorPicker, sender: self)
            }
            return color
        }()

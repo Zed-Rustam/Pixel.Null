@@ -151,7 +151,6 @@ class PencilController : UIViewController {
         return img
     }()
 
-    
     lazy private var perfectPixelOn : UIImageView = {
         let img = UIImageView()
 
@@ -171,8 +170,6 @@ class PencilController : UIViewController {
         return img
     }()
 
-    
-    
     override func viewDidLoad() {
         view.addSubview(scroll)
         

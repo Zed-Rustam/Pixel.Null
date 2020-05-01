@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		95023E4124252AF40098187E /* PalleteCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95023E4024252AF40098187E /* PalleteCreateController.swift */; };
 		95144C4B245AE7FB0070DDF2 /* SegmentSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95144C4A245AE7FB0070DDF2 /* SegmentSelector.swift */; };
+		95144C4D245C26C00070DDF2 /* SelectorSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95144C4C245C26C00070DDF2 /* SelectorSettings.swift */; };
+		95144C4F245C53990070DDF2 /* ImagePixelColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95144C4E245C53990070DDF2 /* ImagePixelColor.swift */; };
 		951CBD50244BB8A2004DB89B /* GradientController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 951CBD4F244BB8A2004DB89B /* GradientController.swift */; };
 		9523F2C62435F46300725214 /* ToggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9523F2C52435F46300725214 /* ToggleView.swift */; };
 		9523F2C82437C4B700725214 /* EraseSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9523F2C72437C4B700725214 /* EraseSettings.swift */; };
@@ -104,6 +106,8 @@
 /* Begin PBXFileReference section */
 		95023E4024252AF40098187E /* PalleteCreateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PalleteCreateController.swift; sourceTree = "<group>"; };
 		95144C4A245AE7FB0070DDF2 /* SegmentSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentSelector.swift; sourceTree = "<group>"; };
+		95144C4C245C26C00070DDF2 /* SelectorSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectorSettings.swift; sourceTree = "<group>"; };
+		95144C4E245C53990070DDF2 /* ImagePixelColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePixelColor.swift; sourceTree = "<group>"; };
 		951CBD4F244BB8A2004DB89B /* GradientController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientController.swift; sourceTree = "<group>"; };
 		9523F2C52435F46300725214 /* ToggleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleView.swift; sourceTree = "<group>"; };
 		9523F2C72437C4B700725214 /* EraseSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EraseSettings.swift; sourceTree = "<group>"; };
@@ -268,6 +272,7 @@
 				95C7278223EB37EA00ED1A28 /* Color Dialog */,
 				95D4559923CED016007E7505 /* Project */,
 				95C7278723EB583D00ED1A28 /* ColorStyle.swift */,
+				95144C4E245C53990070DDF2 /* ImagePixelColor.swift */,
 				95782CDF23CD8F3000C2772F /* TextFieldDelegate.swift */,
 				954AABAF23BBEC3D00F52955 /* AppDelegate.swift */,
 				954AABB123BBEC3D00F52955 /* SceneDelegate.swift */,
@@ -289,6 +294,7 @@
 				954BB2DD240D72B50008B9D5 /* Tool.swift */,
 				9523F2C72437C4B700725214 /* EraseSettings.swift */,
 				9523F2ED2439E17D00725214 /* GradientSettings.swift */,
+				95144C4C245C26C00070DDF2 /* SelectorSettings.swift */,
 			);
 			name = Tools;
 			sourceTree = "<group>";
@@ -584,6 +590,7 @@
 				9537B1A1243C6C880083BE27 /* GridView.swift in Sources */,
 				9540F1BE243330D2008D1657 /* SliderView.swift in Sources */,
 				958C0C1E2419653F007B9C95 /* LayersCollectionView.swift in Sources */,
+				95144C4D245C26C00070DDF2 /* SelectorSettings.swift in Sources */,
 				95816A4D244B4470007C7A69 /* SymmetryController.swift in Sources */,
 				95E2A0312455197400B02742 /* FillController.swift in Sources */,
 				95DC554E23EC9D2A0011FA2A /* ColorSelector.swift in Sources */,
@@ -602,6 +609,7 @@
 				95C0EDD42448B1450012D60D /* SummetryView.swift in Sources */,
 				954BB2DE240D72B50008B9D5 /* Tool.swift in Sources */,
 				95FC4151240A8ECE00B7F315 /* LayerList.swift in Sources */,
+				95144C4F245C53990070DDF2 /* ImagePixelColor.swift in Sources */,
 				954AABB023BBEC3D00F52955 /* AppDelegate.swift in Sources */,
 				9567F5FD23BFF89C00694B40 /* ColorCreator.swift in Sources */,
 				95E2A02F2455185800B02742 /* EraseController.swift in Sources */,

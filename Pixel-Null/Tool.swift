@@ -137,12 +137,11 @@ class Pencil : Tool {
 
 class Selection : Tool {
     
-    enum SelectionType {
-        case draw
-        case rectangle
-        case ellipse
-        case magicTool
-        case colorFill
+    enum SelectionType : Int {
+        case draw = 0
+        case rectangle = 1
+        case ellipse = 2
+        case magicTool = 3
     }
     
     enum selectMode {
@@ -152,11 +151,7 @@ class Selection : Tool {
     
     var type : SelectionType = .rectangle
     var mode : selectMode = .add
-    
-    func setSettings(){
-
-    }
-    
+        
     func reverse(select : UIImage) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(select.size, false, 1)
         
@@ -393,7 +388,7 @@ class Fill : Tool {
     }
     
     func drawOn(image : UIImage,point : CGPoint, selection : UIImage?, fillColor : UIColor) -> UIImage{
-        colorForChange = image.getColor(point: point)
+        colorForChange = image.pixelColor(x: Int(point.x), y: Int(point.y))
         color = fillColor
         
         imageData = image.getColorsArray()

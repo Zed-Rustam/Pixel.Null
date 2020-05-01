@@ -84,17 +84,6 @@ class PencilSettings : UIViewController {
         text.heightAnchor.constraint(equalToConstant: 36).isActive = true
         return text
     }()
-    
-    private var penSmoothTitle : UILabel = {
-        let text = UILabel()
-        text.text = "Pen Smoothing"
-        text.textAlignment = .left
-        text.font = UIFont(name:  "Rubik-Medium", size: 24)
-        text.textColor = ProjectStyle.uiEnableColor
-        text.translatesAutoresizingMaskIntoConstraints = false
-        text.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        return text
-    }()
 
     private var pixelPerfectTitle : UILabel = {
         let text = UILabel()
@@ -171,6 +160,7 @@ class PencilSettings : UIViewController {
         view.setCorners(corners: 12)
         return view
     }()
+    
     private var bgView : UIView = {
         let view = UIView()
         view.setShadow(color: ProjectStyle.uiShadowColor, radius: 8, opasity: 0.25)

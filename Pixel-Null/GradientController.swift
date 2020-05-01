@@ -10,6 +10,7 @@ import UIKit
 
 class GradientController : UIViewController {
     weak var navigation : UINavigationController? = nil
+    
     lazy private var scroll : UIScrollView = {
         let scrl = UIScrollView()
         scrl.translatesAutoresizingMaskIntoConstraints = false

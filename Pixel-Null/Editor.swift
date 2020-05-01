@@ -328,6 +328,18 @@ extension Editor : FrameControlDelegate{
 
 
 extension Editor : ToolSettingsDelegate {
+    func setSelectionSettings(mode: Int) {
+        canvas.selection.type = Selection.SelectionType.init(rawValue: mode)!
+    }
+    
+    func openSelectorSettings() {
+         let selectorSettings = SelectorSettings()
+        selectorSettings.setDefault(mode: canvas.selection.type)
+        selectorSettings.delegate = self
+        selectorSettings.modalPresentationStyle = .pageSheet
+        self.show(selectorSettings, sender: self)
+    }
+    
     func openPencilSettings() {
         let pencilSettings = PencilSettings()
         pencilSettings.modalPresentationStyle = .pageSheet
@@ -346,6 +358,7 @@ extension Editor : ToolSettingsDelegate {
     
     func openGradientSettings() {
         let gradientSettings = GradientSettings()
+        gradientSettings.project = project
         gradientSettings.modalPresentationStyle = .pageSheet
         gradientSettings.delegate = self
         gradientSettings.setSettings(stepCount: canvas.gradient.stepCount, startColor: canvas.gradient.startColor, endColor: canvas.gradient.endColor)
@@ -477,10 +490,12 @@ protocol FrameControlDelegate : class {
 protocol ToolSettingsDelegate : class{
     func openPencilSettings()
     func openEraseSettings()
+    func openSelectorSettings()
     func openGradientSettings()
     
     func setPenSettings(penSize : Int, pixPerfect : Bool)
     func setEraseSettings(eraseSize : Int)
+    func setSelectionSettings(mode : Int)
     func setGradientSettings(stepCount : Int,startColor : UIColor, endColor : UIColor)
 }
 
