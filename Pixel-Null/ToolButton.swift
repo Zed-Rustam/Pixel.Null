@@ -231,7 +231,26 @@ class ToolButton : UICollectionViewCell {
                 editor.canvas.selectTool(newTool: 4)
 
                 self!.barDelegate.wasChangedTool(newTool: 4)
-                self!.barDelegate.updateButtons(btns: [])
+                
+                let selector = SegmentSelector(imgs: [#imageLiteral(resourceName: "layer_icon"),#imageLiteral(resourceName: "layers_icon")])
+                switch editor.canvas.fill.style {
+                case .layer:
+                    selector.select = 0
+                case .frame:
+                    selector.select = 1
+                }
+                
+                selector.selectDelegate = {
+                    switch $0 {
+                    case 0:
+                        editor.canvas.fill.style = .layer
+                    default:
+                        editor.canvas.fill.style = .frame
+                    }
+                }
+                
+                self!.barDelegate.updateButtons(btns: [selector])
+                
                 self!.button.setIconColor(color: ProjectStyle.uiSelectColor)
             }
             button.longPressDelegate = {

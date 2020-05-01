@@ -60,7 +60,6 @@ class GalleryControl : UIViewController{
         let documentsDirectory = paths[0]
         let docURL = URL(string: documentsDirectory)!
         let dataPath = docURL.appendingPathComponent("Projects")
-    //       print(dataPath)
         if !FileManager.default.fileExists(atPath: dataPath.absoluteString) {
             do {
                 try FileManager.default.createDirectory(atPath: dataPath.absoluteString, withIntermediateDirectories: true, attributes: nil)
@@ -240,7 +239,6 @@ extension GalleryControl : ProjectActions {
                             cell.project.transform = CGAffineTransform(scaleX: 1, y: 1)
                             cell.project.alpha = 1
                         })
-                        
                     })
                     
                     break for1

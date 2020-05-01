@@ -348,8 +348,6 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 data[i].a = 255
             }
         }
-        //image.cgImage!.alphaInfo = CGImageAlphaInfo.noneSkipFirst
-        //return image
         return imageFromARGB32Bitmap(pixels: data, width: UInt(image.size.width), height: UInt(image.size.height))
         
     }
@@ -977,7 +975,12 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 location.x = CGFloat(floor(location.x))
                 location.y = CGFloat(floor(location.y))
                 if actionImage.bounds.contains(location) {
-                    ActionLayer = fill.drawOn(image: targetLayer, point: location,selection: isSelected ? selectionLayer : nil, fillColor: selectorColor)
+                    switch fill.style {
+                    case .frame:
+                        ActionLayer = UIImage.merge(images: [fill.drawOnFrame(image: project.getFrame(frame: project.FrameSelected, size: project.projectSize), point: location, selection: isSelected ? selectionLayer : nil, fillColor: selectorColor),targetLayer])
+                    case .layer:
+                        ActionLayer = fill.drawOn(image: targetLayer, point: location,selection: isSelected ? selectionLayer : nil, fillColor: selectorColor)
+                    }
                     
                     let wasImg = project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected)
                     
@@ -1009,19 +1012,30 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 location.x = CGFloat(floor(location.x))
                 location.y = CGFloat(floor(location.y))
                 selection.restart(img: selectionLayer, startPoint: location)
-                
-                selectionLayer = selection.drawOn(image: selectionLayer, point: location,symmetry: getSymmetry())
-                selectionLayer = selection.drawOn(image: selectionLayer, point: location,symmetry: getSymmetry())
-                selectionImage.image = selectionLayer
+
+                if selection.type != .magicTool {
+                    selectionLayer = selection.drawOn(image: selectionLayer, point: location,symmetry: getSymmetry())
+                    selectionLayer = selection.drawOn(image: selectionLayer, point: location,symmetry: getSymmetry())
+                    selectionImage.image = selectionLayer
+                }
             case .changed:
                 location.x = CGFloat(floor(location.x))
                 location.y = CGFloat(floor(location.y))
-
-                selectionLayer = selection.drawOn(image: selectionLayer, point: location,symmetry: getSymmetry())
-                selectionImage.image = selectionLayer
+                if selection.type != .magicTool {
+                    selectionLayer = selection.drawOn(image: selectionLayer, point: location,symmetry: getSymmetry())
+                    selectionImage.image = selectionLayer
+                }
             case .ended:
+                location.x = CGFloat(floor(location.x))
+                location.y = CGFloat(floor(location.y))
                 
-                selectionLayer = selection.finishSelection()
+                if selection.type != .magicTool {
+                    selectionLayer = selection.finishSelection()
+                } else {
+                    selection.magicSelection(image : UIImage.merge(images: [project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected)])!, point: location)
+                    selectionLayer = selection.finishSelection()
+                }
+                
                 selectionImage.image = selectionLayer
                 let isselect = selection.mode == .add ? true : !selection.isSelectEmpty(select: selectionLayer)
                 

@@ -152,6 +152,106 @@ class Selection : Tool {
     var type : SelectionType = .rectangle
     var mode : selectMode = .add
         
+    var points : [CGPoint] = []
+
+    
+    var colorForChange : UIColor = .clear
+    
+    private var imageData : [pixelData] = []
+    private var resultData : [pixelData] = []
+
+    func getPixelData(imgSize : CGSize, point : CGPoint) -> pixelData? {
+        if point.x < 0 || point.x >= imgSize.width || point.y < 0 || point.y >= imgSize.height {return nil}
+        return imageData[Int(imgSize.width * point.y + point.x)]
+    }
+    
+    func setPixelData(imgSize : CGSize, point : CGPoint, color : pixelData) {
+        imageData[Int(imgSize.width * point.y + point.x)] = color
+        resultData[Int(imgSize.width * point.y + point.x)] = pixelData(a: 255, r: 0, g: 0, b: 0)
+    }
+    
+    private func fillH(from : CGPoint, imageSize : CGSize){
+        var pos = from
+
+        var wasAddUp = false
+        var wasAddDown = false
+        
+        if getPixelData(imgSize: imageSize, point: from) != colorForChange.getPixelData() {
+            return
+        }
+        
+        setPixelData(imgSize: imageSize, point: pos, color: ProjectStyle.uiSelectColor.getPixelData())
+
+        if getPixelData(imgSize: imageSize, point: pos.offset(x: 0, y: -1)) == colorForChange.getPixelData() {
+            points.append(pos.offset(x: 0, y: -1))
+            wasAddUp = true
+        }
+        if getPixelData(imgSize: imageSize, point: pos.offset(x: 0, y: 1)) == colorForChange.getPixelData() {
+            points.append(pos.offset(x: 0, y: 1))
+            wasAddDown = true
+        }
+        
+        while getPixelData(imgSize: imageSize, point: pos.offset(x: -1, y: 0)) == colorForChange.getPixelData() {
+            
+            if !wasAddUp && getPixelData(imgSize: imageSize, point: pos.offset(x: -1, y: -1)) == colorForChange.getPixelData() {
+                points.append(pos.offset(x: -1, y: -1))
+                wasAddUp = true
+            } else if getPixelData(imgSize: imageSize, point: pos.offset(x: -1, y: -1)) != colorForChange.getPixelData() {
+                wasAddUp = false
+            }
+            if !wasAddDown && getPixelData(imgSize: imageSize, point: pos.offset(x: -1, y: 1)) == colorForChange.getPixelData() {
+                points.append(pos.offset(x: -1, y: 1))
+                wasAddDown = true
+            } else if getPixelData(imgSize: imageSize, point: pos.offset(x: -1, y: 1)) != colorForChange.getPixelData() {
+                wasAddDown = false
+            }
+            
+            pos = pos.offset(x: -1, y: 0)
+            setPixelData(imgSize: imageSize, point: pos, color: ProjectStyle.uiSelectColor.getPixelData())
+            
+        }
+        
+        pos = from
+        wasAddUp = false
+        wasAddDown = false
+
+        while getPixelData(imgSize: imageSize, point: pos.offset(x: 1, y: 0)) == colorForChange.getPixelData() {
+            if !wasAddUp && getPixelData(imgSize: imageSize, point: pos.offset(x: 1, y: -1)) == colorForChange.getPixelData() {
+                points.append(pos.offset(x: 1, y: -1))
+                wasAddUp = true
+            } else if getPixelData(imgSize: imageSize, point: pos.offset(x: 1, y: -1)) != colorForChange.getPixelData() {
+                wasAddUp = false
+            }
+            
+            if !wasAddDown && getPixelData(imgSize: imageSize, point: pos.offset(x: 1, y: 1)) == colorForChange.getPixelData() {
+                points.append(pos.offset(x: 1, y: 1))
+                wasAddDown = true
+            } else if getPixelData(imgSize: imageSize, point: pos.offset(x: 1, y: 1)) != colorForChange.getPixelData() {
+                wasAddDown = false
+            }
+            
+            pos = pos.offset(x: 1, y: 0)
+            setPixelData(imgSize: imageSize, point: pos, color: ProjectStyle.uiSelectColor.getPixelData())
+        }
+    }
+
+    
+    func magicSelection(image : UIImage,point : CGPoint) {
+        points.removeAll()
+        points.append(point)
+        colorForChange = image.pixelColor(x: Int(point.x), y: Int(point.y))
+
+        imageData = image.getColorsArray()
+        resultData = .init(repeating: pixelData(a: 0, r: 0, g: 0, b: 0), count: imageData.count)
+        
+        
+        while points.count > 0 {
+            fillH(from: points.remove(at: 0), imageSize: image.size)
+        }
+        
+        nowSelection = imageFromARGB32Bitmap(pixels: resultData, width: UInt(image.size.width), height: UInt(image.size.height)).withTintColor(ProjectStyle.uiSelectColor)
+    }
+    
     func reverse(select : UIImage) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(select.size, false, 1)
         
@@ -206,9 +306,7 @@ class Selection : Tool {
     
     var lastSelection : UIImage? = nil
     var nowSelection : UIImage!
-    
-    private var points : [CGPoint] = []
-    
+        
     func restart(img : UIImage, startPoint : CGPoint){
         lastSelection = img
         points.removeAll()
@@ -300,6 +398,13 @@ extension CGPoint {
 }
 
 class Fill : Tool {
+    
+    enum FillStyle : Int {
+        case layer
+        case frame
+    }
+    
+    var style : FillStyle = .layer
     var color : UIColor = .blue
     var colorForChange : UIColor = .clear
 
@@ -425,7 +530,43 @@ class Fill : Tool {
         }
     }
     
-    
+    func drawOnFrame(image : UIImage,point : CGPoint, selection : UIImage?, fillColor : UIColor) -> UIImage {
+        colorForChange = image.pixelColor(x: Int(point.x), y: Int(point.y))
+        color = fillColor
+        
+        imageData = image.getColorsArray()
+        resultData = .init(repeating: pixelData(a: 0, r: 0, g: 0, b: 0), count: imageData.count)
+        
+        points.removeAll()
+        
+        if getPixelData(imgSize: image.size, point: point) != color.getPixelData() {
+            points.append(point)
+            
+            while points.count > 0 {
+                fillH(from: points.remove(at: 0), imageSize: image.size)
+            }
+            let resImg = imageFromARGB32Bitmap(pixels: resultData, width: UInt(image.size.width), height: UInt(image.size.height)).withTintColor(color)
+            
+            UIGraphicsBeginImageContext(image.size)
+            
+            resImg.draw(at: .zero)
+            selection?.draw(at: .zero, blendMode: .destinationIn, alpha: 1)
+            
+            var returnImage = UIGraphicsGetImageFromCurrentImageContext()!
+            
+            //UIGraphicsGetCurrentContext()!.clear(CGRect(origin: .zero, size: image.size))
+            
+            //image.draw(at: .zero)
+            //returnImage.draw(at: .zero)
+            //returnImage = UIGraphicsGetImageFromCurrentImageContext()!
+            
+            UIGraphicsEndImageContext()
+            return returnImage
+        } else {
+            print("dont")
+            return UIImage(size: image.size)!
+        }
+    }
 }
 
 class Square : Tool {

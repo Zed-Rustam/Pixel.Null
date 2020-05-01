@@ -20,6 +20,7 @@ class ColorSlider : UIView {
         case down
         case left
         case right
+        case none
     }
     
     var orientation : Orientation = .horizontal
@@ -143,6 +144,8 @@ class ColorSlider : UIView {
                         switch self.preview {
                         case .down:
                             self.selectView.center.y = 60
+                        case .none:
+                            break
                         default:
                             self.selectView.center.y = -30
                         }
@@ -156,6 +159,8 @@ class ColorSlider : UIView {
                         switch self.preview {
                         case .right:
                             self.selectView.center.x = 60
+                        case .none:
+                            break
                         default:
                             self.selectView.center.x = -30
                         }

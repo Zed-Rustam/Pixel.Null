@@ -5,7 +5,7 @@ class ColorSelectDialog2 : UIView {
     lazy private var redSlider : ColorSlider = {
         let slider = ColorSlider(startColor: .black, endColor: .red, orientation: .horizontal)
         slider.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        slider.preview = .down
+        slider.preview = .none
         
         slider.delegate = {position in
             self.nowred = position
@@ -38,58 +38,6 @@ class ColorSelectDialog2 : UIView {
         text.filed.inputAccessoryView = bar
         
         return text
-    }()
-    
-    lazy private var redStack : UIStackView = {
-        let stack = UIStackView()
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.axis = .horizontal
-        stack.spacing = 12
-        stack.alignment = .center
-        stack.distribution = .fill
-        
-        stack.addArrangedSubview(redSliderText)
-        stack.addArrangedSubview(redSlider)
-        return stack
-    }()
-    
-    lazy private var greenStack : UIStackView = {
-        let stack = UIStackView()
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.axis = .horizontal
-        stack.spacing = 12
-        stack.alignment = .center
-        stack.distribution = .fill
-        
-        stack.addArrangedSubview(greenSliderText)
-        stack.addArrangedSubview(greenSlider)
-        return stack
-    }()
-    
-    lazy private var blueStack : UIStackView = {
-        let stack = UIStackView()
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.axis = .horizontal
-        stack.spacing = 12
-        stack.alignment = .center
-        stack.distribution = .fill
-        
-        stack.addArrangedSubview(blueSliderText)
-        stack.addArrangedSubview(blueSlider)
-        return stack
-    }()
-
-    lazy private var alphaStack : UIStackView = {
-        let stack = UIStackView()
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.axis = .horizontal
-        stack.spacing = 12
-        stack.alignment = .center
-        stack.distribution = .fill
-        
-        stack.addArrangedSubview(alphaSliderText)
-        stack.addArrangedSubview(alphaSlider)
-        return stack
     }()
     
     lazy private var greenSliderText : TextField = {
@@ -182,6 +130,7 @@ class ColorSelectDialog2 : UIView {
 
     lazy private var greenSlider : ColorSlider = {
         let slider  = ColorSlider(startColor: .black, endColor: .green, orientation: .horizontal)
+        slider.preview = .none
         slider.delegate = {position in
            self.nowgreen = position
            self.greenSliderText.filed.text = String(Int(255 * position))
@@ -195,6 +144,8 @@ class ColorSelectDialog2 : UIView {
     
     lazy private var blueSlider : ColorSlider = {
         let slider = ColorSlider(startColor: .black, endColor: .blue, orientation: .horizontal)
+        slider.preview = .none
+
         slider.delegate = {position in
             self.nowblue = position
             self.blueSliderText.filed.text = String(Int(255 * position))
@@ -210,7 +161,8 @@ class ColorSelectDialog2 : UIView {
     
     lazy private var alphaSlider : ColorSlider = {
         let slider = ColorSlider(startColor: UIColor.red.withAlphaComponent(0), endColor: .red, orientation: .horizontal)
-        
+        slider.preview = .none
+
           slider.delegate = {[weak self] in
               self!.nowalpha = $0
               self!.alphaSliderText.filed.text = String(Int(255 * $0))
