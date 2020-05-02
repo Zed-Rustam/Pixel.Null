@@ -120,6 +120,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         selectionImage.image = selectionLayer
         framesImage?.image = framesLayer
         bgImage?.image = bgLayers
+        bgImage?.backgroundColor = project.backgroundColor
         targetImage?.image = targetLayer
         fgImage?.image = fgLayers
     }
@@ -164,6 +165,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         bgImage.image = bgLayers
         bgImage.layer.magnificationFilter = CALayerContentsFilter.nearest
         bgImage.contentMode = .scaleAspectFit
+        bgImage.backgroundColor = project.backgroundColor
 
         actionImage = UIImageView(frame: CGRect(x: 0, y: 0, width: project.projectSize.width, height: project.projectSize.height))
         actionImage.image = ActionLayer
@@ -829,7 +831,6 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         if !actionImage.bounds.contains(location) && sender.state == .began{
             sender.isEnabled = false
             sender.isEnabled = true
-            print("cancel action")
         }
         
         switch selectedTool {
@@ -977,7 +978,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 if actionImage.bounds.contains(location) {
                     switch fill.style {
                     case .frame:
-                        ActionLayer = UIImage.merge(images: [fill.drawOnFrame(image: project.getFrame(frame: project.FrameSelected, size: project.projectSize), point: location, selection: isSelected ? selectionLayer : nil, fillColor: selectorColor),targetLayer])
+                        ActionLayer = UIImage.merge(images: [fill.drawOnFrame(image: project.getFrameFromLayers(frame: project.FrameSelected, size: project.projectSize), point: location, selection: isSelected ? selectionLayer : nil, fillColor: selectorColor),targetLayer])
                     case .layer:
                         ActionLayer = fill.drawOn(image: targetLayer, point: location,selection: isSelected ? selectionLayer : nil, fillColor: selectorColor)
                     }

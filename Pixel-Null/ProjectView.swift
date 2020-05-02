@@ -106,11 +106,6 @@ extension ProjectView : UIContextMenuInteractionDelegate {
             return image
             }
         ){ action in
-            let viewMenu = UIAction(title: "Rename",image : UIImage(systemName: "square.and.pencil", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: UIAction.Identifier(rawValue: "view")) {_ in
-                if(self.delegate != nil) {
-                    
-                }
-            }
             let rotate = UIAction(title: "Clone",image  : UIImage(systemName: "plus.square.on.square", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, handler: {action in
                 if(self.delegate != nil) {
                     self.delegate!.projectDublicate(view: self)
@@ -135,7 +130,7 @@ extension ProjectView : UIContextMenuInteractionDelegate {
             
             let edit = UIMenu(title: "", options: .displayInline, children: [delMenu])
             
-            return UIMenu(title: self.projectName, image: nil, identifier: nil, children: [viewMenu, rotate,getimg,edit])
+            return UIMenu(title: self.projectName, image: nil, identifier: nil, children: [rotate,getimg,edit])
         }
         
         return configuration

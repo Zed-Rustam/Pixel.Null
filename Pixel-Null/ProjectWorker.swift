@@ -68,8 +68,8 @@ class ProjectWork{
             return name
         }
         set {
-           name = newValue
-            rename()
+            rename(newname: newValue)
+            name = newValue
         }
     }
     
@@ -91,8 +91,13 @@ class ProjectWork{
         }
     }
     
-    private func rename(){
-        
+    private func rename(newname : String){
+        do{
+            try FileManager.default.moveItem(at: getProjectDirectory(), to: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("Projects").appendingPathComponent(newname))
+            //try FileManager.default.replace(getProjectDirectory(), withItemAt: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("Projects").appendingPathComponent(newname))
+       } catch{
+           print(error.localizedDescription)
+       }
     }
     
     var projectPallete : [String] {
@@ -701,6 +706,9 @@ class ProjectWork{
                 } else {
                     delegate.updateLayer(layer: LayerSelected)
                 }
+            case .backgroundChange:
+                projectInfo.bgColor = projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["last"]!
+                delegate.updateEditor()
                 
             default:
                 break
@@ -943,6 +951,10 @@ class ProjectWork{
                          delegate.updateLayer(layer: LayerSelected)
                      }
                  }
+            case .backgroundChange:
+                projectInfo.bgColor = projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["now"]!
+                delegate.updateEditor()
+                
             default:
                 break
             }
@@ -1098,4 +1110,5 @@ enum Actions : Int {
     case selectionChange = 11 //done
     case changeFrameDelay = 12 //done
     case transform = 13 //done
+    case backgroundChange = 14
 }

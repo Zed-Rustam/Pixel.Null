@@ -75,9 +75,12 @@ class ToolButton : UICollectionViewCell {
         case -4:
             button.setIcon(ic: #imageLiteral(resourceName: "project_settings_icon"))
             button.setIconColor(color: ProjectStyle.uiEnableColor)
-            button.delegate = {//[weak self] in
+            button.delegate = {[unowned self] in
+                (self.delegate as! Editor).finishTransform()
 
+                (self.delegate as! Editor).openProjectSettings()
             }
+            
         case -3: 
             button.setIcon(ic: #imageLiteral(resourceName: "undo_icon"))
             button.setIconColor(color: ProjectStyle.uiEnableColor)

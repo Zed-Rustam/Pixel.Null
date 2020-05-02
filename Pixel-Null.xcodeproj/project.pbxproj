@@ -11,6 +11,7 @@
 		95144C4B245AE7FB0070DDF2 /* SegmentSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95144C4A245AE7FB0070DDF2 /* SegmentSelector.swift */; };
 		95144C4D245C26C00070DDF2 /* SelectorSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95144C4C245C26C00070DDF2 /* SelectorSettings.swift */; };
 		95144C4F245C53990070DDF2 /* ImagePixelColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95144C4E245C53990070DDF2 /* ImagePixelColor.swift */; };
+		95144C51245D04C00070DDF2 /* ProjectSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95144C50245D04C00070DDF2 /* ProjectSettingsController.swift */; };
 		951CBD50244BB8A2004DB89B /* GradientController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 951CBD4F244BB8A2004DB89B /* GradientController.swift */; };
 		9523F2C62435F46300725214 /* ToggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9523F2C52435F46300725214 /* ToggleView.swift */; };
 		9523F2C82437C4B700725214 /* EraseSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9523F2C72437C4B700725214 /* EraseSettings.swift */; };
@@ -108,6 +109,7 @@
 		95144C4A245AE7FB0070DDF2 /* SegmentSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentSelector.swift; sourceTree = "<group>"; };
 		95144C4C245C26C00070DDF2 /* SelectorSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectorSettings.swift; sourceTree = "<group>"; };
 		95144C4E245C53990070DDF2 /* ImagePixelColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePixelColor.swift; sourceTree = "<group>"; };
+		95144C50245D04C00070DDF2 /* ProjectSettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectSettingsController.swift; sourceTree = "<group>"; };
 		951CBD4F244BB8A2004DB89B /* GradientController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientController.swift; sourceTree = "<group>"; };
 		9523F2C52435F46300725214 /* ToggleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleView.swift; sourceTree = "<group>"; };
 		9523F2C72437C4B700725214 /* EraseSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EraseSettings.swift; sourceTree = "<group>"; };
@@ -295,6 +297,7 @@
 				9523F2C72437C4B700725214 /* EraseSettings.swift */,
 				9523F2ED2439E17D00725214 /* GradientSettings.swift */,
 				95144C4C245C26C00070DDF2 /* SelectorSettings.swift */,
+				95144C50245D04C00070DDF2 /* ProjectSettingsController.swift */,
 			);
 			name = Tools;
 			sourceTree = "<group>";
@@ -653,6 +656,7 @@
 				95AA119C2444C1500048CB96 /* SwiftUIFun.swift in Sources */,
 				951CBD50244BB8A2004DB89B /* GradientController.swift in Sources */,
 				95782CE023CD8F3000C2772F /* TextFieldDelegate.swift in Sources */,
+				95144C51245D04C00070DDF2 /* ProjectSettingsController.swift in Sources */,
 				95746A1E2406DB9200DD2328 /* LayersView.swift in Sources */,
 				9523F2C62435F46300725214 /* ToggleView.swift in Sources */,
 				9540F1BC2431A2C5008D1657 /* NavigationView.swift in Sources */,

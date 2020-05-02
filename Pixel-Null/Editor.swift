@@ -328,6 +328,16 @@ extension Editor : FrameControlDelegate{
 
 
 extension Editor : ToolSettingsDelegate {
+    func openProjectSettings() {
+        project.savePreview(frame: project.FrameSelected)
+        
+        let projectSettings = ProjectSettingsController()
+        projectSettings.project = project
+        projectSettings.editor = self
+        projectSettings.modalPresentationStyle = .pageSheet
+        self.show(projectSettings, sender: self)
+    }
+    
     func setSelectionSettings(mode: Int) {
         canvas.selection.type = Selection.SelectionType.init(rawValue: mode)!
     }
@@ -394,6 +404,8 @@ extension Editor {
         toolBar.animationStart()
         timer = CADisplayLink(target: self, selector: #selector(setFrame(_:)))
         canvas.startAnimationMode()
+        canvas.setImageFromAnimation(img: project.getFrame(frame: project.FrameSelected, size: project.projectSize))
+
         timer.add(to: .main, forMode: .common)
     }
    
@@ -489,6 +501,7 @@ protocol FrameControlDelegate : class {
 
 protocol ToolSettingsDelegate : class{
     func openPencilSettings()
+    func openProjectSettings()
     func openEraseSettings()
     func openSelectorSettings()
     func openGradientSettings()
