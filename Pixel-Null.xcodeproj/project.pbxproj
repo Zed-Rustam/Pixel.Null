@@ -29,6 +29,7 @@
 		954AABB923BBEC4100F52955 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 954AABB823BBEC4100F52955 /* Assets.xcassets */; };
 		954BB2DE240D72B50008B9D5 /* Tool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954BB2DD240D72B50008B9D5 /* Tool.swift */; };
 		954C32782453A71000E520A4 /* PalleteCollectionV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954C32772453A71000E520A4 /* PalleteCollectionV2.swift */; };
+		954DAE4B245E161200CB40B1 /* AlignmentSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954DAE4A245E161200CB40B1 /* AlignmentSelector.swift */; };
 		955145D52405589100524FF9 /* ProjectCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955145D42405589100524FF9 /* ProjectCanvas.swift */; };
 		955145D724055D1000524FF9 /* Editor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955145D624055D1000524FF9 /* Editor.swift */; };
 		9555908923F5D580000EF96B /* GalleryControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9555908823F5D580000EF96B /* GalleryControl.swift */; };
@@ -100,6 +101,7 @@
 		95E2A0312455197400B02742 /* FillController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95E2A0302455197400B02742 /* FillController.swift */; };
 		95E2A03324551CA500B02742 /* SelectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95E2A03224551CA500B02742 /* SelectionController.swift */; };
 		95E3D4AA24524AB90057A830 /* ProjectPallete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95E3D4A924524AB90057A830 /* ProjectPallete.swift */; };
+		95F8AFC3245E0B8F00A26B58 /* ProjectResizeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F8AFC2245E0B8F00A26B58 /* ProjectResizeController.swift */; };
 		95FC4151240A8ECE00B7F315 /* LayerList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95FC4150240A8ECE00B7F315 /* LayerList.swift */; };
 		95FFC435244DA3C40011A5DC /* TransformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95FFC434244DA3C40011A5DC /* TransformView.swift */; };
 /* End PBXBuildFile section */
@@ -131,6 +133,7 @@
 		954AABBD23BBEC4100F52955 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		954BB2DD240D72B50008B9D5 /* Tool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tool.swift; sourceTree = "<group>"; };
 		954C32772453A71000E520A4 /* PalleteCollectionV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PalleteCollectionV2.swift; sourceTree = "<group>"; };
+		954DAE4A245E161200CB40B1 /* AlignmentSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlignmentSelector.swift; sourceTree = "<group>"; };
 		955145D42405589100524FF9 /* ProjectCanvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCanvas.swift; sourceTree = "<group>"; };
 		955145D624055D1000524FF9 /* Editor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Editor.swift; sourceTree = "<group>"; };
 		9555908823F5D580000EF96B /* GalleryControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryControl.swift; sourceTree = "<group>"; };
@@ -201,6 +204,7 @@
 		95E2A0302455197400B02742 /* FillController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FillController.swift; sourceTree = "<group>"; };
 		95E2A03224551CA500B02742 /* SelectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionController.swift; sourceTree = "<group>"; };
 		95E3D4A924524AB90057A830 /* ProjectPallete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectPallete.swift; sourceTree = "<group>"; };
+		95F8AFC2245E0B8F00A26B58 /* ProjectResizeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectResizeController.swift; sourceTree = "<group>"; };
 		95FC4150240A8ECE00B7F315 /* LayerList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayerList.swift; sourceTree = "<group>"; };
 		95FFC434244DA3C40011A5DC /* TransformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransformView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -298,6 +302,7 @@
 				9523F2ED2439E17D00725214 /* GradientSettings.swift */,
 				95144C4C245C26C00070DDF2 /* SelectorSettings.swift */,
 				95144C50245D04C00070DDF2 /* ProjectSettingsController.swift */,
+				95F8AFC2245E0B8F00A26B58 /* ProjectResizeController.swift */,
 			);
 			name = Tools;
 			sourceTree = "<group>";
@@ -480,6 +485,7 @@
 				95C7278523EB577900ED1A28 /* CircleButton.swift */,
 				95D01F1B2456BEBE006C8394 /* TitleView.swift */,
 				95144C4A245AE7FB0070DDF2 /* SegmentSelector.swift */,
+				954DAE4A245E161200CB40B1 /* AlignmentSelector.swift */,
 			);
 			name = Controls;
 			sourceTree = "<group>";
@@ -593,6 +599,7 @@
 				9537B1A1243C6C880083BE27 /* GridView.swift in Sources */,
 				9540F1BE243330D2008D1657 /* SliderView.swift in Sources */,
 				958C0C1E2419653F007B9C95 /* LayersCollectionView.swift in Sources */,
+				954DAE4B245E161200CB40B1 /* AlignmentSelector.swift in Sources */,
 				95144C4D245C26C00070DDF2 /* SelectorSettings.swift in Sources */,
 				95816A4D244B4470007C7A69 /* SymmetryController.swift in Sources */,
 				95E2A0312455197400B02742 /* FillController.swift in Sources */,
@@ -637,6 +644,7 @@
 				95FFC435244DA3C40011A5DC /* TransformView.swift in Sources */,
 				957D04142408510800E58210 /* ProjectControl.swift in Sources */,
 				959BCFBB241FECB900B27CFB /* PalleteEditor.swift in Sources */,
+				95F8AFC3245E0B8F00A26B58 /* ProjectResizeController.swift in Sources */,
 				9570657E2417EA6C0044FC39 /* FramesCollection.swift in Sources */,
 				95DC555223EF3FEA0011FA2A /* ColorSelectDialog2.swift in Sources */,
 				95E3D4AA24524AB90057A830 /* ProjectPallete.swift in Sources */,

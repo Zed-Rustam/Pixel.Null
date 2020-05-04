@@ -94,7 +94,6 @@ class ProjectWork{
     private func rename(newname : String){
         do{
             try FileManager.default.moveItem(at: getProjectDirectory(), to: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("Projects").appendingPathComponent(newname))
-            //try FileManager.default.replace(getProjectDirectory(), withItemAt: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("Projects").appendingPathComponent(newname))
        } catch{
            print(error.localizedDescription)
        }
@@ -123,11 +122,13 @@ class ProjectWork{
         let folder = ProjectWork.getDocumentsDirectory().appendingPathComponent(name)
         do {
             try FileManager.default.createDirectory(atPath: folder.path, withIntermediateDirectories: true, attributes: nil)
-            try FileManager.default.createDirectory(atPath: folder.appendingPathComponent("frame-0").path, withIntermediateDirectories: true, attributes: nil)
+            try FileManager.default.createDirectory(atPath: folder.appendingPathComponent("frames").path, withIntermediateDirectories: true, attributes: nil)
+
+            try FileManager.default.createDirectory(atPath: folder.appendingPathComponent("frames").appendingPathComponent("frame-0").path, withIntermediateDirectories: true, attributes: nil)
             try FileManager.default.createDirectory(atPath: folder.appendingPathComponent("actions").path, withIntermediateDirectories: true, attributes: nil)
 
-            try img.pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frame-0").appendingPathComponent("layer-0.png"))
-            try img.pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frame-0").appendingPathComponent("preview.png"))
+            try img.pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frames").appendingPathComponent("frame-0").appendingPathComponent("layer-0.png"))
+            try img.pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frames").appendingPathComponent("frame-0").appendingPathComponent("preview.png"))
             try UIImage(size: img.size)!.pngData()!.write(to: getProjectDirectory().appendingPathComponent("selection.png"))
             try UIImage(size: img.size)!.pngData()!.write(to: getProjectDirectory().appendingPathComponent("copy.png"))
 
@@ -183,7 +184,7 @@ class ProjectWork{
         }
         
         do{
-            try layer.pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frame-\(projectInfo.frames[frame].frameID)").appendingPathComponent("layer-\(layerID).png"))
+            try layer.pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[frame].frameID)").appendingPathComponent("layer-\(layerID).png"))
             
         } catch{
             print("hey check error : \(error.localizedDescription)")
@@ -240,13 +241,13 @@ class ProjectWork{
     
     func getSmallLayer(frame : Int,layer : Int, size : CGSize) -> UIImage{
         print("    getting layer : frameID : \(projectInfo.frames[frame].frameID) layerID : \(projectInfo.frames[frame].layers[layer].layerID)")
-    let img = UIImage.miniature(imageAt: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(projectName).appendingPathComponent("frame-\(projectInfo.frames[frame].frameID)").appendingPathComponent("layer-\(projectInfo.frames[frame].layers[layer].layerID).png").absoluteURL, to: size, scale: UIScreen.main.scale).withAlpha(CGFloat(projectInfo.frames[frame].layers[layer].transparent))
+    let img = UIImage.miniature(imageAt: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(projectName).appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[frame].frameID)").appendingPathComponent("layer-\(projectInfo.frames[frame].layers[layer].layerID).png").absoluteURL, to: size, scale: UIScreen.main.scale).withAlpha(CGFloat(projectInfo.frames[frame].layers[layer].transparent))
 
     return img
     }
     
     func deleteLayer(frame : Int, layer : Int) {
-           try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("frame-\(projectInfo.frames[frame].frameID)").appendingPathComponent("layer-\(projectInfo.frames[frame].layers[layer].layerID).png"))
+           try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[frame].frameID)").appendingPathComponent("layer-\(projectInfo.frames[frame].layers[layer].layerID).png"))
            
            projectInfo.frames[frame].layers.remove(at: layer)
        }
@@ -267,7 +268,7 @@ class ProjectWork{
         }
         
         do{
-            try img.pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frame-\(projectInfo.frames[frame].frameID)").appendingPathComponent("layer-\(layerID).png"))
+            try img.pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[frame].frameID)").appendingPathComponent("layer-\(layerID).png"))
             
         } catch{
             print("hey check error : \(error.localizedDescription)")
@@ -300,11 +301,11 @@ class ProjectWork{
            }
            
            do{
-                try FileManager.default.createDirectory(atPath: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frame-\(frameID)").path, withIntermediateDirectories: true, attributes: nil)
+                try FileManager.default.createDirectory(atPath: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frames").appendingPathComponent("frame-\(frameID)").path, withIntermediateDirectories: true, attributes: nil)
 
-                try frame.pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frame-\(frameID)").appendingPathComponent("layer-0.png"))
+                try frame.pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frames").appendingPathComponent("frame-\(frameID)").appendingPathComponent("layer-0.png"))
                
-                try frame.pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frame-\(frameID)").appendingPathComponent("preview.png"))
+                try frame.pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frames").appendingPathComponent("frame-\(frameID)").appendingPathComponent("preview.png"))
                
            } catch{}
            
@@ -326,11 +327,11 @@ class ProjectWork{
            }
            
            do{
-                try FileManager.default.createDirectory(atPath: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frame-\(frameID)").path, withIntermediateDirectories: true, attributes: nil)
+                try FileManager.default.createDirectory(atPath: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frames").appendingPathComponent("frame-\(frameID)").path, withIntermediateDirectories: true, attributes: nil)
 
-                try frame.pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frame-\(frameID)").appendingPathComponent("layer-0.png"))
+                try frame.pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frames").appendingPathComponent("frame-\(frameID)").appendingPathComponent("layer-0.png"))
                
-                try frame.pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frame-\(frameID)").appendingPathComponent("preview.png"))
+                try frame.pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frames").appendingPathComponent("frame-\(frameID)").appendingPathComponent("preview.png"))
                
            } catch{}
            
@@ -344,7 +345,7 @@ class ProjectWork{
     }
        
     func getFrame(frame : Int, size : CGSize) -> UIImage{
-        let img = UIImage.miniature(imageAt: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(projectName).appendingPathComponent("frame-\(projectInfo.frames[frame].frameID)").appendingPathComponent("preview.png").absoluteURL, to: size, scale: UIScreen.main.scale)
+        let img = UIImage.miniature(imageAt: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(projectName).appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[frame].frameID)").appendingPathComponent("preview.png").absoluteURL, to: size, scale: UIScreen.main.scale)
         return img
     }
     
@@ -364,7 +365,7 @@ class ProjectWork{
     }
     
     func deleteFrame(frame : Int) {
-        try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("frame-\(projectInfo.frames[frame].frameID)"))
+        try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[frame].frameID)"))
         projectInfo.frames.remove(at: frame)
     }
     
@@ -383,7 +384,7 @@ class ProjectWork{
         
         print("clone frameID : \(frameID)")
         
-        try! FileManager.default.copyItem(at: getProjectDirectory().appendingPathComponent("frame-\(projectInfo.frames[frame].frameID)"), to: getProjectDirectory().appendingPathComponent("frame-\(frameID)"))
+        try! FileManager.default.copyItem(at: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[frame].frameID)"), to: getProjectDirectory().appendingPathComponent("frame-\(frameID)"))
 
         var newFrame : ProjectFrame = projectInfo.frames[frame]
         newFrame.frameID = frameID
@@ -392,7 +393,7 @@ class ProjectWork{
     
     func savePreview(frame : Int){
         print("saved preview for frame on position \(frame) with ID \(projectInfo.frames[frame].frameID)")
-        try! getFrameFromLayers(frame: frame, size: projectSize).pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frame-\(projectInfo.frames[frame].frameID)").appendingPathComponent("preview.png"))
+        try! getFrameFromLayers(frame: frame, size: projectSize).pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[frame].frameID)").appendingPathComponent("preview.png"))
         print("end saving")
 
     }
@@ -424,7 +425,7 @@ class ProjectWork{
         
     static func loadImage(projectName : String,frameID : Int, layerID : Int) -> UIImage? {
         do{
-            let img = UIImage(data: try Data(contentsOf: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(projectName).appendingPathComponent("frame-\(frameID)").appendingPathComponent("layer-\(layerID).png")))
+            let img = UIImage(data: try Data(contentsOf: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(projectName).appendingPathComponent("frames").appendingPathComponent("frame-\(frameID)").appendingPathComponent("layer-\(layerID).png")))
             
             return img
         } catch {}
@@ -434,7 +435,7 @@ class ProjectWork{
     
     static func loadImage(projectName : String,frameID : Int, layerID : Int, scale : CGFloat) -> UIImage? {
         do{
-            let img = UIImage(data: try Data(contentsOf: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(projectName).appendingPathComponent("frame-\(frameID)").appendingPathComponent("layer-\(layerID).png")), scale: scale)
+            let img = UIImage(data: try Data(contentsOf: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(projectName).appendingPathComponent("frames").appendingPathComponent("frame-\(frameID)").appendingPathComponent("layer-\(layerID).png")), scale: scale)
             return img
         } catch {}
         
@@ -451,7 +452,7 @@ class ProjectWork{
         if projectInfo.actionList.lastActiveAction >= 0 {
             switch Actions.init(rawValue: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["ToolID"]!)!)! {
             case .drawing:
-                try! loadActionWas(actionNum: projectInfo.actionList.lastActiveAction).pngData()?.write(to: getProjectDirectory().appendingPathComponent("frame-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].frameID)").appendingPathComponent("layer-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!].layerID).png"))
+                try! loadActionWas(actionNum: projectInfo.actionList.lastActiveAction).pngData()?.write(to: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].frameID)").appendingPathComponent("layer-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!].layerID).png"))
                 
                 
                 if FrameSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)! {
@@ -610,7 +611,7 @@ class ProjectWork{
             case .layerDelete:
                 addLayer(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!, layerPlace: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!)
                 
-                try! loadAction(actionNum: projectInfo.actionList.lastActiveAction).pngData()?.write(to: getProjectDirectory().appendingPathComponent("frame-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].frameID)").appendingPathComponent("layer-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!].layerID).png"))
+                try! loadAction(actionNum: projectInfo.actionList.lastActiveAction).pngData()?.write(to: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].frameID)").appendingPathComponent("layer-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!].layerID).png"))
                 
                 if FrameSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)! {
                     let lastSelect = FrameSelected
@@ -684,7 +685,7 @@ class ProjectWork{
                 setFrameDelay(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!, delay: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["from"]!)!)
                 
             case .transform:
-                try! loadActionWas(actionNum: projectInfo.actionList.lastActiveAction).pngData()?.write(to: getProjectDirectory().appendingPathComponent("frame-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].frameID)").appendingPathComponent("layer-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!].layerID).png"))
+                try! loadActionWas(actionNum: projectInfo.actionList.lastActiveAction).pngData()?.write(to: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].frameID)").appendingPathComponent("layer-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!].layerID).png"))
                 try! loadActionSelectWas(actionNum: projectInfo.actionList.lastActiveAction).pngData()?.write(to: getProjectDirectory().appendingPathComponent("selection.png"))
                 
                 if FrameSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)! {
@@ -709,7 +710,11 @@ class ProjectWork{
             case .backgroundChange:
                 projectInfo.bgColor = projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["last"]!
                 delegate.updateEditor()
-                
+            case .resizeProject:
+                try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("frames"))
+                try! FileManager.default.copyItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: projectInfo.actionList.lastActiveAction))-was"), to: getProjectDirectory().appendingPathComponent("frames"))
+                projectSize = CGSize(width: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["lastSizeX"]!)!, height: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["lastSizeY"]!)!)
+                (delegate as! Editor).resizeProject()
             default:
                 break
             }
@@ -725,7 +730,7 @@ class ProjectWork{
         if projectInfo.actionList.lastActiveAction < projectInfo.actionList.actions.count - 1 {
             switch Actions.init(rawValue: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["ToolID"]!)!)! {
             case .drawing:
-                try! loadAction(actionNum: projectInfo.actionList.lastActiveAction + 1).pngData()?.write(to: getProjectDirectory().appendingPathComponent("frame-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!].frameID)").appendingPathComponent("layer-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!].layerID).png"))
+                try! loadAction(actionNum: projectInfo.actionList.lastActiveAction + 1).pngData()?.write(to: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!].frameID)").appendingPathComponent("layer-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!].layerID).png"))
                
                 if FrameSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)! {
                     
@@ -927,7 +932,7 @@ class ProjectWork{
             case .changeFrameDelay:
                 setFrameDelay(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!, delay: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["to"]!)!)
             case .transform:
-                 try! loadAction(actionNum: projectInfo.actionList.lastActiveAction + 1).pngData()?.write(to: getProjectDirectory().appendingPathComponent("frame-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!].frameID)").appendingPathComponent("layer-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!].layerID).png"))
+                 try! loadAction(actionNum: projectInfo.actionList.lastActiveAction + 1).pngData()?.write(to: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!].frameID)").appendingPathComponent("layer-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!].layerID).png"))
                  try! loadActionSelect(actionNum: projectInfo.actionList.lastActiveAction + 1).pngData()?.write(to: getProjectDirectory().appendingPathComponent("selection.png"))
                  
                  if FrameSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)! {
@@ -954,6 +959,14 @@ class ProjectWork{
             case .backgroundChange:
                 projectInfo.bgColor = projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["now"]!
                 delegate.updateEditor()
+                
+            case .resizeProject:
+                try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("frames"))
+                try! FileManager.default.copyItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: projectInfo.actionList.lastActiveAction + 1))"), to: getProjectDirectory().appendingPathComponent("frames"))
+                
+                projectSize = CGSize(width: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["newSizeX"]!)!, height: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["newSizeY"]!)!)
+
+                (delegate as! Editor).resizeProject()
                 
             default:
                 break
@@ -1004,6 +1017,9 @@ class ProjectWork{
             try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: projectInfo.actionList.actions.count - 1))-was.png"))
             try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-select-\(getActionID(action: projectInfo.actionList.actions.count - 1)).png"))
             try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-select-\(getActionID(action: projectInfo.actionList.actions.count - 1))-was.png"))
+        case .resizeProject:
+            try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: projectInfo.actionList.actions.count - 1))"))
+            try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: projectInfo.actionList.actions.count - 1))-was"))
         default:
             break
         }
@@ -1025,6 +1041,9 @@ class ProjectWork{
             try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: 0))-was.png"))
             try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-select-\(getActionID(action: 0)).png"))
             try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-select-\(getActionID(action: 0))-was.png"))
+        case .resizeProject:
+            try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: 0))"))
+            try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: 0))-was"))
         default:
             break
         }
@@ -1043,6 +1062,73 @@ class ProjectWork{
             return 0
         }
     }
+    
+    func resize(newSize : CGSize, scale : Bool, alignment : ProjectAlignment){
+        if newSize == projectSize { return }
+        
+        addAction(action: ["ToolID" : "\(Actions.resizeProject.rawValue)", "lastSizeX" : "\(Int(projectSize.width))", "lastSizeY" : "\(Int(projectSize.height))", "newSizeX" : "\(Int(newSize.width))","newSizeY" : "\(Int(newSize.height))"])
+        
+        try! FileManager.default.copyItem(at: getProjectDirectory().appendingPathComponent("frames"), to: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getNextActionID())-was"))
+        
+        for f in 0..<projectInfo.frames.count {
+            for l in 0..<projectInfo.frames[f].layers.count {
+                try! resizeImage(image: getLayer(frame: f, layer: l), newSize: newSize, scale: scale, alignment: alignment).pngData()?.write(to: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[f].frameID)").appendingPathComponent("layer-\(projectInfo.frames[f].layers[l].layerID).png"))
+            }
+            try! resizeImage(image: getFrame(frame: f, size: projectSize), newSize: newSize, scale: scale, alignment: alignment).pngData()?.write(to: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[f].frameID)").appendingPathComponent("preview.png"))
+        }
+        
+        try! resizeImage(image: loadSelection(), newSize: newSize, scale: scale, alignment: alignment).pngData()?.write(to: getProjectDirectory().appendingPathComponent("selection.png"))
+        
+        try! FileManager.default.copyItem(at: getProjectDirectory().appendingPathComponent("frames"), to: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getNextActionID())"))
+        
+        projectSize = newSize
+    }
+    
+    func resizeImage(image : UIImage, newSize : CGSize, scale : Bool, alignment : ProjectAlignment) -> UIImage {
+        UIGraphicsBeginImageContext(newSize)
+        let context = UIGraphicsGetCurrentContext()!
+        context.setShouldAntialias(false)
+        context.interpolationQuality = .none
+        
+        if scale {
+            image.draw(in: CGRect(origin: .zero, size: newSize))
+        } else {
+            switch alignment {
+            case .up_left:
+                image.draw(at: .zero)
+            case .up:
+                let offset = CGPoint(x: (newSize.width - image.size.width) / 2, y: 0)
+                image.draw(at: offset)
+            case .up_right:
+                let offset = CGPoint(x: (newSize.width - image.size.width), y: 0)
+                image.draw(at: offset)
+            case .right:
+                let offset = CGPoint(x: (newSize.width - image.size.width), y: (newSize.height - image.size.height) / 2)
+                image.draw(at: offset)
+            case .down_right:
+                let offset = CGPoint(x: (newSize.width - image.size.width), y: (newSize.height - image.size.height))
+                image.draw(at: offset)
+            case .down:
+                let offset = CGPoint(x: (newSize.width - image.size.width) / 2, y: (newSize.height - image.size.height))
+                image.draw(at: offset)
+            case .down_left:
+                let offset = CGPoint(x: 0, y: (newSize.height - image.size.height))
+                image.draw(at: offset)
+            case .left:
+                let offset = CGPoint(x: 0, y: (newSize.height - image.size.height) / 2)
+                image.draw(at: offset)
+            case .center:
+                let offset = CGPoint(x: (newSize.width - image.size.width) / 2, y: (newSize.height - image.size.height) / 2)
+                image.draw(at: offset)
+            }
+        }
+        
+        let result = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        
+        return result
+    }
+    
     
     func createGif() -> CGImageSource{
         let fileProperties: CFDictionary = [kCGImagePropertyGIFDictionary as String: [kCGImagePropertyGIFLoopCount as String: 0]]  as CFDictionary
@@ -1110,5 +1196,6 @@ enum Actions : Int {
     case selectionChange = 11 //done
     case changeFrameDelay = 12 //done
     case transform = 13 //done
-    case backgroundChange = 14
+    case backgroundChange = 14//done
+    case resizeProject = 15
 }

@@ -16,7 +16,7 @@ class ProjectView : UIView{
     private var background : UIImageView = UIImageView(image: ProjectStyle.bgImage!)
     private var title : UILabel = UILabel()
     private var rounded = 16
-    private var blurView : UIVisualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterial))
+    private var blurView : UIVisualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
     weak var superController : UIViewController? = nil
     
     private var tapGesture = UITapGestureRecognizer(target: self, action: #selector(onTap(sender:)))
@@ -93,9 +93,9 @@ class ProjectView : UIView{
         title.font = UIFont(name:  "Rubik-Medium", size: 10)
     }
     
-      @objc func onTap(sender : UITapGestureRecognizer){
-          delegate?.projectOpen(proj: proj)
-      }
+    @objc func onTap(sender : UITapGestureRecognizer){
+        delegate?.projectOpen(proj: proj)
+    }
 }
 
 extension ProjectView : UIContextMenuInteractionDelegate {

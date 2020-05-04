@@ -142,7 +142,6 @@ class ProjectSettingsController : UIViewController {
         text.heightAnchor.constraint(equalToConstant: 42).isActive = true
         text.widthAnchor.constraint(equalToConstant: 164).isActive = true
         text.filed.text = "\(Int(project!.projectSize.width))x\(Int(project!.projectSize.height))"
-        text.filed.text = "1024x1024"
         text.filed.textAlignment = .center
         text.filed.isUserInteractionEnabled = false
         
@@ -194,6 +193,19 @@ class ProjectSettingsController : UIViewController {
         btn.widthAnchor.constraint(equalToConstant: 42).isActive = true
         btn.heightAnchor.constraint(equalToConstant: 42).isActive = true
         btn.corners = 12
+        btn.delegate = {[unowned self] in
+            let resize = ProjectResizeController()
+            resize.project = self.project
+            resize.delegate = {[unowned self] in
+                if $0 {
+                    (self.preview.subviews[0] as! UIImageView).image = self.project!.getFrame(frame: 0, size: self.project!.projectSize)
+                    self.editor?.resizeProject()
+                }
+            }
+            
+            resize.modalPresentationStyle = .pageSheet
+            self.show(resize, sender: self)
+        }
         
         return btn
     }()

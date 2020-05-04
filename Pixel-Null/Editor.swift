@@ -247,6 +247,11 @@ extension Editor : FrameControlDelegate{
         canvas.updateLayers()
     }
     
+    func resizeProject(){
+        control.updateInfo()
+        canvas.resizeProject()
+    }
+    
     func updateLayer(layer : Int){
         UIView.animate(withDuration: 0.0, animations: {
                 self.control.layers.list.reloadItems(at: [IndexPath(item: layer, section: 0)])

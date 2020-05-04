@@ -1,0 +1,191 @@
+//
+//  ProjectResizeController.swift
+//  Pixel-Null
+//
+//  Created by Рустам Хахук on 02.05.2020.
+//  Copyright © 2020 Zed Null. All rights reserved.
+//
+
+import UIKit
+
+class ProjectResizeController : UIViewController {
+    
+    weak var project : ProjectWork? = nil
+    
+    var delegate : (Bool)->() = {isEnd in}
+    
+    lazy private var alignmentSelector : AlignmentSelector = {
+       let selector = AlignmentSelector()
+        
+        return selector
+    }()
+    
+    lazy private var titleBg : UIView = {
+        let view = UIView()
+        view.setCorners(corners: 12)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = ProjectStyle.uiBackgroundColor
+        
+        let mainview = UIView()
+        mainview.setShadow(color: ProjectStyle.uiShadowColor, radius: 8, opasity: 0.25)
+        mainview.translatesAutoresizingMaskIntoConstraints = false
+        mainview.addSubviewFullSize(view: view)
+        
+        mainview.addSubview(cancelBtn)
+        mainview.addSubview(appendBtn)
+        mainview.addSubview(titleText)
+
+        cancelBtn.leftAnchor.constraint(equalTo: mainview.leftAnchor, constant: 0).isActive = true
+        cancelBtn.topAnchor.constraint(equalTo: mainview.topAnchor, constant: 0).isActive = true
+
+        appendBtn.rightAnchor.constraint(equalTo: mainview.rightAnchor, constant: 0).isActive = true
+        appendBtn.topAnchor.constraint(equalTo: mainview.topAnchor, constant: 0).isActive = true
+
+        titleText.leftAnchor.constraint(equalTo: cancelBtn.rightAnchor, constant: 0).isActive = true
+        titleText.rightAnchor.constraint(equalTo: appendBtn.leftAnchor, constant: 0).isActive = true
+        titleText.topAnchor.constraint(equalTo: mainview.topAnchor, constant: 0).isActive = true
+
+        return mainview
+    }()
+    
+    lazy private var titleText : UILabel = {
+        let text = UILabel()
+        text.translatesAutoresizingMaskIntoConstraints = false
+        text.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        text.textColor = ProjectStyle.uiEnableColor
+        text.font = UIFont(name: "Rubik-Bold", size: 24)
+        text.text = "Project Resize"
+        text.textAlignment = .center
+        
+        return text
+    }()
+    
+    lazy private var cancelBtn : CircleButton = {
+        let btn = CircleButton(icon: #imageLiteral(resourceName: "cancel_icon"), frame: .zero,icScale: 0.35)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        btn.widthAnchor.constraint(equalToConstant: 42).isActive = true
+        btn.corners = 12
+        btn.setShadowColor(color: .clear)
+        btn.delegate = {[unowned self] in
+            self.delegate(false)
+            self.dismiss(animated: true, completion: nil)
+        }
+        
+        return btn
+    }()
+    
+    lazy private var appendBtn : CircleButton = {
+        let btn = CircleButton(icon: #imageLiteral(resourceName: "select_icon"), frame: .zero,icScale: 0.35)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        btn.widthAnchor.constraint(equalToConstant: 42).isActive = true
+        btn.corners = 12
+        btn.setShadowColor(color: .clear)
+        btn.delegate = {[unowned self] in
+            self.project?.resize(newSize: CGSize(width: Int(self.widthTextField.filed.text!)!, height: Int(self.heightTextField.filed.text!)!), scale: self.scaleToggle.isCheck, alignment: self.alignmentSelector.alignment)
+            self.delegate(true)
+            self.dismiss(animated: true, completion: nil)
+        }
+        
+        return btn
+    }()
+    
+    lazy private var widthTextField : TextField = {
+        let text = TextField()
+        text.translatesAutoresizingMaskIntoConstraints = false
+        text.setHelpText(help: "Width")
+        text.filed.text = "\(Int(project!.projectSize.width))"
+        
+        return text
+    }()
+    
+    lazy private var heightTextField : TextField = {
+        let text = TextField()
+        text.translatesAutoresizingMaskIntoConstraints = false
+        text.setHelpText(help: "Height")
+        text.filed.text = "\(Int(project!.projectSize.height))"
+        
+        return text
+    }()
+    
+    lazy private var sizeStack : UIStackView = {
+       let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.spacing = 12
+        stack.alignment = .fill
+        stack.distribution = .fillEqually
+        
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        
+        stack.addArrangedSubview(widthTextField)
+        stack.addArrangedSubview(heightTextField)
+        
+        return stack
+    }()
+    
+    lazy private var AlignmentTitle : UILabel = {
+        let text = UILabel()
+        text.textColor = ProjectStyle.uiEnableColor
+        text.font = UIFont(name: "Rubik-Bold", size: 24)
+        text.text = "Alignment"
+        text.translatesAutoresizingMaskIntoConstraints = false
+        text.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        
+        return text
+    }()
+    
+    lazy private var ScaleContentTitle : UILabel = {
+        let text = UILabel()
+        text.textColor = ProjectStyle.uiEnableColor
+        text.font = UIFont(name: "Rubik-Bold", size: 24)
+        text.text = "Scale Content"
+        text.translatesAutoresizingMaskIntoConstraints = false
+        text.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        
+        return text
+    }()
+    
+    lazy private var scaleToggle : ToggleView = {
+        let toggle = ToggleView()
+        return toggle
+    }()
+    
+    override func viewDidLoad() {
+        view.addSubview(titleBg)
+
+        view.addSubview(sizeStack)
+        view.addSubview(ScaleContentTitle)
+        view.addSubview(scaleToggle)
+
+        view.addSubview(AlignmentTitle)
+
+        view.addSubview(alignmentSelector)
+
+        titleBg.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 6).isActive = true
+        titleBg.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -6).isActive = true
+        titleBg.topAnchor.constraint(equalTo: view.topAnchor, constant: 8).isActive = true
+        titleBg.heightAnchor.constraint(equalToConstant: 42).isActive = true
+
+        sizeStack.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
+        sizeStack.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
+        sizeStack.topAnchor.constraint(equalTo: titleBg.bottomAnchor, constant: 6).isActive = true
+        
+        ScaleContentTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
+        ScaleContentTitle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
+        ScaleContentTitle.topAnchor.constraint(equalTo: sizeStack.bottomAnchor, constant: 6).isActive = true
+        
+        scaleToggle.centerYAnchor.constraint(equalTo: ScaleContentTitle.centerYAnchor).isActive = true
+        scaleToggle.rightAnchor.constraint(equalTo: view.rightAnchor,constant: -12).isActive = true
+
+        AlignmentTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
+        AlignmentTitle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
+        AlignmentTitle.topAnchor.constraint(equalTo: ScaleContentTitle.bottomAnchor, constant: 0).isActive = true
+        
+        alignmentSelector.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
+        alignmentSelector.topAnchor.constraint(equalTo: AlignmentTitle.bottomAnchor, constant: 0).isActive = true
+        
+        view.backgroundColor = ProjectStyle.uiBackgroundColor
+    }
+}
