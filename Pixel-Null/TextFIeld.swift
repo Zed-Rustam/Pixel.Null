@@ -17,6 +17,7 @@ class TextField : UIView {
         bg.translatesAutoresizingMaskIntoConstraints = false
         return bg
     }()
+    
     var filed : UITextField = {
         let f = UITextField()
         f.textColor = ProjectStyle.uiEnableColor

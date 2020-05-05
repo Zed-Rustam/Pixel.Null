@@ -16,7 +16,13 @@ class ProjectView : UIView{
     private var background : UIImageView = UIImageView(image: ProjectStyle.bgImage!)
     private var title : UILabel = UILabel()
     private var rounded = 16
-    private var blurView : UIVisualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
+    private var blurView : UIImageView = {
+        let view = UIImageView()
+        
+        return view
+    }()
+    
+    //UIVisualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
     weak var superController : UIViewController? = nil
     
     private var tapGesture = UITapGestureRecognizer(target: self, action: #selector(onTap(sender:)))
@@ -56,6 +62,55 @@ class ProjectView : UIView{
         setCorners(corners: CGFloat(rounded))        
     }
     
+    func blurImage(image:UIImage, forRect rect: CGRect) -> UIImage? {
+        let context = CIContext(options: nil)
+        let inputImage = CIImage(cgImage: image.cgImage!)
+
+
+        let filter = CIFilter(name: "CIGaussianBlur")
+        filter?.setValue(inputImage, forKey: kCIInputImageKey)
+        filter?.setValue((2.0), forKey: kCIInputRadiusKey)
+        let outputImage = filter?.outputImage
+
+        var cgImage:CGImage?
+
+        if let asd = outputImage {
+            cgImage = context.createCGImage(asd, from: rect)
+        }
+
+        if let cgImageA = cgImage {
+            return UIImage(cgImage: cgImageA)
+        }
+
+        return nil
+    }
+    
+    func blackImage(image : UIImage) -> UIImage {
+        UIGraphicsBeginImageContext(image.size)
+        let context = UIGraphicsGetCurrentContext()!
+        image.draw(at: .zero)
+        
+        context.setFillColor(UIColor.black.withAlphaComponent(0.2).cgColor)
+        context.fill(CGRect(origin: .zero, size: image.size))
+        let result = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        return result
+    }
+    
+    func getLayerImage() -> UIImage {
+        UIGraphicsBeginImageContext(_image.layer.frame.size)
+        let context = UIGraphicsGetCurrentContext()!
+        
+        background.layer.render(in: context)
+        var result = UIGraphicsGetImageFromCurrentImageContext()!
+
+        _image.layer.render(in: context)
+        result = UIImage.merge(images: [result, UIGraphicsGetImageFromCurrentImageContext()!])!
+        UIGraphicsEndImageContext()
+        
+        return result
+    }
+    
     required init?(coder: NSCoder) {
         super.init(coder : coder)
     }
@@ -85,8 +140,9 @@ class ProjectView : UIView{
   
         blurView.frame = CGRect(x: rounded / 2, y: Int(Double(self.bounds.height) - Double(rounded) * 1.5), width: Int(self.bounds.width) - rounded, height: rounded)
         blurView.setCorners(corners: CGFloat(rounded / 2))
-        blurView.layer.backgroundColor = UIColor.clear.cgColor
-                        
+        blurView.image = blackImage(image: blurImage(image: getLayerImage(), forRect: CGRect(x: rounded / 2, y: rounded / 2, width: Int(self.bounds.width) - rounded, height: rounded))!)
+        
+        
         title.frame = CGRect(x: rounded, y: Int(Double(self.bounds.height) - Double(rounded) * 1.5), width: Int(self.bounds.width) - rounded * 2, height: rounded)
         title.text = proj.projectName
         title.textColor = .white

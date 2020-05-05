@@ -30,11 +30,11 @@ class EditorController : UIViewController {
                 .setBreakMode(mode: .byWordWrapping)
                 .setMaxWidth(width: view.frame.width - 24)
                 .appendText(text: "Editor\n", fortt: UIFont(name: "Rubik-Bold", size: 48)!)
-                .appendText(text: "    The editor is the place where you create your pictures and animations. Here is everything you need to work with pictures. It is divided into several parts:\n", fortt: UIFont(name: "Rubik-Regular", size: 16)!)
-                .appendText(text: "        * Bar with layers and frames\n        * Tool bar\n        * working area\n", fortt: UIFont(name: "Rubik-Bold", size: 16)!)
-                .appendText(text: "    let's talk about each item separately.\n\n", fortt: UIFont(name: "Rubik-Regular", size: 16)!)
+                .appendText(text: "    An editor is a place where you create animations and images. Here is everything you need for drawing. The editor is divided into 3 parts:\n", fortt: UIFont(name: "Rubik-Regular", size: 16)!)
+                .appendText(text: "        * Bar with layers and frames\n        * Toolbar\n        * Work area\n", fortt: UIFont(name: "Rubik-Bold", size: 16)!)
+                .appendText(text: "Let's talk about each of them.\n\n", fortt: UIFont(name: "Rubik-Regular", size: 16)!)
                 .appendText(text: "Frames and Layers bar\n", fortt: UIFont(name: "Rubik-Bold", size: 24)!)
-                .appendText(text: "    This panel is at the top of the screen. It displays all the frames and layers of the project. The list of frames is displayed in the first line, and the list of layers of the selected frame in the second line. (You can read about layers and frames in the Training menu in the Layers, Frames section)\n", fortt: UIFont(name: "Rubik-Regular", size: 16)!)
+                .appendText(text: "    This is the panel at the top of the screen. It displays all the frames and layers of the project. Frames are displayed on the first line, and layers on the second. Also, if you do not need to work with animation, then you can swipe up the panel to hide the line with frames and increase the workspace.\n", fortt: UIFont(name: "Rubik-Regular", size: 16)!)
         ])
         
         stack.addArrangedSubview(imgLFB)
@@ -52,8 +52,7 @@ class EditorController : UIViewController {
             .appendText(text:
                 """
                 
-                    Also, if you want to paint a picture and will not use frames, then you can swipe up the bar and the line with frames will disappear, and the workspace will increase.
-                    In addition, the bar on the right has 2 buttons. The top one starts the animation with the help of which you can see your animation in the workspace. Pressing the button again stops the animation. And the bottom button opens the frames and layers editor.
+                    In addition, there are 2 buttons on the right side of this panel. The top one starts the animation in the editor to see the result obtained without having to exit the editor. Pressing this button again stops the animation. Clicking on the bottom button will open the frame and layer editor.
 
                 """, fortt: UIFont(name: "Rubik-Regular", size: 16)!),
             UIView().addFullSizeView(view:
@@ -74,13 +73,11 @@ class EditorController : UIViewController {
                 .setMaxWidth(width: view.frame.width - 24)
                 .appendText(text: """
 
-                    In this menu you can add / delete / move / clone frames and layers. You can also change properties such as frame duration and layer transparency.\n\n
+                    In this menu you can add / delete / duplicate / move / hide / merge frames and layers. You can also change properties such as frame duration and layer transparency.\n\n
                 """, fortt: UIFont(name: "Rubik-Regular", size: 16)!)
-                .appendText(text: "Tool Bar\n", fortt: UIFont(name: "Rubik-Bold", size: 24)!)
+                .appendText(text: "Toolbar\n", fortt: UIFont(name: "Rubik-Bold", size: 24)!)
             .appendText(text: """
-                This bar is located at the bottom of the screen. There are all the necessary tools for drawing. This bar is also divided into 2 parts.
-                The main part is the place where all the tools and controls for drawing are located.
-                The second part is an additional bar that appears when the selected tool has any additional actions. For example, the Symmetry tool has actions such as Turn vertical symmetry on, turn horizontal symmetry on, and center all symmetry. This bar appears and disappears on its own depending on the selected instrument.\n
+                This panel is at the bottom of the screen. It contains all the tools for working with the image. This panel is divided into 2 panels: the main one, in which the tools themselves are located, and the additional one, which appears if necessary if the tool has quick actions. At the same time, if some tool does not have quick actions, then the additional panel is hidden and does not occupy the workspace.\n
             """, fortt:  UIFont(name: "Rubik-Regular", size: 16)!),
             UIView().addFullSizeView(view:
                 UIImageView(image: #imageLiteral(resourceName: "tool_bar"))
@@ -92,7 +89,24 @@ class EditorController : UIViewController {
                 .setViewSize(size: CGSize(width: 300, height: 300 * 0.4)),
             UILabel()
             .setTextColor(color: ProjectStyle.uiEnableColor)
-            .appendText(text: "Tool bar", fortt: UIFont(name: "Rubik-Regular", size: 12)!),
+            .appendText(text: "Toolbar\n", fortt: UIFont(name: "Rubik-Regular", size: 12)!),
+            UILabel()
+            .setTextColor(color: ProjectStyle.uiEnableColor)
+            .appendText(text: """
+            
+                If the tool has settings, then a long press on the tool will open the settings menu for this tool. In addition, you can swipe down the toolbar to leave only the top line of tools, while freeing up space for the working area. When Swipe up, the panel will open back. You can change the order of tools and adjust it for yourself in the application settings.
+                Also on this panel is a button that opens the project settings. She looks like a gear. In the project settings, you can change such project properties as:
+                 * Name
+                 * Background color
+                 * Project dimensions
+            In addition to this, you can also rotate or mirror the project.\n\n
+            """, fortt:  UIFont(name: "Rubik-Regular", size: 16)!)
+            .appendText(text: "Work area\n", fortt: UIFont(name: "Rubik-Bold", size: 24)!)
+            .appendText(text: """
+                This is the area in which the selected frame is displayed. Here you can use the tools with your finger. Also, using gestures with two little boys, you can move and scale the canvas to your needs.
+            """, fortt:  UIFont(name: "Rubik-Regular", size: 16)!)
+            .setBreakMode(mode: .byWordWrapping)
+            .setMaxWidth(width: view.frame.width - 24)
         ])
         
         

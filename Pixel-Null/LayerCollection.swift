@@ -191,6 +191,8 @@ class LayerControlCell : UICollectionViewCell {
                preview.heightAnchor.constraint(equalToConstant: 60).isActive = true
                preview.widthAnchor.constraint(equalToConstant: 36).isActive = true
         
+        
+        
         contentView.addSubview(preview)
         preview.centerXAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 0).isActive = true
         preview.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 0).isActive = true

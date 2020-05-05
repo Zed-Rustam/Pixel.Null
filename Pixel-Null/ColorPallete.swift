@@ -18,13 +18,63 @@ class ColorPallete : UIView {
     //превью цветов
     private var colorsImage : UIImage!
     //блюр для названия
-    private var blur : UIVisualEffectView!
+    private var blur : UIImageView!
     //название паллитры
     private var title : UILabel!
     
     weak var delegate : PalleteGalleryDelegate? = nil
     
     private var tapGesture : UITapGestureRecognizer!
+    
+    
+    func blurImage(image:UIImage, forRect rect: CGRect) -> UIImage? {
+        let context = CIContext(options: nil)
+        let inputImage = CIImage(cgImage: image.cgImage!)
+
+
+        let filter = CIFilter(name: "CIGaussianBlur")
+        filter?.setValue(inputImage, forKey: kCIInputImageKey)
+        filter?.setValue((2.0), forKey: kCIInputRadiusKey)
+        let outputImage = filter?.outputImage
+
+        var cgImage:CGImage?
+
+        if let asd = outputImage {
+            cgImage = context.createCGImage(asd, from: rect)
+        }
+
+        if let cgImageA = cgImage {
+            return UIImage(cgImage: cgImageA)
+        }
+
+        return nil
+    }
+    
+    func blackImage(image : UIImage) -> UIImage {
+        UIGraphicsBeginImageContext(image.size)
+        let context = UIGraphicsGetCurrentContext()!
+        image.draw(at: .zero)
+        
+        context.setFillColor(UIColor.black.withAlphaComponent(0.25).cgColor)
+        context.fill(CGRect(origin: .zero, size: image.size))
+        let result = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        return result
+    }
+    
+    func getLayerImage() -> UIImage {
+        UIGraphicsBeginImageContext(colorsView.layer.frame.size)
+        let context = UIGraphicsGetCurrentContext()!
+        
+        bgView.layer.render(in: context)
+        var result = UIGraphicsGetImageFromCurrentImageContext()!
+
+        colorsView.layer.render(in: context)
+        result = UIImage.merge(images: [result, UIGraphicsGetImageFromCurrentImageContext()!])!
+        UIGraphicsEndImageContext()
+        
+        return result
+    }
     
     
     private func titleInit(){
@@ -39,10 +89,12 @@ class ColorPallete : UIView {
     }
     
     private func blurInit(){
-        blur = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
+        blur = UIImageView()
         blur?.frame = CGRect(x: 8, y: frame.height - 24, width: frame.width - 16, height: 16)
         blur?.layer.masksToBounds = true
         blur?.layer.cornerRadius = 8
+        
+        blur.image = blackImage(image: blurImage(image: getLayerImage(), forRect:  CGRect(x: 8, y: 8, width: frame.width - 16, height: 16))!)
     }
     
     private func bgInit(){

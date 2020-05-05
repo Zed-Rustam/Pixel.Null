@@ -11,7 +11,7 @@ import UIKit
 
 class TrainingMain : UIViewController {
     weak var navigation : UINavigationController? = nil
-    private var menus : [String] = ["Editor","Layers","Frames","Pencil", "Erase", "Transform","Gradient","Fill","Symmetry","Selection","Square"]
+    private var menus : [String] = ["Editor","Pencil", "Erase", "Transform","Gradient","Fill","Symmetry","Selection","Square"]
         
     lazy private var titleTraining : UILabel = {
        let label = UILabel()
@@ -85,21 +85,21 @@ extension TrainingMain : UITableViewDelegate, UITableViewDataSource {
         case 1:
             switch indexPath.row {
             case 0:
-                cell.textLabel!.text = menus[3]
+                cell.textLabel!.text = menus[1]
                 case 1:
-                cell.textLabel!.text = menus[4]
+                cell.textLabel!.text = menus[2]
                 case 2:
-                cell.textLabel!.text = menus[5]
+                cell.textLabel!.text = menus[3]
                 case 3:
-                cell.textLabel!.text = menus[6]
+                cell.textLabel!.text = menus[4]
                 case 4:
-                cell.textLabel!.text = menus[7]
+                cell.textLabel!.text = menus[5]
                 case 5:
-                cell.textLabel!.text = menus[8]
+                cell.textLabel!.text = menus[6]
                 case 6:
-                cell.textLabel!.text = menus[9]
+                cell.textLabel!.text = menus[7]
                 case 7:
-                cell.textLabel!.text = menus[10]
+                cell.textLabel!.text = menus[8]
             default:
                 break
             }
@@ -107,10 +107,6 @@ extension TrainingMain : UITableViewDelegate, UITableViewDataSource {
                switch indexPath.row {
                case 0:
                    cell.textLabel!.text = menus[0]
-                   case 1:
-                   cell.textLabel!.text = menus[1]
-                   case 2:
-                   cell.textLabel!.text = menus[2]
                    
                default:
                    break
@@ -125,7 +121,7 @@ extension TrainingMain : UITableViewDelegate, UITableViewDataSource {
         print("i'm alive!")
         switch section {
         case 0:
-            return 3
+            return 1
         case 1:
             return 8
         default:
