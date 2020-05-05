@@ -79,6 +79,7 @@ class ColorPallete : UIView {
         
         isUserInteractionEnabled = true
         addInteraction(UIContextMenuInteraction(delegate: self))
+   
         
         tapGesture = UITapGestureRecognizer(target: self, action: #selector(onTap(sender:)))
         addGestureRecognizer(tapGesture)
@@ -130,30 +131,27 @@ extension ColorPallete : UIContextMenuInteractionDelegate {
             full.setPallete(pal: self.pallete)
             return full
             }) {action in
-                let viewMenu = UIAction(title: "Rename",image: UIImage(systemName: "square.and.pencil", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: UIAction.Identifier(rawValue: "view")) {_ in
-
+                    let clone = UIAction(title: "Clone",image : UIImage(systemName: "plus.square.on.square", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, handler: {action in
+                        self.delegate?.clonePallete(pallete : self.pallete)
+                    })
+                    
+                    let share = UIAction(title: "Share",image : UIImage(systemName: "square.and.arrow.up", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, handler: {action in
+                        self.delegate?.palleteShare(pallete: self.pallete)
+                    })
+                    
+                    let delete = UIAction(title: "Delete",image : UIImage(systemName: "trash", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, discoverabilityTitle: nil, attributes: .destructive, handler: {action in
+                        self.delegate?.deletePallete(pallete: self.pallete)
+                    })
+                    
+                    let delMenu = UIMenu(title: "Delete", image: UIImage(systemName: "trash", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, options : .destructive, children: [delete])
+                    
+                    let edit = UIMenu(title: "", options: .displayInline, children: [delMenu])
+                    
+                    return UIMenu(title: self.pallete.palleteName, image: nil, identifier: nil, children: [clone,share,edit])
                 }
-                let clone = UIAction(title: "Clone",image : UIImage(systemName: "plus.square.on.square", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, handler: {action in
-                    self.delegate?.clonePallete(pallete : self.pallete)
-                })
-                
-                let share = UIAction(title: "Share",image : UIImage(systemName: "square.and.arrow.up", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, handler: {action in
-                    self.delegate?.palleteShare(pallete: self.pallete)
-                })
-                
-                let delete = UIAction(title: "Delete",image : UIImage(systemName: "trash", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, discoverabilityTitle: nil, attributes: .destructive, handler: {action in
-                    self.delegate?.deletePallete(pallete: self.pallete)
-                })
-                
-                let delMenu = UIMenu(title: "Delete", image: UIImage(systemName: "trash", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, options : .destructive, children: [delete])
-                
-                let edit = UIMenu(title: "", options: .displayInline, children: [delMenu])
-                
-                return UIMenu(title: self.pallete.palleteName, image: nil, identifier: nil, children: [viewMenu,clone,share,edit])
-        }
         
         return configuration
+
+        }
+        
     }
-    
-    
-}

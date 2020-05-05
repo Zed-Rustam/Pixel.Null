@@ -77,12 +77,16 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
             project.deleteFrame(frame: frame)
             project.FrameSelected = project.information.frames.count > project.FrameSelected ? project.FrameSelected : project.FrameSelected - 1
             project.LayerSelected = 0
+
             print("new frame select : \(project.FrameSelected) a last : \(frame)")
             UIView.animate(withDuration: 0.2, animations: {
                 self.frames.list.performBatchUpdates({
                     self.frames.list.deleteItems(at: [IndexPath(item: frame, section: 0)])
                 },completion: {isEnd in
+
                     self.frames.list.reloadItems(at: [IndexPath(item: self.project.FrameSelected, section: 0)])
+                    self.frames.list.selectItem(at: IndexPath(item: self.project.FrameSelected, section: 0), animated: true, scrollPosition: .top)
+
                     self.layers.list.reloadData()
                     self.preview.image = self.project.getFrameFromLayers(frame: self.project.FrameSelected, size: self.project.projectSize)
                 })
@@ -100,8 +104,8 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
                 self.layers.list.performBatchUpdates({
                     self.layers.list.deleteItems(at: [IndexPath(item: layer, section: 0)])
                 },completion: {isEnd in
-                    
                     self.layers.list.reloadItems(at: [IndexPath(item: self.project.LayerSelected, section: 0)])
+                    self.layers.list.selectItem(at: IndexPath(item: self.project.LayerSelected, section: 0), animated: true, scrollPosition: .left)
 
                     self.preview.image = self.project.getFrameFromLayers(frame: frame, size: self.project.projectSize)
                 })
@@ -121,9 +125,7 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
        })
     }
     
-    func addFrame(at: Int) {
-       // projecin
-     
+    func addFrame(at: Int) {     
          UIView.animate(withDuration: 0.2, animations: {
             self.frames.list.performBatchUpdates({
                 self.frames.list.insertItems(at: [IndexPath(item: at, section: 0)])
@@ -174,9 +176,7 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
     
     lazy private var frames : FramesCollectionView = {
         let frm = FramesCollectionView(proj: project)
-        frm.list.preview = preview
         frm.list.frameDelegate = self
-        frm.list.layers = layers.list
 
         frm.translatesAutoresizingMaskIntoConstraints = false
         frm.heightAnchor.constraint(equalToConstant: 108).isActive = true
@@ -185,7 +185,7 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
     
     lazy private var layers : LayersCollectionView = {
         let lays = LayersCollectionView(frame : .zero,proj: project)
-        lays.list.preview = preview
+        //lays.list.preview = preview
         lays.list.frameDelegate = self
         lays.translatesAutoresizingMaskIntoConstraints = false
         lays.heightAnchor.constraint(equalToConstant: 108).isActive = true
@@ -225,8 +225,6 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
         preview.layer.shadowColor = ProjectStyle.uiShadowColor.cgColor
         preview.bgColor = UIColor(hex : project.information.bgColor)!
 
-        layers.list.list = frames.list
-
         view.addSubview(preview)
         view.addSubview(frameText)
         view.addSubview(frames)
@@ -259,6 +257,12 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
     deinit {
         print("frame control deinit.")
         project = nil
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        frames.list.selectItem(at: IndexPath(item: project.FrameSelected, section: 0), animated: true, scrollPosition: .left)
+        
+        layers.list.selectItem(at: IndexPath(item: project.LayerSelected, section: 0), animated: true, scrollPosition: .left)
     }
 }
 

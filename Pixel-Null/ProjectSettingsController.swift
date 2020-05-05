@@ -200,6 +200,7 @@ class ProjectSettingsController : UIViewController {
                 if $0 {
                     (self.preview.subviews[0] as! UIImageView).image = self.project!.getFrame(frame: 0, size: self.project!.projectSize)
                     self.editor?.resizeProject()
+                    self.projectSize.filed.text = "\(Int(self.project!.projectSize.width))x\(Int(self.project!.projectSize.height))"
                 }
             }
             

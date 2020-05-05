@@ -457,14 +457,15 @@ extension Editor {
     func finishTransform() {
         if canvas.selectedTool == 2 {
             showTransform(isShow: false)
-            canvas.transformView.isCopyMode = false
             toolBar.clickTool(tool: canvas.transformView.lastToolSelected)
+            canvas.transformView.isCopyMode = false
         }
     }
     
     func startTransformWithImage() {
         if !canvas.selection.isSelectEmpty(select:UIImage.merge(images: [project.loadCopyImage()])!) {
             canvas.transformView.isCopyMode = true
+            canvas.transformView.lastToolSelected = 6
             canvas.setTransformCopyImage()
             canvas.isSelected = true
             toolBar.clickTool(tool: 2)

@@ -384,7 +384,9 @@ class ProjectWork{
         
         print("clone frameID : \(frameID)")
         
-        try! FileManager.default.copyItem(at: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[frame].frameID)"), to: getProjectDirectory().appendingPathComponent("frame-\(frameID)"))
+        savePreview(frame: frame)
+        
+        try! FileManager.default.copyItem(at: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[frame].frameID)"), to: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(frameID)"))
 
         var newFrame : ProjectFrame = projectInfo.frames[frame]
         newFrame.frameID = frameID
@@ -640,7 +642,7 @@ class ProjectWork{
                 
                 print("now frameID : \(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].frameID) and last : \(Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["lastID"]!)!)")
                 
-                try! FileManager.default.copyItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: projectInfo.actionList.lastActiveAction))"), to: getProjectDirectory().appendingPathComponent("frame-\(Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["lastID"]!)!)"))
+                try! FileManager.default.copyItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: projectInfo.actionList.lastActiveAction))"), to: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["lastID"]!)!)"))
                 
                 let lastSelect = FrameSelected
                 FrameSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!

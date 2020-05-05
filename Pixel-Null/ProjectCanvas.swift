@@ -859,11 +859,14 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         
         offset = CGPoint(x: 0, y: (frame.height - project.projectSize.height * scale) / 2)
         bg.frame.origin = offset
-
         
         (grid.layer as! GridLayer).startPos = offset
         (grid.layer as! GridLayer).gridScale = scale
         grid.gridSize = project.projectSize
+        
+        symmetry.scale = scale
+        symmetry.offset = offset
+        symmetry.setNeedsDisplay()
         
         grid.setNeedsDisplay()
         

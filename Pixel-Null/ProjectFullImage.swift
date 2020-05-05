@@ -40,7 +40,6 @@ class ProjectFullImage : UIViewController {
     }
     
     @objc func setFrame(link : CADisplayLink) {
-        print(link.duration)
         animationTime += Int(link.duration * 1000)
         if animationTime >= proj.animationDelay {
             animationTime = animationTime % proj.animationDelay
@@ -61,7 +60,6 @@ class ProjectFullImage : UIViewController {
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        print("some deiniting")
         timer.invalidate()
     }
     

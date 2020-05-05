@@ -109,40 +109,47 @@ class ProjectResizeController : UIViewController {
         return text
     }()
     
-    lazy private var sizeStack : UIStackView = {
-       let stack = UIStackView()
-        stack.axis = .horizontal
-        stack.spacing = 12
-        stack.alignment = .fill
-        stack.distribution = .fillEqually
-        
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.heightAnchor.constraint(equalToConstant: 42).isActive = true
-        
-        stack.addArrangedSubview(widthTextField)
-        stack.addArrangedSubview(heightTextField)
-        
-        return stack
-    }()
-    
     lazy private var AlignmentTitle : UILabel = {
         let text = UILabel()
         text.textColor = ProjectStyle.uiEnableColor
-        text.font = UIFont(name: "Rubik-Bold", size: 24)
+        text.font = UIFont(name: "Rubik-Medium", size: 20)
         text.text = "Alignment"
         text.translatesAutoresizingMaskIntoConstraints = false
-        text.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        text.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        
+        return text
+    }()
+
+    
+    lazy private var WidthTitle : UILabel = {
+        let text = UILabel()
+        text.textColor = ProjectStyle.uiEnableColor
+        text.font = UIFont(name: "Rubik-Medium", size: 20)
+        text.text = "Width"
+        text.translatesAutoresizingMaskIntoConstraints = false
+        text.heightAnchor.constraint(equalToConstant: 36).isActive = true
         
         return text
     }()
     
+    lazy private var HeightTitle : UILabel = {
+        let text = UILabel()
+        text.textColor = ProjectStyle.uiEnableColor
+        text.font = UIFont(name: "Rubik-Medium", size: 20)
+        text.text = "Height"
+        text.translatesAutoresizingMaskIntoConstraints = false
+        text.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        
+        return text
+    }()
+
     lazy private var ScaleContentTitle : UILabel = {
         let text = UILabel()
         text.textColor = ProjectStyle.uiEnableColor
-        text.font = UIFont(name: "Rubik-Bold", size: 24)
+        text.font = UIFont(name: "Rubik-Medium", size: 20)
         text.text = "Scale Content"
         text.translatesAutoresizingMaskIntoConstraints = false
-        text.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        text.heightAnchor.constraint(equalToConstant: 36).isActive = true
         
         return text
     }()
@@ -155,11 +162,16 @@ class ProjectResizeController : UIViewController {
     override func viewDidLoad() {
         view.addSubview(titleBg)
 
-        view.addSubview(sizeStack)
+        view.addSubview(widthTextField)
+        view.addSubview(heightTextField)
+        //view.addSubview(sizeStack)
+        
         view.addSubview(ScaleContentTitle)
         view.addSubview(scaleToggle)
 
         view.addSubview(AlignmentTitle)
+        view.addSubview(WidthTitle)
+        view.addSubview(HeightTitle)
 
         view.addSubview(alignmentSelector)
 
@@ -168,24 +180,34 @@ class ProjectResizeController : UIViewController {
         titleBg.topAnchor.constraint(equalTo: view.topAnchor, constant: 8).isActive = true
         titleBg.heightAnchor.constraint(equalToConstant: 42).isActive = true
 
-        sizeStack.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
-        sizeStack.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
-        sizeStack.topAnchor.constraint(equalTo: titleBg.bottomAnchor, constant: 6).isActive = true
+        widthTextField.leftAnchor.constraint(equalTo: alignmentSelector.rightAnchor, constant: 8).isActive = true
+        widthTextField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -6).isActive = true
+        widthTextField.topAnchor.constraint(equalTo: alignmentSelector.topAnchor, constant: 0).isActive = true
+        
+        heightTextField.leftAnchor.constraint(equalTo: alignmentSelector.rightAnchor, constant: 8).isActive = true
+        heightTextField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -6).isActive = true
+        heightTextField.bottomAnchor.constraint(equalTo: alignmentSelector.bottomAnchor, constant: 0).isActive = true
         
         ScaleContentTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
         ScaleContentTitle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
-        ScaleContentTitle.topAnchor.constraint(equalTo: sizeStack.bottomAnchor, constant: 6).isActive = true
+        ScaleContentTitle.topAnchor.constraint(equalTo: alignmentSelector.bottomAnchor, constant: 6).isActive = true
         
         scaleToggle.centerYAnchor.constraint(equalTo: ScaleContentTitle.centerYAnchor).isActive = true
         scaleToggle.rightAnchor.constraint(equalTo: view.rightAnchor,constant: -12).isActive = true
 
         AlignmentTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
         AlignmentTitle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
-        AlignmentTitle.topAnchor.constraint(equalTo: ScaleContentTitle.bottomAnchor, constant: 0).isActive = true
+        AlignmentTitle.topAnchor.constraint(equalTo: titleBg.bottomAnchor, constant: 8).isActive = true
         
         alignmentSelector.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
         alignmentSelector.topAnchor.constraint(equalTo: AlignmentTitle.bottomAnchor, constant: 0).isActive = true
         
+        WidthTitle.leftAnchor.constraint(equalTo: widthTextField.leftAnchor, constant: 8).isActive = true
+        WidthTitle.bottomAnchor.constraint(equalTo: widthTextField.topAnchor, constant: 0).isActive = true
+        
+        HeightTitle.leftAnchor.constraint(equalTo: heightTextField.leftAnchor, constant: 8).isActive = true
+        HeightTitle.bottomAnchor.constraint(equalTo: heightTextField.topAnchor, constant: 0).isActive = true
+
         view.backgroundColor = ProjectStyle.uiBackgroundColor
     }
 }

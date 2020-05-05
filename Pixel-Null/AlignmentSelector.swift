@@ -32,7 +32,7 @@ class AlignmentSelector : UIView {
 
     lazy private var bg : UIView = {
         let view = UIView()
-        view.backgroundColor = ProjectStyle.uiDisableColor.withAlphaComponent(0.5)
+        view.backgroundColor = ProjectStyle.uiDisableColor.withAlphaComponent(0.25)
         view.setCorners(corners: 12)
         return view
     }()

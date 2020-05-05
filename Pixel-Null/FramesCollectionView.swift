@@ -10,10 +10,10 @@ import UIKit
 
 class FramesCollectionView : UIView, UITextFieldDelegate {
     lazy var list : FramesCollection = {
-        let ls = FramesCollection(frame: .zero, proj: project!)
-        ls.selfView = self
+        let ls = FramesCollection(proj: project!)
+        //ls.selfView = self
         ls.translatesAutoresizingMaskIntoConstraints = false
-        ls.heightAnchor.constraint(equalToConstant: 72).isActive = true
+        ls.heightAnchor.constraint(equalToConstant: 60).isActive = true
         return ls
     }()
     
@@ -25,12 +25,12 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
        btn.setIconColor(color: .white)
        
        btn.delegate = {[weak self] in
-        if(self!.list.canMove && self!.project!.information.frames.count > 1) {
+        if(!self!.list.moving && self!.project!.information.frames.count > 1) {
                let frameJson = String(data: try! JSONEncoder().encode(self!.project!.information.frames[self!.project!.FrameSelected]), encoding: .utf8)!
                
                self!.project?.addAction(action: ["ToolID" : "\(Actions.frameDelete.rawValue)", "frame" : "\(self!.project!.FrameSelected)", "lastID" : "\(self!.project!.information.frames[self!.project!.FrameSelected].frameID)", "frameStruct" : frameJson])
                
-            try! FileManager.default.copyItem(at: self!.project!.getProjectDirectory().appendingPathComponent("frame-\(self!.project!.information.frames[self!.project!.FrameSelected].frameID)"), to: self!.project!.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(self!.project!.getNextActionID())"))
+            try! FileManager.default.copyItem(at: self!.project!.getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(self!.project!.information.frames[self!.project!.FrameSelected].frameID)"), to: self!.project!.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(self!.project!.getNextActionID())"))
                
                self!.list.frameDelegate?.deleteFrame(frame: self!.project!.FrameSelected)
            }
@@ -44,11 +44,11 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
         let btn = CircleButton(icon: #imageLiteral(resourceName: "clone_icon"), frame: .zero)
         
         btn.corners = 6
-        btn.delegate = {[weak self] in
-            if(self!.list.canMove) {
-                self!.project?.addAction(action: ["ToolID" : "\(Actions.frameClone.rawValue)", "frame" : "\(self!.project!.FrameSelected)"])
+        btn.delegate = {[unowned self] in
+            if(!self.list.moving) {
+                self.project?.addAction(action: ["ToolID" : "\(Actions.frameClone.rawValue)", "frame" : "\(self.project!.FrameSelected)"])
                 
-                self!.list.frameDelegate?.cloneFrame(original: self!.project!.FrameSelected)
+                self.list.frameDelegate?.cloneFrame(original: self.project!.FrameSelected)
             }
         }
         btn.translatesAutoresizingMaskIntoConstraints = false
@@ -148,13 +148,13 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
         list.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 0).isActive = true
         
         deleteButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -8).isActive = true
-        deleteButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 0).isActive = true
+        deleteButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 16).isActive = true
         
         cloneButton.leftAnchor.constraint(equalTo: delayField.rightAnchor, constant: 8).isActive = true
-        cloneButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 0).isActive = true
+        cloneButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 16).isActive = true
         
         addButton.leftAnchor.constraint(equalTo: cloneButton.rightAnchor, constant: 8).isActive = true
-        addButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 0).isActive = true
+        addButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 16).isActive = true
     }
     
     required init?(coder: NSCoder) {

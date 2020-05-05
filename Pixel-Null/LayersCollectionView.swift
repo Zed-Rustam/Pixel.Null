@@ -10,10 +10,10 @@ import UIKit
 
 class LayersCollectionView : UIView {
     lazy var list : LayersCollection = {
-        let ls = LayersCollection(frame: .zero, proj: project!)
-        ls.selfView = self
+        let ls = LayersCollection(proj: project!)
+        //ls.selfView = self
         ls.translatesAutoresizingMaskIntoConstraints = false
-        ls.heightAnchor.constraint(equalToConstant: 72).isActive = true
+        ls.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
         return ls
     }()
@@ -25,7 +25,7 @@ class LayersCollectionView : UIView {
         btn.setShadowColor(color: ProjectStyle.uiRedColor.withAlphaComponent(0.75))
         btn.setIconColor(color: .white)
         btn.delegate = {[weak self] in
-            if (self!.list.canMove && self!.project!.information.frames[self!.project!.FrameSelected].layers.count > 1) {
+            if (!self!.list.moving && self!.project!.information.frames[self!.project!.FrameSelected].layers.count > 1) {
                 self!.project?.addAction(action: ["ToolID" : "\(Actions.layerDelete.rawValue)","frame" : "\(self!.project!.FrameSelected)", "layer" : "\(self!.project!.LayerSelected)"])
                 
                 try! self!.project?.getLayer(frame: self!.project!.FrameSelected, layer: self!.project!.LayerSelected).pngData()?.write(to: self!.project!.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(self!.project!.getNextActionID()).png"))
@@ -48,7 +48,7 @@ class LayersCollectionView : UIView {
         let btn = CircleButton(icon: #imageLiteral(resourceName: "clone_icon"), frame: .zero)
         btn.corners = 6
         btn.delegate = {[weak self] in
-            if self!.list.canMove {
+            if !self!.list.moving {
                 self!.project?.addAction(action: ["ToolID" : "\(Actions.layerClone.rawValue)", "frame" : "\(self!.project!.FrameSelected)", "layer" : "\(self!.project!.LayerSelected)"])
                 
                 self!.list.frameDelegate?.cloneLayer(frame: self!.project!.FrameSelected, original: self!.project!.LayerSelected)
@@ -69,7 +69,7 @@ class LayersCollectionView : UIView {
         let btn = CircleButton(icon: #imageLiteral(resourceName: "visible_button_icon"), frame: .zero)
        btn.corners = 6
        btn.delegate = {[weak self] in
-           if self!.list.canMove {
+           if !self!.list.moving {
                self!.list.frameDelegate?.changeLayerVisible(frame: self!.project!.FrameSelected, layer: self!.project!.LayerSelected)
                self!.project!.addAction(action: ["ToolID" : "\(Actions.layerVisibleChange.rawValue)", "frame" : "\(self!.project!.FrameSelected)", "layer" : "\(self!.project!.LayerSelected)"])
            }
@@ -130,15 +130,15 @@ class LayersCollectionView : UIView {
         list.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
         
         cloneButton.leftAnchor.constraint(equalTo: leftAnchor, constant: 8).isActive = true
-        cloneButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 0).isActive = true
+        cloneButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 16).isActive = true
 
         visibleButton.leftAnchor.constraint(equalTo: cloneButton.rightAnchor, constant: 8).isActive = true
-        visibleButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 0).isActive = true
+        visibleButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 16).isActive = true
 
         deleteButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -8).isActive = true
-        deleteButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 0).isActive = true
+        deleteButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 16).isActive = true
         addButton.leftAnchor.constraint(equalTo: visibleButton.rightAnchor, constant: 8).isActive = true
-        addButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 0).isActive = true
+        addButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 16).isActive = true
 
         checkFrame()
     }

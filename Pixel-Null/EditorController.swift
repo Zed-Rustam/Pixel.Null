@@ -41,7 +41,7 @@ class EditorController : UIViewController {
         imgLFB.heightAnchor.constraint(equalTo: imgLFB.widthAnchor, multiplier: 356.0/1250.0).isActive = true
 
         stack.addArrangedSubview(
-            UILabel().setTextColor(color: ProjectStyle.uiEnableColor).appendText(text: "frames and layers bar", fortt: UIFont(name: "Rubik-Regular", size: 12)!)
+            UILabel().setTextColor(color: ProjectStyle.uiEnableColor).appendText(text: "frames and layers bar\n\n", fortt: UIFont(name: "Rubik-Regular", size: 12)!)
         )
         
         stack.addViews(views: [
@@ -51,6 +51,7 @@ class EditorController : UIViewController {
                 .setMaxWidth(width: view.frame.width - 24)
             .appendText(text:
                 """
+                
                     Also, if you want to paint a picture and will not use frames, then you can swipe up the bar and the line with frames will disappear, and the workspace will increase.
                     In addition, the bar on the right has 2 buttons. The top one starts the animation with the help of which you can see your animation in the workspace. Pressing the button again stops the animation. And the bottom button opens the frames and layers editor.
 
@@ -58,15 +59,15 @@ class EditorController : UIViewController {
             UIView().addFullSizeView(view:
                 UIImageView(image: #imageLiteral(resourceName: "frame_editor"))
                     .setContentMove(mode: .scaleAspectFit)
-                    .setSize(size: CGSize(width: 200, height: 200 * 2.1653))
+                    .setSize(size: CGSize(width: 200, height: 200 * 1.066))
                     .Corners(round: 8)
             )
                 .Shadow(clr: ProjectStyle.uiShadowColor, rad: 4, opas: 0.25)
-                .setViewSize(size: CGSize(width: 200, height: 200 * 2.1653)),
+                .setViewSize(size: CGSize(width: 200, height: 200 * 1.066)),
 
             UILabel()
                 .setTextColor(color: ProjectStyle.uiEnableColor)
-                .appendText(text: "frames and layers editor", fortt: UIFont(name: "Rubik-Regular", size: 10)!),
+                .appendText(text: "frames and layers editor", fortt: UIFont(name: "Rubik-Regular", size: 12)!),
             UILabel()
                 .setTextColor(color: ProjectStyle.uiEnableColor)
                 .setBreakMode(mode: .byWordWrapping)
@@ -91,7 +92,7 @@ class EditorController : UIViewController {
                 .setViewSize(size: CGSize(width: 300, height: 300 * 0.4)),
             UILabel()
             .setTextColor(color: ProjectStyle.uiEnableColor)
-            .appendText(text: "Tool bar", fortt: UIFont(name: "Rubik-Regular", size: 10)!),
+            .appendText(text: "Tool bar", fortt: UIFont(name: "Rubik-Regular", size: 12)!),
         ])
         
         
@@ -107,7 +108,6 @@ class EditorController : UIViewController {
         let img = UIImageView(image: #imageLiteral(resourceName: "frames_layers_bar_light"))
         img.translatesAutoresizingMaskIntoConstraints = false
         img.setCorners(corners: 8)
-        
         
         mainView.addSubview(img)
         img.leftAnchor.constraint(equalTo: mainView.leftAnchor, constant: 0).isActive = true
