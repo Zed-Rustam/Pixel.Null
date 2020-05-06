@@ -212,6 +212,10 @@ class ProjectWork{
         return img
     }
     
+    private func loadImagefromUrl(url : URL) -> UIImage {
+        return try! UIImage(data: Data(contentsOf: url))!
+    }
+    
     func loadSelection() -> UIImage{
         let img = UIImage(data: try! Data(contentsOf: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(projectName).appendingPathComponent("selection.png")))!
         return img
@@ -716,6 +720,10 @@ class ProjectWork{
                 try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("frames"))
                 try! FileManager.default.copyItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: projectInfo.actionList.lastActiveAction))-was"), to: getProjectDirectory().appendingPathComponent("frames"))
                 projectSize = CGSize(width: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["lastSizeX"]!)!, height: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["lastSizeY"]!)!)
+                
+                try! loadImagefromUrl(url: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: projectInfo.actionList.lastActiveAction))-selection-was.png")).pngData()?.write(to: getProjectDirectory().appendingPathComponent("selection.png"))
+
+                
                 (delegate as! Editor).resizeProject()
             default:
                 break
@@ -967,7 +975,8 @@ class ProjectWork{
                 try! FileManager.default.copyItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: projectInfo.actionList.lastActiveAction + 1))"), to: getProjectDirectory().appendingPathComponent("frames"))
                 
                 projectSize = CGSize(width: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["newSizeX"]!)!, height: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["newSizeY"]!)!)
-
+                try! loadImagefromUrl(url: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: projectInfo.actionList.lastActiveAction + 1))-selection.png")).pngData()?.write(to: getProjectDirectory().appendingPathComponent("selection.png"))
+                
                 (delegate as! Editor).resizeProject()
                 
             default:
@@ -1022,6 +1031,9 @@ class ProjectWork{
         case .resizeProject:
             try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: projectInfo.actionList.actions.count - 1))"))
             try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: projectInfo.actionList.actions.count - 1))-was"))
+            try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: projectInfo.actionList.actions.count - 1))-selection.png"))
+            try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: projectInfo.actionList.actions.count - 1))-selection-was.png"))
+
         default:
             break
         }
@@ -1046,6 +1058,8 @@ class ProjectWork{
         case .resizeProject:
             try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: 0))"))
             try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: 0))-was"))
+            try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: 0))-selection.png"))
+            try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: 0))-selection-was.png"))
         default:
             break
         }
@@ -1079,8 +1093,12 @@ class ProjectWork{
             try! resizeImage(image: getFrame(frame: f, size: projectSize), newSize: newSize, scale: scale, alignment: alignment).pngData()?.write(to: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[f].frameID)").appendingPathComponent("preview.png"))
         }
         
+        try! loadSelection().pngData()?.write(to: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getNextActionID())-selection-was.png"))
+
         try! resizeImage(image: loadSelection(), newSize: newSize, scale: scale, alignment: alignment).pngData()?.write(to: getProjectDirectory().appendingPathComponent("selection.png"))
         
+        try! loadSelection().pngData()?.write(to: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getNextActionID())-selection.png"))
+
         try! FileManager.default.copyItem(at: getProjectDirectory().appendingPathComponent("frames"), to: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getNextActionID())"))
         
         projectSize = newSize
