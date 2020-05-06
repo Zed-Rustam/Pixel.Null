@@ -46,11 +46,7 @@ class CreateDialogController : UIViewController, CreateDialogDelegate{
         
         return dialog
     }()
-    
-    private var bg = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterial))
-    private var maxwidth = 360
-    private var colorDialogOpen = false
-    
+        
     var proj : ProjectWork!
     
     func onCreate(name: String, width: Int, height: Int, bgColor: UIColor) {

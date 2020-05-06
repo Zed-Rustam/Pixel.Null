@@ -26,7 +26,6 @@ class ColorPallete : UIView {
     
     private var tapGesture : UITapGestureRecognizer!
     
-    
     func blurImage(image:UIImage, forRect rect: CGRect) -> UIImage? {
         let context = CIContext(options: nil)
         let inputImage = CIImage(cgImage: image.cgImage!)

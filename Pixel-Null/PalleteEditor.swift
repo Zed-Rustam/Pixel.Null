@@ -32,6 +32,23 @@ class PalleteEditor : UIViewController {
 
         return btn
     }()
+
+    lazy private var renameButton : CircleButton = {
+        let btn = CircleButton(icon: #imageLiteral(resourceName: "edit_icon"), frame: .zero, icScale: 0.35)
+        
+        btn.delegate = {[unowned self] in
+            self.palleteName.filed.isEnabled = true
+            self.palleteName.filed.becomeFirstResponder()
+            self.exitButton.isEnabled = false
+        }
+        
+        btn.corners = 8
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.widthAnchor.constraint(equalToConstant: 42).isActive = true
+        btn.heightAnchor.constraint(equalToConstant: 42).isActive = true
+
+        return btn
+    }()
     
     lazy private var palleteBar : UIView = {
        let mainview = UIView()
@@ -46,19 +63,35 @@ class PalleteEditor : UIViewController {
         
        
         mainview.addSubviewFullSize(view: bgView,paddings: (0,0,0,0))
-        bgView.addSubviewFullSize(view: palleteName,paddings: (12,-12,0,0))
+        bgView.addSubviewFullSize(view: palleteName,paddings: (0,0,0,0))
         
         return mainview
     }()
     
-    lazy private var palleteName : UILabel = {
-        let label = UILabel().setTextColor(color: ProjectStyle.uiEnableColor).setFont(font: UIFont(name: "Rubik-Bold", size: 18)!).setText(text: "\(pallete.palleteName)")
+    lazy private var palleteName : TextField = {
+        let label = TextField()
+        label.filed.font = UIFont(name: "Rubik-Bold", size: 20)
+        label.filed.text = pallete.palleteName
+        label.subviews[0].setCorners(corners: 8)
+        label.filed.isEnabled = false
+        
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        
+        label.filed.delegate = nameDelegate
+        
+        let bar = UIToolbar()
+        bar.items = [done,cancel]
+        bar.sizeToFit()
+        
+        label.filed.inputAccessoryView = bar
         
         return label
     }()
     
+    let done = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneBtn))
+    let cancel = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(cancelBtn))
+
     lazy private var palleteEditBap : UIView = {
         let mainView = UIView()
         mainView.translatesAutoresizingMaskIntoConstraints = false
@@ -170,9 +203,59 @@ class PalleteEditor : UIViewController {
         return btn
     }()
 
+    lazy private var nameDelegate : TextFieldDelegate = {
+       let del = TextFieldDelegate(method: {[weak self] in
+            if $0.text == "" {
+                self!.done.isEnabled = false
+                self!.palleteName.error = nil
+            } else if self!.getProjects().contains($0.text!) && $0.text! != self!.pallete.palleteName {
+                self!.palleteName.error = "A pallete with this name already exists"
+                self!.done.isEnabled = false
+            } else {
+                self!.palleteName.error = nil
+                self!.done.isEnabled = true
+            }
+        })
+        
+        return del
+    }()
+    
     var pallete : PalleteWorker!
     
     var delegate : () -> () = {}
+    
+    private func getProjects() -> [String] {
+        do{
+            let projs = try FileManager.default.contentsOfDirectory(at: PalleteWorker.getDocumentsDirectory(), includingPropertiesForKeys: nil)
+                   
+                   var names : [String] = []
+                   
+                   for i in 0..<projs.count  {
+                       var name = projs[i].lastPathComponent
+                        name.removeLast(8)
+                       names.append(name)
+                   }
+                   
+                    print(names)
+                    return names
+        } catch {
+            return []
+        }
+    }
+
+    @objc func doneBtn() {
+        pallete.rename(newName: palleteName.filed.text!)
+        palleteName.endEditing(true)
+        self.exitButton.isEnabled = true
+        self.palleteName.filed.isEnabled = false
+    }
+    
+    @objc func cancelBtn(){
+        palleteName.filed.text = pallete.palleteName
+        palleteName.endEditing(true)
+        self.exitButton.isEnabled = true
+        self.palleteName.filed.isEnabled = false
+    }
     
     override func viewDidAppear(_ animated: Bool) {
         colors.selectItem(at: IndexPath(item: 0, section: 0), animated: true, scrollPosition: .left)
@@ -183,6 +266,7 @@ class PalleteEditor : UIViewController {
 
         view.addSubview(colors)
         view.addSubview(exitButton)
+        view.addSubview(renameButton)
         view.addSubview(palleteBar)
         view.addSubview(palleteEditBap)
 
@@ -192,13 +276,16 @@ class PalleteEditor : UIViewController {
         colors.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
         
         palleteBar.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 6).isActive = true
-        palleteBar.rightAnchor.constraint(equalTo: exitButton.leftAnchor, constant: -6).isActive = true
+        palleteBar.rightAnchor.constraint(equalTo: renameButton.leftAnchor, constant: -6).isActive = true
         palleteBar.topAnchor.constraint(equalTo: view.topAnchor, constant: 6).isActive = true
     
         exitButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -6).isActive = true
         exitButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 6).isActive = true
         
-        palleteEditBap.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -6).isActive = true
-        palleteEditBap.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -6).isActive = true
+        renameButton.rightAnchor.constraint(equalTo: exitButton.leftAnchor, constant: -6).isActive = true
+        renameButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 6).isActive = true
+        
+        palleteEditBap.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: 0).isActive = true
+        palleteEditBap.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
     }
 }

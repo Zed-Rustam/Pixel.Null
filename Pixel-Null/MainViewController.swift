@@ -75,7 +75,28 @@ class MainViewController: UIViewController {
 extension MainViewController : NavigationProtocol {
     
     func onSelectChange(select: Int, lastSelect: Int) {
-        self.controllers[lastSelect].view.isHidden = true
+        self.controllers[select].view.transform = CGAffineTransform(translationX: 0, y: -100)
         self.controllers[select].view.isHidden = false
+        self.controllers[select].view.alpha = 0
+
+        self.controllers[lastSelect].view.isHidden = false
+        self.controllers[lastSelect].view.alpha = 1
+        self.controllers[lastSelect].view.transform = CGAffineTransform(translationX: 0, y: 0)
+
+
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
+            self.controllers[lastSelect].view.transform = CGAffineTransform(translationX: 0, y: 100)
+            self.controllers[lastSelect].view.alpha = 0
+            
+            self.controllers[select].view.transform = CGAffineTransform(translationX: 0, y: 0)
+            self.controllers[select].view.alpha = 1
+
+        },completion: {isEnd in
+            if lastSelect != self.nav.select {
+                self.controllers[lastSelect].view.alpha = 1
+                self.controllers[lastSelect].view.transform = CGAffineTransform(translationX: 0, y: 0)
+                self.controllers[lastSelect].view.isHidden = true
+            }
+        })
     }
 }

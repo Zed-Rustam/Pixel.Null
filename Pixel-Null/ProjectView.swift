@@ -15,7 +15,7 @@ class ProjectView : UIView{
     private var proj : ProjectWork!
     private var background : UIImageView = UIImageView(image: ProjectStyle.bgImage!)
     private var title : UILabel = UILabel()
-    private var rounded = 16
+    private var rounded = 12
     private var blurView : UIImageView = {
         let view = UIImageView()
         
@@ -138,12 +138,11 @@ class ProjectView : UIView{
         _image.frame = self.bounds
         _image.contentMode = .scaleAspectFill
   
-        blurView.frame = CGRect(x: rounded / 2, y: Int(Double(self.bounds.height) - Double(rounded) * 1.5), width: Int(self.bounds.width) - rounded, height: rounded)
-        blurView.setCorners(corners: CGFloat(rounded / 2))
-        blurView.image = blackImage(image: blurImage(image: getLayerImage(), forRect: CGRect(x: rounded / 2, y: rounded / 2, width: Int(self.bounds.width) - rounded, height: rounded))!)
+        blurView.frame = CGRect(x: 8, y: Int(Double(self.bounds.height) - Double(8) * 3), width: Int(self.bounds.width) - 8 * 2, height: 8 * 2)
+        blurView.setCorners(corners: CGFloat(8))
+        blurView.image = blackImage(image: blurImage(image: getLayerImage(), forRect: CGRect(x: 8, y: 8, width: Int(self.bounds.width) - 8 * 2, height: 8 * 2))!)
         
-        
-        title.frame = CGRect(x: rounded, y: Int(Double(self.bounds.height) - Double(rounded) * 1.5), width: Int(self.bounds.width) - rounded * 2, height: rounded)
+        title.frame = CGRect(x: 8, y: Int(Double(self.bounds.height) - Double(8) * 3), width: Int(self.bounds.width) - 8 * 2, height: 8 * 2)
         title.text = proj.projectName
         title.textColor = .white
         title.lineBreakMode = .byTruncatingMiddle
