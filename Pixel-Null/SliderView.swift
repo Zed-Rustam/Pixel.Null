@@ -22,7 +22,7 @@ class SliderView : UIView {
 
     lazy private var bg : UIView = {
         let view = UIView()
-        view.backgroundColor = ProjectStyle.uiDisableColor.withAlphaComponent(0.25)
+        view.backgroundColor = UIColor(named: "disableColor")!.withAlphaComponent(0.25)
         view.setCorners(corners: 9)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -30,7 +30,7 @@ class SliderView : UIView {
     
     lazy private var bg2 : UIView = {
         let view = UIView()
-        view.backgroundColor = ProjectStyle.uiEnableColor
+        view.backgroundColor = UIColor(named: "enableColor")
         view.setCorners(corners: 9)
         view.frame.size.height = 18
         view.translatesAutoresizingMaskIntoConstraints = true
@@ -42,7 +42,7 @@ class SliderView : UIView {
         mainView.translatesAutoresizingMaskIntoConstraints = false
         mainView.setShadow(color: .black, radius: 8, opasity: 0.25)
         let view = UIView()
-        view.backgroundColor = ProjectStyle.uiEnableColor
+        view.backgroundColor = UIColor(named: "enableColor")
         view.setCorners(corners: 15)
         view.translatesAutoresizingMaskIntoConstraints = false
         
@@ -197,6 +197,10 @@ class SliderView : UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        setPosition(pos: self.nowPosition)
     }
     
     deinit {

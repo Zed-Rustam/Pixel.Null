@@ -25,9 +25,8 @@ class SymmetryView : UIView {
     }
     
     override func draw(_ layer: CALayer, in ctx: CGContext) {
-        //print("some draw")
         ctx.clear(self.bounds)
-        ctx.setStrokeColor(ProjectStyle.uiEnableColor.cgColor)
+        ctx.setStrokeColor(UIColor(named: "enableColor")!.cgColor)
         ctx.setLineWidth(1)
         if isVertical {
             ctx.addLines(between: [CGPoint(x: offset.x + startX * scale, y: offset.y - 16),CGPoint(x: offset.x + startX * scale, y: offset.y + project.projectSize.height * scale + 16)])
@@ -37,7 +36,7 @@ class SymmetryView : UIView {
         }
         ctx.strokePath()
         
-        ctx.setFillColor(ProjectStyle.uiEnableColor.cgColor)
+        ctx.setFillColor(UIColor(named: "enableColor")!.cgColor)
         if isVertical {
             ctx.addEllipse(in: CGRect(x: offset.x + startX * scale - 16, y: offset.y - 32 - 16, width: 32, height: 32))
             ctx.addEllipse(in: CGRect(x: offset.x + startX * scale - 16, y: offset.y + project.projectSize.height * scale + 16, width: 32, height: 32))

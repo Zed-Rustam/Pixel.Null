@@ -178,7 +178,7 @@ class LayerCell : UICollectionViewCell, UIGestureRecognizerDelegate {
         preview = FramePreview(frame: CGRect(origin: .zero, size: frame.size), image: UIImage())
         super.init(frame: frame)
         
-        layer.borderColor = ProjectStyle.uiSelectColor.cgColor
+        layer.borderColor = getAppColor(color: .select).cgColor
         layer.masksToBounds = false
         layer.cornerRadius = 8
         

@@ -42,6 +42,8 @@
 		95560A2223C8EBCC00581482 /* ProjectFullImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95560A2123C8EBCC00581482 /* ProjectFullImage.swift */; };
 		95560A2423CA315100581482 /* CreateDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95560A2323CA315100581482 /* CreateDialog.swift */; };
 		95578E0523D4C0B200D8DDF2 /* CreateDIalogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95578E0423D4C0B200D8DDF2 /* CreateDIalogController.swift */; };
+		9559B9BC2462CBD80066EA40 /* TransformController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9559B9BB2462CBD80066EA40 /* TransformController.swift */; };
+		9559B9BE2462D0550066EA40 /* ShapeCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9559B9BD2462D0550066EA40 /* ShapeCollection.swift */; };
 		9567F5FD23BFF89C00694B40 /* ColorCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9567F5FC23BFF89C00694B40 /* ColorCreator.swift */; };
 		956C61F72427C3B9000BF9E4 /* ToolBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956C61F62427C3B9000BF9E4 /* ToolBar.swift */; };
 		956C61F92427C3CE000BF9E4 /* ToolBarCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956C61F82427C3CE000BF9E4 /* ToolBarCollection.swift */; };
@@ -92,7 +94,6 @@
 		95C727A623EB637800ED1A28 /* Rubik-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 95C7279C23EB637700ED1A28 /* Rubik-BlackItalic.ttf */; };
 		95C727A723EB637800ED1A28 /* Rubik-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 95C7279D23EB637700ED1A28 /* Rubik-MediumItalic.ttf */; };
 		95C727A823EB637800ED1A28 /* Rubik-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 95C7279E23EB637800ED1A28 /* Rubik-BoldItalic.ttf */; };
-		95D01F1C2456BEBE006C8394 /* TitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95D01F1B2456BEBE006C8394 /* TitleView.swift */; };
 		95DC554C23EC9A820011FA2A /* ColorSelectDialog1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95DC554B23EC9A820011FA2A /* ColorSelectDialog1.swift */; };
 		95DC554E23EC9D2A0011FA2A /* ColorSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95DC554D23EC9D2A0011FA2A /* ColorSelector.swift */; };
 		95DC555023EDF8280011FA2A /* CIrcleColorSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95DC554F23EDF8280011FA2A /* CIrcleColorSlider.swift */; };
@@ -145,6 +146,8 @@
 		95560A2123C8EBCC00581482 /* ProjectFullImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectFullImage.swift; sourceTree = "<group>"; };
 		95560A2323CA315100581482 /* CreateDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateDialog.swift; sourceTree = "<group>"; };
 		95578E0423D4C0B200D8DDF2 /* CreateDIalogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateDIalogController.swift; sourceTree = "<group>"; };
+		9559B9BB2462CBD80066EA40 /* TransformController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransformController.swift; sourceTree = "<group>"; };
+		9559B9BD2462D0550066EA40 /* ShapeCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShapeCollection.swift; sourceTree = "<group>"; };
 		9567F5FC23BFF89C00694B40 /* ColorCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorCreator.swift; sourceTree = "<group>"; };
 		956C61F62427C3B9000BF9E4 /* ToolBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolBar.swift; sourceTree = "<group>"; usesTabs = 0; };
 		956C61F82427C3CE000BF9E4 /* ToolBarCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolBarCollection.swift; sourceTree = "<group>"; };
@@ -195,7 +198,6 @@
 		95C7279C23EB637700ED1A28 /* Rubik-BlackItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-BlackItalic.ttf"; sourceTree = "<group>"; };
 		95C7279D23EB637700ED1A28 /* Rubik-MediumItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-MediumItalic.ttf"; sourceTree = "<group>"; };
 		95C7279E23EB637800ED1A28 /* Rubik-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-BoldItalic.ttf"; sourceTree = "<group>"; };
-		95D01F1B2456BEBE006C8394 /* TitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleView.swift; sourceTree = "<group>"; };
 		95DC554B23EC9A820011FA2A /* ColorSelectDialog1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSelectDialog1.swift; sourceTree = "<group>"; };
 		95DC554D23EC9D2A0011FA2A /* ColorSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorSelector.swift; sourceTree = "<group>"; };
 		95DC554F23EDF8280011FA2A /* CIrcleColorSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIrcleColorSlider.swift; sourceTree = "<group>"; };
@@ -407,6 +409,8 @@
 				95E2A02E2455185800B02742 /* EraseController.swift */,
 				95E2A0302455197400B02742 /* FillController.swift */,
 				95E2A03224551CA500B02742 /* SelectionController.swift */,
+				9559B9BB2462CBD80066EA40 /* TransformController.swift */,
+				9559B9BD2462D0550066EA40 /* ShapeCollection.swift */,
 			);
 			name = Training;
 			sourceTree = "<group>";
@@ -483,7 +487,6 @@
 				9540F1BF2433DDB7008D1657 /* ColorSlider.swift */,
 				95782CDD23CB928200C2772F /* TextFIeld.swift */,
 				95C7278523EB577900ED1A28 /* CircleButton.swift */,
-				95D01F1B2456BEBE006C8394 /* TitleView.swift */,
 				95144C4A245AE7FB0070DDF2 /* SegmentSelector.swift */,
 				954DAE4A245E161200CB40B1 /* AlignmentSelector.swift */,
 			);
@@ -595,7 +598,6 @@
 				95A89E3523FA3E7E00DC796C /* FrameWorker.swift in Sources */,
 				95A626B12444616D007E75F3 /* TrainingMain.swift in Sources */,
 				95578E0523D4C0B200D8DDF2 /* CreateDIalogController.swift in Sources */,
-				95D01F1C2456BEBE006C8394 /* TitleView.swift in Sources */,
 				9537B1A1243C6C880083BE27 /* GridView.swift in Sources */,
 				9540F1BE243330D2008D1657 /* SliderView.swift in Sources */,
 				958C0C1E2419653F007B9C95 /* LayersCollectionView.swift in Sources */,
@@ -608,6 +610,7 @@
 				95C0EDD62448B2130012D60D /* GridLayer.swift in Sources */,
 				956C61F72427C3B9000BF9E4 /* ToolBar.swift in Sources */,
 				954AABB423BBEC3D00F52955 /* MainViewController.swift in Sources */,
+				9559B9BC2462CBD80066EA40 /* TransformController.swift in Sources */,
 				956C61FB2427EE34000BF9E4 /* ToolButton.swift in Sources */,
 				9540F1C02433DDB7008D1657 /* ColorSlider.swift in Sources */,
 				95560A2223C8EBCC00581482 /* ProjectFullImage.swift in Sources */,
@@ -667,6 +670,7 @@
 				95144C51245D04C00070DDF2 /* ProjectSettingsController.swift in Sources */,
 				95746A1E2406DB9200DD2328 /* LayersView.swift in Sources */,
 				9523F2C62435F46300725214 /* ToggleView.swift in Sources */,
+				9559B9BE2462D0550066EA40 /* ShapeCollection.swift in Sources */,
 				9540F1BC2431A2C5008D1657 /* NavigationView.swift in Sources */,
 				956C61F92427C3CE000BF9E4 /* ToolBarCollection.swift in Sources */,
 				95560A2423CA315100581482 /* CreateDialog.swift in Sources */,

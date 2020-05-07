@@ -25,10 +25,10 @@ class EraseController : UIViewController {
     lazy private var content : UIStackView = {
         let stack = makeStack(orientation: .vertical, alignment: .fill, distribution: .fill).addViews(views: [
             UILabel()
-                .setTextColor(color: ProjectStyle.uiEnableColor)
-                .appendText(text: "Eraser", fortt: UIFont(name: "Rubik-Bold", size: 48)!, textClr: ProjectStyle.uiEnableColor),
+                .setTextColor(color: UIColor(named : "enableColor")!)
+                .appendText(text: "Eraser", fortt: UIFont(name: "Rubik-Bold", size: 48)!, textClr: UIColor(named : "enableColor")!),
             UILabel()
-            .setTextColor(color: ProjectStyle.uiEnableColor)
+            .setTextColor(color: UIColor(named : "enableColor")!)
             .appendText(text: """
                 An eraser is a tool that erases pixels, replacing them with a transparent color. This tool works just like a pencil tool. You can change the property
             """, fortt: UIFont(name: "Rubik-Regular", size: 16)!)
@@ -46,7 +46,7 @@ class EraseController : UIViewController {
     override func viewDidLoad() {
         view.addSubview(scroll)
         
-        view.backgroundColor = ProjectStyle.uiBackgroundColor
+        view.backgroundColor = UIColor(named : "backgroundColor")!
         scroll.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
         scroll.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
         scroll.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true

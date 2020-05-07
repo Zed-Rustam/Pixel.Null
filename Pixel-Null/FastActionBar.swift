@@ -14,7 +14,7 @@ class FastActionBar : UIView {
     
     lazy private var bgView : UIView = {
        let view = UIView()
-        view.backgroundColor = ProjectStyle.uiBackgroundColor
+        view.backgroundColor = UIColor(named: "backgroundColor")
         view.translatesAutoresizingMaskIntoConstraints = false
         view.setCorners(corners: 16)
         
@@ -52,7 +52,7 @@ class FastActionBar : UIView {
                     self.stack.addArrangedSubview($0)
                 })
                 hide = false
-                UIView.animate(withDuration: 0.2,delay: 0, options: .curveEaseInOut, animations: {
+                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
                     self.frame.origin.y = 0
                 })
             } else {
@@ -63,7 +63,7 @@ class FastActionBar : UIView {
                     btns.forEach({
                         self.stack.addArrangedSubview($0)
                     })
-                    UIView.animate(withDuration: 0.2,delay: 0,options: .curveEaseInOut, animations: {
+                    UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
                         self.frame.origin.y = 0
                     })
                 })
@@ -81,8 +81,11 @@ class FastActionBar : UIView {
         bgView.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
         bgView.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
         bgView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
-        
-        setShadow(color: ProjectStyle.uiShadowColor, radius: 8, opasity: 0.25)
+        setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
+    }
+    
+    override func tintColorDidChange() {
+        setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
     }
     
     required init?(coder: NSCoder) {

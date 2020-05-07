@@ -25,10 +25,10 @@ class SymmetryController : UIViewController {
     lazy private var content : UIStackView = {
         let stack = makeStack(orientation: .vertical, alignment: .fill, distribution: .fill).addViews(views: [
             UILabel()
-                .setTextColor(color: ProjectStyle.uiEnableColor)
+                .setTextColor(color: UIColor(named: "enableColor")!)
                 .appendText(text: "Symmetry\n", fortt: UIFont(name: "Rubik-Bold", size: 48)!),
             UILabel()
-            .setTextColor(color: ProjectStyle.uiEnableColor)
+            .setTextColor(color: UIColor(named: "enableColor")!)
             .appendText(text: """
                 Symmetry is a tool that helps you save time and draw symmetrical images. This tool has 2 types of symmetry: vertical and horizontal. Each of them can be moved around the canvas.\n
             """, fortt: UIFont(name: "Rubik-Regular", size: 16)!)
@@ -36,77 +36,38 @@ class SymmetryController : UIViewController {
                 .setBreakMode(mode: .byWordWrapping),
             makeStack(orientation: .horizontal, alignment: .center, distribution: .fillEqually).addViews(views: [
                 makeStack(orientation: .vertical, alignment: .center, distribution: .equalSpacing).addViews(views: [
-                    UIView()
-                        .addFullSizeView(view:
-                            UIImageView(image: UIImage.gifImageWithData(NSDataAsset(name: "symmetry_off")!.data))
-                                    .setSize(size: CGSize(width: 132, height: 132))
-                                    .setFilter(filter: .nearest)
-                                    .Corners(round: 16)
-                                    .setBackground(color: UIColor(patternImage: UIImage(cgImage: ProjectStyle.bgImage!.cgImage!, scale: 1.0/16.5, orientation: .down)))
-                    )
-                        .setViewSize(size: CGSize(width: 132, height: 132))
-                        .Shadow(clr: ProjectStyle.uiShadowColor, rad: 4, opas: 0.5),
+                    symmetryOff,
                     UILabel()
-                        .setTextColor(color: ProjectStyle.uiEnableColor)
+                        .setTextColor(color: UIColor(named: "enableColor")!)
                         .setBreakMode(mode: .byWordWrapping)
                         .appendText(text: "Symmetry off\n", fortt: UIFont(name: "Rubik-Regular", size: 12)!),
                 ]),
                 makeStack(orientation: .vertical, alignment: .center, distribution: .equalSpacing).addViews(views: [
-                    UIView()
-                    .addFullSizeView(view:
-                        UIImageView(image: UIImage.gifImageWithData(NSDataAsset(name: "symmetry_vertical")!.data))
-                            .setSize(size: CGSize(width: 132, height: 132))
-                            .setFilter(filter: .nearest)
-                            .Corners(round: 16)
-                            .setBackground(color: UIColor(patternImage: UIImage(cgImage: ProjectStyle.bgImage!.cgImage!, scale: 1.0/16.5, orientation: .down)))
-                        )
-                    .setViewSize(size: CGSize(width: 132, height: 132))
-                    .Shadow(clr: ProjectStyle.uiShadowColor, rad: 4, opas: 0.5),
-                    
+                    symmetryVertical,
                     UILabel()
-                        .setTextColor(color: ProjectStyle.uiEnableColor)
+                        .setTextColor(color: UIColor(named: "enableColor")!)
                         .setBreakMode(mode: .byWordWrapping)
                         .appendText(text: "Symmetry vertical\n", fortt: UIFont(name: "Rubik-Regular", size: 12)!),
                 ])
             ]),
             makeStack(orientation: .horizontal, alignment: .center, distribution: .fillEqually).addViews(views: [
                 makeStack(orientation: .vertical, alignment: .center, distribution: .fill).addViews(views: [
-                    UIView()
-                    .addFullSizeView(view:
-                        UIImageView(image: UIImage.gifImageWithData(NSDataAsset(name: "symmetry_horizontal")!.data))
-                            .setSize(size: CGSize(width: 132, height: 132))
-                            .setFilter(filter: .nearest)
-                            .Corners(round: 16)
-                            .setBackground(color: UIColor(patternImage: UIImage(cgImage: ProjectStyle.bgImage!.cgImage!, scale: 1.0/16.5, orientation: .down)))
-                        )
-                    .setViewSize(size: CGSize(width: 132, height: 132))
-                    .Shadow(clr: ProjectStyle.uiShadowColor, rad: 4, opas: 0.5),
-                    
+                    symmetryHorizontal,
                     UILabel()
-                        .setTextColor(color: ProjectStyle.uiEnableColor)
+                        .setTextColor(color: UIColor(named: "enableColor")!)
                         .setBreakMode(mode: .byWordWrapping)
                         .appendText(text: "Symmetry horizontal\n", fortt: UIFont(name: "Rubik-Regular", size: 12)!),
                 ]),
                 makeStack(orientation: .vertical, alignment: .center, distribution: .fill).addViews(views: [
-                    UIView()
-                    .addFullSizeView(view:
-                        UIImageView(image: UIImage.gifImageWithData(NSDataAsset(name: "symmetry_all")!.data))
-                            .setSize(size: CGSize(width: 132, height: 132))
-                            .setFilter(filter: .nearest)
-                            .Corners(round: 16)
-                            .setBackground(color: UIColor(patternImage: UIImage(cgImage: ProjectStyle.bgImage!.cgImage!, scale: 1.0/16.5, orientation: .down)))
-                        )
-                    .setViewSize(size: CGSize(width: 132, height: 132))
-                    .Shadow(clr: ProjectStyle.uiShadowColor, rad: 4, opas: 0.5),
-                    
+                    symmetryAll,
                     UILabel()
-                        .setTextColor(color: ProjectStyle.uiEnableColor)
+                        .setTextColor(color: UIColor(named: "enableColor")!)
                         .setBreakMode(mode: .byWordWrapping)
                         .appendText(text: "Symmetry all on\n", fortt: UIFont(name: "Rubik-Regular", size: 12)!),
                 ])
             ]),
             UILabel()
-            .setTextColor(color: ProjectStyle.uiEnableColor)
+            .setTextColor(color: UIColor(named: "enableColor")!)
             .setMaxWidth(width: view.frame.width - 24)
             .setBreakMode(mode: .byWordWrapping)
             .appendText(text: """
@@ -121,10 +82,54 @@ class SymmetryController : UIViewController {
         return stack
     }()
     
+    lazy private var symmetryHorizontal : UIView = {
+        return UIView()
+        .addFullSizeView(view:
+            UIImageView(image: UIImage.gifImageWithData(NSDataAsset(name: "symmetry_horizontal")!.data))
+                .setSize(size: CGSize(width: 132, height: 132))
+                .setFilter(filter: .nearest)
+                .Corners(round: 16)
+            )
+        .setViewSize(size: CGSize(width: 132, height: 132))
+    }()
+
+    lazy private var symmetryVertical : UIView = {
+        return UIView()
+        .addFullSizeView(view:
+            UIImageView(image: UIImage.gifImageWithData(NSDataAsset(name: "symmetry_vertical")!.data))
+                .setSize(size: CGSize(width: 132, height: 132))
+                .setFilter(filter: .nearest)
+                .Corners(round: 16)
+            )
+        .setViewSize(size: CGSize(width: 132, height: 132))
+    }()
+    
+    lazy private var symmetryOff : UIView = {
+        return UIView()
+        .addFullSizeView(view:
+            UIImageView(image: UIImage.gifImageWithData(NSDataAsset(name: "symmetry_off")!.data))
+                .setSize(size: CGSize(width: 132, height: 132))
+                .setFilter(filter: .nearest)
+                .Corners(round: 16)
+            )
+        .setViewSize(size: CGSize(width: 132, height: 132))
+    }()
+    
+    lazy private var symmetryAll : UIView = {
+        return UIView()
+        .addFullSizeView(view:
+            UIImageView(image: UIImage.gifImageWithData(NSDataAsset(name: "symmetry_all")!.data))
+                .setSize(size: CGSize(width: 132, height: 132))
+                .setFilter(filter: .nearest)
+                .Corners(round: 16)
+            )
+        .setViewSize(size: CGSize(width: 132, height: 132))
+    }()
+    
     override func viewDidLoad() {
         view.addSubview(scroll)
         
-        view.backgroundColor = ProjectStyle.uiBackgroundColor
+        view.backgroundColor = UIColor(named: "backgroundColor")!
         scroll.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
         scroll.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
         scroll.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
@@ -132,7 +137,19 @@ class SymmetryController : UIViewController {
     }
     
     override func viewDidLayoutSubviews() {
-           content.layoutIfNeeded()
-           scroll.contentSize.height = content.frame.height + 24
-       }
+        content.layoutIfNeeded()
+        scroll.contentSize.height = content.frame.height + 24
+        
+        symmetryHorizontal.subviews[0].backgroundColor = UIColor(patternImage: UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 1.0/16.5, orientation: .down))
+        symmetryHorizontal.setShadow(color: UIColor(named : "shadowColor")!, radius: 8, opasity: 1)
+        
+        symmetryVertical.subviews[0].backgroundColor = UIColor(patternImage: UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 1.0/16.5, orientation: .down))
+        symmetryVertical.setShadow(color: UIColor(named : "shadowColor")!, radius: 8, opasity: 1)
+        
+        symmetryAll.subviews[0].backgroundColor = UIColor(patternImage: UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 1.0/16.5, orientation: .down))
+        symmetryAll.setShadow(color: UIColor(named : "shadowColor")!, radius: 8, opasity: 1)
+        
+        symmetryOff.subviews[0].backgroundColor = UIColor(patternImage: UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 1.0/16.5, orientation: .down))
+        symmetryOff.setShadow(color: UIColor(named : "shadowColor")!, radius: 8, opasity: 1)
+    }
 }

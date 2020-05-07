@@ -19,20 +19,20 @@ class AlignmentSelector : UIView {
     }
     
     private var images : [UIImageView] = [
-        UIImageView(image:#imageLiteral(resourceName: "arrow_up_icon").withTintColor(ProjectStyle.uiEnableColor)),
-        UIImageView(image:#imageLiteral(resourceName: "arrow_up_right_icon").withTintColor(ProjectStyle.uiEnableColor)),
-        UIImageView(image:#imageLiteral(resourceName: "arrow_right_icon").withTintColor(ProjectStyle.uiEnableColor)),
-        UIImageView(image:#imageLiteral(resourceName: "arrow_down_right_icon").withTintColor(ProjectStyle.uiEnableColor)),
-        UIImageView(image:#imageLiteral(resourceName: "arrow_down_icon").withTintColor(ProjectStyle.uiEnableColor)),
-        UIImageView(image:#imageLiteral(resourceName: "arrow_down_left_icon").withTintColor(ProjectStyle.uiEnableColor)),
-        UIImageView(image:#imageLiteral(resourceName: "arrow_left_icon").withTintColor(ProjectStyle.uiEnableColor)),
-        UIImageView(image:#imageLiteral(resourceName: "arrow_up_left_icon").withTintColor(ProjectStyle.uiEnableColor)),
-        UIImageView(image:#imageLiteral(resourceName: "center_icon").withTintColor(ProjectStyle.uiEnableColor))
+        UIImageView(image:#imageLiteral(resourceName: "arrow_up_icon").withTintColor(UIColor(named: "enableColor")!)),
+        UIImageView(image:#imageLiteral(resourceName: "arrow_up_right_icon").withTintColor(UIColor(named: "enableColor")!)),
+        UIImageView(image:#imageLiteral(resourceName: "arrow_right_icon").withTintColor(UIColor(named: "enableColor")!)),
+        UIImageView(image:#imageLiteral(resourceName: "arrow_down_right_icon").withTintColor(UIColor(named: "enableColor")!)),
+        UIImageView(image:#imageLiteral(resourceName: "arrow_down_icon").withTintColor(UIColor(named: "enableColor")!)),
+        UIImageView(image:#imageLiteral(resourceName: "arrow_down_left_icon").withTintColor(UIColor(named: "enableColor")!)),
+        UIImageView(image:#imageLiteral(resourceName: "arrow_left_icon").withTintColor(UIColor(named: "enableColor")!)),
+        UIImageView(image:#imageLiteral(resourceName: "arrow_up_left_icon").withTintColor(UIColor(named: "enableColor")!)),
+        UIImageView(image:#imageLiteral(resourceName: "center_icon").withTintColor(UIColor(named: "enableColor")!))
     ]
 
     lazy private var bg : UIView = {
         let view = UIView()
-        view.backgroundColor = ProjectStyle.uiDisableColor.withAlphaComponent(0.25)
+        view.backgroundColor = UIColor(named: "disableColor")!.withAlphaComponent(0.25)
         view.setCorners(corners: 12)
         return view
     }()
@@ -40,12 +40,11 @@ class AlignmentSelector : UIView {
     lazy private var selectBg : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = ProjectStyle.uiBackgroundColor
+        view.backgroundColor = UIColor(named: "backgroundColor")!
         view.setCorners(corners: 12)
         
         let mainview = UIView()
         mainview.translatesAutoresizingMaskIntoConstraints = false
-        mainview.setShadow(color: ProjectStyle.uiShadowColor, radius: 4, opasity: 0.25)
         mainview.addSubviewFullSize(view: view)
         mainview.widthAnchor.constraint(equalToConstant: 42).isActive = true
         mainview.heightAnchor.constraint(equalToConstant: 42).isActive = true
@@ -65,7 +64,7 @@ class AlignmentSelector : UIView {
         
         nowAlignment = getAlignment(point: resultPoint)
         
-        UIView.animate(withDuration: 0.2,delay: 0,options: .curveEaseInOut, animations: {
+        UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.75, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
             self.selectBg.frame.origin = CGPoint(x: resultPoint.x * 42, y: resultPoint.y * 42)
         },completion: nil)
     }
@@ -101,61 +100,61 @@ class AlignmentSelector : UIView {
                 switch last {
                     case .up:
                         self.images[0].transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
-                        self.images[0].tintColor = ProjectStyle.uiEnableColor
+                        self.images[0].tintColor = UIColor(named: "enableColor")
                     case .up_right:
                         self.images[1].transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
-                        self.images[1].tintColor = ProjectStyle.uiEnableColor
+                        self.images[1].tintColor = UIColor(named: "enableColor")
                     case .right:
                         self.images[2].transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
-                        self.images[2].tintColor = ProjectStyle.uiEnableColor
+                        self.images[2].tintColor = UIColor(named: "enableColor")
                     case .down_right:
                         self.images[3].transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
-                        self.images[3].tintColor = ProjectStyle.uiEnableColor
+                        self.images[3].tintColor = UIColor(named: "enableColor")
                     case .down:
                         self.images[4].transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
-                        self.images[4].tintColor = ProjectStyle.uiEnableColor
+                        self.images[4].tintColor = UIColor(named: "enableColor")
                     case .down_left:
                         self.images[5].transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
-                        self.images[5].tintColor = ProjectStyle.uiEnableColor
+                        self.images[5].tintColor = UIColor(named: "enableColor")
                     case .left:
                         self.images[6].transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
-                        self.images[6].tintColor = ProjectStyle.uiEnableColor
+                        self.images[6].tintColor = UIColor(named: "enableColor")
                     case .up_left:
                         self.images[7].transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
-                        self.images[7].tintColor = ProjectStyle.uiEnableColor
+                        self.images[7].tintColor = UIColor(named: "enableColor")
                     case .center:
                         self.images[8].transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
-                        self.images[8].tintColor = ProjectStyle.uiEnableColor
+                        self.images[8].tintColor = UIColor(named: "enableColor")
                 }
                 
                 switch now {
                     case .up:
                         self.images[0].transform = CGAffineTransform(scaleX: 0.65, y: 0.65)
-                        self.images[0].tintColor = ProjectStyle.uiSelectColor
+                        self.images[0].tintColor = UIColor(named: "selectColor")
                     case .up_right:
                         self.images[1].transform = CGAffineTransform(scaleX: 0.65, y: 0.65)
-                        self.images[1].tintColor = ProjectStyle.uiSelectColor
+                        self.images[1].tintColor = UIColor(named: "selectColor")
                     case .right:
                         self.images[2].transform = CGAffineTransform(scaleX: 0.65, y: 0.65)
-                        self.images[2].tintColor = ProjectStyle.uiSelectColor
+                        self.images[2].tintColor = UIColor(named: "selectColor")
                     case .down_right:
                         self.images[3].transform = CGAffineTransform(scaleX: 0.65, y: 0.65)
-                        self.images[3].tintColor = ProjectStyle.uiSelectColor
+                        self.images[3].tintColor = UIColor(named: "selectColor")
                     case .down:
                         self.images[4].transform = CGAffineTransform(scaleX: 0.65, y: 0.65)
-                        self.images[4].tintColor = ProjectStyle.uiSelectColor
+                        self.images[4].tintColor = UIColor(named: "selectColor")
                     case .down_left:
                         self.images[5].transform = CGAffineTransform(scaleX: 0.65, y: 0.65)
-                        self.images[5].tintColor = ProjectStyle.uiSelectColor
+                        self.images[5].tintColor = UIColor(named: "selectColor")
                     case .left:
                         self.images[6].transform = CGAffineTransform(scaleX: 0.65, y: 0.65)
-                        self.images[6].tintColor = ProjectStyle.uiSelectColor
+                        self.images[6].tintColor = UIColor(named: "selectColor")
                     case .up_left:
                         self.images[7].transform = CGAffineTransform(scaleX: 0.65, y: 0.65)
-                        self.images[7].tintColor = ProjectStyle.uiSelectColor
+                        self.images[7].tintColor = UIColor(named: "selectColor")
                     case .center:
                         self.images[8].transform = CGAffineTransform(scaleX: 0.65, y: 0.65)
-                        self.images[8].tintColor = ProjectStyle.uiSelectColor
+                        self.images[8].tintColor = UIColor(named: "selectColor")
                 }
             },completion: nil)
         }
@@ -180,7 +179,7 @@ class AlignmentSelector : UIView {
             $0.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
             $0.contentMode = .scaleToFill
             $0.image = $0.image?.withRenderingMode(.alwaysTemplate)
-            $0.tintColor = ProjectStyle.uiEnableColor
+            $0.tintColor = UIColor(named: "enableColor")
         })
         
         addSubview(images[0])
@@ -194,7 +193,7 @@ class AlignmentSelector : UIView {
         addSubview(images[8])
         
         images[8].transform = CGAffineTransform(scaleX: 0.65, y: 0.65)
-        images[8].tintColor = ProjectStyle.uiSelectColor
+        images[8].tintColor = UIColor(named: "selectColor")
 
         images[7].leftAnchor.constraint(equalTo: leftAnchor, constant: 0).isActive = true
         images[7].topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
@@ -224,6 +223,11 @@ class AlignmentSelector : UIView {
         images[3].topAnchor.constraint(equalTo: images[2].bottomAnchor, constant: 0).isActive = true
         
         addGestureRecognizer(gesture)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        selectBg.setShadow(color: UIColor(named: "shadowColor")!, radius: 4, opasity: 1)
     }
     
     required init?(coder: NSCoder) {

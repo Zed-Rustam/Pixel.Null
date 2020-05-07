@@ -24,10 +24,9 @@ class ProjectResizeController : UIViewController {
         let view = UIView()
         view.setCorners(corners: 12)
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = ProjectStyle.uiBackgroundColor
+        view.backgroundColor = UIColor(named: "backgroundColor")
         
         let mainview = UIView()
-        mainview.setShadow(color: ProjectStyle.uiShadowColor, radius: 8, opasity: 0.25)
         mainview.translatesAutoresizingMaskIntoConstraints = false
         mainview.addSubviewFullSize(view: view)
         
@@ -52,7 +51,7 @@ class ProjectResizeController : UIViewController {
         let text = UILabel()
         text.translatesAutoresizingMaskIntoConstraints = false
         text.heightAnchor.constraint(equalToConstant: 42).isActive = true
-        text.textColor = ProjectStyle.uiEnableColor
+        text.textColor = UIColor(named: "enableColor")
         text.font = UIFont(name: "Rubik-Bold", size: 24)
         text.text = "Project Resize"
         text.textAlignment = .center
@@ -111,7 +110,7 @@ class ProjectResizeController : UIViewController {
     
     lazy private var AlignmentTitle : UILabel = {
         let text = UILabel()
-        text.textColor = ProjectStyle.uiEnableColor
+        text.textColor = UIColor(named: "enableColor")
         text.font = UIFont(name: "Rubik-Medium", size: 20)
         text.text = "Alignment"
         text.translatesAutoresizingMaskIntoConstraints = false
@@ -123,7 +122,7 @@ class ProjectResizeController : UIViewController {
     
     lazy private var WidthTitle : UILabel = {
         let text = UILabel()
-        text.textColor = ProjectStyle.uiEnableColor
+        text.textColor = UIColor(named: "enableColor")
         text.font = UIFont(name: "Rubik-Medium", size: 20)
         text.text = "Width"
         text.translatesAutoresizingMaskIntoConstraints = false
@@ -134,7 +133,7 @@ class ProjectResizeController : UIViewController {
     
     lazy private var HeightTitle : UILabel = {
         let text = UILabel()
-        text.textColor = ProjectStyle.uiEnableColor
+        text.textColor = UIColor(named: "enableColor")
         text.font = UIFont(name: "Rubik-Medium", size: 20)
         text.text = "Height"
         text.translatesAutoresizingMaskIntoConstraints = false
@@ -145,7 +144,7 @@ class ProjectResizeController : UIViewController {
 
     lazy private var ScaleContentTitle : UILabel = {
         let text = UILabel()
-        text.textColor = ProjectStyle.uiEnableColor
+        text.textColor = UIColor(named: "enableColor")
         text.font = UIFont(name: "Rubik-Medium", size: 20)
         text.text = "Scale Content"
         text.translatesAutoresizingMaskIntoConstraints = false
@@ -158,6 +157,10 @@ class ProjectResizeController : UIViewController {
         let toggle = ToggleView()
         return toggle
     }()
+    
+    override func viewDidLayoutSubviews() {
+        titleBg.setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 0.25)
+    }
     
     override func viewDidLoad() {
         view.addSubview(titleBg)
@@ -208,6 +211,6 @@ class ProjectResizeController : UIViewController {
         HeightTitle.leftAnchor.constraint(equalTo: heightTextField.leftAnchor, constant: 8).isActive = true
         HeightTitle.bottomAnchor.constraint(equalTo: heightTextField.topAnchor, constant: 0).isActive = true
 
-        view.backgroundColor = ProjectStyle.uiBackgroundColor
+        view.backgroundColor = UIColor(named: "backgroundColor")!
     }
 }

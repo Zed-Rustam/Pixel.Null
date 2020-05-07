@@ -38,7 +38,8 @@ class PalleteFull : UIViewController {
     }
     
     override func viewDidLayoutSubviews() {
-        bgView.backgroundColor = UIColor(patternImage: UIImage(cgImage: ProjectStyle.bgImage!.cgImage!, scale: 32 / view.frame.size.width, orientation: .down))
+        
+        bgView.backgroundColor = UIColor(patternImage: UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 32 / view.frame.size.width, orientation: .down))
         
         bgView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
         bgView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true

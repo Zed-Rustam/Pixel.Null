@@ -128,7 +128,7 @@ class GradientSettings : UIViewController {
         text.text = "Step's count"
         text.textAlignment = .left
         text.font = UIFont(name:  "Rubik-Medium", size: 24)
-        text.textColor = ProjectStyle.uiEnableColor
+        text.textColor = UIColor(named: "enableColor")
         text.translatesAutoresizingMaskIntoConstraints = false
         text.heightAnchor.constraint(equalToConstant: 36).isActive = true
         return text
@@ -139,7 +139,7 @@ class GradientSettings : UIViewController {
            text.text = "Colors"
            text.textAlignment = .left
            text.font = UIFont(name:  "Rubik-Medium", size: 24)
-           text.textColor = ProjectStyle.uiEnableColor
+           text.textColor = UIColor(named: "enableColor")
            text.translatesAutoresizingMaskIntoConstraints = false
            text.heightAnchor.constraint(equalToConstant: 36).isActive = true
            return text
@@ -182,7 +182,7 @@ class GradientSettings : UIViewController {
         title.text = "Gradient"
         title.textAlignment = .center
         title.font = UIFont(name:  "Rubik-Bold", size: 24)
-        title.textColor = ProjectStyle.uiEnableColor
+        title.textColor = UIColor(named: "enableColor")
         
         return title
     }()
@@ -194,7 +194,6 @@ class GradientSettings : UIViewController {
         let inView = UIImageView()
         inView.translatesAutoresizingMaskIntoConstraints = false
         inView.setCorners(corners: 12)
-        inView.backgroundColor = UIColor(patternImage: UIImage(cgImage: ProjectStyle.bgImage!.cgImage!, scale: 1.0/6.0, orientation: .down))
         inView.layer.magnificationFilter = .nearest
         
         mainView.addSubview(inView)
@@ -205,8 +204,7 @@ class GradientSettings : UIViewController {
         inView.bottomAnchor.constraint(equalTo: mainView.bottomAnchor, constant: 0).isActive = true
         
         mainView.heightAnchor.constraint(equalToConstant: 24).isActive = true
-        mainView.setShadow(color: ProjectStyle.uiShadowColor, radius: 8, opasity: 0.5)
-        
+
         return mainView
     }()
     
@@ -254,13 +252,12 @@ class GradientSettings : UIViewController {
     
     private var topBarBg: UIView = {
         let view = UIView()
-        view.backgroundColor = ProjectStyle.uiBackgroundColor
+        view.backgroundColor = UIColor(named: "backgroundColor")
         view.setCorners(corners: 12)
         return view
     }()
     private var bgView : UIView = {
         let view = UIView()
-        view.setShadow(color: ProjectStyle.uiShadowColor, radius: 8, opasity: 0.25)
         return view
     }()
     
@@ -283,7 +280,7 @@ class GradientSettings : UIViewController {
         bgView.addSubview(topBarBg)
         
         scrollView.addSubview(colorsView)
-        view.backgroundColor = ProjectStyle.uiBackgroundColor
+        view.backgroundColor = UIColor(named: "backgroundColor")
         
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 0).isActive = true
@@ -329,7 +326,11 @@ class GradientSettings : UIViewController {
     }
     
     override func viewDidLayoutSubviews() {
-
+        bgView.setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
+        
+        gradientPreview.subviews[0].setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
+        
+        gradientPreview.subviews[0].backgroundColor = UIColor(patternImage:UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 1.0/6.0, orientation: .down))
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -33,7 +33,7 @@ class ColorPallete : UIView {
 
         let filter = CIFilter(name: "CIGaussianBlur")
         filter?.setValue(inputImage, forKey: kCIInputImageKey)
-        filter?.setValue((2.0), forKey: kCIInputRadiusKey)
+        filter?.setValue((4.0), forKey: kCIInputRadiusKey)
         let outputImage = filter?.outputImage
 
         var cgImage:CGImage?
@@ -62,12 +62,12 @@ class ColorPallete : UIView {
     }
     
     func getLayerImage() -> UIImage {
-        UIGraphicsBeginImageContext(colorsView.layer.frame.size)
+        UIGraphicsBeginImageContext(bgView.layer.frame.size)
         let context = UIGraphicsGetCurrentContext()!
         
         bgView.layer.render(in: context)
         var result = UIGraphicsGetImageFromCurrentImageContext()!
-
+        
         colorsView.layer.render(in: context)
         result = UIImage.merge(images: [result, UIGraphicsGetImageFromCurrentImageContext()!])!
         UIGraphicsEndImageContext()
@@ -97,9 +97,11 @@ class ColorPallete : UIView {
     }
     
     private func bgInit(){
-        let img = UIImage(cgImage: ProjectStyle.bgImage!.cgImage!, scale: 1 / (frame.width / 2) * colorsImage!.size.width, orientation: .down)
+        let img = UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 1 / (frame.width / 2) * colorsImage!.size.width, orientation: .down)
         bgView = UIImageView(frame: self.bounds)
-        bgView.backgroundColor = UIColor(patternImage: img)
+        bgView.image = #imageLiteral(resourceName: "background")
+        bgView.contentMode = .scaleAspectFill
+        //bgView.backgroundColor = UIColor(patternImage: img)
         bgView?.layer.magnificationFilter = .nearest
     }
     
@@ -167,6 +169,11 @@ class ColorPallete : UIView {
         }
         
         return img
+    }
+    
+    override func layoutSubviews() {
+        //bgView.backgroundColor = UIColor(patternImage: UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 1 / (frame.width / 2) * colorsImage!.size.width, orientation: .down))
+        blur.image = blackImage(image: blurImage(image: getLayerImage(), forRect:  CGRect(x: 8, y: 8, width: frame.width - 16, height: 16))!)
     }
     
     required init?(coder: NSCoder) {

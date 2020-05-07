@@ -11,12 +11,12 @@ import UIKit
 
 class TrainingMain : UIViewController {
     weak var navigation : UINavigationController? = nil
-    private var menus : [String] = ["Editor","Pencil", "Erase", "Transform","Gradient","Fill","Symmetry","Selection","Square"]
+    private var menus : [String] = ["Editor","Pencil", "Erase", "Transform","Gradient","Fill","Symmetry","Selection","Shape"]
         
     lazy private var titleTraining : UILabel = {
        let label = UILabel()
         label.font = UIFont(name:  "Rubik-Medium", size: 48)
-        label.textColor = ProjectStyle.uiEnableColor
+        label.textColor = UIColor(named: "enableColor")
         label.text = "Training"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -28,7 +28,7 @@ class TrainingMain : UIViewController {
         tv.dataSource = self
         
         let head = UILabel()
-        head.textColor = ProjectStyle.uiEnableColor
+        head.textColor = UIColor(named: "enableColor")
         head.translatesAutoresizingMaskIntoConstraints = false
         head.font = UIFont(name: "Rubik-Bold", size: 48)
         head.text = "Training"
@@ -50,7 +50,7 @@ class TrainingMain : UIViewController {
     
     
     override func viewDidLoad() {
-        view.backgroundColor = ProjectStyle.uiBackgroundColor
+        view.backgroundColor = UIColor(named: "backgroundColor")
         
         view.addSubview(table)
         
@@ -64,18 +64,18 @@ class TrainingMain : UIViewController {
 extension TrainingMain : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Table")!
-        cell.textLabel!.textColor = ProjectStyle.uiEnableColor
+        cell.textLabel!.textColor = UIColor(named: "enableColor")
         cell.textLabel!.font = UIFont(name:  "Rubik-Regular", size: 16)
-        cell.backgroundColor = ProjectStyle.uiDisableColor.withAlphaComponent(0.25)
-        cell.tintColor = ProjectStyle.uiEnableColor
+        cell.backgroundColor = UIColor(named: "disableColor")!.withAlphaComponent(0.25)
+        cell.tintColor = UIColor(named: "enableColor")
         cell.selectedBackgroundView = {
             let view = UIView()
-            view.backgroundColor = ProjectStyle.uiDisableColor.withAlphaComponent(0.5)
+            view.backgroundColor = UIColor(named: "disableColor")!.withAlphaComponent(0.5)
             return view
         }()
                 
         cell.accessoryView = {
-            let img = UIImageView(image: #imageLiteral(resourceName: "next_icon").withTintColor(ProjectStyle.uiEnableColor))
+            let img = UIImageView(image: #imageLiteral(resourceName: "next_icon").withTintColor(UIColor(named: "enableColor")!))
             img.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
             return img
         }()
@@ -118,7 +118,6 @@ extension TrainingMain : UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("i'm alive!")
         switch section {
         case 0:
             return 1
@@ -145,7 +144,7 @@ extension TrainingMain : UITableViewDelegate, UITableViewDataSource {
         myLabel.frame = CGRect(x: 20, y: 0, width: 200, height: 24)
         myLabel.font = UIFont(name:  "Rubik-Bold", size: 14)
         myLabel.text = self.tableView(tableView, titleForHeaderInSection: section)
-        myLabel.textColor = ProjectStyle.uiEnableColor
+        myLabel.textColor = UIColor(named: "enableColor")
         
         let headerView = UIView()
         headerView.addSubview(myLabel)
@@ -192,10 +191,21 @@ extension TrainingMain : UITableViewDelegate, UITableViewDataSource {
                
                let cell = tableView.cellForRow(at: indexPath)
                cell?.setSelected(false, animated: true)
+            case 2:
+                let transform = TransformController()
+                navigation?.pushViewController(transform, animated: true)
                 
+                let cell = tableView.cellForRow(at: indexPath)
+                cell?.setSelected(false, animated: true)
             case 6:
                 let select = SelectionController()
                 navigation?.pushViewController(select, animated: true)
+                
+                let cell = tableView.cellForRow(at: indexPath)
+                cell?.setSelected(false, animated: true)
+            case 7:
+                let shape = ShapeController()
+                navigation?.pushViewController(shape, animated: true)
                 
                 let cell = tableView.cellForRow(at: indexPath)
                 cell?.setSelected(false, animated: true)
@@ -230,7 +240,7 @@ extension TrainingMain : UITableViewDelegate, UITableViewDataSource {
 class TableTitle : UITableViewCell {
     lazy var title : UILabel = {
         let text = UILabel()
-        text.textColor = ProjectStyle.uiEnableColor
+        text.textColor = UIColor(named: "enableColor")
         text.text = "Test"
         return text
     }()

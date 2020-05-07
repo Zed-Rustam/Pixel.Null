@@ -12,7 +12,7 @@ class TextField : UIView {
     
     private var bgView : UIView = {
         let bg = UIView()
-        bg.backgroundColor = ProjectStyle.uiDisableColor.withAlphaComponent(0.25)
+        bg.backgroundColor = UIColor(named: "disableColor")!.withAlphaComponent(0.25)
         bg.layer.cornerRadius = 12
         bg.translatesAutoresizingMaskIntoConstraints = false
         return bg
@@ -20,13 +20,13 @@ class TextField : UIView {
     
     var filed : UITextField = {
         let f = UITextField()
-        f.textColor = ProjectStyle.uiEnableColor
-        f.tintColor = ProjectStyle.uiEnableColor
+        f.textColor = UIColor(named: "enableColor")!
+        f.tintColor = UIColor(named: "enableColor")!
         f.font = UIFont(name: "Rubik-Medium", size: 22)
         f.text = "TextTest"
         f.translatesAutoresizingMaskIntoConstraints = false
         f.attributedPlaceholder =
-            NSAttributedString(string: "Test", attributes: [NSAttributedString.Key.foregroundColor : ProjectStyle.uiDisableColor])
+            NSAttributedString(string: "Test", attributes: [NSAttributedString.Key.foregroundColor : UIColor(named: "disableColor")!])
         return f
     }()
     
@@ -35,7 +35,7 @@ class TextField : UIView {
 
         text.text = "Error Text"
         text.font = UIFont(name: "Rubik-Medium", size: 11)
-        text.textColor = ProjectStyle.uiRedColor
+        text.textColor = UIColor(named: "redColor")
         text.alpha = 0
         text.translatesAutoresizingMaskIntoConstraints = false
         
@@ -89,7 +89,7 @@ class TextField : UIView {
     
     func setHelpText(help : String) {
         filed.attributedPlaceholder =
-            NSAttributedString(string: help, attributes: [NSAttributedString.Key.foregroundColor : ProjectStyle.uiDisableColor])
+            NSAttributedString(string: help, attributes: [NSAttributedString.Key.foregroundColor : UIColor(named: "disableColor")!])
     }
     
     func setFIeldDelegate(delegate : UITextFieldDelegate){

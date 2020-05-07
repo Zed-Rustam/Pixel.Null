@@ -42,7 +42,7 @@ class ProjectControl : UIView, UIGestureRecognizerDelegate {
     private unowned var project : ProjectWork
     lazy private var bg : UIView = {
         let bgView = UIView()
-        bgView.backgroundColor = ProjectStyle.uiBackgroundColor
+        bgView.backgroundColor = UIColor(named: "backgroundColor")!
         bgView.layer.cornerRadius = 16
         bgView.layer.maskedCorners = [.layerMaxXMaxYCorner,.layerMinXMaxYCorner]
         bgView.layer.masksToBounds = true
@@ -53,7 +53,7 @@ class ProjectControl : UIView, UIGestureRecognizerDelegate {
     
     lazy private var toggleView : UIView = {
         let bgView = UIView()
-        bgView.backgroundColor = ProjectStyle.uiEnableColor
+        bgView.backgroundColor = UIColor(named: "enableColor")!
         bgView.layer.cornerRadius = 2
         bgView.layer.masksToBounds = true
         bgView.translatesAutoresizingMaskIntoConstraints = false
@@ -130,17 +130,20 @@ class ProjectControl : UIView, UIGestureRecognizerDelegate {
         layers.topAnchor.constraint(equalTo: frames.bottomAnchor, constant: 8).isActive = true
         layers.heightAnchor.constraint(equalToConstant: 36).isActive = true
 
-        setShadow(color: ProjectStyle.uiShadowColor, radius: 8, opasity: 0.25)
         
         self.translatesAutoresizingMaskIntoConstraints = false
         addGestureRecognizer(swipeUpGesture)
         addGestureRecognizer(swipeDownGesture)
     }
+    
     func updateInfo(){
         layers.list.reloadData()
         frames.list.reloadData()
     }
 
+    override func layoutSubviews() {
+        setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
+    }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

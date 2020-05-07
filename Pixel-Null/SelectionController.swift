@@ -26,10 +26,10 @@ class SelectionController : UIViewController {
     lazy private var content : UIStackView = {
         let stack = makeStack(orientation: .vertical, alignment: .fill, distribution: .fill).addViews(views: [
             UILabel()
-                .setTextColor(color: ProjectStyle.uiEnableColor)
-                .appendText(text: "Selection", fortt: UIFont(name: "Rubik-Bold", size: 48)!, textClr: ProjectStyle.uiEnableColor),
+                .setTextColor(color: UIColor(named: "enableColor")!)
+                .appendText(text: "Selection", fortt: UIFont(name: "Rubik-Bold", size: 48)!, textClr: UIColor(named: "enableColor")!),
             UILabel()
-            .setTextColor(color: ProjectStyle.uiEnableColor)
+            .setTextColor(color: UIColor(named: "enableColor")!)
             .appendText(text: """
                 Selection is a tool with which you can select a region on the canvas, which will be active for other tools. This means that the tools will not draw outside the selection. in addition, you can also delete / clear / expand / copy / cut the selection.
 
@@ -37,17 +37,10 @@ class SelectionController : UIViewController {
                 .setMaxWidth(width: view.frame.width - 24)
                 .setBreakMode(mode: .byWordWrapping),
                 makeStack(orientation: .vertical, alignment: .center, distribution: .fill).addViews(views: [
-                    UIView().addFullSizeView(view:
-                        UIImageView(image: UIImage.gifImageWithData(NSDataAsset(name: "selection_tool")!.data))
-                        .setFilter(filter: .nearest)
-                            .setBackground(color: UIColor(patternImage: UIImage(cgImage: ProjectStyle.bgImage!.cgImage!, scale: 1.0/26.25, orientation: .down)))
-                        .setSize(size: CGSize(width: 210, height: 210))
-                        .Corners(round: 16)
-                    )
-                    .Shadow(clr: ProjectStyle.uiShadowColor, rad: 4, opas: 0.5)
+                    selectImage
                     .setViewSize(size: CGSize(width: 210, height: 210)),
                     UILabel()
-                    .setTextColor(color: ProjectStyle.uiEnableColor)
+                    .setTextColor(color: UIColor(named: "enableColor")!)
                     .appendText(text: "selection sample", fortt: UIFont(name: "Rubik-Regular", size: 12)!)
                 ])
         ])
@@ -55,10 +48,19 @@ class SelectionController : UIViewController {
         return stack
     }()
     
+    lazy private var selectImage : UIView = {
+        return UIView().addFullSizeView(view:
+            UIImageView(image: UIImage.gifImageWithData(NSDataAsset(name: "selection_tool")!.data))
+            .setFilter(filter: .nearest)
+            .setSize(size: CGSize(width: 210, height: 210))
+            .Corners(round: 16)
+        )
+    }()
+    
     override func viewDidLoad() {
         view.addSubview(scroll)
         
-        view.backgroundColor = ProjectStyle.uiBackgroundColor
+        view.backgroundColor = UIColor(named: "backgroundColor")
         scroll.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
         scroll.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
         scroll.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
@@ -66,8 +68,11 @@ class SelectionController : UIViewController {
     }
     
     override func viewDidLayoutSubviews() {
-           content.layoutIfNeeded()
-           scroll.contentSize.height = content.frame.height + 24
-       }
+        content.layoutIfNeeded()
+        scroll.contentSize.height = content.frame.height + 24
+        
+        selectImage.subviews[0].backgroundColor = UIColor(patternImage: UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 1.0/26.25, orientation: .down))
+        selectImage.setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
+    }
 }
 

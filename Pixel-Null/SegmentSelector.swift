@@ -15,19 +15,19 @@ class SegmentSelector : UIView {
            return selectedIndex
         }
         set{
-            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
-                self.images[self.selectedIndex].tintColor = ProjectStyle.uiEnableColor
+            UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
+                self.images[self.selectedIndex].tintColor = UIColor(named: "enableColor")
                 self.images[self.selectedIndex].transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
             }, completion: nil)
             
             selectedIndex = newValue
             
-            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
-                self.images[self.selectedIndex].tintColor = ProjectStyle.uiSelectColor
+            UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
+                self.images[self.selectedIndex].tintColor = UIColor(named: "selectColor")
                 self.images[self.selectedIndex].transform = CGAffineTransform(scaleX: 1, y: 1)
             }, completion: nil)
 
-            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
+            UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
                 self.selectBg.frame.origin.x = CGFloat((self.selectedIndex) * 36)
             }, completion: nil)
         }
@@ -46,7 +46,7 @@ class SegmentSelector : UIView {
     lazy private var bg : UIView = {
        let bgview = UIView()
         bgview.translatesAutoresizingMaskIntoConstraints = false
-        bgview.backgroundColor = ProjectStyle.uiDisableColor.withAlphaComponent(0.25)
+        bgview.backgroundColor = UIColor(named: "disableColor")!.withAlphaComponent(0.25)
         bgview.layer.masksToBounds = false
         bgview.layer.cornerRadius = 12
         
@@ -73,9 +73,8 @@ class SegmentSelector : UIView {
         v.layer.masksToBounds = false
         v.layer.cornerRadius = 12
             
-        v.backgroundColor = ProjectStyle.uiBackgroundColor
+        v.backgroundColor = UIColor(named: "backgroundColor")
         
-        mainView.setShadow(color: ProjectStyle.uiShadowColor, radius: 4, opasity: 0.25)
                
                
         mainView.addSubview(v)
@@ -104,19 +103,19 @@ class SegmentSelector : UIView {
     
     @objc func onTap(sender : UITapGestureRecognizer) {
         if sender.state == .ended && Int(sender.location(in: self).x / 36.0) != selectedIndex{
-            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
-                self.images[self.selectedIndex].tintColor = ProjectStyle.uiEnableColor
+            UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 0.75, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
+                self.images[self.selectedIndex].tintColor = UIColor(named: "enableColor")
                 self.images[self.selectedIndex].transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
             }, completion: nil)
             
             selectedIndex = Int(sender.location(in: self).x / 36.0)
             
-            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
-                self.images[self.selectedIndex].tintColor = ProjectStyle.uiSelectColor
+            UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 0.75, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
+                self.images[self.selectedIndex].tintColor = UIColor(named: "selectColor")
                 self.images[self.selectedIndex].transform = CGAffineTransform(scaleX: 1, y: 1)
             }, completion: nil)
 
-            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
+            UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 0.75, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
                 self.selectBg.frame.origin.x = CGFloat((self.selectedIndex) * 36)
             }, completion: nil)
             
@@ -132,7 +131,7 @@ class SegmentSelector : UIView {
             imgview.contentMode = .scaleAspectFit
             imgview.translatesAutoresizingMaskIntoConstraints = false
             imgview.heightAnchor.constraint(equalToConstant: 20).isActive = true
-            imgview.tintColor = ProjectStyle.uiEnableColor
+            imgview.tintColor = UIColor(named: "enableColor")
             imgview.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
             
             images.append(imgview)
@@ -150,6 +149,11 @@ class SegmentSelector : UIView {
         widthAnchor.constraint(equalToConstant: CGFloat(36 * images.count)).isActive = true
         
         addGestureRecognizer(gesture)
+    }
+    
+    override func layoutSubviews() {
+        selectBg.setShadow(color: UIColor(named: "shadowColor")!, radius: 4, opasity: 0.25)
+
     }
     
     required init?(coder: NSCoder) {

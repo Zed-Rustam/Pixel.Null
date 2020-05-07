@@ -22,7 +22,7 @@ class ProjectFullImage : UIViewController {
     }()
     
     private var background : UIImageView = {
-        let bg = UIImageView(image: ProjectStyle.bgImage!)
+        let bg = UIImageView(image: #imageLiteral(resourceName: "background"))
         bg.contentMode = .scaleAspectFill
         bg.layer.magnificationFilter = CALayerContentsFilter.nearest
         bg.translatesAutoresizingMaskIntoConstraints = false

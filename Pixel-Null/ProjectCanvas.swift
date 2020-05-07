@@ -159,7 +159,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         bg.contentMode = .scaleAspectFit
         bg.frame = CGRect(x: 0, y: 0, width: project.projectSize.width, height: project.projectSize.height)
         offset = bg.frame.origin
-        bg.backgroundColor = UIColor(patternImage: UIImage(cgImage: ProjectStyle.bgImage!.cgImage!, scale: 0.1, orientation: .down))
+//        bg.backgroundColor = UIColor(patternImage: UIImage(cgImage: ProjectStyle.bgImage!.cgImage!, scale: 0.1, orientation: .down))
         
         bgImage = UIImageView(frame: CGRect(x: 0, y: 0, width: project.projectSize.width, height: project.projectSize.height))
         bgImage.image = bgLayers
@@ -325,14 +325,14 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         UIGraphicsBeginImageContext(project.projectSize)
         let context = UIGraphicsGetCurrentContext()!
 
-        context.setFillColor(ProjectStyle.uiSelectColor.cgColor)
+        context.setFillColor(getAppColor(color: .select).cgColor)
         context.addRect(CGRect(origin: .zero, size: project.projectSize))
         context.fillPath()
         
         img.draw(at: .zero,blendMode: .destinationOut,alpha: 1)
         
         context.setBlendMode(.sourceOut)
-        context.setFillColor(ProjectStyle.uiSelectColor.cgColor)
+        context.setFillColor(getAppColor(color: .select).cgColor)
         context.addRect(CGRect(origin: .zero, size: project.projectSize))
         context.fillPath()
         
@@ -363,10 +363,10 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         transformView.offset = offset
         transformView.scale = scale
         transformView.angle = 0
-        transformView.setRect(image: getTintImage(image: imageTransform, color: ProjectStyle.uiSelectColor), isSelected: true)
+        transformView.setRect(image: getTintImage(image: imageTransform, color: getAppColor(color: .select)), isSelected: true)
         transformView.lastSelect = selectionLayer
 
-        selectionLayer = fixAlpha(image : imageTransform).withTintColor(ProjectStyle.uiSelectColor)
+        selectionLayer = fixAlpha(image : imageTransform).withTintColor(getAppColor(color: .select))
         selectionImage.image = selectionLayer
         
         
@@ -563,6 +563,9 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         anim.timingFunction = .init(name: .easeInEaseOut)
 
         selectionImage.layer.add(anim, forKey: "test")
+        
+        bg.backgroundColor = UIColor(patternImage:UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 0.1, orientation: .down))
+
     }
     
     func checkActions(){
@@ -781,6 +784,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 
                 let anim = CABasicAnimation(keyPath: "startPos")
                 anim.isAdditive = true
+                anim.timingFunction = .init(name: .easeInEaseOut)
                 anim.fromValue = (grid.layer as! GridLayer).startPos.offset(x: -offset.x, y: -offset.y)
                 anim.toValue = CGPoint.zero
                 anim.duration = animationDelta
@@ -855,7 +859,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         
         bg.transform = CGAffineTransform(scaleX: scale, y: scale)
 
-        bg.backgroundColor = UIColor(patternImage: UIImage(cgImage: ProjectStyle.bgImage!.cgImage!, scale: 0.1, orientation: .down))
+        bg.backgroundColor = UIColor(patternImage: UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 0.1, orientation: .down))
         
         offset = CGPoint(x: 0, y: (frame.height - project.projectSize.height * scale) / 2)
         bg.frame.origin = offset

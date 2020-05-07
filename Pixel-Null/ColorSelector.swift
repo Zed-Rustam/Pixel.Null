@@ -3,7 +3,8 @@ import UIKit
 class ColorSelector : UIView{
     
     var background : UIImageView = {
-        let bg = UIImageView(image: UIImage(cgImage: ProjectStyle.bgImage!.cgImage!.cropping(to: CGRect(x: 0, y: 0, width: 4, height: 4))!))
+        
+        let bg = UIImageView(image: UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!.cropping(to: CGRect(x: 0, y: 0, width: 4, height: 4))!))
         bg.contentMode = .scaleAspectFill
         bg.layer.magnificationFilter = CALayerContentsFilter.nearest
         bg.setCorners(corners: 12)
@@ -36,7 +37,6 @@ class ColorSelector : UIView{
         addSubview(background)
         background.addSubview(foreground)
         
-        setShadow(color: ProjectStyle.uiShadowColor, radius: 4, opasity: 0.25, offset: .zero)
     }
     
     override func layoutSubviews() {
@@ -44,7 +44,9 @@ class ColorSelector : UIView{
         background.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 0).isActive = true
         background.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
         background.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0).isActive = true
-        
+        background.setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
+        background.image = UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!.cropping(to: CGRect(x: 0, y: 0, width: 4, height: 4))!)
+
         foreground.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 0).isActive = true
         foreground.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 0).isActive = true
         foreground.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true

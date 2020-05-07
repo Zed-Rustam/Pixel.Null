@@ -26,7 +26,6 @@ class GradientController : UIViewController {
     lazy private var content : UIStackView = {
         let stack = makeStack(orientation: .vertical, alignment: .fill, distribution: .fill).addViews(views: [
             UILabel()
-                .setTextColor(color: ProjectStyle.uiEnableColor)
                 .appendText(text: "G", fortt: UIFont(name: "Rubik-Bold", size: 48)!, textClr: UIColor(hex: "#8400B1FF")!)
                 .appendText(text: "r", fortt: UIFont(name: "Rubik-Bold", size: 48)!, textClr: UIColor(hex: "#9200B7FF")!)
                 .appendText(text: "a", fortt: UIFont(name: "Rubik-Bold", size: 48)!, textClr: UIColor(hex: "#A000BDFF")!)
@@ -36,7 +35,7 @@ class GradientController : UIViewController {
                 .appendText(text: "n", fortt: UIFont(name: "Rubik-Bold", size: 48)!, textClr: UIColor(hex: "#D800D5FF")!)
                 .appendText(text: "t\n", fortt: UIFont(name: "Rubik-Bold", size: 48)!, textClr: UIColor(hex: "#E600DBFF")!),
             UILabel()
-            .setTextColor(color: ProjectStyle.uiEnableColor)
+            .setTextColor(color: UIColor(named: "enableColor")!)
             .appendText(text: """
                 Gradient is a tool for drawing gradients (unexpectedly, right? :D).
                 At the gradient you can choose the
@@ -60,29 +59,15 @@ class GradientController : UIViewController {
                 .setBreakMode(mode: .byWordWrapping),
             makeStack(orientation: .horizontal, alignment: .fill, distribution: .fillEqually).addViews(views: [
                 makeStack(orientation: .vertical, alignment: .center, distribution: .fill).addViews(views: [
-                    UIView().addFullSizeView(view:
-                        UIImageView(image: #imageLiteral(resourceName: "gradient_x0"))
-                        .setFilter(filter: .nearest)
-                        .setSize(size: CGSize(width: 140, height: 210))
-                        .Corners(round: 16)
-                    )
-                    .Shadow(clr: ProjectStyle.uiShadowColor, rad: 4, opas: 0.5)
-                    .setViewSize(size: CGSize(width: 140, height: 210)),
+                    gradientColor1,
                     UILabel()
-                    .setTextColor(color: ProjectStyle.uiEnableColor)
+                    .setTextColor(color: UIColor(named: "enableColor")!)
                     .appendText(text: "Step's count x0", fortt: UIFont(name: "Rubik-Regular", size: 12)!)
                     ]),
                 makeStack(orientation: .vertical, alignment: .center, distribution: .fill).addViews(views: [
-                    UIView().addFullSizeView(view:
-                        UIImageView(image: #imageLiteral(resourceName: "gradient_x8"))
-                        .setFilter(filter: .nearest)
-                        .setSize(size: CGSize(width: 140, height: 210))
-                        .Corners(round: 16)
-                    )
-                        .Shadow(clr: ProjectStyle.uiShadowColor, rad: 4, opas: 0.5)
-                        .setViewSize(size: CGSize(width: 140, height: 210)),
+                    gradientColor2,
                     UILabel()
-                        .setTextColor(color: ProjectStyle.uiEnableColor)
+                        .setTextColor(color: UIColor(named: "enableColor")!)
                         .appendText(text: "Step's count x8", fortt: UIFont(name: "Rubik-Regular", size: 12)!)
                ])
             ])
@@ -91,10 +76,39 @@ class GradientController : UIViewController {
         return stack
     }()
     
+    lazy private var gradientColor1 : UIView = {
+        let view = UIView()
+        
+        view.addFullSizeView(view:
+            UIImageView(image: #imageLiteral(resourceName: "gradient_x0"))
+            .setFilter(filter: .nearest)
+            .setSize(size: CGSize(width: 140, height: 210))
+            .Corners(round: 16)
+        )
+        .Shadow(clr: getAppColor(color: .shadow), rad: 4, opas: 0.5)
+        .setViewSize(size: CGSize(width: 140, height: 210))
+        return view
+    }()
+    
+    lazy private var gradientColor2 : UIView = {
+           let view = UIView()
+           
+           view.addFullSizeView(view:
+               UIImageView(image: #imageLiteral(resourceName: "gradient_x8"))
+               .setFilter(filter: .nearest)
+               .setSize(size: CGSize(width: 140, height: 210))
+               .Corners(round: 16)
+           )
+           .Shadow(clr: getAppColor(color: .shadow), rad: 4, opas: 0.5)
+           .setViewSize(size: CGSize(width: 140, height: 210))
+           return view
+       }()
+    
+    
     override func viewDidLoad() {
         view.addSubview(scroll)
         
-        view.backgroundColor = ProjectStyle.uiBackgroundColor
+        view.backgroundColor = UIColor(named: "backgroundColor")!
         scroll.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
         scroll.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
         scroll.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
@@ -104,6 +118,9 @@ class GradientController : UIViewController {
     override func viewDidLayoutSubviews() {
            content.layoutIfNeeded()
            scroll.contentSize.height = content.frame.height + 24
-       }
+        
+        gradientColor1.setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
+        gradientColor2.setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
+    }
 }
 

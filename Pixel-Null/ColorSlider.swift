@@ -41,14 +41,13 @@ class ColorSlider : UIView {
         return gr
     }()
     
-    var startColor : UIColor = ProjectStyle.uiDisableColor
-    var endColor : UIColor = ProjectStyle.uiEnableColor
+    var startColor : UIColor = getAppColor(color: .disable)
+    var endColor : UIColor = getAppColor(color: .enable)
     
     lazy private var bgView : UIView = {
         let mainview = UIView()
         mainview.translatesAutoresizingMaskIntoConstraints = false
         mainview.setCorners(corners: 9)
-        mainview.backgroundColor = UIColor(patternImage: UIImage(cgImage: ProjectStyle.bgImage!.cgImage!, scale: 1.0/6.0, orientation: .down))
         mainview.layer.magnificationFilter = .nearest
         return mainview
     }()
@@ -65,7 +64,6 @@ class ColorSlider : UIView {
         
         let bgView = UIView()
         bgView.translatesAutoresizingMaskIntoConstraints = false
-        bgView.backgroundColor = UIColor(patternImage: UIImage(cgImage: ProjectStyle.bgImage!.cgImage!, scale: 1.0 / 7.5, orientation: .down))
         bgView.setCorners(corners: 15)
         bgView.layer.magnificationFilter = .nearest
         
@@ -267,7 +265,6 @@ class ColorSlider : UIView {
         self.translatesAutoresizingMaskIntoConstraints = false
         
         addGestureRecognizer(tapGesture)
-        setShadow(color: ProjectStyle.uiShadowColor, radius: 8, opasity: 0.25)
 
         NotificationCenter.default.addObserver(self, selector: #selector(reset), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
@@ -281,9 +278,16 @@ class ColorSlider : UIView {
     }
     
     override func layoutSubviews() {
+        super.layoutSubviews()
         self.layoutIfNeeded()
         gradient.frame = bgView.bounds
         bgView.layer.addSublayer(gradient)
+        setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
+        
+        bgView.backgroundColor = UIColor(patternImage: UIImage(cgImage:#imageLiteral(resourceName: "background").cgImage! , scale: 1.0/6, orientation: .down))
+        
+        selectView.subviews[0].backgroundColor = UIColor(patternImage: UIImage(cgImage:#imageLiteral(resourceName: "background").cgImage!, scale: 1.0 / 7.5, orientation: .down))
+        setPosition(pos: self.nowPosition)
     }
     
     required init?(coder: NSCoder) {

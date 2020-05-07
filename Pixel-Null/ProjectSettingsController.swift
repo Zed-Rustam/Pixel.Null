@@ -23,13 +23,11 @@ class ProjectSettingsController : UIViewController {
         img.backgroundColor = project?.backgroundColor
         
         let mainview = UIView()
-        mainview.setShadow(color: ProjectStyle.uiShadowColor, radius: 8, opasity: 0.5)
         mainview.translatesAutoresizingMaskIntoConstraints = false
         mainview.widthAnchor.constraint(equalToConstant: view.frame.width - 32).isActive = true
         mainview.heightAnchor.constraint(equalTo: mainview.widthAnchor).isActive = true
         mainview.layer.magnificationFilter = .nearest
         mainview.layer.cornerRadius = 16
-        mainview.backgroundColor = UIColor(patternImage: UIImage(cgImage: ProjectStyle.bgImage!.cgImage!, scale: 1 / ((view.frame.width - 32) / 8.0), orientation: .down))
 
         mainview.addSubviewFullSize(view: img)
         
@@ -243,9 +241,15 @@ class ProjectSettingsController : UIViewController {
         editSizeButton.topAnchor.constraint(equalTo: projectSize.topAnchor, constant: 0).isActive = true
         editSizeButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
         
-        view.backgroundColor = ProjectStyle.uiBackgroundColor
+        view.backgroundColor = UIColor(named: "backgroundColor")!
         
         NotificationCenter.default.addObserver(self, selector: #selector(onShowKeyboard(notification:)), name:  UIApplication.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(onHideKeyboard(notification:)), name: UIApplication.keyboardWillHideNotification, object: nil)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        
+        preview.backgroundColor = UIColor(patternImage: UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 1 / ((view.frame.width - 32) / 8.0), orientation: .down))
+        preview.setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
     }
 }

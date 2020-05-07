@@ -17,7 +17,7 @@ class NavigationView : UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.maskedCorners = [.layerMaxXMinYCorner,.layerMinXMinYCorner]
-        view.backgroundColor = ProjectStyle.uiBackgroundColor
+        view.backgroundColor = UIColor(named: "backgroundColor")
         return view
     }()
     private var icons : [UIImage] = []
@@ -44,9 +44,9 @@ class NavigationView : UIView {
             img.translatesAutoresizingMaskIntoConstraints = true
             img.heightAnchor.constraint(equalToConstant: CGFloat(iconSize)).isActive = true
             if i == select {
-                img.tintColor = ProjectStyle.uiEnableColor
+                img.tintColor = UIColor(named: "enableColor")
             } else {
-                img.tintColor = ProjectStyle.uiDisableColor
+                img.tintColor = UIColor(named: "disableColor")
             }
             
             stack.addArrangedSubview(img)
@@ -64,9 +64,7 @@ class NavigationView : UIView {
     init(ics : [UIImage]){
         icons = ics
         super.init(frame: .zero)
-        
-        setShadow(color: ProjectStyle.uiShadowColor, radius: 8, opasity: 0.25)
-        
+                
         addGestureRecognizer(tapGesture)
     }
     
@@ -90,6 +88,8 @@ class NavigationView : UIView {
         iconStack.bottomAnchor.constraint(equalTo: bgView.bottomAnchor, constant: -CGFloat(bottomOffset)).isActive = true
         
         bgView.layer.mask = makeShape(topCorners: topCorners, bottomCorners: bottomCorners)
+        
+        setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
     }
 
     private func makeShape(topCorners tc : Int, bottomCorners bc : Int) -> CAShapeLayer {
@@ -173,13 +173,13 @@ class NavigationView : UIView {
 
                     UIView.animate(withDuration: 0.25, animations: {
                         self.iconStack.arrangedSubviews[self.select].transform = CGAffineTransform(scaleX: 1, y: 1)
-                         (self.iconStack.arrangedSubviews[self.select] as! UIImageView).tintColor = ProjectStyle.uiDisableColor
+                         (self.iconStack.arrangedSubviews[self.select] as! UIImageView).tintColor = UIColor(named: "disableColor")
                     })
                     select = Int((sender.location(in: iconStack).x / iconStack.bounds.width) * CGFloat(icons.count))
                     
                     UIView.animate(withDuration: 0.25, animations: {
                         self.iconStack.arrangedSubviews[self.select].transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
-                        (self.iconStack.arrangedSubviews[self.select] as! UIImageView).tintColor = ProjectStyle.uiEnableColor
+                        (self.iconStack.arrangedSubviews[self.select] as! UIImageView).tintColor = UIColor(named: "enableColor")
                     })
                     
                     
@@ -196,7 +196,7 @@ class NavigationView : UIView {
                 UIView.animate(withDuration: 0.25, animations: {
                     self.iconStack.arrangedSubviews[self.pressSelect].transform = CGAffineTransform(scaleX: self.pressSelect == self.select ? 1.2 : 1, y: self.pressSelect == self.select ? 1.2 : 1)
                     
-                    (self.iconStack.arrangedSubviews[self.pressSelect] as! UIImageView).tintColor = self.pressSelect == self.select ? ProjectStyle.uiEnableColor : ProjectStyle.uiDisableColor
+                    (self.iconStack.arrangedSubviews[self.pressSelect] as! UIImageView).tintColor = self.pressSelect == self.select ? UIColor(named: "enableColor") : UIColor(named: "disableColor")
                 })
             }
             break

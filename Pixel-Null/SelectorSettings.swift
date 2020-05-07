@@ -13,7 +13,7 @@ class SelectorSettings : UIViewController {
     weak var delegate : ToolSettingsDelegate? = nil
     lazy private var selectorTitle : UILabel = {
         let text = UILabel()
-        text.textColor = ProjectStyle.uiEnableColor
+        text.textColor = UIColor(named: "enableColor")
         text.text = "Selector"
         text.font = UIFont(name: "Rubik-Bold", size: 24)
         text.textAlignment = .center
@@ -53,11 +53,10 @@ class SelectorSettings : UIViewController {
     lazy private var titleBg : UIView = {
        let mainBg = UIView()
         mainBg.translatesAutoresizingMaskIntoConstraints = false
-        mainBg.setShadow(color: ProjectStyle.uiShadowColor, radius: 8, opasity: 0.25)
         
         let bg = UIView()
         bg.translatesAutoresizingMaskIntoConstraints = false
-        bg.backgroundColor = ProjectStyle.uiBackgroundColor
+        bg.backgroundColor = UIColor(named: "backgroundColor")
         bg.setCorners(corners: 12)
         
         mainBg.addSubviewFullSize(view: bg)
@@ -91,7 +90,7 @@ class SelectorSettings : UIViewController {
     lazy private var modeText : UILabel = {
         let text = UILabel()
         text.translatesAutoresizingMaskIntoConstraints = false
-        text.textColor = ProjectStyle.uiEnableColor
+        text.textColor = UIColor(named: "backgroundColor")
         text.text = "Selector Mode"
         text.font = UIFont(name: "Rubik-Medium", size: 20)
         text.heightAnchor.constraint(equalToConstant: 36).isActive = true
@@ -120,7 +119,12 @@ class SelectorSettings : UIViewController {
         modeSelector.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
         modeSelector.topAnchor.constraint(equalTo: titleBg.bottomAnchor, constant: 12).isActive = true
         
-        view.backgroundColor = ProjectStyle.uiBackgroundColor
+        view.backgroundColor = UIColor(named: "backgroundColor")
+    }
+    
+    override func viewDidLayoutSubviews() {
+        titleBg.setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
+
     }
     
     override func viewWillAppear(_ animated: Bool) {

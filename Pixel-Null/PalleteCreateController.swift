@@ -41,7 +41,7 @@ class PalleteCreateController : UIViewController {
         bg.addSubviewFullSize(view: name)
         bg.heightAnchor.constraint(equalToConstant: 42).isActive = true
         
-        bg.backgroundColor = ProjectStyle.uiBackgroundColor
+        bg.backgroundColor = UIColor(named : "backgroundColor")
         return bg
     }()
     
@@ -86,12 +86,11 @@ class PalleteCreateController : UIViewController {
         mainView.translatesAutoresizingMaskIntoConstraints = false
         mainView.widthAnchor.constraint(equalToConstant: 156).isActive = true
         mainView.heightAnchor.constraint(equalToConstant: 42).isActive = true
-        mainView.setShadow(color: ProjectStyle.uiShadowColor, radius: 4, opasity: 0.25)
         
         let bg = UIView()
         bg.translatesAutoresizingMaskIntoConstraints = false
         bg.setCorners(corners: 12)
-        bg.backgroundColor = ProjectStyle.uiBackgroundColor
+        bg.backgroundColor = UIColor(named : "backgroundColor")
         mainView.addSubviewFullSize(view: bg)
         
         bg.addSubview(addButton)
@@ -133,7 +132,7 @@ class PalleteCreateController : UIViewController {
     lazy private var deleteButton : CircleButton = {
         let btn = CircleButton(icon: #imageLiteral(resourceName: "trash_icon"), frame: .zero)
         btn.setShadowColor(color: .clear)
-        btn.setIconColor(color: ProjectStyle.uiRedColor)
+        btn.setIconColor(color: getAppColor(color: .red))
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
         btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
@@ -240,7 +239,7 @@ class PalleteCreateController : UIViewController {
             }
         })
         
-        self.view.backgroundColor = ProjectStyle.uiBackgroundColor
+        self.view.backgroundColor = UIColor(named : "backgroundColor")
         
         self.view.addSubview(colors)
         self.view.addSubview(nameBg)
@@ -263,12 +262,15 @@ class PalleteCreateController : UIViewController {
         nameBg.rightAnchor.constraint(equalTo: createButton.leftAnchor, constant: -6).isActive = true
         nameBg.topAnchor.constraint(equalTo: view.topAnchor, constant: 6).isActive = true
 
-        palleteEditBap.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -6).isActive = true
+        palleteEditBap.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -8).isActive = true
         palleteEditBap.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -6).isActive = true
         
         self.view.isUserInteractionEnabled = true
     }
     
+    override func viewDidLayoutSubviews() {
+        palleteEditBap.setShadow(color: UIColor(named : "shadowColor")!, radius: 4, opasity: 1)
+    }
     override func viewDidAppear(_ animated: Bool) {
         colors.selectItem(at: IndexPath(item: 0, section: 0), animated: true, scrollPosition: .left)
     }

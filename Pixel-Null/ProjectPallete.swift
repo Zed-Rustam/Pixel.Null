@@ -17,12 +17,11 @@ class ProjectPallete : UIViewController {
     
     lazy private var palleteBar : UIView = {
        let mainview = UIView()
-        mainview.setShadow(color: ProjectStyle.uiShadowColor, radius: 8, opasity: 0.25)
         mainview.translatesAutoresizingMaskIntoConstraints = false
         
         
         let bgView = UIView()
-        bgView.backgroundColor = ProjectStyle.uiBackgroundColor
+        bgView.backgroundColor = UIColor(named: "backgroundColor")!
         bgView.setCorners(corners: 8)
         bgView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -55,7 +54,7 @@ class ProjectPallete : UIViewController {
     }()
     
     lazy private var palleteName : UILabel = {
-        let label = UILabel().setTextColor(color: ProjectStyle.uiEnableColor).setFont(font: UIFont(name: "Rubik-Bold", size: 18)!).setText(text: "Project's Pallete")
+        let label = UILabel().setTextColor(color: UIColor(named: "enableColor")!).setFont(font: UIFont(name: "Rubik-Bold", size: 18)!).setText(text: "Project's Pallete")
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 42).isActive = true
         
@@ -89,11 +88,10 @@ class ProjectPallete : UIViewController {
         main.translatesAutoresizingMaskIntoConstraints = false
         main.heightAnchor.constraint(equalToConstant: 42).isActive = true
         main.widthAnchor.constraint(equalToConstant: 84).isActive = true
-        main.setShadow(color: ProjectStyle.uiShadowColor, radius: 4, opasity: 0.25)
         
         let bg = UIView()
         bg.translatesAutoresizingMaskIntoConstraints = false
-        bg.backgroundColor = ProjectStyle.uiBackgroundColor
+        bg.backgroundColor = UIColor(named: "backgroundColor")
         bg.setCorners(corners: 12)
         
         main.addSubview(bg)
@@ -141,12 +139,11 @@ class ProjectPallete : UIViewController {
         mainView.translatesAutoresizingMaskIntoConstraints = false
         mainView.widthAnchor.constraint(equalToConstant: 156).isActive = true
         mainView.heightAnchor.constraint(equalToConstant: 42).isActive = true
-        mainView.setShadow(color: ProjectStyle.uiShadowColor, radius: 4, opasity: 0.25)
         
         let bg = UIView()
         bg.translatesAutoresizingMaskIntoConstraints = false
         bg.setCorners(corners: 12)
-        bg.backgroundColor = ProjectStyle.uiBackgroundColor
+        bg.backgroundColor = UIColor(named: "backgroundColor")
         mainView.addSubviewFullSize(view: bg)
         
         bg.addSubview(addButton)
@@ -188,7 +185,8 @@ class ProjectPallete : UIViewController {
     lazy private var deleteButton : CircleButton = {
         let btn = CircleButton(icon: #imageLiteral(resourceName: "trash_icon"), frame: .zero)
         btn.setShadowColor(color: .clear)
-        btn.setIconColor(color: ProjectStyle.uiRedColor)
+        btn.setIconColor(color: UIColor(named: "redColor")!)
+        
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
         btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
@@ -227,6 +225,7 @@ class ProjectPallete : UIViewController {
     lazy private var editButton : CircleButton = {
         let btn = CircleButton(icon: #imageLiteral(resourceName: "edit_icon"), frame: .zero)
         btn.setShadowColor(color: .clear)
+        
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
         btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
@@ -262,6 +261,14 @@ class ProjectPallete : UIViewController {
         
         return btn
     }()
+    
+    override func viewDidLayoutSubviews() {
+        palleteEditBap.setShadow(color: UIColor(named: "shadowColor")!, radius: 4, opasity: 1)
+        selectedColor.setShadow(color: UIColor(named: "shadowColor")!, radius: 4, opasity: 1)
+        palleteBar.setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
+
+
+    }
 
     override func viewDidLoad() {
         view.addSubview(collection)
@@ -290,7 +297,7 @@ class ProjectPallete : UIViewController {
         palleteEditBap.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -6).isActive = true
         palleteEditBap.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -6).isActive = true
         
-        view.backgroundColor = ProjectStyle.uiBackgroundColor
+        view.backgroundColor = UIColor(named: "backgroundColor")
     }
     
     override func viewDidAppear(_ animated: Bool) {

@@ -26,7 +26,7 @@ class FullColor : UIViewController {
         colorView = UIView(frame: view.bounds)
         colorView.backgroundColor = color
         
-        view.backgroundColor = UIColor(patternImage: UIImage(cgImage: ProjectStyle.bgImage!.cgImage!, scale: 1 / (view.frame.width / 8), orientation: .down))
+        view.backgroundColor = UIColor(patternImage: UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 1 / (view.frame.width / 8), orientation: .down))
         
         view.addSubview(colorView)
     }

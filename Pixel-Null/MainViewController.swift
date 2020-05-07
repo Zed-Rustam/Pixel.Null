@@ -41,7 +41,7 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = ProjectStyle.uiBackgroundColor
+        self.view.backgroundColor = UIColor(named: "backgroundColor")
         
         self.view.addSubview(controllers[0].view)
         self.view.addSubview(controllers[1].view)
@@ -75,7 +75,7 @@ class MainViewController: UIViewController {
 extension MainViewController : NavigationProtocol {
     
     func onSelectChange(select: Int, lastSelect: Int) {
-        self.controllers[select].view.transform = CGAffineTransform(translationX: 0, y: -100)
+        self.controllers[select].view.transform = CGAffineTransform(translationX: 0, y: 100)
         self.controllers[select].view.isHidden = false
         self.controllers[select].view.alpha = 0
 
@@ -83,20 +83,26 @@ extension MainViewController : NavigationProtocol {
         self.controllers[lastSelect].view.alpha = 1
         self.controllers[lastSelect].view.transform = CGAffineTransform(translationX: 0, y: 0)
 
-
-        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
-            self.controllers[lastSelect].view.transform = CGAffineTransform(translationX: 0, y: 100)
+        
+        
+        UIView.animate(withDuration: 0.2,delay: 0,options: .curveEaseOut, animations: {
             self.controllers[lastSelect].view.alpha = 0
+            self.controllers[select].view.alpha = 1
+        })
+        
+        UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
+            self.controllers[lastSelect].view.transform = CGAffineTransform(translationX: 0, y: -100)
             
             self.controllers[select].view.transform = CGAffineTransform(translationX: 0, y: 0)
-            self.controllers[select].view.alpha = 1
-
-        },completion: {isEnd in
-            if lastSelect != self.nav.select {
+        }, completion: {isEnd in
+           if lastSelect != self.nav.select {
                 self.controllers[lastSelect].view.alpha = 1
                 self.controllers[lastSelect].view.transform = CGAffineTransform(translationX: 0, y: 0)
                 self.controllers[lastSelect].view.isHidden = true
             }
         })
+
+            
+
     }
 }

@@ -12,7 +12,7 @@ class SettingsController : UINavigationController {
     
     override func viewDidLoad() {
         navigationBar.isHidden = true
-        view.backgroundColor = ProjectStyle.uiBackgroundColor
+        view.backgroundColor = getAppColor(color: .background)
         let main = MainSettingsMenu()
         main.navigation = self
         pushViewController(main, animated: true)

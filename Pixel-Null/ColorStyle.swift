@@ -10,25 +10,6 @@ import UIKit
 import ImageIO
 import MobileCoreServices
 
-class ProjectStyle {
-    static var uiBackgroundColor = UIColor(r: 255, g: 241, b: 233, a: 255)
-    static var uiDisableColor = UIColor(r: 230, g: 209, b: 203, a: 255)
-    static var uiEnableColor = UIColor(r: 201, g: 170, b: 160, a: 255)
-    static var uiSelectColor = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1)
-    static var uiShadowColor = UIColor(r: 201, g: 170, b: 160, a: 150).withAlphaComponent(0.5)
-    static var uiRedColor = UIColor(r: 186, g: 33, b: 0, a: 255)
-
-    //dark mode :D
-//    static var uiBackgroundColor = UIColor(r: 45, g: 46, b: 49, a: 255)
-//    static var uiDisableColor = UIColor(r: 80, g: 81, b: 90, a: 255)
-//    static var uiEnableColor = UIColor(r: 119, g: 120, b: 133, a: 255)
-//    static var uiSelectColor = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1)
-//    static var uiShadowColor = UIColor(r: 24, g: 25, b: 28, a: 255)
-//    static var uiRedColor = UIColor(r: 186, g: 33, b: 0, a: 255)
-
-    static var bgImage = UIImage.merge(images: [UIImage(named: "Background1")!.withTintColor(ProjectStyle.uiBackgroundColor),UIImage(named: "Background2")!.withTintColor(ProjectStyle.uiDisableColor)])
-}
-
 func getAppColor(color : Theme) -> UIColor{
     return UIColor(named: color.rawValue)!
 }

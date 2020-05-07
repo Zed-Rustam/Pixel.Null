@@ -33,7 +33,7 @@ class ToolButton : UICollectionViewCell {
         switch id {
         case -5:
             button.setIcon(ic: #imageLiteral(resourceName: "symmetry_icon"))
-            button.setIconColor(color: ProjectStyle.uiEnableColor)
+            button.setIconColor(color: UIColor(named: "enableColor")!)
             button.delegate = {[weak self] in
                 let editor = self!.delegate as! Editor
                 editor.canvas.checkTransformChangeBefore(newTool: -5)
@@ -45,22 +45,23 @@ class ToolButton : UICollectionViewCell {
                 btnVert.setShadowColor(color: .clear)
                 btnVert.widthAnchor.constraint(equalToConstant: 36).isActive = true
                 btnVert.heightAnchor.constraint(equalToConstant: 36).isActive = true
-                btnVert.setIconColor(color: editor.canvas.isVerticalSymmeyry ? ProjectStyle.uiSelectColor : ProjectStyle.uiEnableColor)
+                btnVert.setIconColor(color: editor.canvas.isVerticalSymmeyry ? UIColor(named: "selectColor")! : UIColor(named: "enableColor")!)
                 
                 btnVert.delegate = {
                     editor.canvas.changeSymmetry(vertical: !editor.canvas.isVerticalSymmeyry)
-                    btnVert.setIconColor(color: editor.canvas.isVerticalSymmeyry ? ProjectStyle.uiSelectColor : ProjectStyle.uiEnableColor)
+                    btnVert.setIconColor(color: editor.canvas.isVerticalSymmeyry ? UIColor(named: "selectColor")! : UIColor(named: "enableColor")!)
                 }
                 
                 let btnHor = CircleButton(icon: #imageLiteral(resourceName: "symmetry_horizontal_icon"), frame: .zero)
                 btnHor.setShadowColor(color: .clear)
                 btnHor.widthAnchor.constraint(equalToConstant: 36).isActive = true
                 btnHor.heightAnchor.constraint(equalToConstant: 36).isActive = true
-                btnHor.setIconColor(color: editor.canvas.isHorizontalSymmetry ? ProjectStyle.uiSelectColor : ProjectStyle.uiEnableColor)
+                btnHor.setIconColor(color: editor.canvas.isHorizontalSymmetry ? UIColor(named: "selectColor")! : UIColor(named: "enableColor")!)
                 btnHor.delegate = {
                     editor.canvas.changeSymmetry(horizontal: !editor.canvas.isHorizontalSymmetry)
-                    btnHor.setIconColor(color: editor.canvas.isHorizontalSymmetry ? ProjectStyle.uiSelectColor : ProjectStyle.uiEnableColor)
+                    btnHor.setIconColor(color: editor.canvas.isHorizontalSymmetry ? UIColor(named: "selectColor")! : UIColor(named: "enableColor")!)
                 }
+                
                 let btnCent = CircleButton(icon: #imageLiteral(resourceName: "symmetry_centerize"), frame: .zero)
                 btnCent.setShadowColor(color: .clear)
                 btnCent.widthAnchor.constraint(equalToConstant: 36).isActive = true
@@ -74,7 +75,7 @@ class ToolButton : UICollectionViewCell {
 
         case -4:
             button.setIcon(ic: #imageLiteral(resourceName: "project_settings_icon"))
-            button.setIconColor(color: ProjectStyle.uiEnableColor)
+            button.setIconColor(color: UIColor(named: "enableColor")!)
             button.delegate = {[unowned self] in
                 (self.delegate as! Editor).finishTransform()
 
@@ -83,7 +84,7 @@ class ToolButton : UICollectionViewCell {
             
         case -3: 
             button.setIcon(ic: #imageLiteral(resourceName: "undo_icon"))
-            button.setIconColor(color: ProjectStyle.uiEnableColor)
+            button.setIconColor(color: UIColor(named: "enableColor")!)
             button.delegate = {[weak self] in
                 let editor = self!.delegate as! Editor
                 editor.finishTransform()
@@ -93,7 +94,7 @@ class ToolButton : UICollectionViewCell {
             }
         case -2:
             button.setIcon(ic: #imageLiteral(resourceName: "redo_icon"))
-            button.setIconColor(color: ProjectStyle.uiEnableColor)
+            button.setIconColor(color: UIColor(named: "enableColor")!)
             button.delegate = {[weak self] in
                 let editor = self!.delegate as! Editor
                 editor.finishTransform()
@@ -104,7 +105,7 @@ class ToolButton : UICollectionViewCell {
             
         case -1:
           button.setIcon(ic: #imageLiteral(resourceName: "cancel_icon"))
-          button.setIconColor(color: ProjectStyle.uiEnableColor)
+          button.setIconColor(color: UIColor(named: "enableColor")!)
           button.delegate = {[weak self] in
             let editor = self!.delegate as! Editor
                 editor.finishTransform()
@@ -117,7 +118,7 @@ class ToolButton : UICollectionViewCell {
           }
         case 0:
             button.setIcon(ic: #imageLiteral(resourceName: "edit_icon"))
-            button.setIconColor(color: ProjectStyle.uiEnableColor)
+            button.setIconColor(color: UIColor(named: "enableColor")!)
             button.delegate = {[weak self] in
                 let editor = self!.delegate as! Editor
                 editor.canvas.checkTransformChangeBefore(newTool: 0)
@@ -125,7 +126,7 @@ class ToolButton : UICollectionViewCell {
 
                 self!.barDelegate.wasChangedTool(newTool: 0)
                 self!.barDelegate.updateButtons(btns: [])
-                self!.button.setIconColor(color: ProjectStyle.uiSelectColor)
+                self!.button.setIconColor(color: UIColor(named: "selectColor")!)
             }
             button.longPressDelegate = {[weak self] in
                 let impactFeedbackgenerator = UIImpactFeedbackGenerator (style: .heavy)
@@ -136,7 +137,7 @@ class ToolButton : UICollectionViewCell {
             
         case 1:
             button.setIcon(ic: #imageLiteral(resourceName: "erase_icon"))
-            button.setIconColor(color: ProjectStyle.uiEnableColor)
+            button.setIconColor(color: UIColor(named: "enableColor")!)
             button.delegate = {[weak self] in
                 let editor = self!.delegate as! Editor
                 editor.canvas.checkTransformChangeBefore(newTool: 1)
@@ -144,7 +145,7 @@ class ToolButton : UICollectionViewCell {
 
                 self!.barDelegate.wasChangedTool(newTool: 1)
                 self!.barDelegate.updateButtons(btns: [])
-                self!.button.setIconColor(color: ProjectStyle.uiSelectColor)
+                self!.button.setIconColor(color: UIColor(named: "selectColor")!)
             }
             button.longPressDelegate = {[weak self] in
                 let impactFeedbackgenerator = UIImpactFeedbackGenerator (style: .heavy)
@@ -155,7 +156,7 @@ class ToolButton : UICollectionViewCell {
             
         case 2:
            button.setIcon(ic: #imageLiteral(resourceName: "move_icon"))
-           button.setIconColor(color: ProjectStyle.uiEnableColor)
+           button.setIconColor(color: UIColor(named: "enableColor")!)
            button.delegate = {[weak self] in
             let editor = self!.delegate as! Editor
             
@@ -168,6 +169,7 @@ class ToolButton : UICollectionViewCell {
             editor.showTransform(isShow: true)
             
             let flipV = CircleButton(icon: #imageLiteral(resourceName: "flip_horizontal_icon"), frame: .zero)
+            flipV.setIconColor(color: UIColor(named: "enableColor")!)
             flipV.widthAnchor.constraint(equalToConstant: 36).isActive = true
             flipV.heightAnchor.constraint(equalToConstant: 36).isActive = true
             flipV.setShadowColor(color: .clear)
@@ -176,6 +178,7 @@ class ToolButton : UICollectionViewCell {
             }
             
             let flipH = CircleButton(icon: #imageLiteral(resourceName: "flip_vertical_icon"), frame: .zero)
+            flipH.setIconColor(color: UIColor(named: "enableColor")!)
             flipH.widthAnchor.constraint(equalToConstant: 36).isActive = true
             flipH.heightAnchor.constraint(equalToConstant: 36).isActive = true
             flipH.setShadowColor(color: .clear)
@@ -192,6 +195,8 @@ class ToolButton : UICollectionViewCell {
             }
             
             let finish = CircleButton(icon: #imageLiteral(resourceName: "save_icon"), frame: .zero)
+            finish.setIconColor(color: UIColor(named: "enableColor")!)
+
             finish.widthAnchor.constraint(equalToConstant: 36).isActive = true
             finish.heightAnchor.constraint(equalToConstant: 36).isActive = true
             finish.setShadowColor(color: .clear)
@@ -203,12 +208,12 @@ class ToolButton : UICollectionViewCell {
             
             self!.barDelegate.wasChangedTool(newTool: 2)
             self!.barDelegate.updateButtons(btns: [flipV,flipH,finish])
-            self!.button.setIconColor(color: ProjectStyle.uiSelectColor)
+            self!.button.setIconColor(color: UIColor(named: "selectColor")!)
            }
         
         case 3:
           button.setIcon(ic: #imageLiteral(resourceName: "gradient_icon"))
-          button.setIconColor(color: ProjectStyle.uiEnableColor)
+          button.setIconColor(color: UIColor(named: "enableColor")!)
           button.delegate = {[weak self] in
               let editor = self!.delegate as! Editor
             editor.canvas.checkTransformChangeBefore(newTool: 3)
@@ -216,7 +221,7 @@ class ToolButton : UICollectionViewCell {
 
             self!.barDelegate.wasChangedTool(newTool: 3)
             self!.barDelegate.updateButtons(btns: [])
-            self!.button.setIconColor(color: ProjectStyle.uiSelectColor)
+            self!.button.setIconColor(color: UIColor(named: "selectColor")!)
           }
           button.longPressDelegate = {[weak self] in
                 let impactFeedbackgenerator = UIImpactFeedbackGenerator (style: .heavy)
@@ -227,7 +232,7 @@ class ToolButton : UICollectionViewCell {
         
         case 4:
             button.setIcon(ic: #imageLiteral(resourceName: "fill_icon"))
-            button.setIconColor(color: ProjectStyle.uiEnableColor)
+            button.setIconColor(color: UIColor(named: "enableColor")!)
             button.delegate = {[weak self] in
                 let editor = self!.delegate as! Editor
                 editor.canvas.checkTransformChangeBefore(newTool: 4)
@@ -254,7 +259,7 @@ class ToolButton : UICollectionViewCell {
                 
                 self!.barDelegate.updateButtons(btns: [selector])
                 
-                self!.button.setIconColor(color: ProjectStyle.uiSelectColor)
+                self!.button.setIconColor(color: UIColor(named: "selectColor")!)
             }
             button.longPressDelegate = {
                     let impactFeedbackgenerator = UIImpactFeedbackGenerator (style: .heavy)
@@ -264,20 +269,20 @@ class ToolButton : UICollectionViewCell {
 
         case 5:
             button.setIcon(ic: #imageLiteral(resourceName: "grid_icon"))
-            button.setIconColor(color: ProjectStyle.uiEnableColor)
+            button.setIconColor(color: UIColor(named: "enableColor")!)
             button.delegate = {[weak self] in
                 let editor = self!.delegate as! Editor
                 if editor.canvas.isGridVIsible {
-                    self!.button.setIconColor(color: ProjectStyle.uiEnableColor)
+                    self!.button.setIconColor(color: UIColor(named: "enableColor")!)
                 } else {
-                    self!.button.setIconColor(color: ProjectStyle.uiSelectColor)
+                    self!.button.setIconColor(color: UIColor(named: "selectColor")!)
                 }
                 editor.canvas.isGridVIsible.toggle()
             }
             
         case 6:
             button.setIcon(ic: #imageLiteral(resourceName: "selection_icon"))
-            button.setIconColor(color: ProjectStyle.uiEnableColor)
+            button.setIconColor(color: UIColor(named: "enableColor")!)
 
             button.delegate = {[weak self] in
                 let editor = self!.delegate as! Editor
@@ -304,7 +309,7 @@ class ToolButton : UICollectionViewCell {
                 }
                 
                 let delete = CircleButton(icon: #imageLiteral(resourceName: "selection_delete_icon"), frame: .zero)
-                delete.setIconColor(color: ProjectStyle.uiRedColor)
+                delete.setIconColor(color: UIColor(named: "redColor")!)
                 delete.widthAnchor.constraint(equalToConstant: 36).isActive = true
                 delete.heightAnchor.constraint(equalToConstant: 36).isActive = true
                 delete.setShadowColor(color: .clear)
@@ -354,8 +359,9 @@ class ToolButton : UICollectionViewCell {
                 
                 self!.barDelegate.updateButtons(btns: [reverse,clear,paste,copy,cut,delete,selectMode])
                 
-                self!.button.setIconColor(color: ProjectStyle.uiSelectColor)
+                self!.button.setIconColor(color: UIColor(named: "selectColor")!)
             }
+            
             button.longPressDelegate = {[unowned self] in
                 let impactFeedbackgenerator = UIImpactFeedbackGenerator (style: .heavy)
                 impactFeedbackgenerator.prepare()
@@ -365,14 +371,14 @@ class ToolButton : UICollectionViewCell {
             }
         case 7:
             button.setIcon(ic: #imageLiteral(resourceName: "sharp_icon"))
-            button.setIconColor(color: ProjectStyle.uiEnableColor)
+            button.setIconColor(color: UIColor(named: "enableColor")!)
             button.delegate = {[weak self] in
                 let editor = self!.delegate as! Editor
                 editor.canvas.checkTransformChangeBefore(newTool: 7)
                 editor.canvas.selectTool(newTool: 7)
 
                 self!.barDelegate.wasChangedTool(newTool: 7)
-                self!.button.setIconColor(color: ProjectStyle.uiSelectColor)
+                self!.button.setIconColor(color: UIColor(named: "selectColor")!)
                 
                 let squareSelector = SegmentSelector(imgs: [#imageLiteral(resourceName: "rectangle_icon"),#imageLiteral(resourceName: "circle_icon"),#imageLiteral(resourceName: "line_icon")])
                 squareSelector.selectDelegate = {select in
@@ -389,7 +395,7 @@ class ToolButton : UICollectionViewCell {
                 }
 
                 let block = CircleButton(icon: editor.canvas.square.isFixed ? #imageLiteral(resourceName: "block_icon") : #imageLiteral(resourceName: "unblock_icon"), frame: .zero)
-                block.setIconColor(color: editor.canvas.square.isFixed ? ProjectStyle.uiSelectColor : ProjectStyle.uiEnableColor)
+                block.setIconColor(color: editor.canvas.square.isFixed ? UIColor(named: "selectColor")! : UIColor(named: "enableColor")!)
                 block.widthAnchor.constraint(equalToConstant: 36).isActive = true
                 block.heightAnchor.constraint(equalToConstant: 36).isActive = true
                 block.setShadowColor(color: .clear)
@@ -397,7 +403,7 @@ class ToolButton : UICollectionViewCell {
                 block.delegate = {
                     editor.canvas.square.isFixed.toggle()
                     block.setIcon(ic: editor.canvas.square.isFixed ? #imageLiteral(resourceName: "block_icon") : #imageLiteral(resourceName: "unblock_icon"))
-                    block.setIconColor(color: editor.canvas.square.isFixed ? ProjectStyle.uiSelectColor : ProjectStyle.uiEnableColor)
+                    block.setIconColor(color: editor.canvas.square.isFixed ? UIColor(named: "selectColor")! : UIColor(named: "enableColor")!)
                 }
                 
                 switch editor.canvas.square.squareType {
@@ -414,7 +420,7 @@ class ToolButton : UICollectionViewCell {
 
         case 8:
             button.setIcon(ic: #imageLiteral(resourceName: "picker_icon"))
-            button.setIconColor(color: ProjectStyle.uiEnableColor)
+            button.setIconColor(color: UIColor(named: "enableColor")!)
             button.delegate = {[weak self] in
                 let editor = self!.delegate as! Editor
                 editor.canvas.checkTransformChangeBefore(newTool: 8)
@@ -422,7 +428,7 @@ class ToolButton : UICollectionViewCell {
 
                 self!.barDelegate.wasChangedTool(newTool: 8)
                 self!.barDelegate.updateButtons(btns: [])
-                self!.button.setIconColor(color: ProjectStyle.uiSelectColor)
+                self!.button.setIconColor(color: UIColor(named: "selectColor")!)
             }
             
         default:

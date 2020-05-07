@@ -14,23 +14,22 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Table")!
-        cell.textLabel!.textColor = ProjectStyle.uiEnableColor
+        cell.textLabel!.textColor = UIColor(named: "enableColor")
         cell.textLabel!.font = UIFont(name:  "Rubik-Regular", size: 16)
-        cell.backgroundColor = ProjectStyle.uiDisableColor.withAlphaComponent(0.25)
-        cell.tintColor = ProjectStyle.uiEnableColor
+        cell.backgroundColor = UIColor(named: "disableColor")!.withAlphaComponent(0.25)
+        cell.tintColor = UIColor(named: "enableColor")
         cell.selectedBackgroundView = {
             let view = UIView()
-            view.backgroundColor = ProjectStyle.uiDisableColor.withAlphaComponent(0.5)
+            view.backgroundColor = UIColor(named: "disableColor")!.withAlphaComponent(0.5)
             return view
         }()
                 
         cell.accessoryView = {
-            let img = UIImageView(image: #imageLiteral(resourceName: "next_icon").withTintColor(ProjectStyle.uiEnableColor))
+            let img = UIImageView(image: #imageLiteral(resourceName: "next_icon").withTintColor(UIColor(named: "enableColor")!))
             img.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
             return img
         }()
         
-        print("\(indexPath.section)   \(indexPath.row)   \(indexPath.row)")
         
         switch indexPath.section {
         case 0:
@@ -99,7 +98,7 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
         myLabel.frame = CGRect(x: 20, y: 0, width: 200, height: 24)
         myLabel.font = UIFont(name:  "Rubik-Bold", size: 14)
         myLabel.text = self.tableView(tableView, titleForHeaderInSection: section)
-        myLabel.textColor = ProjectStyle.uiEnableColor
+        myLabel.textColor = UIColor(named: "enableColor")
         
         let headerView = UIView()
         headerView.addSubview(myLabel)
@@ -137,9 +136,12 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
         img.widthAnchor.constraint(equalToConstant: 72).isActive = true
         img.heightAnchor.constraint(equalToConstant: 72).isActive = true
         
-        img.setShadow(color: ProjectStyle.uiShadowColor, radius: 4, opasity: 0.25)
         return img
     }()
+    
+    override func viewDidLayoutSubviews() {
+        icon.setShadow(color: UIColor(named: "shadowColor")!, radius: 4, opasity: 0.25)
+    }
     
     lazy private var appTitle : UILabel = {
        let label = UILabel()
@@ -148,7 +150,7 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
         
         label.text = "Pixel.Null"
         
-        label.textColor = ProjectStyle.uiEnableColor
+        label.textColor = UIColor(named: "enableColor")
         label.textAlignment = .center
         label.font = UIFont(name:  "Rubik-Bold", size: 36)
         
@@ -161,7 +163,7 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
         tv.backgroundColor = .clear
         tv.register(UITableViewCell.self, forCellReuseIdentifier: "Table")
         tv.separatorStyle = .none
-        tv.tintColor = ProjectStyle.uiEnableColor.withAlphaComponent(0.5)
+        tv.tintColor = UIColor(named: "enableColor")!.withAlphaComponent(0.5)
         //tv.isScrollEnabled = false
         
         tv.tableHeaderView = tableTitle
@@ -199,6 +201,6 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
         table.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
 
 
-        view.backgroundColor = ProjectStyle.uiBackgroundColor
+        view.backgroundColor = UIColor(named: "backgroundColor")
     }
 }

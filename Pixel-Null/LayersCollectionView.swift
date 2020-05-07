@@ -21,8 +21,8 @@ class LayersCollectionView : UIView {
     lazy var deleteButton : CircleButton = {
         let btn = CircleButton(icon: #imageLiteral(resourceName: "trash_icon"), frame: .zero)
         btn.corners = 6
-        btn.setbgColor(color: ProjectStyle.uiRedColor)
-        btn.setShadowColor(color: ProjectStyle.uiRedColor.withAlphaComponent(0.75))
+        btn.setbgColor(color: getAppColor(color: .red))
+        btn.setShadowColor(color: getAppColor(color: .red).withAlphaComponent(0.75))
         btn.setIconColor(color: .white)
         btn.delegate = {[weak self] in
             if (!self!.list.moving && self!.project!.information.frames[self!.project!.FrameSelected].layers.count > 1) {

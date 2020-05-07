@@ -91,7 +91,7 @@ class EraseSettings : UIViewController {
         text.text = "Erase width"
         text.textAlignment = .left
         text.font = UIFont(name:  "Rubik-Medium", size: 24)
-        text.textColor = ProjectStyle.uiEnableColor
+        text.textColor = UIColor(named: "enableColor")
         text.translatesAutoresizingMaskIntoConstraints = false
         text.heightAnchor.constraint(equalToConstant: 36).isActive = true
         return text
@@ -117,14 +117,14 @@ class EraseSettings : UIViewController {
            title.text = "Erase"
            title.textAlignment = .center
            title.font = UIFont(name:  "Rubik-Bold", size: 24)
-           title.textColor = ProjectStyle.uiEnableColor
+           title.textColor = UIColor(named: "enableColor")
            
            return title
        }()
     
        private var topBarBg : UIView = {
            let view = UIView()
-           view.backgroundColor = ProjectStyle.uiBackgroundColor
+           view.backgroundColor = UIColor(named: "backgroundColor")
            view.setCorners(corners: 12)
            return view
        }()
@@ -141,7 +141,6 @@ class EraseSettings : UIViewController {
     
     private var bgView : UIView = {
         let view = UIView()
-        view.setShadow(color: ProjectStyle.uiShadowColor, radius: 8, opasity: 0.25)
         return view
     }()
     
@@ -155,7 +154,7 @@ class EraseSettings : UIViewController {
         
         scrollView.addSubview(colorsView)
         //scrollView.addSubview(vStack)
-        view.backgroundColor = ProjectStyle.uiBackgroundColor
+        view.backgroundColor = UIColor(named: "backgroundColor")
         
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 0).isActive = true
@@ -200,6 +199,10 @@ class EraseSettings : UIViewController {
 
     }
  
+    
+    override func viewDidLayoutSubviews() {
+        bgView.setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
+    }
     override func viewWillAppear(_ animated: Bool) {
         eraseSizeSlider.setPosition(pos: CGFloat(size - 1) / 63)
         eraseSizeInput.filed.text = "\(size)"

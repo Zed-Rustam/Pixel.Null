@@ -93,7 +93,7 @@ class PalleteCollection : UIViewController, UICollectionViewDelegate, UICollecti
         layout.bottomOffset = 72 + Double(UIApplication.shared.windows[0].safeAreaInsets.bottom / 2) + 4
         layout.delegate = self
         
-        view.backgroundColor = ProjectStyle.uiBackgroundColor
+        view.backgroundColor = UIColor(named: "backgroundColor")
         
         view.addSubview(collection)
         view.addSubview(addButton)
@@ -173,7 +173,10 @@ class PalleteCell : UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame : frame)
-        contentView.setShadow(color: ProjectStyle.uiShadowColor, radius: 8, opasity: 0.5)
+    }
+    
+    override func layoutSubviews() {
+        contentView.setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 0.5)
     }
     
     func setPallete(pallete : PalleteWorker){

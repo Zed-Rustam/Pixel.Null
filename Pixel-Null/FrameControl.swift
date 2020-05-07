@@ -39,6 +39,7 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
         
         layers.list.reloadData()
         layers.checkFrame()
+        layers.list.selectItem(at: IndexPath(item: 0, section: 0), animated: true, scrollPosition: .left)
         
         preview.image = project.getFrame(frame: to, size: project.projectSize)
         frames.delayField.filed.text = String(project.information.frames[project.FrameSelected].delay)
@@ -157,7 +158,7 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
         let text = UILabel(frame: .zero)
         text.text = "Frames"
         text.font = UIFont(name: "Rubik-Medium", size: 28)
-        text.textColor = ProjectStyle.uiEnableColor
+        text.textColor = UIColor(named: "enableColor")
         text.translatesAutoresizingMaskIntoConstraints = false
         
         return text
@@ -167,7 +168,7 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
         let text = UILabel(frame: .zero)
         text.text = "Layers"
         text.font = UIFont(name: "Rubik-Medium", size: 28)
-        text.textColor = ProjectStyle.uiEnableColor
+        text.textColor = UIColor(named: "enableColor")
         text.translatesAutoresizingMaskIntoConstraints = false
         
         return text
@@ -212,7 +213,7 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
     var project : ProjectWork!
     
     override func viewDidLoad() {
-        self.view.backgroundColor = ProjectStyle.uiBackgroundColor
+        self.view.backgroundColor = UIColor(named: "backgroundColor")
         
         var width = 96 * (project.projectSize.width / project.projectSize.height)
         if width > self.view.frame.size.width - 72 {
@@ -222,7 +223,7 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
         }
         
         preview = FramePreview(frame: CGRect(x: 12, y: 12, width: width, height: 96), image: project.getFrame(frame: project.FrameSelected, size: CGSize(width: 96, height: 96)))
-        preview.layer.shadowColor = ProjectStyle.uiShadowColor.cgColor
+        preview.layer.shadowColor = getAppColor(color: .shadow).cgColor
         preview.bgColor = UIColor(hex : project.information.bgColor)!
 
         view.addSubview(preview)

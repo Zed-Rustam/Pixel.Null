@@ -97,7 +97,7 @@ class CircleSlider : UIView {
         layer.shadowRadius = 4
         layer.shadowOffset = CGSize.zero
         layer.shadowOpacity = 1
-        layer.shadowColor = ProjectStyle.uiShadowColor.cgColor
+        layer.shadowColor = getAppColor(color: .shadow).cgColor
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

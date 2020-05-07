@@ -52,7 +52,7 @@ class TransformView : UIView {
         var endy : Int = 0
             
         if isSelected {
-            lastSelect = image.withTintColor(ProjectStyle.uiSelectColor)
+            lastSelect = image.withTintColor(UIColor(named: "selectColor")!)
             let data = image.getColorsArray()
             let group = DispatchGroup()
             
@@ -313,7 +313,7 @@ class TransformView : UIView {
         context.rotate(by: Radians(CGFloat(angle)))
         context.translateBy(x: -lastSize.width * scale - offset.x, y: -lastSize.height * scale - offset.y)
 
-        context.setStrokeColor(ProjectStyle.uiSelectColor.cgColor)
+        context.setStrokeColor(UIColor(named: "selectColor")!.cgColor)
         context.setLineWidth(2)
         context.setLineJoin(.round)
         context.setLineCap(.round)
@@ -327,7 +327,7 @@ class TransformView : UIView {
         
         context.strokePath()
         
-        context.setFillColor(ProjectStyle.uiSelectColor.cgColor)
+        context.setFillColor(UIColor(named: "selectColor")!.cgColor)
         context.addEllipse(in: CGRect(x: offset.x + position.origin.x * scale - 12, y: offset.y + position.origin.y * scale - 12, width: 24, height: 24))
         context.addEllipse(in: CGRect(x: offset.x + (position.origin.x + position.size.width) * scale - 12, y: offset.y + position.origin.y * scale - 12, width: 24, height: 24))
         context.addEllipse(in: CGRect(x: offset.x + position.origin.x * scale - 12, y: offset.y + (position.origin.y + position.size.height) * scale - 12, width: 24, height: 24))
@@ -343,12 +343,8 @@ class TransformView : UIView {
 
         context.addEllipse(in: CGRect(x: offset.x + (position.origin.x) * scale - 12, y: offset.y + (position.origin.y + position.size.height / 2.0) * scale - 12, width: 24, height: 24))
 
-        context.setShadow(offset: .zero, blur: 4, color: ProjectStyle.uiShadowColor.withAlphaComponent(0.5).cgColor)
+        context.setShadow(offset: .zero, blur: 4, color: UIColor(named: "shadowColor")!.withAlphaComponent(0.5).cgColor)
         context.fillPath()
-        
-        //context.rotate(by: -angle)
-        //context.translateBy(x: -(offset.x + (position.width / 2.0 * scale)), y: -(offset.y + (position.height / 2.0 * scale)))
-        
     }
     
     init(frame: CGRect, canvas c : ProjectCanvas) {

@@ -133,7 +133,7 @@ class GalleryControl : UIViewController{
         gallery.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
         
         
-        self.view.backgroundColor = ProjectStyle.uiBackgroundColor
+        self.view.backgroundColor = UIColor(named: "backgroundColor")
     }
 }
 

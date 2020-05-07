@@ -26,10 +26,8 @@ class Editor : UIViewController {
     lazy var transformSize : UIView = {
         let mainView = UIView()
         mainView.translatesAutoresizingMaskIntoConstraints = false
-        mainView.setShadow(color: ProjectStyle.uiShadowColor, radius: 8, opasity: 0.25)
-        
         let bg = UIView()
-        bg.backgroundColor = ProjectStyle.uiBackgroundColor
+        bg.backgroundColor = UIColor(named: "backgroundColor")
         bg.setCorners(corners: 8)
         bg.translatesAutoresizingMaskIntoConstraints = false
         
@@ -37,7 +35,7 @@ class Editor : UIViewController {
         
         let title = UILabel()
         title.translatesAutoresizingMaskIntoConstraints = false
-        title.textColor = ProjectStyle.uiEnableColor
+        title.textColor = UIColor(named: "enableColor")
         title.text = "1024x1024"
         title.font = UIFont(name: "Rubik-Bold", size: 16)
         title.textAlignment = .center
@@ -56,10 +54,9 @@ class Editor : UIViewController {
     lazy var transformAngle : UIView = {
         let mainView = UIView()
         mainView.translatesAutoresizingMaskIntoConstraints = false
-        mainView.setShadow(color: ProjectStyle.uiShadowColor, radius: 8, opasity: 0.25)
         
         let bg = UIView()
-        bg.backgroundColor = ProjectStyle.uiBackgroundColor
+        bg.backgroundColor = UIColor(named: "backgroundColor")
         bg.setCorners(corners: 8)
         bg.translatesAutoresizingMaskIntoConstraints = false
         
@@ -67,7 +64,7 @@ class Editor : UIViewController {
         
         let title = UILabel()
         title.translatesAutoresizingMaskIntoConstraints = false
-        title.textColor = ProjectStyle.uiEnableColor
+        title.textColor = UIColor(named: "enableColor")
         title.text = "0°"
         title.font = UIFont(name: "Rubik-Bold", size: 16)
         title.textAlignment = .center
@@ -149,7 +146,7 @@ class Editor : UIViewController {
         transformAngle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 6).isActive = true
         transformAngle.topAnchor.constraint(equalTo: transformSize.bottomAnchor, constant: 6).isActive = true
         
-        view.backgroundColor = ProjectStyle.uiBackgroundColor
+        view.backgroundColor = UIColor(named: "backgroundColor")!
         showTransform(isShow: false)
     }
     
@@ -169,6 +166,8 @@ class Editor : UIViewController {
     override func viewWillLayoutSubviews() {
         print("some shit is here")
         toolBar.reLayout()
+        transformSize.setShadow(color: UIColor(named : "shadowColor")!, radius: 8, opasity: 1)
+        transformAngle.setShadow(color: UIColor(named : "shadowColor")!, radius: 8, opasity: 1)
     }
     
     override func viewDidLayoutSubviews() {

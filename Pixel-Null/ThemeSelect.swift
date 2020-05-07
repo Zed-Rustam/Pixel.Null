@@ -14,7 +14,7 @@ class ThemeSelect: UIViewController {
         super.viewDidLoad()
 
         
-        view.backgroundColor = ProjectStyle.uiBackgroundColor
+        view.backgroundColor = getAppColor(color: .background)
         // Do any additional setup after loading the view.
     }
 }

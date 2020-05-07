@@ -10,7 +10,7 @@ import UIKit
 
 class FramePreview : UIView {
     private var bg : UIImageView
-    private static var bgImg = ProjectStyle.bgImage!
+    private static var bgImg = #imageLiteral(resourceName: "background")
     private var img : UIImageView
     private weak var picToImg : UIImage?
     private var visibility = true

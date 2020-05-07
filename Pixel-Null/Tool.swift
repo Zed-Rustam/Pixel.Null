@@ -180,7 +180,7 @@ class Selection : Tool {
             return
         }
         
-        setPixelData(imgSize: imageSize, point: pos, color: ProjectStyle.uiSelectColor.getPixelData())
+        setPixelData(imgSize: imageSize, point: pos, color: getAppColor(color: .select).getPixelData())
 
         if getPixelData(imgSize: imageSize, point: pos.offset(x: 0, y: -1)) == colorForChange.getPixelData() {
             points.append(pos.offset(x: 0, y: -1))
@@ -207,7 +207,7 @@ class Selection : Tool {
             }
             
             pos = pos.offset(x: -1, y: 0)
-            setPixelData(imgSize: imageSize, point: pos, color: ProjectStyle.uiSelectColor.getPixelData())
+            setPixelData(imgSize: imageSize, point: pos, color: getAppColor(color: .select).getPixelData())
             
         }
         
@@ -231,7 +231,7 @@ class Selection : Tool {
             }
             
             pos = pos.offset(x: 1, y: 0)
-            setPixelData(imgSize: imageSize, point: pos, color: ProjectStyle.uiSelectColor.getPixelData())
+            setPixelData(imgSize: imageSize, point: pos, color: getAppColor(color: .select).getPixelData())
         }
     }
 
@@ -249,14 +249,14 @@ class Selection : Tool {
             fillH(from: points.remove(at: 0), imageSize: image.size)
         }
         
-        nowSelection = imageFromARGB32Bitmap(pixels: resultData, width: UInt(image.size.width), height: UInt(image.size.height)).withTintColor(ProjectStyle.uiSelectColor)
+        nowSelection = imageFromARGB32Bitmap(pixels: resultData, width: UInt(image.size.width), height: UInt(image.size.height)).withTintColor(getAppColor(color: .select))
     }
     
     func reverse(select : UIImage) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(select.size, false, 1)
         
         let context = UIGraphicsGetCurrentContext()!
-        context.setFillColor(ProjectStyle.uiSelectColor.cgColor)
+        context.setFillColor(getAppColor(color: .select).cgColor)
         context.fill(CGRect(origin: .zero, size: select.size))
         
         select.draw(at: .zero, blendMode: .destinationOut, alpha: 1)
@@ -322,9 +322,9 @@ class Selection : Tool {
         
         switch mode {
         case .add:
-            context.setFillColor(ProjectStyle.uiSelectColor.cgColor)
+            context.setFillColor(getAppColor(color: .select).cgColor)
         case .delete:
-            context.setFillColor(ProjectStyle.uiRedColor.cgColor)
+            context.setFillColor(getAppColor(color: .red).cgColor)
         }
         
         context.setShouldAntialias(false)

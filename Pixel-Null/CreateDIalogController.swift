@@ -69,7 +69,7 @@ class CreateDialogController : UIViewController, CreateDialogDelegate{
         createDialog.setDefault()
         self.view.addSubview(createDialog)
         
-        self.view.backgroundColor = ProjectStyle.uiBackgroundColor
+        self.view.backgroundColor = UIColor(named: "backgroundColor")
 
     }
     

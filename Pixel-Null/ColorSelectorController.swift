@@ -1,7 +1,6 @@
 import UIKit
 
 class ColorSelectorController : UIViewController, NavigationProtocol {
-    private var bgView : UIView = UIView()
     
     lazy private var topNavigation : NavigationView = {
         let navig = NavigationView(ics: [#imageLiteral(resourceName: "color_selector_1_icon"),#imageLiteral(resourceName: "color_selector_2_icon"),#imageLiteral(resourceName: "pallete_collection_item")])
@@ -51,13 +50,12 @@ class ColorSelectorController : UIViewController, NavigationProtocol {
     
     lazy private var topBar : UIView = {
         let mainView = UIView()
-        mainView.setShadow(color: ProjectStyle.uiShadowColor, radius: 8, opasity: 0.25)
         mainView.translatesAutoresizingMaskIntoConstraints = false
        
 
         let view = UIView()
         view.setCorners(corners: 12)
-        view.backgroundColor = ProjectStyle.uiBackgroundColor
+        view.backgroundColor = UIColor(named: "backgroundColor")
         view.translatesAutoresizingMaskIntoConstraints = false
 
         mainView.addSubview(view)
@@ -88,8 +86,6 @@ class ColorSelectorController : UIViewController, NavigationProtocol {
         return mainView
     }()
     
-    
-    
     var delegate : (UIColor)->() = {color in}
     
     func setColor(clr : UIColor) {
@@ -111,6 +107,7 @@ class ColorSelectorController : UIViewController, NavigationProtocol {
             dialog1.isHidden = false
             dialog2.isHidden = true
             dialog3.isHidden = true
+            
         } else if select == 1 {
             switch lastSelect {
             case 0:
@@ -133,7 +130,7 @@ class ColorSelectorController : UIViewController, NavigationProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.view.backgroundColor = ProjectStyle.uiBackgroundColor
+        self.view.backgroundColor = UIColor(named: "backgroundColor")
 
        
 
@@ -176,6 +173,10 @@ class ColorSelectorController : UIViewController, NavigationProtocol {
         
         dialog2.isHidden = true
         dialog3.isHidden = true
+    }
+    
+    override func viewWillLayoutSubviews() {
+        topBar.setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
     }
     
     override func viewDidAppear(_ animated: Bool) {

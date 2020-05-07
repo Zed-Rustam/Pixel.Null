@@ -53,6 +53,11 @@ class PalleteCollectionV2 : UICollectionView {
         
         return gesture
     }()
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        setShadow(color: UIColor(named : "shadowColor")!, radius: 4, opasity: 0.5)
+    }
 
     init(colors clrs: [String]) {
         colors = clrs
@@ -71,7 +76,9 @@ class PalleteCollectionV2 : UICollectionView {
         layer.masksToBounds = false
         
         addGestureRecognizer(moveGesture)
-        setShadow(color: ProjectStyle.uiShadowColor, radius: 4, opasity: 0.5)
+        
+        setShadow(color: UIColor(named : "shadowColor")!, radius: 4, opasity: 0.5)
+        
         isPrefetchingEnabled = false
     }
     
@@ -166,7 +173,6 @@ extension PalleteCollectionV2 : UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        print("deselect")
         let cellnew = cellForItem(at: indexPath) as? PalleteColorCell
         cellnew?.setVisible(visible: false, withAnim: true)
     }
@@ -209,8 +215,10 @@ extension PalleteCollectionV2 : PalleteCollectionDelegate {
                     self.selectedColor = self.colors.count - 1
                 }
             }, completion: {isEnd in
-                (self.cellForItem(at: IndexPath(item: self.selectedColor, section: 0)) as! PalleteColorCell).setVisible(visible: true)
-                self.selectItem(at: IndexPath(item: self.selectedColor, section: 0), animated: true, scrollPosition: .left)
+                if isEnd {
+                    (self.cellForItem(at: IndexPath(item: self.selectedColor, section: 0)) as! PalleteColorCell).setVisible(visible: true)
+                    self.selectItem(at: IndexPath(item: self.selectedColor, section: 0), animated: true, scrollPosition: .left)
+                }
             })
         }
     }
@@ -306,6 +314,7 @@ class PalleteColorCell : UICollectionViewCell {
             colorView.subviews[0].backgroundColor = newValue
         }
     }
+    
     //color view
     lazy private var colorView : UIView = {
         let mainView = UIView()
@@ -315,7 +324,6 @@ class PalleteColorCell : UICollectionViewCell {
         mainView.isOpaque = true
         
         mainView.setCorners(corners: 12)
-        mainView.backgroundColor = UIColor(patternImage: UIImage(cgImage: ProjectStyle.bgImage!.cgImage!, scale: 0.25, orientation: .down))
         mainView.layer.magnificationFilter = .nearest
         
         mainView.tintColor = .clear
@@ -337,13 +345,13 @@ class PalleteColorCell : UICollectionViewCell {
         let mainview = UIView()
         mainview.translatesAutoresizingMaskIntoConstraints = false
         mainview.backgroundColor = .clear
-        mainview.setShadow(color: ProjectStyle.uiSelectColor, radius: 4, opasity: 0.25)
+        mainview.setShadow(color: getAppColor(color: .select), radius: 4, opasity: 0.25)
         
         mainview.widthAnchor.constraint(equalToConstant: 44).isActive = true
         mainview.heightAnchor.constraint(equalToConstant: 44).isActive = true
 
         let stroke = UIView()
-        stroke.layer.borderColor = ProjectStyle.uiSelectColor.cgColor
+        stroke.layer.borderColor = getAppColor(color: .select).cgColor
         stroke.layer.borderWidth = 3
         stroke.setCorners(corners: 18)
         stroke.translatesAutoresizingMaskIntoConstraints = false
@@ -383,6 +391,12 @@ class PalleteColorCell : UICollectionViewCell {
         contentView.layer.rasterizationScale = UIScreen.main.scale
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        colorView.backgroundColor = UIColor(patternImage: UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 0.25, orientation: .down))
+        
+    }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

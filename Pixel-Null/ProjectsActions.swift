@@ -23,11 +23,12 @@ class FastActionsView: UIView {
         for i in 0..<icons.count {
             items.append(UIImageView(image: icons[i]))
             items.last!.image!.withRenderingMode(.alwaysTemplate)
-            items.last!.tintColor = ProjectStyle.uiEnableColor
+            items.last!.tintColor = getAppColor(color: .enable)
             items.last!.frame = CGRect(x:Int(Double(iconsSize * i) + Double(Double(spacing) * 1.5) + Double(i * spacing * 1)), y: spacing, width: iconsSize, height: iconsSize)
         }
+        
         background.frame = CGRect(x: 0, y: 0, width: icons.count * iconsSize + (icons.count + 2) * spacing, height: spacing * 2 + iconsSize)
-        background.backgroundColor = ProjectStyle.uiBackgroundColor
+        background.backgroundColor = getAppColor(color: .background)
         background.layer.cornerRadius = CGFloat((iconsSize + spacing * 2) / 2)
 
         super.init(frame : CGRect(x: x, y: y, width: icons.count * iconsSize + (icons.count + 2) * spacing, height: spacing * 2 + iconsSize))
@@ -37,7 +38,7 @@ class FastActionsView: UIView {
             addSubview(item)
         }
         
-        layer.shadowColor = ProjectStyle.uiShadowColor.cgColor
+        layer.shadowColor = getAppColor(color: .shadow).cgColor
         layer.shadowRadius = 8
         layer.shadowOffset = CGSize(width: 0, height: 1)
         layer.shadowOpacity = 0.25

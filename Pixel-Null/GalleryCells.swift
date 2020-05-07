@@ -18,7 +18,12 @@ class GalleryCell : UICollectionViewCell {
         
         contentView.frame = frame
         contentView.addSubview(project)
-        contentView.setShadow(color: ProjectStyle.uiShadowColor, radius: 8, opasity: 0.5, offset: .zero)
+        contentView.setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 0.5, offset: .zero)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        contentView.setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 0.5)
     }
     
     public func setProject(proj : ProjectWork){
@@ -49,7 +54,7 @@ class GalleryTitleCell : UICollectionViewCell{
     
     func setTitle(title t : String){
         title.text = t
-        title.textColor = ProjectStyle.uiEnableColor
+        title.textColor = UIColor(named: "enableColor")
         title.font = UIFont(name: "Rubik-Bold", size: 48)
         title.frame = contentView.bounds
     }

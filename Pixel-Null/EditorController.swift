@@ -26,7 +26,7 @@ class EditorController : UIViewController {
     lazy private var content : UIStackView = {
         let stack = makeStack(orientation: .vertical, alignment: .center, distribution: .fill).addViews(views: [
             UILabel()
-                .setTextColor(color: ProjectStyle.uiEnableColor)
+                .setTextColor(color: UIColor(named: "enableColor")!)
                 .setBreakMode(mode: .byWordWrapping)
                 .setMaxWidth(width: view.frame.width - 24)
                 .appendText(text: "Editor\n", fortt: UIFont(name: "Rubik-Bold", size: 48)!)
@@ -41,12 +41,12 @@ class EditorController : UIViewController {
         imgLFB.heightAnchor.constraint(equalTo: imgLFB.widthAnchor, multiplier: 356.0/1250.0).isActive = true
 
         stack.addArrangedSubview(
-            UILabel().setTextColor(color: ProjectStyle.uiEnableColor).appendText(text: "frames and layers bar\n\n", fortt: UIFont(name: "Rubik-Regular", size: 12)!)
+            UILabel().setTextColor(color:UIColor(named: "enableColor")!).appendText(text: "frames and layers bar\n\n", fortt: UIFont(name: "Rubik-Regular", size: 12)!)
         )
         
         stack.addViews(views: [
             UILabel()
-                .setTextColor(color: ProjectStyle.uiEnableColor)
+                .setTextColor(color: UIColor(named: "enableColor")!)
                 .setBreakMode(mode: .byWordWrapping)
                 .setMaxWidth(width: view.frame.width - 24)
             .appendText(text:
@@ -55,20 +55,13 @@ class EditorController : UIViewController {
                     In addition, there are 2 buttons on the right side of this panel. The top one starts the animation in the editor to see the result obtained without having to exit the editor. Pressing this button again stops the animation. Clicking on the bottom button will open the frame and layer editor.
 
                 """, fortt: UIFont(name: "Rubik-Regular", size: 16)!),
-            UIView().addFullSizeView(view:
-                UIImageView(image: #imageLiteral(resourceName: "frame_editor"))
-                    .setContentMove(mode: .scaleAspectFit)
-                    .setSize(size: CGSize(width: 200, height: 200 * 1.066))
-                    .Corners(round: 8)
-            )
-                .Shadow(clr: ProjectStyle.uiShadowColor, rad: 4, opas: 0.25)
-                .setViewSize(size: CGSize(width: 200, height: 200 * 1.066)),
+            frameEditor,
 
             UILabel()
-                .setTextColor(color: ProjectStyle.uiEnableColor)
+                .setTextColor(color: UIColor(named: "enableColor")!)
                 .appendText(text: "frames and layers editor", fortt: UIFont(name: "Rubik-Regular", size: 12)!),
             UILabel()
-                .setTextColor(color: ProjectStyle.uiEnableColor)
+                .setTextColor(color: UIColor(named: "enableColor")!)
                 .setBreakMode(mode: .byWordWrapping)
                 .setMaxWidth(width: view.frame.width - 24)
                 .appendText(text: """
@@ -79,19 +72,12 @@ class EditorController : UIViewController {
             .appendText(text: """
                 This panel is at the bottom of the screen. It contains all the tools for working with the image. This panel is divided into 2 panels: the main one, in which the tools themselves are located, and the additional one, which appears if necessary if the tool has quick actions. At the same time, if some tool does not have quick actions, then the additional panel is hidden and does not occupy the workspace.\n
             """, fortt:  UIFont(name: "Rubik-Regular", size: 16)!),
-            UIView().addFullSizeView(view:
-                UIImageView(image: #imageLiteral(resourceName: "tool_bar"))
-                    .setContentMove(mode: .scaleAspectFit)
-                    .setSize(size: CGSize(width: 300, height: 300 * 0.4))
-                    .Corners(round: 8)
-            )
-                .Shadow(clr: ProjectStyle.uiShadowColor, rad: 4, opas: 0.25)
-                .setViewSize(size: CGSize(width: 300, height: 300 * 0.4)),
+            toolbarImg,
             UILabel()
-            .setTextColor(color: ProjectStyle.uiEnableColor)
+            .setTextColor(color: UIColor(named: "enableColor")!)
             .appendText(text: "Toolbar\n", fortt: UIFont(name: "Rubik-Regular", size: 12)!),
             UILabel()
-            .setTextColor(color: ProjectStyle.uiEnableColor)
+            .setTextColor(color: UIColor(named: "enableColor")!)
             .appendText(text: """
             
                 If the tool has settings, then a long press on the tool will open the settings menu for this tool. In addition, you can swipe down the toolbar to leave only the top line of tools, while freeing up space for the working area. When Swipe up, the panel will open back. You can change the order of tools and adjust it for yourself in the application settings.
@@ -109,10 +95,6 @@ class EditorController : UIViewController {
             .setMaxWidth(width: view.frame.width - 24)
         ])
         
-        
-        //imgLFB.widthAnchor.constraint(equalToConstant: self.view.frame.width - 24).isActive = true
-        //imgLFB.heightAnchor.constraint(equalTo: imgLFB.widthAnchor, multiplier: 400.0 / 1250.0).isActive = true
-
         return stack
     }()
     
@@ -129,8 +111,29 @@ class EditorController : UIViewController {
         img.topAnchor.constraint(equalTo: mainView.topAnchor, constant: 0).isActive = true
         img.bottomAnchor.constraint(equalTo: mainView.bottomAnchor, constant: 0).isActive = true
         
-        mainView.setShadow(color: ProjectStyle.uiShadowColor, radius: 4, opasity: 0.25)
         return mainView
+    }()
+    
+    lazy private var toolbarImg : UIView = {
+       return UIView().addFullSizeView(view:
+           UIImageView(image: #imageLiteral(resourceName: "tool_bar"))
+               .setContentMove(mode: .scaleAspectFit)
+               .setSize(size: CGSize(width: 300, height: 300 * 0.4))
+               .Corners(round: 8)
+       )
+           .Shadow(clr: getAppColor(color: .shadow), rad: 4, opas: 0.25)
+           .setViewSize(size: CGSize(width: 300, height: 300 * 0.4))
+    }()
+    
+    lazy private var frameEditor : UIView = {
+       return UIView().addFullSizeView(view:
+           UIImageView(image: #imageLiteral(resourceName: "frame_editor"))
+               .setContentMove(mode: .scaleAspectFit)
+               .setSize(size: CGSize(width: 200, height: 200 * 1.066))
+               .Corners(round: 8)
+       )
+           .Shadow(clr: getAppColor(color: .shadow), rad: 4, opas: 0.25)
+           .setViewSize(size: CGSize(width: 200, height: 200 * 1.066))
     }()
     
     override func viewDidLoad() {
@@ -140,12 +143,17 @@ class EditorController : UIViewController {
         scroll.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
         scroll.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
 
-        view.backgroundColor = ProjectStyle.uiBackgroundColor
+        view.backgroundColor = UIColor(named: "backgroundColor")
     }
     
     override func viewDidLayoutSubviews() {
         content.layoutIfNeeded()
         scroll.contentSize.height = content.frame.height + 24
         print(content.frame.height)
+        
+        imgLFB.setShadow(color: UIColor(named: "shadowColor")!, radius: 4, opasity: 1)
+        toolbarImg.setShadow(color: UIColor(named: "shadowColor")!, radius: 4, opasity: 1)
+        frameEditor.setShadow(color: UIColor(named: "shadowColor")!, radius: 4, opasity: 1)
+
     }
 }

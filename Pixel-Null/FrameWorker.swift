@@ -21,12 +21,12 @@ override init(frame: CGRect) {
     line2 = UIView(frame: CGRect(x: 3, y: 13.5, width: 18, height: 3))
     super.init(frame: frame)
     
-    line1.backgroundColor = ProjectStyle.uiEnableColor
+    line1.backgroundColor = UIColor(named: "enableColor")
     line1.layer.cornerRadius = 1.5
     line1.layer.allowsEdgeAntialiasing = true
 
     
-    line2.backgroundColor = ProjectStyle.uiEnableColor
+    line2.backgroundColor = UIColor(named: "enableColor")
     line2.layer.cornerRadius = 1.5
     line2.layer.allowsEdgeAntialiasing = true
     
@@ -55,7 +55,6 @@ required init?(coder: NSCoder) {
         line1.layer.add(move, forKey: "test2")
         line1.layer.transform = CATransform3DMakeRotation(CGFloat((45.0 / 180.0) * Float.pi), 0, 0, 1)
         line1.layer.position.y += 3
-        
         
         let rotation2 = CABasicAnimation(keyPath: "transform.rotation.z")
         rotation2.fromValue = 0
@@ -175,14 +174,19 @@ class FrameWorker : UIView {
             
             if isSelected {
                 StrokeAnimate(duration: duration, width: 2)
-                ShadowColorAnimate(duration: duration, color: ProjectStyle.uiSelectColor)
+                ShadowColorAnimate(duration: duration, color: UIColor(named: "selectColor")!)
                 ShadowRadiusAnimate(duration : duration, radius: 4)
             } else {
                 StrokeAnimate(duration: duration, width: 0)
-                ShadowColorAnimate(duration: duration, color: ProjectStyle.uiShadowColor)
+                ShadowColorAnimate(duration: duration, color: UIColor(named: "shadowColor")!)
                 ShadowRadiusAnimate(duration : duration, radius: 12)
             }
         }
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        setShadow(color: isSelect ? UIColor(named: "selectColor")! : UIColor(named: "shadowColor")!, radius: isSelect ? 4 : 12, opasity: 1)
     }
     
     override init(frame: CGRect) {
@@ -203,12 +207,12 @@ class FrameWorker : UIView {
         CATransaction.setAnimationDuration(0)
         
         layer.cornerRadius = 8
-        backgroundColor = ProjectStyle.uiBackgroundColor
+        backgroundColor = UIColor(named: "backgroundColor")
         
-        layer.shadowColor = ProjectStyle.uiShadowColor.cgColor
+        layer.shadowColor = UIColor(named: "shadowColor")!.cgColor
         layer.shadowRadius = 12
         layer.shadowOffset = .zero
-        layer.shadowOpacity = 0.5
+        layer.shadowOpacity = 1
         layer.borderColor = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1).cgColor
         layer.allowsEdgeAntialiasing = true
         
@@ -231,7 +235,7 @@ class FrameWorker : UIView {
         layer.add(b, forKey: "drag")
 
         StrokeAnimate(duration: duration, width: 0)
-        ShadowColorAnimate(duration: duration, color: ProjectStyle.uiShadowColor)
+        ShadowColorAnimate(duration: duration, color: UIColor(named: "shadowColor")!)
         ShadowRadiusAnimate(duration : duration, radius: 12)
     }
     
@@ -249,7 +253,7 @@ class FrameWorker : UIView {
         
         layer.add(b, forKey: "rotate")
         StrokeAnimate(duration: duration, width: 2)
-        ShadowColorAnimate(duration: duration, color: ProjectStyle.uiSelectColor)
+        ShadowColorAnimate(duration: duration, color: UIColor(named: "selectColor")!)
         ShadowRadiusAnimate(duration : duration, radius: 4)
     }
     

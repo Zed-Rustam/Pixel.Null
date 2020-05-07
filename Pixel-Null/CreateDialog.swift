@@ -12,13 +12,15 @@ class CreateDialog : UIView{
     private var dialogTitle : UILabel = {
         let title = UILabel()
         title.font = UIFont(name: "Rubik-Bold", size: 24)
-        title.textColor = ProjectStyle.uiEnableColor
+        title.textColor = UIColor(named: "enableColor")
         title.textAlignment = .center
         title.text = "New Project"
         title.translatesAutoresizingMaskIntoConstraints = false
         return title
     }()
+    
     weak var delegate : CreateDialogDelegate? = nil
+    
     lazy private var projectName : TextField = {
         let field = TextField()
         field.filed.text = getDefaultName()
@@ -28,6 +30,7 @@ class CreateDialog : UIView{
         field.translatesAutoresizingMaskIntoConstraints = false
         return field
     }()
+    
     lazy private var projectWidth : TextField = {
         let field = TextField()
         field.filed.text = "64"
@@ -142,7 +145,7 @@ class CreateDialog : UIView{
     private var titleBg : UIView = {
         let bg = UIView()
         bg.translatesAutoresizingMaskIntoConstraints = false
-        bg.backgroundColor = ProjectStyle.uiBackgroundColor
+        bg.backgroundColor = UIColor(named: "backgroundColor")
         
         bg.setCorners(corners: 12)
 
@@ -153,9 +156,7 @@ class CreateDialog : UIView{
         bg.rightAnchor.constraint(equalTo: mainBg.rightAnchor, constant: 0).isActive = true
         bg.topAnchor.constraint(equalTo: mainBg.topAnchor, constant: 0).isActive = true
         bg.bottomAnchor.constraint(equalTo: mainBg.bottomAnchor, constant: 0).isActive = true
-        
-        mainBg.setShadow(color: ProjectStyle.uiShadowColor, radius: 8, opasity: 0.25)
-        
+                
         mainBg.translatesAutoresizingMaskIntoConstraints = false
         return mainBg
     }()
@@ -247,6 +248,8 @@ class CreateDialog : UIView{
         backgroundSelector.topAnchor.constraint(equalTo: projectBackground.topAnchor, constant: 0).isActive = true
         backgroundSelector.widthAnchor.constraint(equalToConstant: 48).isActive = true
         backgroundSelector.heightAnchor.constraint(equalToConstant: 48).isActive = true
+        
+        titleBg.setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 0.5)
     }
     
     required init?(coder: NSCoder) {

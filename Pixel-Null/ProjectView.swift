@@ -13,7 +13,7 @@ class ProjectView : UIView{
     
     private var _image : UIImageView = UIImageView()
     private var proj : ProjectWork!
-    private var background : UIImageView = UIImageView(image: ProjectStyle.bgImage!)
+    private var background : UIImageView = UIImageView(image: #imageLiteral(resourceName: "background"))
     private var title : UILabel = UILabel()
     private var rounded = 12
     private var blurView : UIImageView = {
@@ -152,6 +152,10 @@ class ProjectView : UIView{
     
     @objc func onTap(sender : UITapGestureRecognizer){
         delegate?.projectOpen(proj: proj)
+    }
+    
+    override func layoutSubviews() {
+        blurView.image = blackImage(image: blurImage(image: getLayerImage(), forRect: CGRect(x: 8, y: 8, width: Int(self.bounds.width) - 8 * 2, height: 8 * 2))!)
     }
 }
 

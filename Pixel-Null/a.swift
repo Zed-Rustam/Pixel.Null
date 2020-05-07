@@ -10,22 +10,18 @@ import UIKit
 
 class Controller1 : UIViewController {
     override func viewDidLoad() {
-        self.view.backgroundColor = ProjectStyle.uiBackgroundColor
     }
 }
 class Controller2 : UIViewController {
     override func viewDidLoad() {
-        self.view.backgroundColor = ProjectStyle.uiBackgroundColor
     }
 }
 class Controller3 : UIViewController {
     override func viewDidLoad() {
-        self.view.backgroundColor = ProjectStyle.uiBackgroundColor
     }
 }
 class Controller5 : UIViewController {
     override func viewDidLoad() {
-        self.view.backgroundColor = ProjectStyle.uiBackgroundColor
     }
 }
 

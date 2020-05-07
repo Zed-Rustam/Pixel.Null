@@ -27,25 +27,17 @@ class PencilController : UIViewController {
                 text1,
                 makeStack(orientation: .horizontal, alignment: .fill, distribution: .fillEqually).addViews(views: [
                     makeStack(orientation: .vertical, alignment: .center).addViews(views: [
-                        UIImageView(image: UIImage.gifImageWithData(NSDataAsset(name: "pixel_perfect_off")!.data))
-                            .Corners(round: 10)
-                            .setSize(size: CGSize(width: 120, height: 160))
-                            .setBackground(color: UIColor(patternImage: UIImage(cgImage: ProjectStyle.bgImage!.cgImage!, scale: 1.0/20.0, orientation: .down)))
-                            .setFilter(filter: .nearest),
+                        perfectPixelOff,
                         UILabel()
                             .setText(text: "pixel perfect off")
-                            .setTextColor(color: ProjectStyle.uiEnableColor)
+                            .setTextColor(color: UIColor(named: "enableColor")!)
                             .setFont(font: UIFont(name:  "Rubik-Regular", size: 12)!)
                     ]),
                 makeStack(orientation: .vertical, alignment: .center).addViews(views: [
-                    UIImageView(image: UIImage.gifImageWithData(NSDataAsset(name: "pixel_perfect_on")!.data))
-                        .Corners(round: 10)
-                        .setSize(size: CGSize(width: 120, height: 160))
-                        .setBackground(color: UIColor(patternImage: UIImage(cgImage: ProjectStyle.bgImage!.cgImage!, scale: 1.0/20.0, orientation: .down)))
-                        .setFilter(filter: .nearest),
+                    perfectPixelOn,
                     UILabel()
                         .setText(text: "pixel perfect on")
-                        .setTextColor(color: ProjectStyle.uiEnableColor)
+                        .setTextColor(color: UIColor(named: "enableColor")!)
                         .setFont(font: UIFont(name:  "Rubik-Regular", size: 12)!)
                 ])
                 ]),
@@ -56,7 +48,7 @@ class PencilController : UIViewController {
     lazy private var pencilTitle : UILabel = {
         let label = UILabel()
         label.text = "Pencil"
-        label.textColor = ProjectStyle.uiEnableColor
+        label.textColor = UIColor(named: "enableColor")
         label.font = UIFont(name:  "Rubik-Bold", size: 48)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -64,7 +56,8 @@ class PencilController : UIViewController {
     
     lazy private var text1 : UILabel = {
         let label = UILabel()
-        label.textColor = ProjectStyle.uiEnableColor
+        label.textColor = UIColor(named: "enableColor")
+        
         label.font = UIFont(name:  "Rubik-Regular", size: 18)
         
         label.textAlignment = .justified
@@ -115,7 +108,7 @@ class PencilController : UIViewController {
                 Using the pencil tool, you can draw curved lines, a stroke, and just draw like a brush.
             """, attributes:normal)
         
-        label.textColor = ProjectStyle.uiEnableColor
+        label.textColor = UIColor(named: "enableColor")
         label.font = UIFont(name:  "Rubik-Regular", size: 16)
         
         label.textAlignment = .justified
@@ -132,42 +125,30 @@ class PencilController : UIViewController {
         return label
     }()
     
-    lazy private var perfectPixelOff : UIImageView = {
-        let img = UIImageView()
-
-        if let asset = NSDataAsset(name: "pixel_perfect_off") {
-            img.image = UIImage.gifImageWithData( asset.data)
-        }
+    lazy private var perfectPixelOff : UIView = {
+        let view = UIView()
+        view.layer.masksToBounds = false
         
-        img.contentMode = .scaleAspectFit
-        img.layer.magnificationFilter = .nearest
-        img.translatesAutoresizingMaskIntoConstraints = false
-        img.heightAnchor.constraint(equalToConstant: 160).isActive = true
-        img.widthAnchor.constraint(equalToConstant: 120).isActive = true
+        view.addFullSizeView(view: UIImageView(image: UIImage.gifImageWithData(NSDataAsset(name: "pixel_perfect_off")!.data))
+        .Corners(round: 10)
+        .setSize(size: CGSize(width: 120, height: 160))
+        .setBackground(color: UIColor(patternImage: UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 1.0/20.0, orientation: .down)))
+        .setFilter(filter: .nearest))
         
-        img.backgroundColor = UIColor(patternImage: UIImage(cgImage: ProjectStyle.bgImage!.cgImage!, scale: 1.0/20.0, orientation: .down))
-        
-        img.setCorners(corners: 10)
-        return img
+        return view.setViewSize(size: CGSize(width: 120, height: 160))
     }()
 
-    lazy private var perfectPixelOn : UIImageView = {
-        let img = UIImageView()
-
-        if let asset = NSDataAsset(name: "pixel_perfect_on") {
-            img.image = UIImage.gifImageWithData( asset.data)
-        }
+    lazy private var perfectPixelOn : UIView = {
+        let view = UIView()
+        view.layer.masksToBounds = false
         
-        img.contentMode = .scaleAspectFit
-        img.layer.magnificationFilter = .nearest
-        img.translatesAutoresizingMaskIntoConstraints = false
-        img.heightAnchor.constraint(equalToConstant: 160).isActive = true
-        img.widthAnchor.constraint(equalToConstant: 120).isActive = true
+        view.addFullSizeView(view: UIImageView(image: UIImage.gifImageWithData(NSDataAsset(name: "pixel_perfect_on")!.data))
+        .Corners(round: 10)
+        .setSize(size: CGSize(width: 120, height: 160))
+        .setBackground(color: UIColor(patternImage: UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 1.0/20.0, orientation: .down)))
+        .setFilter(filter: .nearest))
         
-        img.backgroundColor = UIColor(patternImage: UIImage(cgImage: ProjectStyle.bgImage!.cgImage!, scale: 1.0/20.0, orientation: .down))
-        
-        img.setCorners(corners: 10)
-        return img
+        return view
     }()
 
     override func viewDidLoad() {
@@ -178,12 +159,20 @@ class PencilController : UIViewController {
         scroll.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
         scroll.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
         
-        view.backgroundColor = ProjectStyle.uiBackgroundColor
+        view.backgroundColor = UIColor(named: "backgroundColor")
     }
     
     override func viewDidLayoutSubviews() {
         stack.layoutIfNeeded()
         scroll.contentSize.height = stack.frame.height + 24
         print(stack.frame.height)
+        
+        perfectPixelOn.subviews[0].backgroundColor = UIColor(patternImage: UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 1.0/20.0, orientation: .down))
+        perfectPixelOff.subviews[0].backgroundColor = UIColor(patternImage: UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 1.0/20.0, orientation: .down))
+
+        perfectPixelOn.setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
+        perfectPixelOff.setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
+
+
     }
 }
