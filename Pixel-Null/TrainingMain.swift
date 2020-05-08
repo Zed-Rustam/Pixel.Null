@@ -11,16 +11,7 @@ import UIKit
 
 class TrainingMain : UIViewController {
     weak var navigation : UINavigationController? = nil
-    private var menus : [String] = ["Editor","Pencil", "Erase", "Transform","Gradient","Fill","Symmetry","Selection","Shape"]
-        
-    lazy private var titleTraining : UILabel = {
-       let label = UILabel()
-        label.font = UIFont(name:  "Rubik-Medium", size: 48)
-        label.textColor = UIColor(named: "enableColor")
-        label.text = "Training"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    private var menus : [String] = [NSLocalizedString("Editor", comment: ""),NSLocalizedString("Pencil", comment: ""), NSLocalizedString("Eraser", comment: ""), NSLocalizedString("Transform", comment: ""),NSLocalizedString("Gradient", comment: ""),NSLocalizedString("Fill", comment: ""),NSLocalizedString("Symmetry", comment: ""),NSLocalizedString("Selection", comment: ""),NSLocalizedString("Shape", comment: "")]
     
     lazy private var table : UITableView = {
         let tv = UITableView(frame: .zero, style: .insetGrouped)
@@ -31,8 +22,7 @@ class TrainingMain : UIViewController {
         head.textColor = UIColor(named: "enableColor")
         head.translatesAutoresizingMaskIntoConstraints = false
         head.font = UIFont(name: "Rubik-Bold", size: 48)
-        head.text = "Training"
-        //head.heightAnchor.constraint(equalToConstant: 64).isActive = true
+        head.text = NSLocalizedString("Training", comment: "")
         
         let bgview = UIView()
         bgview.addSubviewFullSize(view: head, paddings: (16,0,8,0))
@@ -131,9 +121,9 @@ extension TrainingMain : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0:
-            return "EDITOR STRUCTURE"
+            return NSLocalizedString("Editor structure", comment: "")
         case 1:
-            return "TOOLS"
+            return NSLocalizedString("Tools", comment: "")
         default:
             return nil
         }

@@ -182,6 +182,7 @@ class ToolBar : UIView {
         bg.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
         bg.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
         //bg.setShadow(color: ProjectStyle.uiShadowColor, radius: 4, opasity: 0.25)
+        bg.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
 
         
         self.heightAnchor.constraint(equalTo: bg.heightAnchor, constant: 48).isActive = true
@@ -191,8 +192,7 @@ class ToolBar : UIView {
         addGestureRecognizer(swipeDownGesture)
     }
     override func tintColorDidChange() {
-        bg.setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
-
+        bg.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
     }
     
     func setData(project proj : ProjectWork, delegate del : FrameControlDelegate){

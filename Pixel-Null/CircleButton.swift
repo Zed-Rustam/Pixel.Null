@@ -18,8 +18,8 @@ class CircleButton : UIView, UIGestureRecognizerDelegate {
     var delegate : ()->() = {}
     private var panGesture : UILongPressGestureRecognizer!
     
-    private var shadowColor : UIColor = UIColor(named: "shadowColor")!
-    private var iconColor : UIColor = UIColor(named: "enableColor")!
+    private var shadowColor : UIColor = getAppColor(color: .shadow)
+    private var iconColor : UIColor = getAppColor(color: .enable)
 
     private var longPanGesture : UILongPressGestureRecognizer!
     
@@ -36,7 +36,7 @@ class CircleButton : UIView, UIGestureRecognizerDelegate {
                 case true:
                     self.icon.tintColor = self.iconColor
                 case false:
-                    self.icon.tintColor = UIColor(named: "disableColor")!
+                    self.icon.tintColor = getAppColor(color: .disable)
                 }
             })
             
@@ -57,6 +57,7 @@ class CircleButton : UIView, UIGestureRecognizerDelegate {
     
     func setShadowColor(color : UIColor){
         shadowColor = color
+        self.setShadow(color: shadowColor, radius: 8, opasity: 1)
     }
     
     func setIconColor(color : UIColor){
@@ -78,7 +79,7 @@ class CircleButton : UIView, UIGestureRecognizerDelegate {
         addSubview(bg)
         addSubview(icon)
 
-        bg.backgroundColor = UIColor(named: "backgroundColor")!
+        bg.backgroundColor = getAppColor(color: .background)
         
         bg.translatesAutoresizingMaskIntoConstraints = false
         bg.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 0).isActive = true
@@ -97,9 +98,7 @@ class CircleButton : UIView, UIGestureRecognizerDelegate {
 
 
         isEnabled = true
-        
-        //setShadow(color: ProjectStyle.uiShadowColor, radius: 8, opasity: 1, offset: .zero)
-        
+                
         self.isUserInteractionEnabled = true
 
         panGesture = UILongPressGestureRecognizer(target: self, action: #selector(tap(sender:)))

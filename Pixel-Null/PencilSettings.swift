@@ -76,7 +76,7 @@ class PencilSettings : UIViewController {
     
     private var penSizeTitle : UILabel = {
         let text = UILabel()
-        text.text = "Pen Width"
+        text.text = NSLocalizedString("Pencil width", comment: "")
         text.textAlignment = .left
         text.font = UIFont(name:  "Rubik-Medium", size: 24)
         text.textColor = UIColor(named: "enableColor")
@@ -147,7 +147,7 @@ class PencilSettings : UIViewController {
     
     private var penTitle : UILabel = {
         let title = UILabel()
-        title.text = "Pencil"
+        title.text = NSLocalizedString("Pencil", comment: "")
         title.textAlignment = .center
         title.font = UIFont(name:  "Rubik-Bold", size: 24)
         title.textColor = UIColor(named: "enableColor")

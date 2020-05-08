@@ -89,7 +89,7 @@ class NavigationView : UIView {
         
         bgView.layer.mask = makeShape(topCorners: topCorners, bottomCorners: bottomCorners)
         
-        setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
+        setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
     }
 
     private func makeShape(topCorners tc : Int, bottomCorners bc : Int) -> CAShapeLayer {

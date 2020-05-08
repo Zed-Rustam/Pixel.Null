@@ -13,10 +13,10 @@ class PalletesDialog: UIView {
     lazy private var palleteTitle : UILabel = {
         let label = UILabel()
         
-        label.textColor = UIColor(named : "enableColor")
+        label.textColor = getAppColor(color: .enable)
         label.textAlignment = .left
         label.font = UIFont(name:  "Rubik-Medium", size: 18)
-        label.text = "Default Pallete"
+        label.text = NSLocalizedString("Default palette", comment: "")
         
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 48).isActive = true
@@ -40,7 +40,7 @@ class PalletesDialog: UIView {
         let subview = UIView()
         subview.setCorners(corners: 12)
         subview.translatesAutoresizingMaskIntoConstraints = false
-        subview.backgroundColor = UIColor(named : "backgroundColor")
+        subview.backgroundColor = getAppColor(color: .background)
         
         mainview.addSubview(subview)
         mainview.addSubview(palleteTitle)
@@ -102,7 +102,7 @@ class PalletesDialog: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        PalleteBar.setShadow(color: UIColor(named : "shadowColor")!, radius: 8, opasity: 1)
+        PalleteBar.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
     }
     
     required init?(coder: NSCoder) {

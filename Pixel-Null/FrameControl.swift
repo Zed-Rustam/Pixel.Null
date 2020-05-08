@@ -47,6 +47,7 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
     
     func changeLayer(frame: Int, from: Int, to: Int) {
         project.LayerSelected = to
+        layers.transparentField.filed.text = "\(Int(project.information.frames[project.FrameSelected].layers[project.LayerSelected].transparent * 100))"
     }
     
     func updateFramePosition(from: Int, to: Int) {
@@ -66,11 +67,25 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
     }
     
     func updateLayerSettings(target: Int) {
-        
+        UIView.animate(withDuration: 0, animations: {
+            self.layers.list.performBatchUpdates({
+                self.layers.list.reloadItems(at: [IndexPath(item: target, section: 0)])
+
+            }, completion: {isEnd in
+                self.layers.list.selectItem(at: IndexPath(item: self.project!.LayerSelected, section: 0), animated: true, scrollPosition: .top)
+            })
+        })
     }
     
     func updateFrameSettings(target: Int) {
-        
+        UIView.animate(withDuration: 0, animations: {
+                   self.frames.list.performBatchUpdates({
+                       self.frames.list.reloadItems(at: [IndexPath(item: target, section: 0)])
+
+                   }, completion: {isEnd in
+                       self.frames.list.selectItem(at: IndexPath(item: self.project!.FrameSelected, section: 0), animated: true, scrollPosition: .top)
+                   })
+               })
     }
     
     func deleteFrame(frame: Int) {
@@ -151,7 +166,9 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
                 self.layers.list.insertItems(at: [IndexPath(item: layer, section: 0)])
             },completion: nil)
         })
-        
+    }
+    func updatePreview(){
+        self.preview.image = self.project.getFrameFromLayers(frame: self.project.FrameSelected, size: self.project.projectSize)
     }
     
     lazy private var frameText : UILabel = {
@@ -280,5 +297,6 @@ protocol FrameControlUpdate : class {
     func cloneLayer(frame : Int, original : Int)
     func addLayer(frame : Int, layer : Int)
     func addFrame(at : Int)
+    func updatePreview()
     func changeLayerVisible(frame : Int,layer : Int)
 }

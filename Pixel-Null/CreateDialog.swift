@@ -14,7 +14,7 @@ class CreateDialog : UIView{
         title.font = UIFont(name: "Rubik-Bold", size: 24)
         title.textColor = UIColor(named: "enableColor")
         title.textAlignment = .center
-        title.text = "New Project"
+        title.text = NSLocalizedString("New project", comment: "")
         title.translatesAutoresizingMaskIntoConstraints = false
         return title
     }()
@@ -25,7 +25,7 @@ class CreateDialog : UIView{
         let field = TextField()
         field.filed.text = getDefaultName()
         field.error = nil
-        field.setHelpText(help: "Project Name")
+        field.setHelpText(help: NSLocalizedString("Project name", comment: ""))
         field.filed.delegate = namedel
         field.translatesAutoresizingMaskIntoConstraints = false
         return field
@@ -36,10 +36,9 @@ class CreateDialog : UIView{
         field.filed.text = "64"
         field.error = nil
         field.filed.keyboardType = .numberPad
-        field.setHelpText(help: "Width")
+        field.setHelpText(help: NSLocalizedString("Width", comment: ""))
         field.filed.delegate = widthdel
         field.translatesAutoresizingMaskIntoConstraints = false
-        
 
         return field
     }()
@@ -48,19 +47,20 @@ class CreateDialog : UIView{
         field.filed.text = "64"
         field.error = nil
         field.filed.keyboardType = .numberPad
-        field.setHelpText(help: "Height")
+        field.setHelpText(help: NSLocalizedString("Height", comment: ""))
         field.filed.delegate = heightdel
         field.translatesAutoresizingMaskIntoConstraints = false
         return field
     }()
     lazy private var projectBackground : TextField = {
        let field = TextField()
-       field.filed.text = "Background"
-       field.setHelpText(help: "Background")
+       field.filed.text = NSLocalizedString("Background", comment: "")
+       field.setHelpText(help: NSLocalizedString("Background", comment: ""))
        field.filed.isUserInteractionEnabled = false
         field.translatesAutoresizingMaskIntoConstraints = false
         return field
     }()
+    
     var backgroundSelector : ColorSelector = {
         let color = ColorSelector()
         color.translatesAutoresizingMaskIntoConstraints = false
@@ -95,7 +95,7 @@ class CreateDialog : UIView{
     lazy private var namedel : TextFieldDelegate = {
         let delegate = TextFieldDelegate(method: {field in
             if(self.getProjects().contains(field.text!)) {
-                self.projectName.error = "A project with this name already exists"
+                self.projectName.error = NSLocalizedString("Project exist error", comment: "")
             } else if (field.text == ""){
                 self.projectName.error = nil
             } else {
@@ -145,7 +145,7 @@ class CreateDialog : UIView{
     private var titleBg : UIView = {
         let bg = UIView()
         bg.translatesAutoresizingMaskIntoConstraints = false
-        bg.backgroundColor = UIColor(named: "backgroundColor")
+        bg.backgroundColor = getAppColor(color: .background)
         
         bg.setCorners(corners: 12)
 
@@ -249,7 +249,7 @@ class CreateDialog : UIView{
         backgroundSelector.widthAnchor.constraint(equalToConstant: 48).isActive = true
         backgroundSelector.heightAnchor.constraint(equalToConstant: 48).isActive = true
         
-        titleBg.setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 0.5)
+        titleBg.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 0.5)
     }
     
     required init?(coder: NSCoder) {
@@ -279,7 +279,7 @@ class CreateDialog : UIView{
     
     private func getDefaultName() -> String {
         for i in 0... {
-            if !getProjects().contains("New Project \(i)") { return "New Project \(i)" }
+            if !getProjects().contains("\(NSLocalizedString("New project", comment: "")) \(i)") { return "\(NSLocalizedString("New project", comment: "")) \(i)" }
         }
         return ""
     }

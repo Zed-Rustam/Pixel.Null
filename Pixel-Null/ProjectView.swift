@@ -142,7 +142,7 @@ class ProjectView : UIView{
         blurView.setCorners(corners: CGFloat(8))
         blurView.image = blackImage(image: blurImage(image: getLayerImage(), forRect: CGRect(x: 8, y: 8, width: Int(self.bounds.width) - 8 * 2, height: 8 * 2))!)
         
-        title.frame = CGRect(x: 8, y: Int(Double(self.bounds.height) - Double(8) * 3), width: Int(self.bounds.width) - 8 * 2, height: 8 * 2)
+        title.frame = CGRect(x: 16, y: Int(Double(self.bounds.height) - Double(8) * 3), width: Int(self.bounds.width) - 8 * 4, height: 8 * 2)
         title.text = proj.projectName
         title.textColor = .white
         title.lineBreakMode = .byTruncatingMiddle

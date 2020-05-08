@@ -1,0 +1,72 @@
+/* 
+  Localizable.strings
+  Pixel-Null
+
+  Created by Рустам Хахук on 07.05.2020.
+  Copyright © 2020 Zed Null. All rights reserved.
+*/
+
+"Gallery" = "Gallery";
+"Palettes" = "Palettes";
+"New project" = "New project";
+"New palette" = "New palette";
+"Project name" = "Project name";
+"Width" = "Width";
+"Height" = "Height";
+"Background" = "Background";
+"Default palette" = "Default palette";
+"Pencil" = "Pencil";
+"Pencil width" = "Pencil width";
+"Pixel perfect" = "Pixel perfect";
+"Eraser" = "Eraser";
+"Eraser width" = "Eraser width";
+"Gradient" = "Gradient";
+"Step's count" = "Step's count";
+"Colors" = "Colors";
+"Selector mode" = "Selector mode";
+"Project resize" = "Project resize";
+"Alignment" = "Alignment";
+"Scale content" = "Scale content";
+"Frames" = "Frames";
+"Layers" = "Layers";
+"Done" = "Done";
+"Cancel" = "Cancel";
+"Project's palette" = "Project's palette";
+"Training" = "Training";
+"Editor" = "Editor";
+"Transform" = "Transform";
+"Fill" = "Fill";
+"Symmetry" = "Symmetry";
+"Selection" = "Selection";
+"Shape" = "Shape";
+"Project exist error" = "A project with this name already exist";
+"Palette exist error" = "A palette with this name already exist";
+"Tools" = "Tools";
+"Editor structure" = "Editor stricture";
+
+
+"Editor text 1" = "    An editor is a place where you create animations and images. Here is everything you need for drawing. The editor is divided into 3 parts:\n";
+"Editor text 2" = "        * Bar with layers and frames\n        * Toolbar\n        * Work area\n";
+"Editor text 3" = "Let's talk about each of them.\n\n";
+"Editor text 4" = "Frames and Layers bar\n";
+"Editor text 5" = "    This is the panel at the top of the screen. It displays all the frames and layers of the project. Frames are displayed on the first line, and layers on the second. Also, if you do not need to work with animation, then you can swipe up the panel to hide the line with frames and increase the workspace.\n";
+"Editor text 6" = "
+    In addition, there are 2 buttons on the right side of this panel. The top one starts the animation in the editor to see the result obtained without having to exit the editor. Pressing this button again stops the animation. Clicking on the bottom button will open the frame and layer editor.
+";
+"Editor text 7" = "frames and layers editor";
+
+"Editor text 8" = "
+    In this menu you can add / delete / duplicate / move / hide / merge frames and layers. You can also change properties such as frame duration and layer transparency.\n
+";
+"Editor text 9" = "Toolbar\n";
+"Editor text 10" = "    This panel is at the bottom of the screen. It contains all the tools for working with the image. This panel is divided into 2 panels: the main one, in which the tools themselves are located, and the additional one, which appears if necessary if the tool has quick actions. At the same time, if some tool does not have quick actions, then the additional panel is hidden and does not occupy the workspace.\n";
+"Editor text 11" = "
+    If the tool has settings, then a long press on the tool will open the settings menu for this tool. In addition, you can swipe down the toolbar to leave only the top line of tools, while freeing up space for the working area. When Swipe up, the panel will open back. You can change the order of tools and adjust it for yourself in the application settings.
+    Also on this panel is a button that opens the project settings. She looks like a gear. In the project settings, you can change such project properties as:
+     * Name
+     * Background color
+     * Project dimensions
+In addition to this, you can also rotate or mirror the project.\n
+";
+"Editor text 12" = "Work area\n";
+"Editor text 13" = "    This is the area in which the selected frame is displayed. Here you can use the tools with your finger. Also, using gestures with two fingers, you can move and scale the canvas to your needs.";

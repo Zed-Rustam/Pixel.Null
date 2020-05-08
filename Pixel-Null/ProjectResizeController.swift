@@ -53,7 +53,8 @@ class ProjectResizeController : UIViewController {
         text.heightAnchor.constraint(equalToConstant: 42).isActive = true
         text.textColor = UIColor(named: "enableColor")
         text.font = UIFont(name: "Rubik-Bold", size: 24)
-        text.text = "Project Resize"
+        text.text = NSLocalizedString("Project resize", comment: "")
+        text.adjustsFontSizeToFitWidth = true
         text.textAlignment = .center
         
         return text
@@ -93,7 +94,6 @@ class ProjectResizeController : UIViewController {
     lazy private var widthTextField : TextField = {
         let text = TextField()
         text.translatesAutoresizingMaskIntoConstraints = false
-        text.setHelpText(help: "Width")
         text.filed.text = "\(Int(project!.projectSize.width))"
         
         return text
@@ -102,7 +102,6 @@ class ProjectResizeController : UIViewController {
     lazy private var heightTextField : TextField = {
         let text = TextField()
         text.translatesAutoresizingMaskIntoConstraints = false
-        text.setHelpText(help: "Height")
         text.filed.text = "\(Int(project!.projectSize.height))"
         
         return text
@@ -112,9 +111,14 @@ class ProjectResizeController : UIViewController {
         let text = UILabel()
         text.textColor = UIColor(named: "enableColor")
         text.font = UIFont(name: "Rubik-Medium", size: 20)
-        text.text = "Alignment"
+        text.text = NSLocalizedString("Alignment", comment: "")
+        text.adjustsFontSizeToFitWidth = true
+        //text.numberOfLines = 1
+        //text.minimumScaleFactor = 2
         text.translatesAutoresizingMaskIntoConstraints = false
+        
         text.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        text.widthAnchor.constraint(equalToConstant: 126).isActive = true
         
         return text
     }()
@@ -124,7 +128,7 @@ class ProjectResizeController : UIViewController {
         let text = UILabel()
         text.textColor = UIColor(named: "enableColor")
         text.font = UIFont(name: "Rubik-Medium", size: 20)
-        text.text = "Width"
+        text.text = NSLocalizedString("Width", comment: "")
         text.translatesAutoresizingMaskIntoConstraints = false
         text.heightAnchor.constraint(equalToConstant: 36).isActive = true
         
@@ -135,7 +139,7 @@ class ProjectResizeController : UIViewController {
         let text = UILabel()
         text.textColor = UIColor(named: "enableColor")
         text.font = UIFont(name: "Rubik-Medium", size: 20)
-        text.text = "Height"
+        text.text = NSLocalizedString("Height", comment: "")
         text.translatesAutoresizingMaskIntoConstraints = false
         text.heightAnchor.constraint(equalToConstant: 36).isActive = true
         
@@ -146,7 +150,9 @@ class ProjectResizeController : UIViewController {
         let text = UILabel()
         text.textColor = UIColor(named: "enableColor")
         text.font = UIFont(name: "Rubik-Medium", size: 20)
-        text.text = "Scale Content"
+        text.text = NSLocalizedString("Scale content", comment: "")
+        text.adjustsFontSizeToFitWidth = true
+
         text.translatesAutoresizingMaskIntoConstraints = false
         text.heightAnchor.constraint(equalToConstant: 36).isActive = true
         
@@ -199,7 +205,7 @@ class ProjectResizeController : UIViewController {
         scaleToggle.rightAnchor.constraint(equalTo: view.rightAnchor,constant: -12).isActive = true
 
         AlignmentTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
-        AlignmentTitle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
+        //AlignmentTitle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
         AlignmentTitle.topAnchor.constraint(equalTo: titleBg.bottomAnchor, constant: 8).isActive = true
         
         alignmentSelector.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true

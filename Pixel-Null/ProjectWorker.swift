@@ -216,6 +216,7 @@ class ProjectWork{
         return try! UIImage(data: Data(contentsOf: url))!
     }
     
+    
     func loadSelection() -> UIImage{
         let img = UIImage(data: try! Data(contentsOf: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(projectName).appendingPathComponent("selection.png")))!
         return img
@@ -402,6 +403,10 @@ class ProjectWork{
         try! getFrameFromLayers(frame: frame, size: projectSize).pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[frame].frameID)").appendingPathComponent("preview.png"))
         print("end saving")
 
+    }
+    
+    func setLayerOpasity(frame : Int, layer : Int, newOpasity : Int) {
+        projectInfo.frames[frame].layers[layer].transparent = Float(newOpasity) / 100.0
     }
     
     static func clone(original : String, clone : String){
@@ -725,6 +730,29 @@ class ProjectWork{
 
                 
                 (delegate as! Editor).resizeProject()
+                
+            case .changeLayerOpasity:
+                setLayerOpasity(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!, layer: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!, newOpasity: Int(Float(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["from"]!)! * 100))
+                
+                if FrameSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)! {
+                    
+                    savePreview(frame: FrameSelected)
+
+                    let lastSelect = FrameSelected
+                    FrameSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!
+                    LayerSelected = 0
+                    delegate.updateFrameSelect(lastFrame: lastSelect, newFrame: FrameSelected)
+                } else {
+                    delegate.updateFrame(frame: FrameSelected)
+                }
+                
+                if LayerSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)! {
+                    let lastSelect = LayerSelected
+                    LayerSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!
+                    delegate.updateLayerSelect(lastLayer: lastSelect, newLayer: LayerSelected)
+                } else {
+                    delegate.updateLayer(layer: LayerSelected)
+                }
             default:
                 break
             }
@@ -979,6 +1007,30 @@ class ProjectWork{
                 
                 (delegate as! Editor).resizeProject()
                 
+            case .changeLayerOpasity:
+                setLayerOpasity(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!, layer: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!, newOpasity: Int(Float(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["to"]!)! * 100))
+                
+                 if FrameSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)! {
+                     
+                     savePreview(frame: FrameSelected)
+                     
+                     let lastSelect = FrameSelected
+                     FrameSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!
+                     if LayerSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)! {
+                         LayerSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!
+                     }
+                     delegate.updateFrameSelect(lastFrame: lastSelect, newFrame: FrameSelected)
+                 } else {
+                     delegate.updateFrame(frame: FrameSelected)
+                     
+                     if LayerSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)! {
+                         let lastSelect = LayerSelected
+                         LayerSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!
+                         delegate.updateLayerSelect(lastLayer: lastSelect, newLayer: LayerSelected)
+                     } else {
+                         delegate.updateLayer(layer: LayerSelected)
+                     }
+                 }
             default:
                 break
             }
@@ -1217,5 +1269,6 @@ enum Actions : Int {
     case changeFrameDelay = 12 //done
     case transform = 13 //done
     case backgroundChange = 14//done
-    case resizeProject = 15
+    case resizeProject = 15//done
+    case changeLayerOpasity = 16
 }

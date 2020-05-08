@@ -14,7 +14,7 @@ class SelectorSettings : UIViewController {
     lazy private var selectorTitle : UILabel = {
         let text = UILabel()
         text.textColor = UIColor(named: "enableColor")
-        text.text = "Selector"
+        text.text = NSLocalizedString("Selector", comment: "")
         text.font = UIFont(name: "Rubik-Bold", size: 24)
         text.textAlignment = .center
         text.translatesAutoresizingMaskIntoConstraints = false
@@ -90,8 +90,8 @@ class SelectorSettings : UIViewController {
     lazy private var modeText : UILabel = {
         let text = UILabel()
         text.translatesAutoresizingMaskIntoConstraints = false
-        text.textColor = UIColor(named: "backgroundColor")
-        text.text = "Selector Mode"
+        text.textColor = getAppColor(color: .enable)
+        text.text = NSLocalizedString("Selector mode", comment: "")
         text.font = UIFont(name: "Rubik-Medium", size: 20)
         text.heightAnchor.constraint(equalToConstant: 36).isActive = true
         

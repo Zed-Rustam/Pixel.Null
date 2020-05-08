@@ -88,7 +88,7 @@ class EraseSettings : UIViewController {
     
     private var eraseSizeTitle : UILabel = {
         let text = UILabel()
-        text.text = "Erase width"
+        text.text = NSLocalizedString("Eraser width", comment: "")
         text.textAlignment = .left
         text.font = UIFont(name:  "Rubik-Medium", size: 24)
         text.textColor = UIColor(named: "enableColor")
@@ -114,7 +114,7 @@ class EraseSettings : UIViewController {
 
     private var eraseTitle : UILabel = {
            let title = UILabel()
-           title.text = "Erase"
+           title.text = NSLocalizedString("Eraser", comment: "")
            title.textAlignment = .center
            title.font = UIFont(name:  "Rubik-Bold", size: 24)
            title.textColor = UIColor(named: "enableColor")

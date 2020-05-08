@@ -38,26 +38,24 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
                 cell.textLabel!.text = settings[0]
             case 1:
                 cell.textLabel!.text = settings[1]
-            case 2:
-                cell.textLabel!.text = settings[2]
             default:
                 break
             }
         case 1:
             switch indexPath.row {
             case 0:
-                cell.textLabel!.text = settings[3]
+                cell.textLabel!.text = settings[2]
             case 1:
-                cell.textLabel!.text = settings[4]
+                cell.textLabel!.text = settings[3]
             default:
                 break
             }
         case 2:
             switch indexPath.row {
             case 0:
-                cell.textLabel!.text = settings[5]
+                cell.textLabel!.text = settings[4]
             case 1:
-                cell.textLabel!.text = settings[6]
+                cell.textLabel!.text = settings[5]
             default:
                 break
             }
@@ -70,7 +68,7 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return 3
+            return 2
         case 1:
             return 2
         case 2:
@@ -126,7 +124,7 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
         cell?.setSelected(false, animated: true)
     }
     
-    let settings : [String] = ["App theme", "Language" ,"iCloud synchronization", "Tool bar", "Undo / Redo","About","Contacts"]
+    let settings : [String] = ["App theme", "Language", "Tool bar", "Undo / Redo","About","Contacts"]
     
     
     lazy private var icon : UIImageView = {
@@ -140,7 +138,7 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
     }()
     
     override func viewDidLayoutSubviews() {
-        icon.setShadow(color: UIColor(named: "shadowColor")!, radius: 4, opasity: 0.25)
+        icon.setShadow(color: getAppColor(color: .shadow), radius: 4, opasity: 1)
     }
     
     lazy private var appTitle : UILabel = {
@@ -201,6 +199,6 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
         table.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
 
 
-        view.backgroundColor = UIColor(named: "backgroundColor")
+        //view.backgroundColor = UIColor(named: "backgroundColor")
     }
 }

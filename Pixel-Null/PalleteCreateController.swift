@@ -199,7 +199,7 @@ class PalleteCreateController : UIViewController {
     
     private func getPalleteName() -> String{
         for i in 0... {
-            if !getProjects().contains("New Pallete \(i)") { return "New Pallete \(i)" }
+            if !getProjects().contains("\(NSLocalizedString("New palette", comment: "")) \(i)") { return "\(NSLocalizedString("New palette", comment: "")) \(i)" }
         }
         return ""
     }
@@ -231,7 +231,7 @@ class PalleteCreateController : UIViewController {
                 self!.createButton.isEnabled = false
                 self!.name.error = nil
             } else if self!.getProjects().contains($0.text!) && $0.text! != self!.pallete.palleteName {
-                self!.name.error = "A pallete with this name already exists"
+                self!.name.error = NSLocalizedString("Palette exist error", comment: "")
                 self!.createButton.isEnabled = false
             } else {
                 self!.name.error = nil
@@ -239,7 +239,7 @@ class PalleteCreateController : UIViewController {
             }
         })
         
-        self.view.backgroundColor = UIColor(named : "backgroundColor")
+        self.view.backgroundColor = getAppColor(color: .background)
         
         self.view.addSubview(colors)
         self.view.addSubview(nameBg)
@@ -269,7 +269,7 @@ class PalleteCreateController : UIViewController {
     }
     
     override func viewDidLayoutSubviews() {
-        palleteEditBap.setShadow(color: UIColor(named : "shadowColor")!, radius: 4, opasity: 1)
+        palleteEditBap.setShadow(color: getAppColor(color: .shadow), radius: 4, opasity: 1)
     }
     override func viewDidAppear(_ animated: Bool) {
         colors.selectItem(at: IndexPath(item: 0, section: 0), animated: true, scrollPosition: .left)

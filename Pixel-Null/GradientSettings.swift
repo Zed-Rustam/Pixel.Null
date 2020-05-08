@@ -125,7 +125,7 @@ class GradientSettings : UIViewController {
    
     private var stepCountTitle : UILabel = {
         let text = UILabel()
-        text.text = "Step's count"
+        text.text = NSLocalizedString("Step's count", comment: "")
         text.textAlignment = .left
         text.font = UIFont(name:  "Rubik-Medium", size: 24)
         text.textColor = UIColor(named: "enableColor")
@@ -136,7 +136,7 @@ class GradientSettings : UIViewController {
     
     private var colorsTitle : UILabel = {
            let text = UILabel()
-           text.text = "Colors"
+           text.text = NSLocalizedString("Colors", comment: "")
            text.textAlignment = .left
            text.font = UIFont(name:  "Rubik-Medium", size: 24)
            text.textColor = UIColor(named: "enableColor")
@@ -179,7 +179,7 @@ class GradientSettings : UIViewController {
     
     private var penTitle: UILabel = {
         let title = UILabel()
-        title.text = "Gradient"
+        title.text = NSLocalizedString("Gradient", comment: "")
         title.textAlignment = .center
         title.font = UIFont(name:  "Rubik-Bold", size: 24)
         title.textColor = UIColor(named: "enableColor")

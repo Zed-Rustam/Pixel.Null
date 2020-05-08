@@ -87,7 +87,7 @@ class GalleryControl : UIViewController{
             
         } catch {}
                 
-        projects.insert("Gallery", at: 0)
+        projects.insert(NSLocalizedString("Gallery", comment: ""), at: 0)
     
         
         self.view.addSubview(gallery)

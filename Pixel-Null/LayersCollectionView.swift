@@ -8,7 +8,7 @@
 
 import UIKit
 
-class LayersCollectionView : UIView {
+class LayersCollectionView : UIView, UITextFieldDelegate {
     lazy var list : LayersCollection = {
         let ls = LayersCollection(proj: project!)
         //ls.selfView = self
@@ -103,6 +103,59 @@ class LayersCollectionView : UIView {
         return btn
     }()
 
+    lazy var transparentField : TextField = {
+        let text = TextField()
+        text.translatesAutoresizingMaskIntoConstraints = false
+        text.widthAnchor.constraint(equalToConstant: 72).isActive = true
+        text.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        text.setHelpText(help: "100")
+        text.filed.text = "\(Int(project!.information.frames[project!.FrameSelected].layers[project!.LayerSelected].transparent * 100))"
+
+        text.filed.textAlignment = .center
+        text.filed.keyboardType = .numberPad
+
+        text.filed.delegate = self
+        let bar = UIToolbar()
+        bar.items = [done,cancel]
+        bar.sizeToFit()
+        text.filed.inputAccessoryView = bar
+        return text
+    }()
+    
+    let done = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneAction))
+    let cancel = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(cancelAction))
+    
+    @objc func doneAction() {
+        project?.addAction(action: ["ToolID" : "\(Actions.changeLayerOpasity.rawValue)","frame" : "\(project!.FrameSelected)","layer" : "\(project!.LayerSelected)", "from" : "\(project!.information.frames[project!.FrameSelected].layers[project!.LayerSelected].transparent)", "to" : "\(Float(transparentField.filed.text!)! / 100.0)"])
+        
+        project?.setLayerOpasity(frame: project!.FrameSelected, layer: project!.LayerSelected, newOpasity: Int(transparentField.filed.text!)!)
+        transparentField.endEditing(true)
+        
+        list.frameDelegate?.updateLayerSettings(target: project!.LayerSelected)
+        list.frameDelegate?.updateFrameSettings(target: project!.FrameSelected)
+        list.frameDelegate?.updatePreview()
+    }
+    
+    @objc func cancelAction() {
+        transparentField.filed.text = "\(Int(project!.information.frames[project!.FrameSelected].layers[project!.LayerSelected].transparent * 100))"
+        transparentField.endEditing(true)
+    }
+    
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+         if textField.text != "" {
+            var delay = Int(textField.text!) ?? -1
+        
+            if delay <= 0 {
+                textField.text = ""
+                return
+            } else if delay > 100 {
+                delay = 100
+            }
+            textField.text = String(delay)
+            //self.project!.setFrameDelay(frame: self.project!.FrameSelected, delay: delay)
+         }
+    }
+    
     weak var project : ProjectWork?
     
     func checkFrame(){
@@ -120,6 +173,7 @@ class LayersCollectionView : UIView {
         
         super.init(frame : frame)
         self.addSubview(list)
+        self.addSubview(transparentField)
         self.addSubview(deleteButton)
         self.addSubview(cloneButton)
         self.addSubview(visibleButton)
@@ -129,7 +183,10 @@ class LayersCollectionView : UIView {
         list.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
         list.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
         
-        cloneButton.leftAnchor.constraint(equalTo: leftAnchor, constant: 8).isActive = true
+        transparentField.leftAnchor.constraint(equalTo: leftAnchor, constant: 8).isActive = true
+        transparentField.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 16).isActive = true
+        
+        cloneButton.leftAnchor.constraint(equalTo: transparentField.rightAnchor, constant: 8).isActive = true
         cloneButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 16).isActive = true
 
         visibleButton.leftAnchor.constraint(equalTo: cloneButton.rightAnchor, constant: 8).isActive = true

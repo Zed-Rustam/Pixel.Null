@@ -152,7 +152,7 @@ class SegmentSelector : UIView {
     }
     
     override func layoutSubviews() {
-        selectBg.setShadow(color: UIColor(named: "shadowColor")!, radius: 4, opasity: 0.25)
+        selectBg.setShadow(color: UIColor(named: "shadowColor")!, radius: 4, opasity: 1)
 
     }
     

@@ -14,7 +14,6 @@ func getAppColor(color : Theme) -> UIColor{
     return UIColor(named: color.rawValue)!
 }
 
-
 enum Theme : String {
     case background = "backgroundColor"
     case enable = "enableColor"
@@ -225,8 +224,7 @@ func getTintImage(image : UIImage, color : UIColor) -> UIImage {
 
 import UIKit
 import ImageIO
-// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
-// Consider refactoring the code to use the non-optional operators.
+
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   switch (lhs, rhs) {
   case let (l?, r?):

@@ -76,7 +76,7 @@ class PalleteCollection : UIViewController, UICollectionViewDelegate, UICollecti
     }
     
     override func viewDidLoad() {
-        palletes.append("Palletes")
+        palletes.append(NSLocalizedString("Palettes", comment: ""))
         let f = FileManager()
         do {
             let projs = try f.contentsOfDirectory(at: PalleteWorker.getDocumentsDirectory(), includingPropertiesForKeys: nil)
