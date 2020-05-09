@@ -21,6 +21,7 @@ class Tool {
 class Pencil : Tool {
     var size : Double = 1
     var pixPerfect : Bool = false
+    var startImage : UIImage? = nil
     
     func setSettings(penSize : Int, pixelPerf : Bool){
         size = Double(penSize)
@@ -29,8 +30,9 @@ class Pencil : Tool {
     
     private var points : [CGPoint] = []
     
-    func setStartPoint(point : CGPoint){
+    func setStartPoint(point : CGPoint,startimg : UIImage){
         points.removeAll()
+        startImage = startimg
     }
     
     func normalise(radius : Double) -> Double {
@@ -87,6 +89,7 @@ class Pencil : Tool {
         UIGraphicsBeginImageContextWithOptions(image.size, false, 1)
         
         let context = UIGraphicsGetCurrentContext()!
+
         context.setStrokeColor(UIColor.black.cgColor)
         context.setShouldAntialias(false)
         context.setLineCap(.round)
@@ -131,7 +134,7 @@ class Pencil : Tool {
         
         UIGraphicsEndImageContext()
                 
-        return myImage.withTintColor(color)
+        return UIImage.merge(images: [startImage!, myImage.withTintColor(color)])!
     }
 }
 
@@ -554,11 +557,11 @@ class Fill : Tool {
             
             var returnImage = UIGraphicsGetImageFromCurrentImageContext()!
             
-            //UIGraphicsGetCurrentContext()!.clear(CGRect(origin: .zero, size: image.size))
+            UIGraphicsGetCurrentContext()!.clear(CGRect(origin: .zero, size: image.size))
             
-            //image.draw(at: .zero)
-            //returnImage.draw(at: .zero)
-            //returnImage = UIGraphicsGetImageFromCurrentImageContext()!
+            image.draw(at: .zero)
+            returnImage.draw(at: .zero)
+            returnImage = UIGraphicsGetImageFromCurrentImageContext()!
             
             UIGraphicsEndImageContext()
             return returnImage
@@ -578,6 +581,7 @@ class Square : Tool {
     }
     
     var isFixed = false
+    var startImage : UIImage? = nil
     
     func normalise(radius : Double) -> Double {
         if radius <= 2 {
@@ -598,7 +602,7 @@ class Square : Tool {
     
     private var startPoint : CGPoint = .zero
     
-    func setStartPoint(point : CGPoint) {
+    func setStartPoint(point : CGPoint,startImg : UIImage){
         switch Int(size) % 2 {
            case 0:
             startPoint = point
@@ -607,6 +611,8 @@ class Square : Tool {
            default:
                 break
         }
+        
+        startImage = startImg
     }
     
     func setSettings(penSize : Int){
@@ -691,7 +697,7 @@ class Square : Tool {
     
         UIGraphicsEndImageContext()
                 
-        return myImage.withTintColor(color)
+        return UIImage.merge(images: [startImage!, myImage.withTintColor(color)])!
 
     }
 }
@@ -803,18 +809,22 @@ class Erase : Tool {
 
 class Move : Tool {
     private var moveImage : UIImage!
+    private var startImage : UIImage!
+    
     var selectionImage : UIImage!
     private var offset : CGPoint = .zero
     var wasStart : Bool = false
     var realSize : CGSize = .zero
     
-    func setImage(image : UIImage, startpos : CGPoint,selection : UIImage?,size : CGSize) {
+    func setImage(image : UIImage, startpos : CGPoint,selection : UIImage?,size : CGSize,startImg : UIImage) {
 
         realSize = size
         moveImage = image
         selectionImage = selection ?? UIImage(size: moveImage.size)
         wasStart = true
         offset = startpos
+        
+        startImage = startImg
     }
     
     func flipImage(flipX : Bool, flipY : Bool) {
@@ -857,7 +867,7 @@ class Move : Tool {
 
         UIGraphicsEndImageContext()
  
-        return myImage
+        return UIImage.merge(images: [startImage, myImage])!
     }
     
     func drawSelectionOn(position : CGRect, rotation : CGFloat, rotateCenter : CGPoint) -> UIImage{
@@ -888,13 +898,15 @@ class Move : Tool {
 class Gradient : Tool {
     private var startPoint : CGPoint = .zero
     private var endPoint : CGPoint = .zero
-
+    
     var startColor : UIColor = .black
     var endColor : UIColor = .white
     var stepCount = 10
+    var startImage : UIImage? = nil
     
-    func setStartPoint(point : CGPoint) {
+    func setStartPoint(point : CGPoint,startImg : UIImage) {
         startPoint = CGPoint(x: point.x + 0.5, y: point.y + 0.5)
+        startImage = startImg
     }
     
     func makeArray() -> [CGFloat] {
@@ -945,8 +957,7 @@ class Gradient : Tool {
         myImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
                 
-        return myImage
-
+        return UIImage.merge(images: [ startImage!,myImage])!
     }
     
     func lenght(p1 : CGPoint, p2 : CGPoint) -> CGFloat {

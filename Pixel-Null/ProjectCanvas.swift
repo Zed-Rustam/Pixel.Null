@@ -124,6 +124,9 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         fgImage?.image = fgLayers
         
         targetImage?.alpha = project.information.frames[project.FrameSelected].layers[project.LayerSelected].visible ? CGFloat(project.information.frames[project.FrameSelected].layers[project.LayerSelected].transparent) : 0
+        
+        actionImage?.alpha = project.information.frames[project.FrameSelected].layers[project.LayerSelected].visible ? CGFloat(project.information.frames[project.FrameSelected].layers[project.LayerSelected].transparent) : 0
+
     }
     
     func getPreview() -> UIImage{
@@ -295,7 +298,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
             transformView.scale = scale
             transformView.angle = 0
             transformView.setRect(image: UIImage.merge(images: [selectionLayer])!, isSelected: isSelected)
-            move.setImage(image: targetLayer.inner(image: isSelected ? selectionLayer : nil).getImageFromRect(rect: transformView.position), startpos: .zero, selection: selectionLayer.getImageFromRect(rect: transformView.position),size: project.projectSize)
+            move.setImage(image: targetLayer.inner(image: isSelected ? selectionLayer : nil).getImageFromRect(rect: transformView.position), startpos: .zero, selection: selectionLayer.getImageFromRect(rect: transformView.position),size: project.projectSize, startImg: targetLayer.cut(image: isSelected ? selectionLayer : nil))
             
             //actionImage.image =
             targetLayer = targetLayer.cut(image: isSelected ? selectionLayer : nil)
@@ -306,6 +309,8 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
             
             transformView.alpha = 1
             transformGest.isEnabled = true
+            targetImage.isHidden = true
+
         } else if selectedTool == 2 && selectedTool != newTool {
             if transformView.needToSave {
                 finishTransform()
@@ -369,14 +374,15 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         selectionLayer = fixAlpha(image : imageTransform).withTintColor(getAppColor(color: .select))
         selectionImage.image = selectionLayer
         
-        
-        move.setImage(image: imageTransform.getImageFromRect(rect: transformView.position), startpos: .zero, selection: selectionLayer.getImageFromRect(rect: transformView.position),size: project.projectSize)
+        move.setImage(image: imageTransform.getImageFromRect(rect: transformView.position), startpos: .zero, selection: selectionLayer.getImageFromRect(rect: transformView.position),size: project.projectSize, startImg: targetLayer.cut(image: isSelected ? selectionLayer : nil))
         
         ActionLayer = move.drawOn(position: transformView.position, rotation: transformView.Radians(CGFloat(transformView.angle)),rotateCenter: CGPoint(x: transformView.lastSize.width, y: transformView.lastSize.height))
         actionImage.image = ActionLayer
         
         transformView.alpha = 1
         transformGest.isEnabled = true
+        
+        targetImage.isHidden = true
     }
     
     func startAnimationMode(){
@@ -493,6 +499,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
             print("dont changed")
             clearTransform()
         }
+        targetImage.isHidden = false
         editor?.canvas.transformView.isCopyMode = false
     }
     
@@ -506,8 +513,8 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         actionImage.image = ActionLayer
         editor?.showTransform(isShow: false)
         editor?.canvas.transformView.isCopyMode = false
+        targetImage.isHidden = false
     }
-    
     
     @objc private func touch(sender : UILongPressGestureRecognizer) {
           switch sender.state {
@@ -892,7 +899,9 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
             case .began:
                 location.x = CGFloat(floor(location.x))
                 location.y = CGFloat(floor(location.y))
-                pen.setStartPoint(point: location)
+                pen.setStartPoint(point: location,startimg: targetLayer)
+                targetImage.isHidden = true
+
                 ActionLayer = pen.drawOn(image: ActionLayer, point: location,selection: isSelected ? selectionLayer : nil, symmetry: getSymmetry(),color: selectorColor)
                 ActionLayer = pen.drawOn(image: ActionLayer, point: location,selection: isSelected ? selectionLayer : nil, symmetry: getSymmetry(), color: selectorColor)
                 actionImage.image = ActionLayer
@@ -906,12 +915,13 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
             case .ended:
                 let wasImg = project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected)
                           
-                targetLayer = UIImage.merge(images: [targetLayer,ActionLayer])
+                targetLayer = UIImage.merge(images: [ActionLayer])
                 targetImage.image = targetLayer
-                
+                targetImage.isHidden = false
+
                 project.addAction(action :["ToolID" : "\(Actions.drawing.rawValue)", "frame" : "\(project.FrameSelected)", "layer" : "\(project.LayerSelected)"])
                 
-                try! UIImage.merge(images: [project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected),ActionLayer])!.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(project.information.frames[project.FrameSelected].frameID)").appendingPathComponent("layer-\(project.information.frames[project.FrameSelected].layers[project.LayerSelected].layerID).png"))
+                try! UIImage.merge(images: [ActionLayer])!.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(project.information.frames[project.FrameSelected].frameID)").appendingPathComponent("layer-\(project.information.frames[project.FrameSelected].layers[project.LayerSelected].layerID).png"))
                 
                 try! wasImg.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
                 
@@ -928,6 +938,8 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
             case .cancelled:
                 ActionLayer = UIImage(size : project.projectSize)
                 actionImage.image = ActionLayer
+                targetImage.isHidden = false
+
                 print("was cancel")
             default:
                 break
@@ -987,7 +999,11 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
             case .began:
                 location.x = CGFloat(floor(location.x))
                 location.y = CGFloat(floor(location.y))
-                gradient.setStartPoint(point: location)
+                targetImage.isHidden = true
+
+                gradient.setStartPoint(point: location,startImg: targetLayer)
+                ActionLayer = gradient.drawOn(image: ActionLayer, point: location,selection: isSelected ? selectionLayer : nil)
+                
                 actionImage.image = ActionLayer
             case .changed:
                 location.x = CGFloat(floor(location.x))
@@ -998,12 +1014,13 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
             case .ended:
                 let wasImg = project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected)
                           
-                targetLayer = UIImage.merge(images: [targetLayer,ActionLayer])
+                targetLayer = UIImage.merge(images: [ActionLayer])
                 targetImage.image = targetLayer
-                
+                targetImage.isHidden = false
+
                 project.addAction(action :["ToolID" : "\(Actions.drawing.rawValue)", "frame" : "\(project.FrameSelected)", "layer" : "\(project.LayerSelected)"])
                 
-                try! UIImage.merge(images: [project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected),ActionLayer])!.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(project.information.frames[project.FrameSelected].frameID)").appendingPathComponent("layer-\(project.information.frames[project.FrameSelected].layers[project.LayerSelected].layerID).png"))
+                try! UIImage.merge(images: [ActionLayer])!.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(project.information.frames[project.FrameSelected].frameID)").appendingPathComponent("layer-\(project.information.frames[project.FrameSelected].layers[project.LayerSelected].layerID).png"))
                 
                 try! wasImg.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
                 
@@ -1020,6 +1037,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
             case .cancelled:
                 ActionLayer = UIImage(size : project.projectSize)
                 actionImage.image = ActionLayer
+                targetImage.isHidden = false
             default:
                 break
             }
@@ -1031,7 +1049,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 if actionImage.bounds.contains(location) {
                     switch fill.style {
                     case .frame:
-                        ActionLayer = UIImage.merge(images: [fill.drawOnFrame(image: project.getFrameFromLayers(frame: project.FrameSelected, size: project.projectSize), point: location, selection: isSelected ? selectionLayer : nil, fillColor: selectorColor),targetLayer])
+                        ActionLayer = fill.drawOnFrame(image: UIImage.merge(images: [project.getFrameFromLayers(frame: project.FrameSelected, size: project.projectSize)])!, point: location, selection: isSelected ? selectionLayer : nil, fillColor: selectorColor)
                     case .layer:
                         ActionLayer = fill.drawOn(image:  UIImage.merge(images: [targetLayer])!, point: location,selection: isSelected ? selectionLayer : nil, fillColor: selectorColor)
                     }
@@ -1127,7 +1145,9 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
             case .began:
                 location.x = CGFloat(floor(location.x))
                 location.y = CGFloat(floor(location.y))
-                square.setStartPoint(point: location)
+                targetImage.isHidden = true
+                square.setStartPoint(point: location,startImg: targetLayer)
+                
                 ActionLayer = square.drawOn(image: ActionLayer, point: location, color: selectorColor, symmetry: getSymmetry(), selection: isSelected ? selectionLayer : nil)
                 actionImage.image = ActionLayer
             case .changed:
@@ -1140,12 +1160,13 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
             case .ended:
                 let wasImg = project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected)
                           
-                targetLayer = UIImage.merge(images: [targetLayer,ActionLayer])
+                targetLayer = UIImage.merge(images: [ActionLayer])
                 targetImage.image = targetLayer
+                targetImage.isHidden = false
                 
                 project.addAction(action :["ToolID" : "\(Actions.drawing.rawValue)", "frame" : "\(project.FrameSelected)", "layer" : "\(project.LayerSelected)"])
                 
-                try! UIImage.merge(images: [project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected),ActionLayer])!.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(project.information.frames[project.FrameSelected].frameID)").appendingPathComponent("layer-\(project.information.frames[project.FrameSelected].layers[project.LayerSelected].layerID).png"))
+                try! UIImage.merge(images: [ActionLayer])!.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(project.information.frames[project.FrameSelected].frameID)").appendingPathComponent("layer-\(project.information.frames[project.FrameSelected].layers[project.LayerSelected].layerID).png"))
                 
                 try! wasImg.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
                 
@@ -1162,6 +1183,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
             case .cancelled:
                 ActionLayer = UIImage(size : project.projectSize)
                 actionImage.image = ActionLayer
+                targetImage.isHidden = false
                 print("was cancel")
             default:
                 break

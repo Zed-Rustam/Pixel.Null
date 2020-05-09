@@ -173,7 +173,7 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
     
     lazy private var frameText : UILabel = {
         let text = UILabel(frame: .zero)
-        text.text = "Frames"
+        text.text = NSLocalizedString("Frames", comment: "")
         text.font = UIFont(name: "Rubik-Medium", size: 28)
         text.textColor = UIColor(named: "enableColor")
         text.translatesAutoresizingMaskIntoConstraints = false
@@ -183,7 +183,7 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
     
     lazy private var layerText : UILabel = {
         let text = UILabel(frame: .zero)
-        text.text = "Layers"
+        text.text = NSLocalizedString("Layers", comment: "")
         text.font = UIFont(name: "Rubik-Medium", size: 28)
         text.textColor = UIColor(named: "enableColor")
         text.translatesAutoresizingMaskIntoConstraints = false
@@ -273,13 +273,11 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
     }
     
     deinit {
-        print("frame control deinit.")
         project = nil
     }
     
     override func viewWillAppear(_ animated: Bool) {
         frames.list.selectItem(at: IndexPath(item: project.FrameSelected, section: 0), animated: true, scrollPosition: .left)
-        
         layers.list.selectItem(at: IndexPath(item: project.LayerSelected, section: 0), animated: true, scrollPosition: .left)
     }
 }
