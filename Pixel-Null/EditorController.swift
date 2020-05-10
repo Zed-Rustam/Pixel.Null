@@ -44,7 +44,7 @@ class EditorController : UIViewController {
             UILabel().setTextColor(color:UIColor(named: "enableColor")!).appendText(text: NSLocalizedString("Editor text 4", comment: ""), fortt: UIFont(name: "Rubik-Regular", size: 12)!)
         )
         
-        stack.addViews(views: [
+        return stack.addViews(views: [
             UILabel()
                 .setTextColor(color: UIColor(named: "enableColor")!)
                 .setBreakMode(mode: .byWordWrapping)
@@ -75,8 +75,6 @@ class EditorController : UIViewController {
             .setBreakMode(mode: .byWordWrapping)
             .setMaxWidth(width: view.frame.width - 24)
         ])
-        
-        return stack
     }()
     
     lazy private var imgLFB : UIView = {

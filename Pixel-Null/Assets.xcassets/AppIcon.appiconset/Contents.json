@@ -54,6 +54,7 @@
       "size" : "20x20"
     },
     {
+      "filename" : "Slice 2340-1.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "20x20"
@@ -64,16 +65,19 @@
       "size" : "29x29"
     },
     {
+      "filename" : "Slice 2358-1.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "29x29"
     },
     {
+      "filename" : "Slice 2340-2.png",
       "idiom" : "ipad",
       "scale" : "1x",
       "size" : "40x40"
     },
     {
+      "filename" : "Slice 2380-1.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "40x40"

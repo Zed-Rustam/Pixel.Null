@@ -198,7 +198,7 @@ class ProjectResizeController : UIViewController {
         heightTextField.bottomAnchor.constraint(equalTo: alignmentSelector.bottomAnchor, constant: 0).isActive = true
         
         ScaleContentTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
-        ScaleContentTitle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
+        ScaleContentTitle.rightAnchor.constraint(equalTo: scaleToggle.leftAnchor, constant: -12).isActive = true
         ScaleContentTitle.topAnchor.constraint(equalTo: alignmentSelector.bottomAnchor, constant: 6).isActive = true
         
         scaleToggle.centerYAnchor.constraint(equalTo: ScaleContentTitle.centerYAnchor).isActive = true

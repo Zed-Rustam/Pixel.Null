@@ -93,6 +93,9 @@ class FrameList : UICollectionView, UICollectionViewDataSource, UICollectionView
         self.isExclusiveTouch = false
         
         self.addGestureRecognizer(tapgesture)
+        
+        self.showsVerticalScrollIndicator = false
+        self.showsHorizontalScrollIndicator = false
     }
     
     @objc func tap(sender : UITapGestureRecognizer){

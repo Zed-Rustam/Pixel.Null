@@ -86,14 +86,12 @@ class ProjectSettingsController : UIViewController {
     }
 
     let doneBtn = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(done))
-
     
     @objc func onShowKeyboard(notification : NSNotification) {
         let info = notification.userInfo!
         let rect: CGRect = info[UIResponder.keyboardFrameEndUserInfoKey] as! CGRect
-        print("\(rect)")
         
-        if view.frame.height - rect.height - 8 < projectName.frame.origin.y + projectName.frame.height {
+        if view.frame.height - rect.height - 8 < projectName.frame.origin.y + projectName.frame.height && projectName.filed.isFirstResponder {
             UIView.animate(withDuration: 0.2, animations: {
                 self.view.frame.origin.y -= (self.projectName.frame.origin.y + self.projectName.frame.height) - (self.view.frame.height - rect.height) + 8
             })
@@ -248,7 +246,6 @@ class ProjectSettingsController : UIViewController {
     }
     
     override func viewDidLayoutSubviews() {
-        
         preview.backgroundColor = UIColor(patternImage: UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 1 / ((view.frame.width - 32) / 8.0), orientation: .down))
         preview.setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
     }

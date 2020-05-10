@@ -132,8 +132,7 @@ class GalleryControl : UIViewController{
         gallery.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
         gallery.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
         
-        
-        self.view.backgroundColor = UIColor(named: "backgroundColor")
+        self.view.backgroundColor = getAppColor(color: .background)
     }
 }
 

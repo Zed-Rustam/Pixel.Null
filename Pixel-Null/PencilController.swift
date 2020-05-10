@@ -129,26 +129,24 @@ class PencilController : UIViewController {
         let view = UIView()
         view.layer.masksToBounds = false
         
-        view.addFullSizeView(view: UIImageView(image: UIImage.gifImageWithData(NSDataAsset(name: "pixel_perfect_off")!.data))
+        return view.addFullSizeView(view: UIImageView(image: UIImage.gifImageWithData(NSDataAsset(name: "pixel_perfect_off")!.data))
         .Corners(round: 10)
         .setSize(size: CGSize(width: 120, height: 160))
         .setBackground(color: UIColor(patternImage: UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 1.0/20.0, orientation: .down)))
         .setFilter(filter: .nearest))
-        
-        return view.setViewSize(size: CGSize(width: 120, height: 160))
+        .setViewSize(size: CGSize(width: 120, height: 160))
     }()
 
     lazy private var perfectPixelOn : UIView = {
         let view = UIView()
         view.layer.masksToBounds = false
         
-        view.addFullSizeView(view: UIImageView(image: UIImage.gifImageWithData(NSDataAsset(name: "pixel_perfect_on")!.data))
+        return view.addFullSizeView(view: UIImageView(image: UIImage.gifImageWithData(NSDataAsset(name: "pixel_perfect_on")!.data))
         .Corners(round: 10)
         .setSize(size: CGSize(width: 120, height: 160))
         .setBackground(color: UIColor(patternImage: UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 1.0/20.0, orientation: .down)))
         .setFilter(filter: .nearest))
         
-        return view
     }()
 
     override func viewDidLoad() {

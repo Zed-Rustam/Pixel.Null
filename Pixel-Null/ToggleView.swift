@@ -90,6 +90,10 @@ class ToggleView : UIView {
         heightAnchor.constraint(equalToConstant: 30).isActive = true
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.selectorView.frame.origin.x = self.check ? self.frame.width - self.selectorView.frame.width : 0
+    }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

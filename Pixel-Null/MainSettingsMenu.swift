@@ -14,18 +14,18 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Table")!
-        cell.textLabel!.textColor = UIColor(named: "enableColor")
+        cell.textLabel!.textColor = getAppColor(color: .enable)
         cell.textLabel!.font = UIFont(name:  "Rubik-Regular", size: 16)
-        cell.backgroundColor = UIColor(named: "disableColor")!.withAlphaComponent(0.25)
-        cell.tintColor = UIColor(named: "enableColor")
+        cell.backgroundColor = getAppColor(color: .disable).withAlphaComponent(0.25)
+        cell.tintColor = getAppColor(color: .enable)
         cell.selectedBackgroundView = {
             let view = UIView()
-            view.backgroundColor = UIColor(named: "disableColor")!.withAlphaComponent(0.5)
+            view.backgroundColor = getAppColor(color: .disable).withAlphaComponent(0.5)
             return view
         }()
                 
         cell.accessoryView = {
-            let img = UIImageView(image: #imageLiteral(resourceName: "next_icon").withTintColor(UIColor(named: "enableColor")!))
+            let img = UIImageView(image: #imageLiteral(resourceName: "next_icon").withTintColor(getAppColor(color: .enable)))
             img.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
             return img
         }()
@@ -148,7 +148,7 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
         
         label.text = "Pixel.Null"
         
-        label.textColor = UIColor(named: "enableColor")
+        label.textColor = getAppColor(color: .enable)
         label.textAlignment = .center
         label.font = UIFont(name:  "Rubik-Bold", size: 36)
         
@@ -161,7 +161,7 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
         tv.backgroundColor = .clear
         tv.register(UITableViewCell.self, forCellReuseIdentifier: "Table")
         tv.separatorStyle = .none
-        tv.tintColor = UIColor(named: "enableColor")!.withAlphaComponent(0.5)
+        tv.tintColor = getAppColor(color: .enable).withAlphaComponent(0.5)
         //tv.isScrollEnabled = false
         
         tv.tableHeaderView = tableTitle
@@ -197,8 +197,5 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
         table.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
         table.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
         table.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
-
-
-        //view.backgroundColor = UIColor(named: "backgroundColor")
     }
 }

@@ -45,7 +45,6 @@ class ProjectView : UIView{
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        let blurFilter = CIFilter(name: "CIGaussianBlur",parameters: [kCIInputRadiusKey: 2])
         
         let interaction = UIContextMenuInteraction(delegate: self)
         self.addInteraction(interaction)

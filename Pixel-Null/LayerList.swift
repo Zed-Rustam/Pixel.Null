@@ -122,6 +122,9 @@ class LayerList : UICollectionView, UICollectionViewDataSource, UICollectionView
         
         self.addGestureRecognizer(tapgesture)
         self.addGestureRecognizer(longPressGesture)
+        
+        self.showsVerticalScrollIndicator = false
+        self.showsHorizontalScrollIndicator = false
     }
     
     @objc func tap(sender : UITapGestureRecognizer){

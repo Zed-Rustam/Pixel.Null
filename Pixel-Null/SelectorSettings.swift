@@ -94,7 +94,7 @@ class SelectorSettings : UIViewController {
         text.text = NSLocalizedString("Selector mode", comment: "")
         text.font = UIFont(name: "Rubik-Medium", size: 20)
         text.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        
+        text.adjustsFontSizeToFitWidth = true
         return text
     }()
     
@@ -114,6 +114,7 @@ class SelectorSettings : UIViewController {
         titleBg.topAnchor.constraint(equalTo: view.topAnchor, constant: 6).isActive = true
         
         modeText.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
+        modeText.rightAnchor.constraint(equalTo: modeSelector.leftAnchor, constant: -12).isActive = true
         modeText.topAnchor.constraint(equalTo: titleBg.bottomAnchor, constant: 12).isActive = true
         
         modeSelector.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true

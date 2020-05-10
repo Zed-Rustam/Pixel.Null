@@ -79,7 +79,7 @@ class GradientController : UIViewController {
     lazy private var gradientColor1 : UIView = {
         let view = UIView()
         
-        view.addFullSizeView(view:
+        return view.addFullSizeView(view:
             UIImageView(image: #imageLiteral(resourceName: "gradient_x0"))
             .setFilter(filter: .nearest)
             .setSize(size: CGSize(width: 140, height: 210))
@@ -87,13 +87,12 @@ class GradientController : UIViewController {
         )
         .Shadow(clr: getAppColor(color: .shadow), rad: 4, opas: 0.5)
         .setViewSize(size: CGSize(width: 140, height: 210))
-        return view
     }()
     
     lazy private var gradientColor2 : UIView = {
            let view = UIView()
            
-           view.addFullSizeView(view:
+          return view.addFullSizeView(view:
                UIImageView(image: #imageLiteral(resourceName: "gradient_x8"))
                .setFilter(filter: .nearest)
                .setSize(size: CGSize(width: 140, height: 210))
@@ -101,7 +100,6 @@ class GradientController : UIViewController {
            )
            .Shadow(clr: getAppColor(color: .shadow), rad: 4, opas: 0.5)
            .setViewSize(size: CGSize(width: 140, height: 210))
-           return view
        }()
     
     

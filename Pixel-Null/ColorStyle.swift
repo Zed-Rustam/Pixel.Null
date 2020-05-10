@@ -11,7 +11,7 @@ import ImageIO
 import MobileCoreServices
 
 func getAppColor(color : Theme) -> UIColor{
-    return UIColor(named: color.rawValue)!
+        return UIColor(named: color.rawValue)!
 }
 
 enum Theme : String {

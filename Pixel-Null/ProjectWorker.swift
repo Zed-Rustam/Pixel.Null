@@ -753,8 +753,6 @@ class ProjectWork{
                 } else {
                     delegate.updateLayer(layer: LayerSelected)
                 }
-            default:
-                break
             }
             
             delegate.updateCanvas()
@@ -1031,8 +1029,6 @@ class ProjectWork{
                          delegate.updateLayer(layer: LayerSelected)
                      }
                  }
-            default:
-                break
             }
             delegate.updateCanvas()
             projectInfo.actionList.lastActiveAction += 1

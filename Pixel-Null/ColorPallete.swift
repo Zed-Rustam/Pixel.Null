@@ -97,7 +97,6 @@ class ColorPallete : UIView {
     }
     
     private func bgInit(){
-        let img = UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 1 / (frame.width / 2) * colorsImage!.size.width, orientation: .down)
         bgView = UIImageView(frame: self.bounds)
         bgView.image = #imageLiteral(resourceName: "background")
         bgView.contentMode = .scaleAspectFill
