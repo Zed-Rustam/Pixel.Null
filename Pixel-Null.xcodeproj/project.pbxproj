@@ -69,6 +69,7 @@
 		959BCFBB241FECB900B27CFB /* PalleteEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959BCFBA241FECB900B27CFB /* PalleteEditor.swift */; };
 		959BCFBF241FEFA300B27CFB /* PalleteWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959BCFBE241FEFA300B27CFB /* PalleteWorker.swift */; };
 		959BCFC3242254F100B27CFB /* FullColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959BCFC2242254F100B27CFB /* FullColor.swift */; };
+		959DB4AA2469B4CC006C4678 /* ToolBarRepositionCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959DB4A92469B4CC006C4678 /* ToolBarRepositionCollection.swift */; };
 		959DC1132430AD38001A79DF /* PencilSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959DC1122430AD38001A79DF /* PencilSettings.swift */; };
 		95A35C942446357C005780F0 /* FastActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A35C932446357C005780F0 /* FastActionBar.swift */; };
 		95A51E1224444B4700A03606 /* Training.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A51E1124444B4700A03606 /* Training.swift */; };
@@ -95,6 +96,7 @@
 		95C727A623EB637800ED1A28 /* Rubik-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 95C7279C23EB637700ED1A28 /* Rubik-BlackItalic.ttf */; };
 		95C727A723EB637800ED1A28 /* Rubik-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 95C7279D23EB637700ED1A28 /* Rubik-MediumItalic.ttf */; };
 		95C727A823EB637800ED1A28 /* Rubik-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 95C7279E23EB637800ED1A28 /* Rubik-BoldItalic.ttf */; };
+		95C850232468620900366EA2 /* EditorSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C850222468620900366EA2 /* EditorSettingsController.swift */; };
 		95DC554C23EC9A820011FA2A /* ColorSelectDialog1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95DC554B23EC9A820011FA2A /* ColorSelectDialog1.swift */; };
 		95DC554E23EC9D2A0011FA2A /* ColorSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95DC554D23EC9D2A0011FA2A /* ColorSelector.swift */; };
 		95DC555023EDF8280011FA2A /* CIrcleColorSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95DC554F23EDF8280011FA2A /* CIrcleColorSlider.swift */; };
@@ -177,6 +179,7 @@
 		959BCFBA241FECB900B27CFB /* PalleteEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PalleteEditor.swift; sourceTree = "<group>"; };
 		959BCFBE241FEFA300B27CFB /* PalleteWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PalleteWorker.swift; sourceTree = "<group>"; };
 		959BCFC2242254F100B27CFB /* FullColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullColor.swift; sourceTree = "<group>"; };
+		959DB4A92469B4CC006C4678 /* ToolBarRepositionCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolBarRepositionCollection.swift; sourceTree = "<group>"; };
 		959DC1122430AD38001A79DF /* PencilSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PencilSettings.swift; sourceTree = "<group>"; };
 		95A35C932446357C005780F0 /* FastActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastActionBar.swift; sourceTree = "<group>"; };
 		95A51E1124444B4700A03606 /* Training.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Training.swift; sourceTree = "<group>"; };
@@ -203,6 +206,7 @@
 		95C7279C23EB637700ED1A28 /* Rubik-BlackItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-BlackItalic.ttf"; sourceTree = "<group>"; };
 		95C7279D23EB637700ED1A28 /* Rubik-MediumItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-MediumItalic.ttf"; sourceTree = "<group>"; };
 		95C7279E23EB637800ED1A28 /* Rubik-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-BoldItalic.ttf"; sourceTree = "<group>"; };
+		95C850222468620900366EA2 /* EditorSettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorSettingsController.swift; sourceTree = "<group>"; };
 		95DC554B23EC9A820011FA2A /* ColorSelectDialog1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSelectDialog1.swift; sourceTree = "<group>"; };
 		95DC554D23EC9D2A0011FA2A /* ColorSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorSelector.swift; sourceTree = "<group>"; };
 		95DC554F23EDF8280011FA2A /* CIrcleColorSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIrcleColorSlider.swift; sourceTree = "<group>"; };
@@ -250,6 +254,8 @@
 				9537B1AA24425D920083BE27 /* SettingsController.swift */,
 				95A799602443A3E200F7BBE2 /* ThemeSelect.swift */,
 				95A799642443B59800F7BBE2 /* MainSettingsMenu.swift */,
+				95C850222468620900366EA2 /* EditorSettingsController.swift */,
+				959DB4A92469B4CC006C4678 /* ToolBarRepositionCollection.swift */,
 			);
 			name = Settings;
 			sourceTree = "<group>";
@@ -606,6 +612,7 @@
 				95A89E3523FA3E7E00DC796C /* FrameWorker.swift in Sources */,
 				95A626B12444616D007E75F3 /* TrainingMain.swift in Sources */,
 				95578E0523D4C0B200D8DDF2 /* CreateDIalogController.swift in Sources */,
+				959DB4AA2469B4CC006C4678 /* ToolBarRepositionCollection.swift in Sources */,
 				9537B1A1243C6C880083BE27 /* GridView.swift in Sources */,
 				9540F1BE243330D2008D1657 /* SliderView.swift in Sources */,
 				958C0C1E2419653F007B9C95 /* LayersCollectionView.swift in Sources */,
@@ -640,6 +647,7 @@
 				9571F63D244503E200BCBA38 /* EditorController.swift in Sources */,
 				954C32782453A71000E520A4 /* PalleteCollectionV2.swift in Sources */,
 				95560A1723C4302900581482 /* GalleryCells.swift in Sources */,
+				95C850232468620900366EA2 /* EditorSettingsController.swift in Sources */,
 				959DC1132430AD38001A79DF /* PencilSettings.swift in Sources */,
 				95DC554C23EC9A820011FA2A /* ColorSelectDialog1.swift in Sources */,
 				955145D724055D1000524FF9 /* Editor.swift in Sources */,

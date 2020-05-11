@@ -43,6 +43,7 @@ class PalleteWorker {
             let data = try JSONEncoder().encode(pallete)
             try String(data: data, encoding: .utf8)!.write(to: PalleteWorker.getDocumentsDirectoryWithFile().appendingPathComponent("\(palleteName).pallete"), atomically: true, encoding: .utf8)
         } catch {
+            print(error)
         }
     }
     

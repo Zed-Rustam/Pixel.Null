@@ -24,11 +24,13 @@ class ThemeSelect: UIViewController {
         let label = UILabel()
         label.text = NSLocalizedString("Use system theme", comment: "")
         label.textColor = getAppColor(color: .enable)
+        
         label.font = UIFont(name: "Rubik-Medium", size: 24)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 36).isActive = true
         label.adjustsFontSizeToFitWidth = true
-        
+        label.textAlignment = .center
+        label.baselineAdjustment = .alignCenters
         return label
     }()
     
@@ -170,8 +172,10 @@ class ThemeSelect: UIViewController {
         
         useSystemTheme.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 8).isActive = true
         useSystemTheme.rightAnchor.constraint(equalTo: toggle.leftAnchor, constant: -8).isActive = true
-        useSystemTheme.topAnchor.constraint(equalTo: themeTitle.bottomAnchor, constant: 12).isActive = true
-
+        //useSystemTheme.topAnchor.constraint(equalTo: themeTitle.bottomAnchor, constant: 12).isActive = true
+        useSystemTheme.centerYAnchor.constraint(equalTo: toggle.centerYAnchor, constant: 0).isActive = true
+        
+        
         toggle.topAnchor.constraint(equalTo: themeTitle.bottomAnchor, constant: 15).isActive = true
         toggle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8).isActive = true
         
@@ -196,16 +200,15 @@ class ThemeSelect: UIViewController {
         
         self.selectTheme(theme: self.traitCollection.userInterfaceStyle.rawValue)
         view.addGestureRecognizer(tapgesture)
-        view.safeAreaLayoutGuide.topAnchor
     }
     
     func selectTheme(theme : Int) {
         if theme == 1 {
-            UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.75, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
+            UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.65, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
                 self.selectStroke.transform = CGAffineTransform(translationX: 0, y: 0)
             }, completion: nil)
         } else {
-            UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.75, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
+            UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.65, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
                 self.selectStroke.transform = CGAffineTransform(translationX: 60, y: 0)
             }, completion: nil)
         }

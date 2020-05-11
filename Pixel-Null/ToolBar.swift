@@ -31,7 +31,7 @@ class ToolBar : UIView {
     }()
     
     lazy private var toolCollection : ToolBarCollection = {
-        let collection = ToolBarCollection(frame: self.bounds, tools: [-6,-3,-2,0,1,2,3,4,5,6,7,8,-4,-5,-1])
+        let collection = ToolBarCollection(frame: self.bounds, tools: getToolsArray())
         collection.barDelegate = self
         collection.translatesAutoresizingMaskIntoConstraints = false
         
@@ -105,7 +105,7 @@ class ToolBar : UIView {
     }
     
     func updateSelectedColor(newColor : UIColor) {
-        (toolCollection.cellForItem(at: IndexPath(item: 0, section: 0)) as! SelectionButton).colorSelector.color = newColor
+        (toolCollection.cellForItem(at: IndexPath(item: toolCollection.tools.firstIndex(of: -6)!, section: 0)) as! SelectionButton).colorSelector.color = newColor
     }
     
     @objc private func swipe(sender : UISwipeGestureRecognizer) {

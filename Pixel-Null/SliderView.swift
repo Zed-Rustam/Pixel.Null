@@ -23,7 +23,7 @@ class SliderView : UIView {
     lazy private var bg : UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(named: "disableColor")!.withAlphaComponent(0.25)
-        view.setCorners(corners: 9)
+        view.setCorners(corners: 8)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -31,8 +31,8 @@ class SliderView : UIView {
     lazy private var bg2 : UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(named: "enableColor")
-        view.setCorners(corners: 9)
-        view.frame.size.height = 18
+        view.setCorners(corners: 8)
+        view.frame.size.height = 16
         view.translatesAutoresizingMaskIntoConstraints = true
         return view
     }()
@@ -70,10 +70,10 @@ class SliderView : UIView {
         
         bg.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 0).isActive = true
         bg.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 0).isActive = true
-        bg.topAnchor.constraint(equalTo: self.topAnchor, constant: 6).isActive = true
-        bg.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -6).isActive = true
+        bg.topAnchor.constraint(equalTo: self.topAnchor, constant: 7).isActive = true
+        bg.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -7).isActive = true
         
-        bg2.frame = CGRect(x: 0, y: 0, width: 0, height: 24)
+        bg2.frame = CGRect(x: 0, y: 0, width: 0, height: 16)
 
         selectorView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 0).isActive = true
         selectorView.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true

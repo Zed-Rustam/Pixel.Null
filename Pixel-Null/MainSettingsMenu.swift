@@ -9,7 +9,7 @@
 import UIKit
 
 
-class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataSource {
+class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate {
     weak var navigation : UINavigationController? = nil
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -38,24 +38,10 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
                 cell.textLabel!.text = settings[0]
             case 1:
                 cell.textLabel!.text = settings[1]
-            default:
-                break
-            }
-        case 1:
-            switch indexPath.row {
-            case 0:
+            case 2:
                 cell.textLabel!.text = settings[2]
-            case 1:
+            case 3:
                 cell.textLabel!.text = settings[3]
-            default:
-                break
-            }
-        case 2:
-            switch indexPath.row {
-            case 0:
-                cell.textLabel!.text = settings[4]
-            case 1:
-                cell.textLabel!.text = settings[5]
             default:
                 break
             }
@@ -68,64 +54,36 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return 2
-        case 1:
-            return 2
-        case 2:
-            return 2
+            return 4
         default:
             return 0
         }
     }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        switch section {
-        case 0:
-            return "APP"
-        case 1:
-            return "EDITOR"
-        case 2:
-            return "MORE"
-        default:
-            return nil
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let myLabel = UILabel()
-        myLabel.frame = CGRect(x: 20, y: 0, width: 200, height: 24)
-        myLabel.font = UIFont(name:  "Rubik-Bold", size: 14)
-        myLabel.text = self.tableView(tableView, titleForHeaderInSection: section)
-        myLabel.textColor = UIColor(named: "enableColor")
-        
-        let headerView = UIView()
-        headerView.addSubview(myLabel)
-
-        return headerView
-    }
-    
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        return 1
     }
         
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 0
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 24
-    }
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let themeSelect = ThemeSelect()
-        navigation?.pushViewController(themeSelect, animated: true)
+        switch indexPath.item {
+        case 0:
+            let themeSelect = ThemeSelect()
+            navigation?.pushViewController(themeSelect, animated: true)
+            
+            let cell = tableView.cellForRow(at: indexPath)
+            cell?.setSelected(false, animated: true)
+        default:
+            let editorSettings = EditorSettingsController()
+            navigation?.pushViewController(editorSettings, animated: true)
+            
+            let cell = tableView.cellForRow(at: indexPath)
+            cell?.setSelected(false, animated: true)
+        }
         
-        let cell = tableView.cellForRow(at: indexPath)
-        cell?.setSelected(false, animated: true)
+        
     }
     
-    let settings : [String] = ["App theme", "Language", "Tool bar", "Undo / Redo","About","Contacts"]
-    
+    let settings : [String] = ["App theme", "Language", "Editor Settings","Credits"]
     
     lazy private var icon : UIImageView = {
        let img = UIImageView(image: #imageLiteral(resourceName: "app_icon"))
@@ -144,7 +102,7 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
     lazy private var appTitle : UILabel = {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        label.heightAnchor.constraint(equalToConstant: 56).isActive = true
         
         label.text = "Pixel.Null"
         
@@ -163,6 +121,8 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
         tv.separatorStyle = .none
         tv.tintColor = getAppColor(color: .enable).withAlphaComponent(0.5)
         //tv.isScrollEnabled = false
+        tv.sectionHeaderHeight = 6
+        tv.sectionFooterHeight = 6
         
         tv.tableHeaderView = tableTitle
         
@@ -176,7 +136,6 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
         bgview.addSubview(icon)
         bgview.addSubview(appTitle)
         
-        
         icon.centerXAnchor.constraint(equalTo: bgview.centerXAnchor, constant: 0).isActive = true
         icon.topAnchor.constraint(equalTo: bgview.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
         
@@ -184,10 +143,9 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
         appTitle.rightAnchor.constraint(equalTo: bgview.rightAnchor, constant: -12).isActive = true
         appTitle.topAnchor.constraint(equalTo: icon.bottomAnchor, constant: 0).isActive = true
         
-        bgview.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 132)
+        bgview.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 164)
         return bgview
     }()
-    
     
     override func viewDidLoad() {
         
@@ -197,5 +155,14 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
         table.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
         table.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
         table.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        print("yeas")
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+    }
+    
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }

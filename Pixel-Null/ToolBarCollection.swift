@@ -66,7 +66,6 @@ extension ToolBarCollection : UICollectionViewDataSource {
 
 class ToolBarLayout : UICollectionViewLayout {
     private var attributes : [UICollectionViewLayoutAttributes] = []
-    private var contentHeight = 0
     private var spacing : Int = 0
     private var offsetWidth : Int = 0
     private var offsetBottom : Int = 0
@@ -77,6 +76,7 @@ class ToolBarLayout : UICollectionViewLayout {
     var contentWidth : Int {
         return Int(collectionView!.bounds.width)
     }
+    private var contentHeight = 0
     
     override var collectionViewContentSize: CGSize {
         return CGSize(width: contentWidth, height: contentHeight)
@@ -87,14 +87,9 @@ class ToolBarLayout : UICollectionViewLayout {
         attributes.removeAll()
         
         columnsCount = ((Int(collectionView!.bounds.width)) / (itemSize))
-        print(columnsCount)
         
         offsetWidth = Int(CGFloat(Int(collectionView!.bounds.width) - (columnsCount) * itemSize) / 2.0)
-        
-        print("spacing : \(spacing)")
-        
-        attributes.removeAll()
-                
+                                
         for item in 0..<collectionView!.numberOfItems(inSection: 0){
             let index = IndexPath(item: item, section: 0)
             let frame = CGRect(x: offsetWidth + itemSize * (item % columnsCount), y: offsetTop + (itemSize) * (item / columnsCount), width: itemSize, height: itemSize)

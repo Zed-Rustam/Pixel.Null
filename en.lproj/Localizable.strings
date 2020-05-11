@@ -71,3 +71,5 @@ In addition to this, you can also rotate or mirror the project.\n
 "Editor text 12" = "Work area\n";
 "Editor text 13" = "    This is the area in which the selected frame is displayed. Here you can use the tools with your finger. Also, using gestures with two fingers, you can move and scale the canvas to your needs.";
 "Theme" = "Theme";
+"Use system theme" = "Use system theme";
+"Editor settings" = "Editor settings";
