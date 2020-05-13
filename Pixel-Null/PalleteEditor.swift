@@ -207,7 +207,7 @@ class PalleteEditor : UIViewController {
             if $0.text == "" {
                 self!.done.isEnabled = false
                 self!.palleteName.error = nil
-            } else if self!.getProjects().contains($0.text!) && $0.text! != self!.pallete.palleteName {
+            } else if self!.getProjects().contains("\($0.text!).pnpalette") && $0.text! != self!.pallete.palleteName {
                 self!.palleteName.error = "A pallete with this name already exists"
                 self!.done.isEnabled = false
             } else {
@@ -230,8 +230,7 @@ class PalleteEditor : UIViewController {
                    var names : [String] = []
                    
                    for i in 0..<projs.count  {
-                       var name = projs[i].lastPathComponent
-                        name.removeLast(8)
+                       let name = projs[i].lastPathComponent
                        names.append(name)
                    }
                    

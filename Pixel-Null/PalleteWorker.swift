@@ -108,6 +108,15 @@ class PalleteWorker {
         let paths = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])
         return paths.appendingPathComponent("Palletes")
     }
+    
+    static func clone(original : String, clone : String){
+        do{
+            try FileManager.default.copyItem(at: PalleteWorker.getDocumentsDirectoryWithFile().appendingPathComponent(original), to: PalleteWorker.getDocumentsDirectoryWithFile().appendingPathComponent(clone))
+            //try FileManager.default.copyItem(at: URL(fileURLWithPath: original, isDirectory: false), to: URL(fileURLWithPath: clone, isDirectory: false))
+        } catch{
+            print(error.localizedDescription)
+        }
+    }
 }
 
 struct Pallete : Codable {

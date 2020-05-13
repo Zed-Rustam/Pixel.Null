@@ -29,7 +29,7 @@ class ThemeSelect: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 36).isActive = true
         label.adjustsFontSizeToFitWidth = true
-        label.textAlignment = .center
+        label.textAlignment = .left
         label.baselineAdjustment = .alignCenters
         return label
     }()

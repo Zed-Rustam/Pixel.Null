@@ -123,8 +123,31 @@ extension PalleteCollection : PalleteGalleryDelegate {
        }
           
        func clonePallete(pallete : PalleteWorker) {
-              
-       }
+            var index : Int = 1
+            
+        let projs = try! FileManager.default.contentsOfDirectory(at: PalleteWorker.getDocumentsDirectory(), includingPropertiesForKeys: nil)
+            
+            ind : while true {
+                for i in 0..<projs.count  {
+                    print("\(projs[i].lastPathComponent)   \(pallete.palleteName)(\(index)).pnpalette")
+                    if projs[i].lastPathComponent == "\(pallete.palleteName)(\(index)).pnpalette" {
+                        index += 1
+                        continue ind
+                    }
+                }
+                break
+            }
+            
+        PalleteWorker.clone(original: "\(pallete.palleteName).pnpalette", clone: "\(pallete.palleteName)(\(index)).pnpalette")
+        print("some tests \(pallete.palleteName)")
+        let proj = PalleteWorker(fileName: "\(pallete.palleteName)(\(index))")
+            
+        palletes.append(proj)
+            
+        collection.performBatchUpdates({
+            collection.insertItems(at: [IndexPath(item: palletes.count - 1, section: 0)])
+        },completion: nil)
+    }
           
        func deletePallete(pallete : PalleteWorker) {
             pallete.delete()

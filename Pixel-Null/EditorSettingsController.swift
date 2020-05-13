@@ -24,19 +24,6 @@ class EditorSettingsController: UIViewController {
         return label
     }()
     
-    lazy private var historySize: UILabel = {
-        let label = UILabel()
-        label.text = NSLocalizedString("History size", comment: "")
-        label.textColor = getAppColor(color: .enable)
-        label.font = UIFont(name: "Rubik-Medium", size: 24)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .left
-        label.adjustsFontSizeToFitWidth = true
-        label.baselineAdjustment = .alignCenters
-        
-        return label
-    }()
-    
     lazy private var toolsPosition: UILabel = {
         let label = UILabel()
         label.text = NSLocalizedString("Tools position", comment: "")
@@ -48,28 +35,6 @@ class EditorSettingsController: UIViewController {
         label.baselineAdjustment = .alignCenters
         
         return label
-    }()
-    
-    lazy private var historyInput: TextField = {
-        let text = TextField()
-        text.translatesAutoresizingMaskIntoConstraints = false
-        text.widthAnchor.constraint(equalToConstant: 64).isActive = true
-        text.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        text.filed.text = "64"
-        text.filed.textAlignment = .center
-        return text
-    }()
-    
-    lazy private var historySlider: SliderView = {
-        let slider = SliderView()
-        slider.delegate = {[unowned self] in
-            self.historyInput.filed.text = "\(Int($0 * 120) + 8)"
-        }
-        slider.translatesAutoresizingMaskIntoConstraints = false
-        slider.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        
-        slider.setPosition(pos: (64 - 8) / 120.0)
-        return slider
     }()
     
     lazy private var toolBarBg: UIView = {
@@ -112,29 +77,14 @@ class EditorSettingsController: UIViewController {
         view.backgroundColor = getAppColor(color: .background)
         
         view.addSubview(themeTitle)
-        view.addSubview(historySize)
         view.addSubview(toolsPosition)
-        view.addSubview(historyInput)
-        view.addSubview(historySlider)
         view.addSubview(toolBarBg)
 
         themeTitle.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
         themeTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
         themeTitle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
         
-        historySize.topAnchor.constraint(equalTo: themeTitle.bottomAnchor, constant: 0).isActive = true
-        historySize.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
-        historySize.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
-        
-        historyInput.topAnchor.constraint(equalTo: historySize.bottomAnchor, constant: 8).isActive = true
-        historyInput.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
-        
-        historySlider.topAnchor.constraint(equalTo: historySize.bottomAnchor, constant: 11).isActive = true
-        historySlider.leftAnchor.constraint(equalTo: historyInput.rightAnchor, constant: 8).isActive = true
-        historySlider.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
-        
-        
-        toolsPosition.topAnchor.constraint(equalTo: historyInput.bottomAnchor, constant: 16).isActive = true
+        toolsPosition.topAnchor.constraint(equalTo: themeTitle.bottomAnchor, constant: 16).isActive = true
         toolsPosition.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
         toolsPosition.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
         
@@ -164,52 +114,27 @@ class EditorSettingsController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         self.themeTitle.transform = CGAffineTransform(translationX: 0, y: 50)
         self.themeTitle.alpha = 0
-        UIView.animate(withDuration: 0.75, delay: 0.1, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
+        UIView.animate(withDuration: 1, delay: 0.1, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
             self.themeTitle.transform = CGAffineTransform(translationX: 0, y: 0)
         }, completion: nil)
         UIView.animate(withDuration: 0.25, delay: 0.1, animations: {
             self.themeTitle.alpha = 1
         })
 
-        self.historySize.transform = CGAffineTransform(translationX: 0, y: 50)
-        self.historySize.alpha = 0
-
-        UIView.animate(withDuration: 0.75, delay: 0.2, usingSpringWithDamping: 0.5, initialSpringVelocity: 0,    options: .curveEaseInOut, animations: {
-            self.historySize.transform = CGAffineTransform(translationX: 0, y: 0)
-        }, completion: nil)
-        UIView.animate(withDuration: 0.25, delay: 0.2, animations: {
-            self.historySize.alpha = 1
-        })
-
-        self.historyInput.transform = CGAffineTransform(translationX: 0, y: 50)
-        self.historyInput.alpha = 0
-
-        self.historySlider.transform = CGAffineTransform(translationX: 0, y: 50)
-        self.historySlider.alpha = 0
-
-        UIView.animate(withDuration: 0.75, delay: 0.3, usingSpringWithDamping: 0.5, initialSpringVelocity: 0,    options: .curveEaseInOut, animations: {
-            self.historyInput.transform = CGAffineTransform(translationX: 0, y: 0)
-            self.historySlider.transform = CGAffineTransform(translationX: 0, y: 0)
-        }, completion: nil)
-        UIView.animate(withDuration: 0.25, delay: 0.3, animations: {
-            self.historyInput.alpha = 1
-            self.historySlider.alpha = 1
-        })
-
         self.toolsPosition.transform = CGAffineTransform(translationX: 0, y: 50)
         self.toolsPosition.alpha = 0
 
-        UIView.animate(withDuration: 0.75, delay: 0.4, usingSpringWithDamping: 0.5, initialSpringVelocity: 0,    options: .curveEaseInOut, animations: {
+        UIView.animate(withDuration: 1, delay: 0.3, usingSpringWithDamping: 0.5, initialSpringVelocity: 0,    options: .curveEaseInOut, animations: {
             self.toolsPosition.transform = CGAffineTransform(translationX: 0, y: 0)
         }, completion: nil)
-        UIView.animate(withDuration: 0.25, delay: 0.4, animations: {
+        UIView.animate(withDuration: 0.25, delay: 0.3, animations: {
             self.toolsPosition.alpha = 1
         })
 
         self.toolBarBg.transform = CGAffineTransform(translationX: 0, y: 50)
         self.toolBarBg.alpha = 0
 
-        UIView.animate(withDuration: 0.75, delay: 0.5, usingSpringWithDamping: 0.5, initialSpringVelocity: 0,    options: .curveEaseInOut, animations: {
+        UIView.animate(withDuration: 1, delay: 0.5, usingSpringWithDamping: 0.5, initialSpringVelocity: 0,    options: .curveEaseInOut, animations: {
             self.toolBarBg.transform = CGAffineTransform(translationX: 0, y: 0)
         }, completion: nil)
         UIView.animate(withDuration: 0.25, delay: 0.5, animations: {

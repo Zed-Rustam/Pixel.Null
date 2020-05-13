@@ -16,7 +16,7 @@ func getToolsArray() -> [Int] {
     }
 }
 
-class ToolBarRepositionCollection : UICollectionView {
+class ToolBarRepositionCollection : UICollectionView , UIGestureRecognizerDelegate {
     
     var toolsArray : [Int] = getToolsArray()
     weak var navigate : UINavigationController? = nil
@@ -28,7 +28,7 @@ class ToolBarRepositionCollection : UICollectionView {
     }()
 
     lazy var tapGesture : UILongPressGestureRecognizer = {
-        let gesture = UILongPressGestureRecognizer(target: self, action: #selector(onLongPress(sender:)))
+        let gesture = UILongPressGestureRecognizer(target: self, action: #selector(onPress(sender:)))
         gesture.minimumPressDuration = 0.0
         return gesture
     }()
@@ -111,6 +111,10 @@ class ToolBarRepositionCollection : UICollectionView {
         }
     }
     
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+    
     init() {
         super.init(frame: .zero, collectionViewLayout: layout)
         translatesAutoresizingMaskIntoConstraints = false
@@ -121,6 +125,10 @@ class ToolBarRepositionCollection : UICollectionView {
             
         backgroundColor = .clear
         addGestureRecognizer(moveGesture)
+        addGestureRecognizer(tapGesture)
+        moveGesture.delegate = self
+        tapGesture.delegate = self
+        
         //isUserInteractionEnabled = true
         
         layer.masksToBounds = false

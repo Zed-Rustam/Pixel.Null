@@ -24,7 +24,7 @@ class ProjectWork{
             selectedLayer = newValue
         }
     }
-
+    
     var FrameSelected : Int {
         get{
             return selectedFrame

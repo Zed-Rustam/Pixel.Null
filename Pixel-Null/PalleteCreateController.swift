@@ -199,7 +199,7 @@ class PalleteCreateController : UIViewController {
     
     private func getPalleteName() -> String{
         for i in 0... {
-            if !getProjects().contains("\(NSLocalizedString("New palette", comment: "")) \(i)") { return "\(NSLocalizedString("New palette", comment: "")) \(i)" }
+            if !getProjects().contains("\(NSLocalizedString("New palette", comment: "")) \(i).pnpalette") { return "\(NSLocalizedString("New palette", comment: "")) \(i)" }
         }
         return ""
     }
@@ -212,7 +212,6 @@ class PalleteCreateController : UIViewController {
                    
                    for i in 0..<projs.count  {
                        var name = projs[i].lastPathComponent
-                        name.removeLast(8)
                        names.append(name)
                    }
                    
@@ -230,7 +229,7 @@ class PalleteCreateController : UIViewController {
             if $0.text == "" {
                 self!.createButton.isEnabled = false
                 self!.name.error = nil
-            } else if self!.getProjects().contains($0.text!) && $0.text! != self!.pallete.palleteName {
+            } else if self!.getProjects().contains("\($0.text!).pnpalette") && "\($0.text!)" != self!.pallete.palleteName {
                 self!.name.error = NSLocalizedString("Palette exist error", comment: "")
                 self!.createButton.isEnabled = false
             } else {
