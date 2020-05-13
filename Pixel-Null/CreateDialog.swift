@@ -52,6 +52,7 @@ class CreateDialog : UIView{
         field.translatesAutoresizingMaskIntoConstraints = false
         return field
     }()
+    
     lazy private var projectBackground : TextField = {
        let field = TextField()
        field.filed.text = NSLocalizedString("Background", comment: "")
@@ -94,7 +95,7 @@ class CreateDialog : UIView{
     }()
     lazy private var namedel : TextFieldDelegate = {
         let delegate = TextFieldDelegate(method: {field in
-            if(self.getProjects().contains(field.text!)) {
+            if(self.getProjects().contains("\(field.text!).pnart")) {
                 self.projectName.error = NSLocalizedString("Project exist error", comment: "")
             } else if (field.text == ""){
                 self.projectName.error = nil
@@ -279,7 +280,7 @@ class CreateDialog : UIView{
     
     private func getDefaultName() -> String {
         for i in 0... {
-            if !getProjects().contains("\(NSLocalizedString("New project", comment: "")) \(i)") { return "\(NSLocalizedString("New project", comment: "")) \(i)" }
+            if !getProjects().contains("\(NSLocalizedString("New project", comment: "")) \(i).pnart") { return "\(NSLocalizedString("New project", comment: "")) \(i)" }
         }
         return ""
     }

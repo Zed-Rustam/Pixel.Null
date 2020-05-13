@@ -83,7 +83,7 @@ class PalleteCollection : UIViewController, UICollectionViewDelegate, UICollecti
             
             for i in 0..<projs.count  {
                 var name : String = projs[i].lastPathComponent
-                name.removeLast(8)
+                name.removeLast(10)
                 palletes.append(PalleteWorker(fileName: name))
             }
         } catch {}

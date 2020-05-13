@@ -16,26 +16,43 @@ func getToolsArray() -> [Int] {
     }
 }
 
-class ToolBarRepositionCollection : UICollectionView, UIGestureRecognizerDelegate {
-    var toolsArray : [Int] = getToolsArray()
+class ToolBarRepositionCollection : UICollectionView {
     
-    lazy private var moveGesture : UILongPressGestureRecognizer = {
+    var toolsArray : [Int] = getToolsArray()
+    weak var navigate : UINavigationController? = nil
+    
+    lazy var moveGesture : UILongPressGestureRecognizer = {
         let gesture = UILongPressGestureRecognizer(target: self, action: #selector(onLongPress(sender:)))
         gesture.minimumPressDuration = 0.35
         return gesture
     }()
+
+    lazy var tapGesture : UILongPressGestureRecognizer = {
+        let gesture = UILongPressGestureRecognizer(target: self, action: #selector(onLongPress(sender:)))
+        gesture.minimumPressDuration = 0.0
+        return gesture
+    }()
+
     
     private var layout = ToolBarRepositionCollectionLayout()
     private var moveIndex : Int = -1
     private var isMoving : Bool = false
     private var isFinish : Bool = false
     private var moveCell : ToolBarRepositionCollectionCell? = nil
-
+    
+    @objc func onPress(sender : UILongPressGestureRecognizer) {
+        switch sender.state {
+        case .ended, .cancelled:
+            navigate?.interactivePopGestureRecognizer?.isEnabled = true
+        default:
+            break
+        }
+    }
+    
     @objc func onLongPress(sender : UILongPressGestureRecognizer) {
         switch sender.state {
         case .began:
             if let index = indexPathForItem(at: sender.location(in: self)) {
-                print("was start")
                 beginInteractiveMovementForItem(at: index)
                 let cell = cellForItem(at: index) as! ToolBarRepositionCollectionCell
                 
@@ -53,6 +70,7 @@ class ToolBarRepositionCollection : UICollectionView, UIGestureRecognizerDelegat
             updateInteractiveMovementTargetPosition(sender.location(in: self))
             
         case .ended:
+            navigate?.interactivePopGestureRecognizer?.isEnabled = true
              if isMoving {
                isFinish = true
                UIView.animate(withDuration: 0.15, animations: {
@@ -72,6 +90,7 @@ class ToolBarRepositionCollection : UICollectionView, UIGestureRecognizerDelegat
            }
             
         default:
+            navigate?.interactivePopGestureRecognizer?.isEnabled = true
             if isMoving {
                 isFinish = true
                 UIView.animate(withDuration: 0.15, animations: {
@@ -105,18 +124,23 @@ class ToolBarRepositionCollection : UICollectionView, UIGestureRecognizerDelegat
         //isUserInteractionEnabled = true
         
         layer.masksToBounds = false
-        //isExclusiveTouch = true
-       
+        isExclusiveTouch = true
         //isMultipleTouchEnabled = false
     }
     
+    
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        if let _ = indexPathForItem(at: point) {
+            navigate?.interactivePopGestureRecognizer?.isEnabled = false
+        } else {
+            navigate?.interactivePopGestureRecognizer?.isEnabled = true
+        }
+        return self
+    }
+    
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
-
-        return false
     }
 }
 

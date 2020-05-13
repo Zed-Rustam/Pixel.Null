@@ -39,6 +39,8 @@ class ProjectSettingsController : UIViewController {
         text.translatesAutoresizingMaskIntoConstraints = false
         text.heightAnchor.constraint(equalToConstant: 42).isActive = true
         text.filed.text = project!.projectName
+        text.filed.text?.removeLast(6)
+        
         text.isUserInteractionEnabled = false
         text.setHelpText(help: "Project Name")
         text.filed.delegate = renameDelegate
@@ -54,10 +56,10 @@ class ProjectSettingsController : UIViewController {
     
     lazy private var renameDelegate : TextFieldDelegate = {
         return TextFieldDelegate(method: {[unowned self] in
-            if(self.getProjects().contains($0.text!) && $0.text != self.project!.projectName) {
+            if(self.getProjects().contains("\($0.text!).pnart") && "\($0.text!).pnart" != self.project!.projectName) {
                 self.projectName.error = "A project with this name already exists"
                 self.doneBtn.isEnabled = false
-            } else if ($0.text == "" || $0.text == self.project!.projectName){
+            } else if ($0.text == "" || "\($0.text!).pnart" == self.project!.projectName){
                 self.projectName.error = nil
                 self.doneBtn.isEnabled = false
             } else {
@@ -102,6 +104,7 @@ class ProjectSettingsController : UIViewController {
             self.view.frame.origin.y = 0
         })
         projectName.filed.text = project!.projectName
+        projectName.filed.text?.removeLast(6)
     }
     
     
@@ -112,7 +115,7 @@ class ProjectSettingsController : UIViewController {
     
     
     @objc func done() {
-        project!.projectName = projectName.filed.text!
+        project!.projectName = "\(projectName.filed.text!).pnart"
         projectName.isUserInteractionEnabled = false
         projectName.endEditing(true)
     }

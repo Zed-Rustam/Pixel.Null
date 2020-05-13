@@ -73,6 +73,15 @@ class ProjectWork{
         }
     }
     
+    var userProjectName : String {
+        get{
+            var userName = name
+            userName.removeLast(6)
+            
+            return userName
+        }
+    }
+    
     var layerCount : Int {
         get{
             return projectInfo.frames[FrameSelected].layers.count
@@ -108,7 +117,6 @@ class ProjectWork{
         }
     }
     
-    
     init(ProjectName projName : String, ProjectSize projSize : CGSize, bgColor : UIColor){
         
         let img = UIImage(size: projSize)!
@@ -129,12 +137,17 @@ class ProjectWork{
 
             try img.pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frames").appendingPathComponent("frame-0").appendingPathComponent("layer-0.png"))
             try img.pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frames").appendingPathComponent("frame-0").appendingPathComponent("preview.png"))
+            
+            try! scalePreview(preview: img, size: generateIconSize()).pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frames").appendingPathComponent("frame-0").appendingPathComponent("preview-icon.png"))
+            
             try UIImage(size: img.size)!.pngData()!.write(to: getProjectDirectory().appendingPathComponent("selection.png"))
+            
             try UIImage(size: img.size)!.pngData()!.write(to: getProjectDirectory().appendingPathComponent("copy.png"))
 
             let data = try JSONEncoder().encode(projectInfo)
             
             try String(data: data, encoding: .utf8)!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("main.txt"), atomically: true, encoding: .utf8)
+            
         } catch {
             print(error.localizedDescription)
         }
@@ -147,6 +160,16 @@ class ProjectWork{
         name = fileName
         do{
             projectInfo = try JSONDecoder().decode(ProjectInfo.self, from: try Data(contentsOf: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("main.txt")))
+        } catch {}
+    }
+    
+    init(fileUrl : URL) {
+        selectedLayer = 0
+        selectedFrame = 0
+        
+        name = fileUrl.lastPathComponent
+        do{
+            projectInfo = try JSONDecoder().decode(ProjectInfo.self, from: try Data(contentsOf: fileUrl))
         } catch {}
     }
     
@@ -399,10 +422,30 @@ class ProjectWork{
     }
     
     func savePreview(frame : Int){
-        print("saved preview for frame on position \(frame) with ID \(projectInfo.frames[frame].frameID)")
         try! getFrameFromLayers(frame: frame, size: projectSize).pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[frame].frameID)").appendingPathComponent("preview.png"))
-        print("end saving")
-
+        
+        try! scalePreview(preview: getFrameFromLayers(frame: frame, size: projectSize) , size: generateIconSize()).pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[frame].frameID)").appendingPathComponent("preview-icon.png"))
+    }
+    
+    private func scalePreview(preview : UIImage, size : CGSize) -> UIImage {
+        UIGraphicsBeginImageContext(size)
+        let context = UIGraphicsGetCurrentContext()!
+        context.interpolationQuality = .none
+        
+        preview.draw(in: CGRect(origin: .zero, size: size))
+        
+        let img = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        
+        return img
+    }
+    
+    private func generateIconSize() -> CGSize {
+        if projectSize.width > projectSize.height {
+            return CGSize(width: 512, height: 512 * (projectSize.height / projectSize.width))
+        } else {
+            return CGSize(width: 512 * (projectSize.width / projectSize.height), height: 512)
+        }
     }
     
     func setLayerOpasity(frame : Int, layer : Int, newOpasity : Int) {
@@ -1048,7 +1091,7 @@ class ProjectWork{
             projectInfo.actionList.lastActiveAction -= 1
         }
         if projectInfo.actionList.actions.count > 0 {
-        mutableAction["ActionID"] = "\((getActionID(action: projectInfo.actionList.actions.count - 1) + 1) % projectInfo.actionList.maxCount)"
+            mutableAction["ActionID"] = "\((getActionID(action: projectInfo.actionList.actions.count - 1) + 1) % projectInfo.actionList.maxCount)"
         } else {
             mutableAction["ActionID"] = "\(0)"
         }

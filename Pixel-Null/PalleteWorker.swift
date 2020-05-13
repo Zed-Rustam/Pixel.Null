@@ -41,7 +41,7 @@ class PalleteWorker {
             try FileManager.default.createDirectory(atPath: PalleteWorker.getDocumentsDirectory().path, withIntermediateDirectories: true, attributes: nil)
             
             let data = try JSONEncoder().encode(pallete)
-            try String(data: data, encoding: .utf8)!.write(to: PalleteWorker.getDocumentsDirectoryWithFile().appendingPathComponent("\(palleteName).pallete"), atomically: true, encoding: .utf8)
+            try String(data: data, encoding: .utf8)!.write(to: PalleteWorker.getDocumentsDirectoryWithFile().appendingPathComponent("\(palleteName).pnpalette"), atomically: true, encoding: .utf8)
         } catch {
             print(error)
         }
@@ -68,29 +68,35 @@ class PalleteWorker {
         pallete.colors.insert(color , at: to)
     }
     func delete(){
-        try? FileManager.default.removeItem(atPath: PalleteWorker.getDocumentsDirectory().appendingPathComponent("\(palleteName).pallete").path)
+        try? FileManager.default.removeItem(atPath: PalleteWorker.getDocumentsDirectory().appendingPathComponent("\(palleteName).pnpalette").path)
     }
     
     func rename(newName : String){
         if newName != palleteName {
-            try! FileManager.default.moveItem(at: PalleteWorker.getDocumentsDirectoryWithFile().appendingPathComponent("\(palleteName).pallete"), to: PalleteWorker.getDocumentsDirectoryWithFile().appendingPathComponent("\(newName).pallete"))
+            try! FileManager.default.moveItem(at: PalleteWorker.getDocumentsDirectoryWithFile().appendingPathComponent("\(palleteName).pnpalette"), to: PalleteWorker.getDocumentsDirectoryWithFile().appendingPathComponent("\(newName).pnpalette"))
             palleteName = newName
         }
     }
     
     func getURL() -> URL {
-        return URL(fileURLWithPath: PalleteWorker.getDocumentsDirectoryWithFile().appendingPathComponent("\(palleteName).pallete").path)
+        return URL(fileURLWithPath: PalleteWorker.getDocumentsDirectoryWithFile().appendingPathComponent("\(palleteName).pnpalette").path)
     }
     
     init(name : String, colors : [String]){
         pallete = Pallete(colors: colors)
         self.name = name
         save()
+        
     }
     
     init(fileName : String){
-        pallete = try! JSONDecoder().decode(Pallete.self, from: try! Data(contentsOf: PalleteWorker.getDocumentsDirectoryWithFile().appendingPathComponent("\(fileName).pallete")))
+        pallete = try! JSONDecoder().decode(Pallete.self, from: try! Data(contentsOf: PalleteWorker.getDocumentsDirectoryWithFile().appendingPathComponent("\(fileName).pnpalette")))
         name = fileName
+    }
+    
+    init(fileUrl : URL){
+        pallete = try! JSONDecoder().decode(Pallete.self, from: try! Data(contentsOf: fileUrl))
+        name = fileUrl.lastPathComponent
     }
     
     static func getDocumentsDirectory() -> URL {

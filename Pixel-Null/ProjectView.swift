@@ -65,7 +65,6 @@ class ProjectView : UIView{
         let context = CIContext(options: nil)
         let inputImage = CIImage(cgImage: image.cgImage!)
 
-
         let filter = CIFilter(name: "CIGaussianBlur")
         filter?.setValue(inputImage, forKey: kCIInputImageKey)
         filter?.setValue((2.0), forKey: kCIInputRadiusKey)
@@ -143,6 +142,8 @@ class ProjectView : UIView{
         
         title.frame = CGRect(x: 16, y: Int(Double(self.bounds.height) - Double(8) * 3), width: Int(self.bounds.width) - 8 * 4, height: 8 * 2)
         title.text = proj.projectName
+        title.text?.removeLast(6)
+        
         title.textColor = .white
         title.lineBreakMode = .byTruncatingMiddle
         title.textAlignment = .center
@@ -181,7 +182,7 @@ extension ProjectView : UIContextMenuInteractionDelegate {
             
             let delete = UIAction(title: "Delete",image : UIImage(systemName: "trash", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, discoverabilityTitle: nil, attributes: .destructive, handler: {action in
                 if(self.delegate != nil) {
-                    self.delegate!.projectDelete(view: self, deletedName: self.title.text!)
+                    self.delegate!.projectDelete(view: self, deletedName: "\(self.title.text!).pnart")
                 }
             })
             

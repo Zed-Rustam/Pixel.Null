@@ -851,7 +851,7 @@ class Move : Tool {
         UIGraphicsBeginImageContextWithOptions(realSize, false, 1)
         let flipX = position.size.width < 0
         let flipY = position.size.height < 0
-
+        
         let context = UIGraphicsGetCurrentContext()!
         context.setShouldAntialias(false)
         context.setAllowsAntialiasing(false)

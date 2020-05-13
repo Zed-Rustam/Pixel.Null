@@ -50,9 +50,9 @@ class CreateDialogController : UIViewController, CreateDialogDelegate{
     var proj : ProjectWork!
     
     func onCreate(name: String, width: Int, height: Int, bgColor: UIColor) {
-        let project = ProjectWork(ProjectName : name, ProjectSize: CGSize(width: width, height: height), bgColor: bgColor)
+        let project = ProjectWork(ProjectName : name + ".pnart", ProjectSize: CGSize(width: width, height: height), bgColor: bgColor)
         project.save()
-        delegate?.projectAdded(name: name)
+        delegate?.projectAdded(name: name + ".pnart")
         
         self.dismiss(animated: true)
     }

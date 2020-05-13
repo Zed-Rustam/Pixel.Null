@@ -143,16 +143,22 @@ class EditorSettingsController: UIViewController {
         toolBarBg.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
         toolBarBg.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 16).isActive = true
         
-        lastDelegate = self.navigationController?.interactivePopGestureRecognizer?.delegate
         
-        self.navigationController?.interactivePopGestureRecognizer?.delegate = collection
+        //self.navigationController?.interactivePopGestureRecognizer
+        collection.navigate = self.navigationController
+        
+        //collection.moveGesture.canBePrevented(by: self.navigationController!.interactivePopGestureRecognizer!)
+        //self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+        //self.navigationController?.interactivePopGestureRecognizer?.canBePrevented(by: collection.moveGesture)
+        //self.navigationController?.interactivePopGestureRecognizer?.cancelsTouchesInView = true
+
+        //lastDelegate = self.navigationController?.interactivePopGestureRecognizer?.delegate
+        
+        //self.navigationController?.interactivePopGestureRecognizer?.delegate = collection
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        print("someeee")
-        
-        //navigationController?.view.addGestureRecognizer(lastDelegate!)
-        //navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+        self.navigationController?.interactivePopGestureRecognizer?.reset()
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -30,18 +30,20 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
             return img
         }()
         
-        
         switch indexPath.section {
         case 0:
             switch indexPath.row {
+                case 0:
+                    cell.textLabel!.text = settings[0]
+                case 1:
+                    cell.textLabel!.text = settings[1]
+                default:
+                    break
+            }
+        case 1:
+            switch indexPath.row {
             case 0:
-                cell.textLabel!.text = settings[0]
-            case 1:
-                cell.textLabel!.text = settings[1]
-            case 2:
-                cell.textLabel!.text = settings[2]
-            case 3:
-                cell.textLabel!.text = settings[3]
+            cell.textLabel!.text = settings[2]
             default:
                 break
             }
@@ -54,36 +56,64 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return 4
+            return 2
+        case 1:
+            return 1
         default:
             return 0
         }
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return 2
     }
         
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        switch indexPath.item {
+        switch indexPath.section {
         case 0:
-            let themeSelect = ThemeSelect()
-            navigation?.pushViewController(themeSelect, animated: true)
+            switch indexPath.item {
+            case 0:
+                let themeSelect = ThemeSelect()
+                navigation?.pushViewController(themeSelect, animated: true)
+                
+                let cell = tableView.cellForRow(at: indexPath)
+                cell?.setSelected(false, animated: true)
+           
+            case 2:
+                let editorSettings = EditorSettingsController()
+                navigation?.pushViewController(editorSettings, animated: true)
+                
+                let cell = tableView.cellForRow(at: indexPath)
+                cell?.setSelected(false, animated: true)
+                
+            default:
+                let editorSettings = EditorSettingsController()
+                navigation?.pushViewController(editorSettings, animated: true)
+                
+                let cell = tableView.cellForRow(at: indexPath)
+                cell?.setSelected(false, animated: true)
+            }
             
-            let cell = tableView.cellForRow(at: indexPath)
-            cell?.setSelected(false, animated: true)
+        case 1:
+            switch indexPath.item {
+            case 0:
+                let aboutDev = AboutDeveloperController()
+                navigation?.pushViewController(aboutDev, animated: true)
+                               
+                let cell = tableView.cellForRow(at: indexPath)
+                cell?.setSelected(false, animated: true)
+            default:
+                break
+            }
+            
         default:
-            let editorSettings = EditorSettingsController()
-            navigation?.pushViewController(editorSettings, animated: true)
-            
-            let cell = tableView.cellForRow(at: indexPath)
-            cell?.setSelected(false, animated: true)
+            break
         }
         
         
     }
     
-    let settings : [String] = ["App theme", "Language", "Editor Settings","Credits"]
+    let settings : [String] = ["App theme", "Editor Settings","About developer"]
     
     lazy private var icon : UIImageView = {
        let img = UIImageView(image: #imageLiteral(resourceName: "app_icon"))
@@ -159,7 +189,7 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
     
     override func viewDidAppear(_ animated: Bool) {
         print("yeas")
-        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+        //self.navigationController?.interactivePopGestureRecognizer?.delegate = self
     }
     
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {

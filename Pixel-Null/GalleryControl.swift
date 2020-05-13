@@ -198,7 +198,8 @@ extension GalleryControl : ProjectActions {
         
         ind : while true {
             for i in 0..<projs.count  {
-                if projs[i].lastPathComponent == "\(view.projectName)(\(index))" {
+                print("\(projs[i].lastPathComponent)   \(view.projectName)(\(index)).pnart")
+                if projs[i].lastPathComponent == "\(view.projectName)(\(index)).pnart" {
                     index += 1
                     continue ind
                 }
@@ -206,9 +207,9 @@ extension GalleryControl : ProjectActions {
             break
         }
         
-        ProjectWork.clone(original: view.projectName, clone: "\(view.projectName)(\(index))")
+        ProjectWork.clone(original: "\(view.projectName).pnart", clone: "\(view.projectName)(\(index)).pnart")
         
-        let proj = ProjectWork(fileName: "\(view.projectName)(\(index))")
+        let proj = ProjectWork(fileName: "\(view.projectName)(\(index)).pnart")
         
         projects.append(proj)
         

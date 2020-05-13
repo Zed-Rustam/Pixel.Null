@@ -95,7 +95,7 @@ class ProjectResizeController : UIViewController {
         let text = TextField()
         text.translatesAutoresizingMaskIntoConstraints = false
         text.filed.text = "\(Int(project!.projectSize.width))"
-        
+        text.filed.keyboardType = .numberPad
         return text
     }()
     
@@ -103,7 +103,7 @@ class ProjectResizeController : UIViewController {
         let text = TextField()
         text.translatesAutoresizingMaskIntoConstraints = false
         text.filed.text = "\(Int(project!.projectSize.height))"
-        
+        text.filed.keyboardType = .numberPad
         return text
     }()
     
