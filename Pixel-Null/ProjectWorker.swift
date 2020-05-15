@@ -229,6 +229,12 @@ class ProjectWork{
         let img = UIImage(data: try! Data(contentsOf: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(projectName).appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: actionNum)).png")))!
         return img
     }
+
+    private func loadActionMerge(actionNum : Int, imageNum : Int) -> UIImage{
+        let img = UIImage(data: try! Data(contentsOf: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(projectName).appendingPathComponent("actions").appendingPathComponent("action-\(imageNum == 1 ? "first" : "second")-\(getActionID(action: actionNum)).png")))!
+        return img
+    }
+
     
     private func loadActionSelect(actionNum : Int) -> UIImage{
         let img = UIImage(data: try! Data(contentsOf: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(projectName).appendingPathComponent("actions").appendingPathComponent("action-select-\(getActionID(action: actionNum)).png")))!
@@ -395,6 +401,12 @@ class ProjectWork{
     func deleteFrame(frame : Int) {
         try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[frame].frameID)"))
         projectInfo.frames.remove(at: frame)
+    }
+    
+    func mergeLayers(frame : Int, layer : Int) {
+        try! UIImage.merge(images: [getLayer(frame: frame, layer: layer + 1),getLayer(frame: frame, layer: layer)])!.pngData()?.write(to: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[frame].frameID)").appendingPathComponent("layer-\(projectInfo.frames[frame].layers[layer].layerID).png"))
+        
+        deleteLayer(frame: frame, layer: layer + 1)
     }
     
     func cloneFrame(frame : Int) {
@@ -796,6 +808,40 @@ class ProjectWork{
                 } else {
                     delegate.updateLayer(layer: LayerSelected)
                 }
+                
+            //MARK: Layers merge
+
+                    
+            case .mergeLayers:
+                
+                try! loadActionMerge(actionNum: projectInfo.actionList.lastActiveAction, imageNum: 1).pngData()?.write(to: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].frameID)").appendingPathComponent("layer-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!].layerID).png"))
+
+                addLayer(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!, layerPlace: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)! + 1)
+                
+                try! loadActionMerge(actionNum: projectInfo.actionList.lastActiveAction, imageNum: 2).pngData()?.write(to: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].frameID)").appendingPathComponent("layer-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)! + 1].layerID).png"))
+
+                
+                if FrameSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)! {
+                    let lastSelect = FrameSelected
+                    
+                    savePreview(frame: FrameSelected)
+                    
+                    FrameSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!
+                    LayerSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!
+                    
+                    delegate.updateFrameSelect(lastFrame: lastSelect, newFrame: FrameSelected)
+                } else {
+                    let lastSelect = LayerSelected
+                    LayerSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!
+                    
+                    delegate.addLayer(layer: LayerSelected)
+                    if lastSelect < LayerSelected {
+                        delegate.updateLayerSelect(lastLayer: lastSelect, newLayer: LayerSelected)
+                    } else{
+                        delegate.updateLayerSelect(lastLayer: lastSelect + 1, newLayer: LayerSelected)
+                    }
+                }
+                break
             }
             
             delegate.updateCanvas()
@@ -805,9 +851,15 @@ class ProjectWork{
         }
     }
     
+    //MARK: ReDo
+    
+    
     func reDo(delegate : FrameControlDelegate){
         if projectInfo.actionList.lastActiveAction < projectInfo.actionList.actions.count - 1 {
             switch Actions.init(rawValue: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["ToolID"]!)!)! {
+            //MARK: Drawing Action
+                
+                
             case .drawing:
                 try! loadAction(actionNum: projectInfo.actionList.lastActiveAction + 1).pngData()?.write(to: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!].frameID)").appendingPathComponent("layer-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!].layerID).png"))
                
@@ -832,6 +884,8 @@ class ProjectWork{
                         delegate.updateLayer(layer: LayerSelected)
                     }
                 }
+            //MARK: Add layer
+                
                 
             case .layerAdd:
                 addLayer(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!, layerPlace:  Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!)
@@ -852,9 +906,14 @@ class ProjectWork{
                 
                 delegate.addLayer(layer: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!)
             
+            //MARK: Add frame
+                
+                
             case .frameAdd:
                 addFrame()
                 delegate.addFrame(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!)
+                
+            //MARK: Replace frame
                 
                 
             case .frameReplace:
@@ -870,6 +929,9 @@ class ProjectWork{
                 replaceFrame(from: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["from"]!)!, to: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["to"]!)!)
                 delegate.replaceFrame(from: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["from"]!)!, to: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["to"]!)!)
             
+            //MARK: Replace layer
+                
+                
             case .layerReplace:
                 replaceLayer(frame : Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!,from: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["from"]!)!, to: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["to"]!)!)
                                 
@@ -893,6 +955,9 @@ class ProjectWork{
                     delegate.replaceLayer(from: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["from"]!)!, to: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["to"]!)!)
                     delegate.updateFrame(frame: FrameSelected)
                 }
+                
+            //MARK: Clone layer
+                
                 
             case .layerClone:
                 cloneLayer(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!, layer: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!)
@@ -920,6 +985,9 @@ class ProjectWork{
                     }
                 }
                 
+            //MARK: Clone frame
+                
+                
             case .frameClone:
                 cloneFrame(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!)
                 delegate.addFrame(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)! + 1)
@@ -938,6 +1006,9 @@ class ProjectWork{
                         delegate.updateFrameSelect(lastFrame: lastSelect + 1, newFrame: FrameSelected)
                     }
                 }
+                
+            //MARK: Delete layer
+                
                 
             case .layerDelete:
                 deleteLayer(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!, layer: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!)
@@ -966,6 +1037,10 @@ class ProjectWork{
                         LayerSelected -= 1
                     }
                 }
+                
+            //MARK: Delete frame
+                
+                
             case .frameDelete:
                 deleteFrame(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!)
                 delegate.deleteFrame(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!)
@@ -982,6 +1057,10 @@ class ProjectWork{
                 } else if FrameSelected > Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)! {
                     FrameSelected -= 1
                 }
+                
+                
+                //MARK: Layer visible change
+                
                 
                 case .layerVisibleChange:
                 projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!].visible.toggle()
@@ -1005,11 +1084,21 @@ class ProjectWork{
                     delegate.updateLayer(layer: LayerSelected)
                 }
                 
+            //MARK: Change selection
+              
+                
             case .selectionChange:
                 delegate.updateSelection(select: loadAction(actionNum: projectInfo.actionList.lastActiveAction + 1), isSelected: Bool(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["nowSelected"]!)!)
                 
+            //MARK: Change frame delay
+              
+                
             case .changeFrameDelay:
                 setFrameDelay(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!, delay: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["to"]!)!)
+           
+            //MARK: Transform
+                
+                
             case .transform:
                  try! loadAction(actionNum: projectInfo.actionList.lastActiveAction + 1).pngData()?.write(to: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!].frameID)").appendingPathComponent("layer-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!].layerID).png"))
                  try! loadActionSelect(actionNum: projectInfo.actionList.lastActiveAction + 1).pngData()?.write(to: getProjectDirectory().appendingPathComponent("selection.png"))
@@ -1035,9 +1124,16 @@ class ProjectWork{
                          delegate.updateLayer(layer: LayerSelected)
                      }
                  }
+                
+            //MARK: Change background
+                
+                
             case .backgroundChange:
                 projectInfo.bgColor = projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["now"]!
                 delegate.updateEditor()
+               
+            //MARK: Project resize
+                
                 
             case .resizeProject:
                 try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("frames"))
@@ -1047,6 +1143,9 @@ class ProjectWork{
                 try! loadImagefromUrl(url: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: projectInfo.actionList.lastActiveAction + 1))-selection.png")).pngData()?.write(to: getProjectDirectory().appendingPathComponent("selection.png"))
                 
                 (delegate as! Editor).resizeProject()
+                
+            //MARK: Clone layer opasity
+
                 
             case .changeLayerOpasity:
                 setLayerOpasity(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!, layer: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!, newOpasity: Int(Float(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["to"]!)! * 100))
@@ -1072,6 +1171,34 @@ class ProjectWork{
                          delegate.updateLayer(layer: LayerSelected)
                      }
                  }
+                
+            //MARK: Layers merge
+
+                
+            case .mergeLayers:
+                try! UIImage.merge(images: [loadActionMerge(actionNum: projectInfo.actionList.lastActiveAction + 1, imageNum: 2),loadActionMerge(actionNum: projectInfo.actionList.lastActiveAction + 1, imageNum: 1)])?.pngData()?.write(to: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!].frameID)").appendingPathComponent("layer-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!].layerID).png"))
+
+                deleteLayer(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!, layer: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)! + 1)
+                
+                if FrameSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)! {
+                    let lastSelect = FrameSelected
+                    
+                    savePreview(frame: FrameSelected)
+                    
+                    FrameSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!
+                    LayerSelected = 0
+                    
+                    delegate.updateFrameSelect(lastFrame: lastSelect, newFrame: FrameSelected)
+                } else {
+                    delegate.deleteLayer(layer: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)! + 1)
+                    delegate.updateLayer(layer: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!)
+
+                    delegate.updateFrame(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!)
+                    
+                    LayerSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!
+                        
+                    delegate.updateLayer(layer: LayerSelected)
+                }
             }
             delegate.updateCanvas()
             projectInfo.actionList.lastActiveAction += 1
@@ -1124,7 +1251,9 @@ class ProjectWork{
             try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: projectInfo.actionList.actions.count - 1))-was"))
             try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: projectInfo.actionList.actions.count - 1))-selection.png"))
             try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: projectInfo.actionList.actions.count - 1))-selection-was.png"))
-
+        case .mergeLayers:
+            try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-first-\(getActionID(action: projectInfo.actionList.actions.count - 1)).png"))
+            try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-second-\(getActionID(action: projectInfo.actionList.actions.count - 1)).png"))
         default:
             break
         }
@@ -1151,6 +1280,9 @@ class ProjectWork{
             try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: 0))-was"))
             try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: 0))-selection.png"))
             try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: 0))-selection-was.png"))
+        case .mergeLayers:
+            try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-first-\(getActionID(action: 0)).png"))
+            try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-second-\(getActionID(action: 0)).png"))
         default:
             break
         }
@@ -1240,7 +1372,6 @@ class ProjectWork{
         return result
     }
     
-    
     func createGif() -> CGImageSource{
         let fileProperties: CFDictionary = [kCGImagePropertyGIFDictionary as String: [kCGImagePropertyGIFLoopCount as String: 0]]  as CFDictionary
         let resData : CFMutableData = CFDataCreateMutable(nil, .zero)
@@ -1309,5 +1440,6 @@ enum Actions : Int {
     case transform = 13 //done
     case backgroundChange = 14//done
     case resizeProject = 15//done
-    case changeLayerOpasity = 16
+    case changeLayerOpasity = 16//done
+    case mergeLayers = 17//done
 }

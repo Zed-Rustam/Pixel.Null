@@ -167,6 +167,16 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
             },completion: nil)
         })
     }
+    
+    func margeLayers(frame : Int, layer: Int) {
+        UIView.animate(withDuration: 0.2, animations: {
+            self.layers.list.performBatchUpdates({
+                self.layers.list.deleteItems(at: [IndexPath(item: layer + 1, section: 0)])
+                self.layers.list.reloadItems(at: [IndexPath(item: layer, section: 0)])
+            },completion: nil)
+        })
+    }
+    
     func updatePreview(){
         self.preview.image = self.project.getFrameFromLayers(frame: self.project.FrameSelected, size: self.project.projectSize)
     }
@@ -297,4 +307,5 @@ protocol FrameControlUpdate : class {
     func addFrame(at : Int)
     func updatePreview()
     func changeLayerVisible(frame : Int,layer : Int)
+    func margeLayers(frame : Int,layer : Int)
 }

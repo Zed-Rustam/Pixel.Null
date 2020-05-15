@@ -65,6 +65,7 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
         
         return btn
     }()
+    
     lazy var visibleButton : CircleButton = {
         let btn = CircleButton(icon: #imageLiteral(resourceName: "visible_button_icon"), frame: .zero)
        btn.corners = 6
@@ -103,6 +104,28 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
         return btn
     }()
 
+    lazy var mergeButton : CircleButton = {
+        let btn = CircleButton(icon: #imageLiteral(resourceName: "settings_icon"), frame: CGRect(x: frame.width - 90, y: 0, width: 36, height: 36))
+        btn.corners = 8
+        btn.delegate = { [unowned self] in
+            //self!.project!.addLayer(frame : self!.project!.FrameSelected, layerPlace: self!.project!.LayerSelected + 1)
+            if self.project!.layerCount > 1 && self.project!.LayerSelected != self.project!.layerCount - 1 {
+                self.project!.addAction(action: ["ToolID" : "\(Actions.mergeLayers.rawValue)", "frame" : "\(self.project!.FrameSelected)", "layer" : "\( self.project!.LayerSelected)"])
+                
+                try! self.project!.getLayer(frame: self.project!.FrameSelected, layer: self.project!.LayerSelected).pngData()?.write(to: self.project!.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-first-\(self.project!.getNextActionID()).png"))
+                try! self.project!.getLayer(frame: self.project!.FrameSelected, layer: self.project!.LayerSelected + 1).pngData()?.write(to: self.project!.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-second-\(self.project!.getNextActionID()).png"))
+
+                self.project!.mergeLayers(frame: self.project!.FrameSelected, layer: self.project!.LayerSelected)
+                self.list.frameDelegate?.margeLayers(frame: self.project!.FrameSelected, layer: self.project!.LayerSelected)
+            }
+        }
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
+               
+        return btn
+    }()
+    
     lazy var transparentField : TextField = {
         let text = TextField()
         text.translatesAutoresizingMaskIntoConstraints = false
@@ -178,6 +201,7 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
         self.addSubview(cloneButton)
         self.addSubview(visibleButton)
         self.addSubview(addButton)
+        self.addSubview(mergeButton)
 
         list.leftAnchor.constraint(equalTo: leftAnchor, constant: 0).isActive = true
         list.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
@@ -194,8 +218,12 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
 
         deleteButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -8).isActive = true
         deleteButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 16).isActive = true
+       
         addButton.leftAnchor.constraint(equalTo: visibleButton.rightAnchor, constant: 8).isActive = true
         addButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 16).isActive = true
+        
+        mergeButton.leftAnchor.constraint(equalTo: addButton.rightAnchor, constant: 8).isActive = true
+        mergeButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 16).isActive = true
 
         checkFrame()
     }

@@ -139,11 +139,10 @@ extension PalleteCollection : PalleteGalleryDelegate {
             }
             
         PalleteWorker.clone(original: "\(pallete.palleteName).pnpalette", clone: "\(pallete.palleteName)(\(index)).pnpalette")
-        print("some tests \(pallete.palleteName)")
         let proj = PalleteWorker(fileName: "\(pallete.palleteName)(\(index))")
             
         palletes.append(proj)
-            
+        
         collection.performBatchUpdates({
             collection.insertItems(at: [IndexPath(item: palletes.count - 1, section: 0)])
         },completion: nil)
