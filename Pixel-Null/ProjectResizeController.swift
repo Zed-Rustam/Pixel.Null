@@ -83,7 +83,7 @@ class ProjectResizeController : UIViewController {
         btn.corners = 12
         btn.setShadowColor(color: .clear)
         btn.delegate = {[unowned self] in
-            self.project?.resize(newSize: CGSize(width: Int(self.widthTextField.filed.text!)!, height: Int(self.heightTextField.filed.text!)!), scale: self.scaleToggle.isCheck, alignment: self.alignmentSelector.alignment)
+            self.project?.resize(newSize: CGSize(width: Int(self.widthTextField.filed.text ?? "\(Int(self.project!.projectSize.width))")!, height: Int(self.heightTextField.filed.text ?? "\(Int(self.project!.projectSize.height))")!), scale: self.scaleToggle.isCheck, alignment: self.alignmentSelector.alignment)
             self.delegate(true)
             self.dismiss(animated: true, completion: nil)
         }
@@ -95,7 +95,9 @@ class ProjectResizeController : UIViewController {
         let text = TextField()
         text.translatesAutoresizingMaskIntoConstraints = false
         text.filed.text = "\(Int(project!.projectSize.width))"
+        text.setHelpText(help: "\(Int(project!.projectSize.width))")
         text.filed.keyboardType = .numberPad
+        text.filed.delegate = sizedel
         return text
     }()
     
@@ -103,7 +105,9 @@ class ProjectResizeController : UIViewController {
         let text = TextField()
         text.translatesAutoresizingMaskIntoConstraints = false
         text.filed.text = "\(Int(project!.projectSize.height))"
+        text.setHelpText(help: "\(Int(project!.projectSize.height))")
         text.filed.keyboardType = .numberPad
+        text.filed.delegate = sizedel
         return text
     }()
     
@@ -123,6 +127,23 @@ class ProjectResizeController : UIViewController {
         return text
     }()
 
+    lazy private var sizedel : TextFieldDelegate = {
+        let delegate = TextFieldDelegate(method: {field in
+            let height = Int(field.text!) ?? -1
+            if(height > 512) {
+                field.text = "512"
+            } else if(height == -1 && field.text != ""){
+               field.text = ""
+            } else if(height == -1){
+                field.text = ""
+            }else if(height == 0){
+                field.text = ""
+            }else{
+                //self.projectHeight.error = nil
+            }
+        })
+        return delegate
+    }()
     
     lazy private var WidthTitle : UILabel = {
         let text = UILabel()

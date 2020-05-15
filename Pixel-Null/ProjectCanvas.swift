@@ -374,7 +374,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         selectionLayer = fixAlpha(image : imageTransform).withTintColor(getAppColor(color: .select))
         selectionImage.image = selectionLayer
         
-        move.setImage(image: imageTransform.getImageFromRect(rect: transformView.position), startpos: .zero, selection: selectionLayer.getImageFromRect(rect: transformView.position),size: project.projectSize, startImg: targetLayer.cut(image: isSelected ? selectionLayer : nil))
+        move.setImage(image: imageTransform.getImageFromRect(rect: transformView.position), startpos: .zero, selection: selectionLayer.getImageFromRect(rect: transformView.position),size: project.projectSize, startImg: UIImage.merge(images: [targetLayer])!)
         
         ActionLayer = move.drawOn(position: transformView.position, rotation: transformView.Radians(CGFloat(transformView.angle)),rotateCenter: CGPoint(x: transformView.lastSize.width, y: transformView.lastSize.height))
         actionImage.image = ActionLayer

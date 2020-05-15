@@ -10,19 +10,6 @@ import UIKit
 import ImageIO
 import MobileCoreServices
 
-func getAppColor(color : Theme) -> UIColor{
-        return UIColor(named: color.rawValue)!
-}
-
-enum Theme : String {
-    case background = "backgroundColor"
-    case enable = "enableColor"
-    case disable = "disableColor"
-    case shadow = "shadowColor"
-    case select = "selectColor"
-    case red = "redColor"
-}
-
 extension UIImage {
     
     convenience init?(size : CGSize){

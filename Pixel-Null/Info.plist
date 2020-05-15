@@ -17,6 +17,11 @@
 			<array>
 				<string>com.zed.null.palette</string>
 			</array>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<string>pnpalette</string>
+			</dict>
 		</dict>
 		<dict>
 			<key>CFBundleTypeIconFiles</key>
@@ -27,6 +32,11 @@
 			<array>
 				<string>com.zed.null.project</string>
 			</array>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<string>pnart</string>
+			</dict>
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
@@ -41,10 +51,14 @@
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict/>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>2</string>
 	<key>LSApplicationCategoryType</key>
-	<string></string>
+	<string>public.app-category.graphics-design</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
@@ -132,14 +146,36 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
+				<string>public.directory</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Pixel.Null Project file</string>
+			<key>UTTypeIconFiles</key>
+			<array/>
+			<key>UTTypeIdentifier</key>
+			<string>com.zed.null.project</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<string>pnart</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
 				<string>public.data</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Pallete file</string>
+			<string>Pixe.Null Pallete file</string>
 			<key>UTTypeIconFiles</key>
 			<array/>
 			<key>UTTypeIdentifier</key>
 			<string>com.zed.null.palette</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<string>pnpalette</string>
+			</dict>
 		</dict>
 	</array>
 </dict>

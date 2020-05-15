@@ -70,6 +70,13 @@ class MainViewController: UIViewController {
             $0.additionalSafeAreaInsets = edges
         })
     }
+    
+    func importFiles(url : [URL]) {
+        let importCollection = ProjectImportController(filesUrl: url)
+        importCollection.modalPresentationStyle = .formSheet
+        
+        self.show(importCollection, sender: nil)
+    }
 }
 
 extension MainViewController : NavigationProtocol {

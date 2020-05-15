@@ -109,8 +109,8 @@ class CreateDialog : UIView{
     lazy private var widthdel : TextFieldDelegate = {
         let delegate = TextFieldDelegate(method: {field in
            let width = Int(field.text!) ?? -1
-           if(width > 1024) {
-               field.text = "1024"
+           if(width > 512) {
+               field.text = "512"
            } else if(width == -1 && field.text != ""){
                field.text = ""
            } else if(width == -1){
@@ -127,8 +127,8 @@ class CreateDialog : UIView{
     lazy private var heightdel : TextFieldDelegate = {
         let delegate = TextFieldDelegate(method: {field in
             let height = Int(field.text!) ?? -1
-            if(height > 1024) {
-                field.text = "1024"
+            if(height > 512) {
+                field.text = "512"
             } else if(height == -1 && field.text != ""){
                field.text = ""
             } else if(height == -1){

@@ -235,6 +235,7 @@ class Selection : Tool {
             
             pos = pos.offset(x: 1, y: 0)
             setPixelData(imgSize: imageSize, point: pos, color: getAppColor(color: .select).getPixelData())
+            
         }
     }
 

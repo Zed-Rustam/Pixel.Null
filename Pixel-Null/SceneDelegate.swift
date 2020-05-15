@@ -12,6 +12,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     
     let maincontroller = MainViewController()
+    var string = "tests"
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -34,8 +35,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.overrideUserInterfaceStyle = UIUserInterfaceStyle.init(rawValue: UserDefaults.standard.integer(forKey: "themeMode"))!
         window?.makeKeyAndVisible()
         window?.rootViewController = maincontroller
+        
+        
+        if connectionOptions.urlContexts.count > 0 {
+            var urlArray : [URL] = []
+            
+            connectionOptions.urlContexts.forEach({
+                urlArray.append($0.url)
+            })
+            
+            maincontroller.importFiles(url: urlArray)
+        }
     }
-
+    
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
         // This occurs shortly after the scene enters the background, or when its session is discarded.
@@ -63,7 +75,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
     }
-
-
+    
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        if URLContexts.count > 0 {
+            var urlArray : [URL] = []
+            
+            for context in URLContexts {
+                print(context)
+            }
+            
+            URLContexts.forEach({
+                urlArray.append($0.url)
+            })
+            print("all URL information : \(URLContexts)")
+            
+            maincontroller.importFiles(url: urlArray)
+        }
+    }
 }
 
