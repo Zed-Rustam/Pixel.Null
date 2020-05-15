@@ -8,6 +8,7 @@
 
 import UIKit
 
+//MARK: Palette Collection
 class PalleteCollectionV2 : UICollectionView {
     
     private var colors : [String]
@@ -159,7 +160,7 @@ extension PalleteCollectionV2 : UICollectionViewDataSource {
         return cell
     }
 }
-
+//MARK: Palette Collection Delegate
 extension PalleteCollectionV2 : UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if selectedColor != indexPath.item {
@@ -190,6 +191,7 @@ extension PalleteCollectionV2 : UICollectionViewDelegate {
     }
 }
 
+//MARK: Palette Collection Dalagete
 extension PalleteCollectionV2 : PalleteCollectionDelegate {
     
     func addColor(color : UIColor) {
@@ -227,7 +229,9 @@ extension PalleteCollectionV2 : PalleteCollectionDelegate {
         colors[selectedColor] = UIColor.toHex(color: color)
         performBatchUpdates({
             reloadItems(at: [IndexPath(item: selectedColor, section: 0)])
-        }, completion: nil)
+        }, completion: {isEnd in
+            self.selectItem(at: IndexPath(item: self.selectedColor, section: 0), animated: false, scrollPosition: .left)
+        })
     }
     
     func getSelectItemColor() -> UIColor {
@@ -235,6 +239,7 @@ extension PalleteCollectionV2 : PalleteCollectionDelegate {
     }
 }
 
+//MARK: Palette Collection Layout
 class PalleteCollectionLayout : UICollectionViewLayout {
     //size of item
     private var itemSize : CGFloat = 44
@@ -304,6 +309,7 @@ class PalleteCollectionLayout : UICollectionViewLayout {
     }
 }
 
+//MARK: Palette Collection Cell
 class PalleteColorCell : UICollectionViewCell {
     //color setter and getter
     var color : UIColor {
@@ -402,6 +408,7 @@ class PalleteColorCell : UICollectionViewCell {
     }
 }
 
+//MARK: Palette Collection Delegate
 //protocol for working with collection
 protocol PalleteCollectionDelegate : class {
     func cloneSelectedColor()

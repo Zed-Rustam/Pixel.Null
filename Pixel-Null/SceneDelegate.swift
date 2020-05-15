@@ -87,7 +87,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             URLContexts.forEach({
                 urlArray.append($0.url)
             })
-            print("all URL information : \(URLContexts)")
             
             maincontroller.importFiles(url: urlArray)
         }
