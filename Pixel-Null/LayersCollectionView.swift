@@ -26,7 +26,7 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
         btn.setIconColor(color: .white)
         btn.delegate = {[weak self] in
             if (!self!.list.moving && self!.project!.information.frames[self!.project!.FrameSelected].layers.count > 1) {
-                self!.project?.addAction(action: ["ToolID" : "\(Actions.layerDelete.rawValue)","frame" : "\(self!.project!.FrameSelected)", "layer" : "\(self!.project!.LayerSelected)"])
+                self!.project?.addAction(action: ["ToolID" : "\(Actions.layerDelete.rawValue)","frame" : "\(self!.project!.FrameSelected)", "layer" : "\(self!.project!.LayerSelected)", "wasVisible" : "\(self!.project!.information.frames[self!.project!.FrameSelected].layers[self!.project!.LayerSelected].visible)", "transparent" : "\(self!.project!.information.frames[self!.project!.FrameSelected].layers[self!.project!.LayerSelected].transparent)"])
                 
                 try! self!.project?.getLayer(frame: self!.project!.FrameSelected, layer: self!.project!.LayerSelected).pngData()?.write(to: self!.project!.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(self!.project!.getNextActionID()).png"))
                 
@@ -105,7 +105,7 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
     }()
 
     lazy var mergeButton : CircleButton = {
-        let btn = CircleButton(icon: #imageLiteral(resourceName: "settings_icon"), frame: CGRect(x: frame.width - 90, y: 0, width: 36, height: 36))
+        let btn = CircleButton(icon: #imageLiteral(resourceName: "layers_merge_icon"), frame: CGRect(x: frame.width - 90, y: 0, width: 36, height: 36))
         btn.corners = 8
         btn.delegate = { [unowned self] in
             //self!.project!.addLayer(frame : self!.project!.FrameSelected, layerPlace: self!.project!.LayerSelected + 1)

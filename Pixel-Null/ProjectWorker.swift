@@ -674,8 +674,16 @@ class ProjectWork{
                     
                 }
                 
+            //MARK: Layer delete
+
+                
             case .layerDelete:
                 addLayer(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!, layerPlace: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!)
+                
+                projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!].transparent = Float(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["transparent"]!)!
+
+                projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!].visible = Bool(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["wasVisible"]!)!
+
                 
                 try! loadAction(actionNum: projectInfo.actionList.lastActiveAction).pngData()?.write(to: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].frameID)").appendingPathComponent("layer-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!].layerID).png"))
                 
@@ -699,6 +707,10 @@ class ProjectWork{
                         delegate.updateLayerSelect(lastLayer: lastSelect + 1, newLayer: LayerSelected)
                     }
                 }
+                
+            //MARK: Frame delete
+
+                
             case .frameDelete:
                 let frame : ProjectFrame = try! JSONDecoder().decode(ProjectFrame.self, from: projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frameStruct"]!.data(using: .utf8)!)
                 
@@ -722,6 +734,9 @@ class ProjectWork{
                 }
                 delegate.updateLayers()
                
+            //MARK: Layers visible change
+
+                
             case .layerVisibleChange:
                 projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!].visible.toggle()
                 
@@ -744,11 +759,20 @@ class ProjectWork{
                     delegate.updateLayer(layer: LayerSelected)
                 }
                 
+            //MARK: Selection change
+
+                
             case .selectionChange:
                 delegate.updateSelection(select: loadActionWas(actionNum: projectInfo.actionList.lastActiveAction),isSelected: Bool(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["wasSelected"]!)!)
             
+            //MARK: Frames delay change
+
+                
             case .changeFrameDelay:
                 setFrameDelay(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!, delay: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["from"]!)!)
+                
+            //MARK: Transform
+
                 
             case .transform:
                 try! loadActionWas(actionNum: projectInfo.actionList.lastActiveAction).pngData()?.write(to: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].frameID)").appendingPathComponent("layer-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!].layerID).png"))
@@ -773,6 +797,10 @@ class ProjectWork{
                 } else {
                     delegate.updateLayer(layer: LayerSelected)
                 }
+                
+            //MARK: Background change
+
+                
             case .backgroundChange:
                 projectInfo.bgColor = projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["last"]!
                 delegate.updateEditor()
@@ -785,6 +813,9 @@ class ProjectWork{
 
                 
                 (delegate as! Editor).resizeProject()
+                
+            //MARK: Layers opacity change
+
                 
             case .changeLayerOpasity:
                 setLayerOpasity(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!, layer: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!, newOpasity: Int(Float(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["from"]!)! * 100))
@@ -1443,3 +1474,4 @@ enum Actions : Int {
     case changeLayerOpasity = 16//done
     case mergeLayers = 17//done
 }
+
