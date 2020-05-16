@@ -10,6 +10,8 @@ import UIKit
 
 class PalletesDialog: UIView {
 
+    weak var controller : UIViewController? = nil
+    
     lazy private var palleteTitle : UILabel = {
         let label = UILabel()
         
@@ -31,6 +33,13 @@ class PalletesDialog: UIView {
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.heightAnchor.constraint(equalToConstant: 40).isActive = true
         btn.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        
+        btn.delegate = {[unowned self] in
+            let paletteSel = PeletteSelectController()
+            paletteSel.modalPresentationStyle = .formSheet
+            
+            self.controller?.show(paletteSel, sender: nil)
+        }
         return btn
     }()
     

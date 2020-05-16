@@ -33,11 +33,12 @@
 		954FFE24246B357D00A4EC71 /* QuickLookThumbnailing.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 954FFE23246B357D00A4EC71 /* QuickLookThumbnailing.framework */; };
 		954FFE27246B357D00A4EC71 /* ThumbnailProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954FFE26246B357D00A4EC71 /* ThumbnailProvider.swift */; };
 		954FFE2B246B357D00A4EC71 /* FIles Miniature.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 954FFE21246B357D00A4EC71 /* FIles Miniature.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		954FFE31246B405200A4EC71 /* PalleteDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954FFE30246B405200A4EC71 /* PalleteDocument.swift */; };
 		954FFE99246B66F700A4EC71 /* ThumbnailProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954FFE26246B357D00A4EC71 /* ThumbnailProvider.swift */; };
 		954FFE9A246B6B9800A4EC71 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 954AABB823BBEC4100F52955 /* Assets.xcassets */; };
+		95513ABB24709D59007E3E9E /* ColorsPalleteNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95513ABA24709D59007E3E9E /* ColorsPalleteNew.swift */; };
 		955145D52405589100524FF9 /* ProjectCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955145D42405589100524FF9 /* ProjectCanvas.swift */; };
 		955145D724055D1000524FF9 /* Editor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955145D624055D1000524FF9 /* Editor.swift */; };
+		95537EFF2470048E0074C821 /* SelectPaletteCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95537EFE2470048E0074C821 /* SelectPaletteCollection.swift */; };
 		9555908923F5D580000EF96B /* GalleryControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9555908823F5D580000EF96B /* GalleryControl.swift */; };
 		95560A1323C2EA3100581482 /* a.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95560A1223C2EA3100581482 /* a.swift */; };
 		95560A1523C42EE500581482 /* ProjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95560A1423C42EE500581482 /* ProjectView.swift */; };
@@ -99,7 +100,6 @@
 		95AA119C2444C1500048CB96 /* SwiftUIFun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95AA119B2444C1500048CB96 /* SwiftUIFun.swift */; };
 		95C0EDD42448B1450012D60D /* SummetryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C0EDD32448B1450012D60D /* SummetryView.swift */; };
 		95C0EDD62448B2130012D60D /* GridLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C0EDD52448B2130012D60D /* GridLayer.swift */; };
-		95C1233A241D733C00775377 /* ColorPallete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C12339241D733C00775377 /* ColorPallete.swift */; };
 		95C1233D241E08A600775377 /* PalleteCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C1233C241E08A600775377 /* PalleteCollection.swift */; };
 		95C7278423EB384300ED1A28 /* ColorSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C7278323EB384200ED1A28 /* ColorSelectorController.swift */; };
 		95C7278623EB577900ED1A28 /* CircleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C7278523EB577900ED1A28 /* CircleButton.swift */; };
@@ -184,9 +184,10 @@
 		954FFE23246B357D00A4EC71 /* QuickLookThumbnailing.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLookThumbnailing.framework; path = System/Library/Frameworks/QuickLookThumbnailing.framework; sourceTree = SDKROOT; };
 		954FFE26246B357D00A4EC71 /* ThumbnailProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailProvider.swift; sourceTree = "<group>"; };
 		954FFE28246B357D00A4EC71 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		954FFE30246B405200A4EC71 /* PalleteDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PalleteDocument.swift; sourceTree = "<group>"; };
+		95513ABA24709D59007E3E9E /* ColorsPalleteNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorsPalleteNew.swift; sourceTree = "<group>"; };
 		955145D42405589100524FF9 /* ProjectCanvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCanvas.swift; sourceTree = "<group>"; };
 		955145D624055D1000524FF9 /* Editor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Editor.swift; sourceTree = "<group>"; };
+		95537EFE2470048E0074C821 /* SelectPaletteCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPaletteCollection.swift; sourceTree = "<group>"; };
 		9555908823F5D580000EF96B /* GalleryControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryControl.swift; sourceTree = "<group>"; };
 		95560A1223C2EA3100581482 /* a.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = a.swift; sourceTree = "<group>"; };
 		95560A1423C42EE500581482 /* ProjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectView.swift; sourceTree = "<group>"; };
@@ -241,7 +242,6 @@
 		95AA119B2444C1500048CB96 /* SwiftUIFun.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIFun.swift; sourceTree = "<group>"; };
 		95C0EDD32448B1450012D60D /* SummetryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummetryView.swift; sourceTree = "<group>"; };
 		95C0EDD52448B2130012D60D /* GridLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GridLayer.swift; sourceTree = "<group>"; };
-		95C12339241D733C00775377 /* ColorPallete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPallete.swift; sourceTree = "<group>"; };
 		95C1233C241E08A600775377 /* PalleteCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PalleteCollection.swift; sourceTree = "<group>"; };
 		95C7278323EB384200ED1A28 /* ColorSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSelectorController.swift; sourceTree = "<group>"; };
 		95C7278523EB577900ED1A28 /* CircleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleButton.swift; sourceTree = "<group>"; };
@@ -531,14 +531,14 @@
 			children = (
 				95023E3F24252ADE0098187E /* PalleteCreate */,
 				959BCFB9241FECA500B27CFB /* PalleteEditor */,
-				95C12339241D733C00775377 /* ColorPallete.swift */,
 				95C1233C241E08A600775377 /* PalleteCollection.swift */,
 				959BCFB7241EC64100B27CFB /* PalleteFull.swift */,
 				959BCFBE241FEFA300B27CFB /* PalleteWorker.swift */,
 				959BCFC2242254F100B27CFB /* FullColor.swift */,
 				954C32772453A71000E520A4 /* PalleteCollectionV2.swift */,
-				954FFE30246B405200A4EC71 /* PalleteDocument.swift */,
 				959CB7E0246F59300096EF38 /* PalleteSelectController.swift */,
+				95537EFE2470048E0074C821 /* SelectPaletteCollection.swift */,
+				95513ABA24709D59007E3E9E /* ColorsPalleteNew.swift */,
 			);
 			name = "Colors Pallete";
 			sourceTree = "<group>";
@@ -732,7 +732,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9555908923F5D580000EF96B /* GalleryControl.swift in Sources */,
-				95C1233A241D733C00775377 /* ColorPallete.swift in Sources */,
 				95A89E3523FA3E7E00DC796C /* FrameWorker.swift in Sources */,
 				95A626B12444616D007E75F3 /* TrainingMain.swift in Sources */,
 				95578E0523D4C0B200D8DDF2 /* CreateDIalogController.swift in Sources */,
@@ -774,7 +773,6 @@
 				9571F63D244503E200BCBA38 /* EditorController.swift in Sources */,
 				954C32782453A71000E520A4 /* PalleteCollectionV2.swift in Sources */,
 				95560A1723C4302900581482 /* GalleryCells.swift in Sources */,
-				954FFE31246B405200A4EC71 /* PalleteDocument.swift in Sources */,
 				95C850232468620900366EA2 /* EditorSettingsController.swift in Sources */,
 				959DC1132430AD38001A79DF /* PencilSettings.swift in Sources */,
 				95DC554C23EC9A820011FA2A /* ColorSelectDialog1.swift in Sources */,
@@ -789,6 +787,7 @@
 				95A799612443A3E200F7BBE2 /* ThemeSelect.swift in Sources */,
 				9570657524164C350044FC39 /* FrameList.swift in Sources */,
 				95560A1F23C79ACC00581482 /* ProjectsActions.swift in Sources */,
+				95513ABB24709D59007E3E9E /* ColorsPalleteNew.swift in Sources */,
 				95FFC435244DA3C40011A5DC /* TransformView.swift in Sources */,
 				957D04142408510800E58210 /* ProjectControl.swift in Sources */,
 				959BCFBB241FECB900B27CFB /* PalleteEditor.swift in Sources */,
@@ -815,6 +814,7 @@
 				95782CE023CD8F3000C2772F /* TextFieldDelegate.swift in Sources */,
 				95144C51245D04C00070DDF2 /* ProjectSettingsController.swift in Sources */,
 				95746A1E2406DB9200DD2328 /* LayersView.swift in Sources */,
+				95537EFF2470048E0074C821 /* SelectPaletteCollection.swift in Sources */,
 				9523F2C62435F46300725214 /* ToggleView.swift in Sources */,
 				9559B9BE2462D0550066EA40 /* ShapeCollection.swift in Sources */,
 				956E310B246E774200502A2F /* ViewHelper.swift in Sources */,

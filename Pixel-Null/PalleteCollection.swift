@@ -19,7 +19,9 @@ class PalleteCollection : UIViewController, UICollectionViewDelegate, UICollecti
         col.backgroundColor = .clear
         col.contentInsetAdjustmentBehavior = .never
         col.translatesAutoresizingMaskIntoConstraints = false
-        
+        col.isUserInteractionEnabled = true
+        //col.layer.shouldRasterize = true
+        //col.layer.rasterizationScale = UIScreen.main.scale
         return col
     }()
     private var palletes : [Any] = []
@@ -75,6 +77,14 @@ class PalleteCollection : UIViewController, UICollectionViewDelegate, UICollecti
         return UICollectionViewCell()
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print("was touch")
+        if let cell = collectionView.cellForItem(at: indexPath) as? PalleteCell {
+            print("was touch1")
+            cell.palleteView.delegate?.palleteOpen(item: palletes[indexPath.item] as! PalleteWorker)
+        }
+    }
+    
     override func viewDidLoad() {
         palletes.append(NSLocalizedString("Palettes", comment: ""))
         let f = FileManager()
@@ -108,13 +118,17 @@ class PalleteCollection : UIViewController, UICollectionViewDelegate, UICollecti
         addButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
         addButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 21).isActive = true
     }
+    
+    override func viewDidLayoutSubviews() {
+        collection.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
+    }
 }
 
 extension PalleteCollection : PalleteGalleryDelegate {
-       func palleteOpen(item: ColorPallete) {
+       func palleteOpen(item: PalleteWorker) {
             let editor = PalleteEditor()
             editor.isModalInPresentation = true
-            editor.pallete = item.pallete
+            editor.pallete = item
             editor.delegate = {[unowned self] in
                 self.collection.reloadData()
             }
@@ -191,26 +205,22 @@ extension PalleteCollection : PalleteGalleryDelegate {
 }
 
 class PalleteCell : UICollectionViewCell {
-    var palleteView : ColorPallete!
+   // var palleteView : ColorsPaletteNew!
+    
+    lazy var palleteView : ColorsPaletteNew = {
+        let pallete = ColorsPaletteNew()
+        
+        return pallete
+    }()
     
     override init(frame: CGRect) {
         super.init(frame : frame)
-    }
-    
-    override func layoutSubviews() {
-        contentView.setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 0.5)
+        contentView.addSubviewFullSize(view: palleteView)
+        //contentView.isUserInteractionEnabled = true
     }
     
     func setPallete(pallete : PalleteWorker){
-        palleteView?.removeFromSuperview()
-        
-        palleteView = ColorPallete(width: self.frame.width, pallete: pallete)
-        contentView.addSubview(palleteView)
-        contentView.isUserInteractionEnabled = true
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to:nil, from:nil, for:nil)
+        palleteView.setPallete(newPallete: pallete, width: Int(contentView.frame.width))
     }
     
     required init?(coder: NSCoder) {
@@ -219,7 +229,7 @@ class PalleteCell : UICollectionViewCell {
 }
 
 protocol PalleteGalleryDelegate : class{
-    func palleteOpen(item : ColorPallete)
+    func palleteOpen(item : PalleteWorker)
     func clonePallete(pallete : PalleteWorker)
     func deletePallete(pallete : PalleteWorker)
     func palleteUpdate(item : Int)

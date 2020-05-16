@@ -134,6 +134,10 @@ class GalleryControl : UIViewController{
         
         self.view.backgroundColor = getAppColor(color: .background)
     }
+    
+    override func viewDidLayoutSubviews() {
+        gallery.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
+    }
 }
 
 extension GalleryControl : UIPopoverPresentationControllerDelegate {
