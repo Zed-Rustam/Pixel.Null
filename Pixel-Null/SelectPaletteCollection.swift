@@ -39,7 +39,6 @@ class SelectPaletteCollection : UICollectionView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        
         setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
     }
 }

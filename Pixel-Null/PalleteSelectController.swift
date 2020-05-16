@@ -58,7 +58,8 @@ class PeletteSelectController : UIViewController {
         collection.topAnchor.constraint(equalTo: titleBg.bottomAnchor, constant: -12).isActive = true
     }
     
-    override func viewDidLayoutSubviews() {
+    override func viewWillLayoutSubviews() {
+        collection.layoutIfNeeded()
         (collection.collectionViewLayout as! UICollectionViewFlowLayout).itemSize = CGSize(width: (view.frame.width - 36) / 3, height: (view.frame.width - 36) / 3)
         
         (collection.collectionViewLayout as! UICollectionViewFlowLayout).minimumLineSpacing = 8

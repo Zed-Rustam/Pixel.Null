@@ -120,6 +120,8 @@ class PalleteCollection : UIViewController, UICollectionViewDelegate, UICollecti
     }
     
     override func viewDidLayoutSubviews() {
+        collection.layoutSubviews()
+        collection.reloadData()
         collection.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
     }
 }

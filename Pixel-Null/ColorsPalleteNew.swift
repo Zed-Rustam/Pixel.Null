@@ -83,7 +83,6 @@ class ColorsPaletteNew : UIView {
         layoutIfNeeded()
         pallete = newPallete
         contentImage.image = ColorsPaletteNew.makeColorImage(pallete: pallete!)
-        
         titleBg.backgroundColor = UIColor(patternImage: blackImage(image: blurImage(image: getLayerImage(), forRect: CGRect(x: 8, y: 8, width: titleBg.frame.width, height: 16))!))
         titleLabel.text = pallete!.palleteName
     }
@@ -150,6 +149,10 @@ class ColorsPaletteNew : UIView {
 
         isUserInteractionEnabled = true
         addInteraction(UIContextMenuInteraction(delegate: self))
+    }
+    
+    override func tintColorDidChange() {
+        //super.layoutSubviews()
     }
     
     required init?(coder: NSCoder) {
