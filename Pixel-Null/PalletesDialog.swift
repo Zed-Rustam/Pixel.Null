@@ -38,6 +38,11 @@ class PalletesDialog: UIView {
             let paletteSel = PeletteSelectController()
             paletteSel.modalPresentationStyle = .formSheet
             
+            paletteSel.selectDelegate = {[unowned self] in
+                self.setColors(newColors: $0.colors)
+                self.palleteTitle.text = $1
+            }
+            
             self.controller?.show(paletteSel, sender: nil)
         }
         return btn
@@ -86,6 +91,10 @@ class PalletesDialog: UIView {
         (clrs.collectionViewLayout as! PalleteCollectionLayout).bottomOffset = 16
         return clrs
     }()
+    
+    func setColors(newColors : [String]) {
+        collection.palleteColors = newColors
+    }
    
     lazy var colorSelected : UIColor = collection.getSelectItemColor()
     

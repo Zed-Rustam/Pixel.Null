@@ -43,6 +43,10 @@ class PalleteCollectionV2 : UICollectionView {
         get{
             return colors
         }
+        set {
+            colors = newValue
+            reloadData()
+        }
     }
     
     //делегат, который вызывается при выборе цвета и передает цвет

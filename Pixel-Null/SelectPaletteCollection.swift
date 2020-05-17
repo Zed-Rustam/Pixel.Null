@@ -9,6 +9,8 @@
 import UIKit
 
 class SelectPaletteCollection : UICollectionView {
+    weak var mainController : PeletteSelectController? = nil
+    
     private var palettes : [String] = []
     private var layout = UICollectionViewFlowLayout()
     init() {
@@ -50,6 +52,7 @@ extension SelectPaletteCollection : UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = dequeueReusableCell(withReuseIdentifier: "palette", for: indexPath) as! SelectPaletteCell
+        cell.contentView.frame.size = layout.layoutAttributesForItem(at: indexPath)!.frame.size
         cell.setImage(pallete: PalleteWorker(fileName: palettes[indexPath.item]))
         
         return cell
@@ -57,7 +60,10 @@ extension SelectPaletteCollection : UICollectionViewDataSource {
 }
 
 extension SelectPaletteCollection : UICollectionViewDelegate {
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        mainController?.setSelectPalette(palette: PalleteWorker(fileName: palettes[indexPath.item]).colors,name: PalleteWorker(fileName: palettes[indexPath.item]).palleteName)
+        mainController?.dismiss(animated: true, completion: nil)
+    }
 }
 
 
@@ -136,7 +142,7 @@ class SelectPaletteCell : UICollectionViewCell {
     
     func getLayerImage() -> UIImage {
         layoutIfNeeded()
-        UIGraphicsBeginImageContext(cellBg.frame.size)
+        UIGraphicsBeginImageContext(contentView.frame.size)
         print(contentView.frame)
         let context = UIGraphicsGetCurrentContext()!
         

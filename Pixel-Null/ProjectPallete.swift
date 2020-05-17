@@ -40,6 +40,15 @@ class ProjectPallete : UIViewController {
         openPalletesBtn.widthAnchor.constraint(equalToConstant: 36).isActive = true
         openPalletesBtn.heightAnchor.constraint(equalToConstant: 36).isActive = true
         openPalletesBtn.setShadowColor(color: .clear)
+        openPalletesBtn.delegate = {[unowned self] in
+            let selector = PeletteSelectController()
+            selector.modalPresentationStyle = .formSheet
+            selector.selectDelegate = {[unowned self] palette,name in
+                self.collection.palleteColors = palette.colors
+                self.collection.reloadData()
+            }
+            self.show(selector, sender: nil)
+        }
         
         bgView.addSubview(openPalletesBtn)
         openPalletesBtn.leftAnchor.constraint(equalTo: bgView.leftAnchor, constant: 3).isActive = true

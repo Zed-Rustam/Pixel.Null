@@ -9,6 +9,9 @@
 import UIKit
 
 class PeletteSelectController : UIViewController {
+
+    var selectDelegate : (Pallete,String) -> () = {palette,name in }
+    
     lazy private var titleBg : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -23,6 +26,10 @@ class PeletteSelectController : UIViewController {
         mainview.addSubviewFullSize(view: view)
         return mainview
     }()
+    
+    func setSelectPalette(palette : [String], name : String) {
+        selectDelegate(Pallete(colors: palette), name)
+    }
     
     lazy private var titleLabel : UILabel = {
         let label = UILabel()
@@ -56,6 +63,7 @@ class PeletteSelectController : UIViewController {
         collection.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
         collection.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
         collection.topAnchor.constraint(equalTo: titleBg.bottomAnchor, constant: -12).isActive = true
+        collection.mainController = self
     }
     
     override func viewWillLayoutSubviews() {
