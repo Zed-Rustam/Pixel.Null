@@ -22,6 +22,7 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
                self.layers.list.reloadItems(at: [IndexPath(item: layer, section: 0)])
            },completion: {isEnd in
                self.preview.image = self.project.getFrameFromLayers(frame: frame, size: self.project.projectSize)
+            self.layers.list.selectItem(at: IndexPath(item: layer, section: 0), animated: false, scrollPosition: .top)
            })
        //})
         

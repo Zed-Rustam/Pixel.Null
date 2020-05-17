@@ -24,6 +24,8 @@ class PalleteCollectionV2 : UICollectionView {
     
     private var moveCell : PalleteColorCell? = nil
 
+    var startIndexMoving : IndexPath? = nil
+    
     //вкл/выкл перемещение
     func setEnableMoving(enable : Bool) {
         if enable && gestureRecognizers == nil || !gestureRecognizers!.contains(moveGesture) {
@@ -94,6 +96,7 @@ class PalleteCollectionV2 : UICollectionView {
                 if !isMoving {
                     beginInteractiveMovementForItem(at: cell)
                     moveCell = cellForItem(at: cell) as? PalleteColorCell
+                    startIndexMoving = cell
                     
                     UIView.animate(withDuration: 0.25, animations: {
                         self.moveCell!.contentView.transform = CGAffineTransform(scaleX: 1.25, y: 1.25)
@@ -135,6 +138,7 @@ class PalleteCollectionV2 : UICollectionView {
                             self.moveCell = nil
                             self.isMoving = false
                             self.isFinish = false
+                            self.startIndexMoving = nil
                         })
                     })
                 })

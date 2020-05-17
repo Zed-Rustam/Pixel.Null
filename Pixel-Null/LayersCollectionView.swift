@@ -110,13 +110,21 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
         btn.delegate = { [unowned self] in
             //self!.project!.addLayer(frame : self!.project!.FrameSelected, layerPlace: self!.project!.LayerSelected + 1)
             if self.project!.layerCount > 1 && self.project!.LayerSelected != self.project!.layerCount - 1 {
-                self.project!.addAction(action: ["ToolID" : "\(Actions.mergeLayers.rawValue)", "frame" : "\(self.project!.FrameSelected)", "layer" : "\( self.project!.LayerSelected)"])
+                self.project!.addAction(action: ["ToolID" : "\(Actions.mergeLayers.rawValue)",
+                    "frame" : "\(self.project!.FrameSelected)",
+                    "layer" : "\( self.project!.LayerSelected)",
+                    "firstLayerOpasity" : "\(self.project!.information.frames[self.project!.FrameSelected].layers[self.project!.LayerSelected].transparent)",
+                    "secondLayerOpasity" : "\(self.project!.information.frames[self.project!.FrameSelected].layers[self.project!.LayerSelected + 1].transparent)",
+                    "isFirstLayerVisible" : "\(self.project!.information.frames[self.project!.FrameSelected].layers[self.project!.LayerSelected].visible)",
+                    "isSecondLayerVisible" : "\(self.project!.information.frames[self.project!.FrameSelected].layers[self.project!.LayerSelected + 1].visible)",
+                ])
                 
                 try! self.project!.getLayer(frame: self.project!.FrameSelected, layer: self.project!.LayerSelected).pngData()?.write(to: self.project!.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-first-\(self.project!.getNextActionID()).png"))
                 try! self.project!.getLayer(frame: self.project!.FrameSelected, layer: self.project!.LayerSelected + 1).pngData()?.write(to: self.project!.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-second-\(self.project!.getNextActionID()).png"))
 
                 self.project!.mergeLayers(frame: self.project!.FrameSelected, layer: self.project!.LayerSelected)
                 self.list.frameDelegate?.margeLayers(frame: self.project!.FrameSelected, layer: self.project!.LayerSelected)
+                self.transparentField.filed.text = "100"
             }
         }
         btn.translatesAutoresizingMaskIntoConstraints = false
@@ -133,7 +141,7 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
         text.heightAnchor.constraint(equalToConstant: 36).isActive = true
         text.setHelpText(help: "100")
         text.filed.text = "\(Int(project!.information.frames[project!.FrameSelected].layers[project!.LayerSelected].transparent * 100))"
-
+        
         text.filed.textAlignment = .center
         text.filed.keyboardType = .numberPad
 

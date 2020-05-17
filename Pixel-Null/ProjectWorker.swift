@@ -404,8 +404,9 @@ class ProjectWork{
     }
     
     func mergeLayers(frame : Int, layer : Int) {
-        try! UIImage.merge(images: [getLayer(frame: frame, layer: layer + 1),getLayer(frame: frame, layer: layer)])!.pngData()?.write(to: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[frame].frameID)").appendingPathComponent("layer-\(projectInfo.frames[frame].layers[layer].layerID).png"))
+        try! UIImage.merge(images: [getLayer(frame: frame, layer: layer + 1).withAlpha(projectInfo.frames[frame].layers[layer + 1].visible ? CGFloat(projectInfo.frames[frame].layers[layer + 1].transparent) : 0),getLayer(frame: frame, layer: layer).withAlpha(projectInfo.frames[frame].layers[layer].visible ? CGFloat(projectInfo.frames[frame].layers[layer].transparent) : 0)])!.pngData()?.write(to: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[frame].frameID)").appendingPathComponent("layer-\(projectInfo.frames[frame].layers[layer].layerID).png"))
         
+        projectInfo.frames[frame].layers[layer].transparent = 1
         deleteLayer(frame: frame, layer: layer + 1)
     }
     
@@ -851,6 +852,13 @@ class ProjectWork{
                 
                 try! loadActionMerge(actionNum: projectInfo.actionList.lastActiveAction, imageNum: 2).pngData()?.write(to: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].frameID)").appendingPathComponent("layer-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)! + 1].layerID).png"))
 
+                projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!].transparent = Float(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["firstLayerOpasity"]!)!
+                
+                projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!].visible = Bool(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["isFirstLayerVisible"]!)!
+                
+                projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)! + 1].transparent = Float(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["secondLayerOpasity"]!)!
+                
+                projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)! + 1].visible = Bool(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["isSecondLayerVisible"]!)!
                 
                 if FrameSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)! {
                     let lastSelect = FrameSelected
@@ -1207,9 +1215,9 @@ class ProjectWork{
 
                 
             case .mergeLayers:
-                try! UIImage.merge(images: [loadActionMerge(actionNum: projectInfo.actionList.lastActiveAction + 1, imageNum: 2),loadActionMerge(actionNum: projectInfo.actionList.lastActiveAction + 1, imageNum: 1)])?.pngData()?.write(to: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!].frameID)").appendingPathComponent("layer-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!].layerID).png"))
-
-                deleteLayer(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!, layer: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)! + 1)
+                mergeLayers(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!, layer: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!)
+                
+                projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!].visible = true
                 
                 if FrameSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)! {
                     let lastSelect = FrameSelected
