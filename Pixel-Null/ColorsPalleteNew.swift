@@ -10,7 +10,7 @@ import UIKit
 
 class ColorsPaletteNew : UIView {
     private var pallete : PalleteWorker? = nil
-    
+
     lazy private var bg : UIImageView = {
         let view = UIImageView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -151,10 +151,6 @@ class ColorsPaletteNew : UIView {
         addInteraction(UIContextMenuInteraction(delegate: self))
     }
     
-    override func tintColorDidChange() {
-        //super.layoutSubviews()
-    }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -191,5 +187,4 @@ func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurati
     return configuration
 
     }
-    
 }

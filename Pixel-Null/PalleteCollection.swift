@@ -119,9 +119,12 @@ class PalleteCollection : UIViewController, UICollectionViewDelegate, UICollecti
         addButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 21).isActive = true
     }
     
-    override func viewDidLayoutSubviews() {
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         collection.layoutSubviews()
         collection.reloadData()
+    }
+    
+    override func viewDidLayoutSubviews() {
         collection.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
     }
 }

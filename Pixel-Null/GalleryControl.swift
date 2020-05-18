@@ -37,6 +37,9 @@ class GalleryControl : UIViewController{
         collection.backgroundColor = .clear
         collection.contentInsetAdjustmentBehavior = .never
 
+        //collection.layer.shouldRasterize = true
+        //collection.layer.rasterizationScale = UIScreen.main.scale
+        
         return collection
     }()
     
@@ -70,6 +73,10 @@ class GalleryControl : UIViewController{
     private func getDocumentsDirectory() -> URL {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         return paths[0].appendingPathComponent("Projects")
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        gallery.reloadData()
     }
     
     override func viewDidLoad() {
@@ -134,14 +141,11 @@ class GalleryControl : UIViewController{
         
         self.view.backgroundColor = getAppColor(color: .background)
     }
-    
+        
     override func viewDidLayoutSubviews() {
+        print("some ome")
         gallery.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
     }
-}
-
-extension GalleryControl : UIPopoverPresentationControllerDelegate {
-    
 }
 
 extension GalleryControl : GalleryDelegate {
@@ -179,6 +183,7 @@ extension GalleryControl : GalleryProjectDelegate {
 }
 
 extension GalleryControl : ProjectActions {
+    
     func projectOpen(proj: ProjectWork) {
         //переделять что бы каждый раз не создавалось новое окно, а менялись данные в окне
         let ed = Editor()
@@ -191,11 +196,11 @@ extension GalleryControl : ProjectActions {
     }
         //var editor = Editor()
     
-    func projectRename(view: ProjectView, newName: String) {
+    func projectRename(view: ProjectViewNew, newName: String) {
         
     }
     
-    func projectDublicate(view: ProjectView) {
+    func projectDublicate(view: ProjectViewNew) {
         var index : Int = 1
         
         let projs = try! FileManager.default.contentsOfDirectory(at: getDocumentsDirectory(), includingPropertiesForKeys: nil)
@@ -222,7 +227,7 @@ extension GalleryControl : ProjectActions {
         },completion: nil)
     }
     
-    func projectDelete(view: ProjectView, deletedName: String) {
+    func projectDelete(view: ProjectViewNew, deletedName: String) {
         ProjectWork.deleteFile(fileName: deletedName)
         
         for1 : for i in 0..<projects.count {
@@ -267,7 +272,6 @@ extension GalleryControl : UICollectionViewDataSource {
                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! GalleryCell
                cell.setProject(proj: projects[indexPath.item] as! ProjectWork)
                cell.project.delegate = self
-               cell.project.superController = self
                return cell
            }
            return UICollectionViewCell()
@@ -275,7 +279,11 @@ extension GalleryControl : UICollectionViewDataSource {
 }
 
 extension GalleryControl : UICollectionViewDelegate {
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if projects[indexPath.item] is ProjectWork {
+            self.projectOpen(proj: projects[indexPath.item] as! ProjectWork)
+        }
+    }
 }
 
 protocol GalleryProjectDelegate : class{
@@ -288,8 +296,8 @@ protocol GalleryDelegate : class{
 }
 
 protocol ProjectActions : class{
-    func projectRename(view : ProjectView, newName : String)
-    func projectDublicate(view : ProjectView)
-    func projectDelete(view : ProjectView, deletedName : String)
+    func projectRename(view : ProjectViewNew, newName : String)
+    func projectDublicate(view : ProjectViewNew)
+    func projectDelete(view : ProjectViewNew, deletedName : String)
     func projectOpen(proj : ProjectWork)
 }

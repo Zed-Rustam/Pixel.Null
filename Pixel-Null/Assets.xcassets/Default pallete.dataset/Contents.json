@@ -1,8 +1,9 @@
 {
   "data" : [
     {
-      "filename" : "Default pallete.pallete",
-      "idiom" : "universal"
+      "filename" : "New default palette.pnpalette",
+      "idiom" : "universal",
+      "universal-type-identifier" : "com.zed.null.palette"
     }
   ],
   "info" : {

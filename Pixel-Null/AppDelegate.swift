@@ -14,10 +14,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-        //if let url = launchOptions?[UIApplication.LaunchOptionsKey.url] as? URL {
-            //try! url.absoluteString.write(to: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("Logs.txt"), atomically: true, encoding: .utf8)
-       // }
         
         return true
     }

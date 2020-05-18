@@ -173,6 +173,7 @@ class Editor : UIViewController {
     override func viewDidLayoutSubviews() {
         control.setPosition()
         toolBar.setPosition()
+        toolBar.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
     }
     
     func showTransform(isShow : Bool) {
