@@ -67,7 +67,29 @@ class ProjectExportController: UIViewController {
                 try! self.project!.getFrameWithBackground(frame: 0).scale(scaleFactor: CGFloat(self.scale)).pngData()?.write(to: self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).png"))
                 
                 self.present(activity, animated: true, completion: nil)
-               
+            case 2:
+                let activity = UIActivityViewController(activityItems: [self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).gif")], applicationActivities: nil)
+                activity.completionWithItemsHandler = { (activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) -> Void in
+                    if completed == true {
+                        try! FileManager.default.removeItem(at: self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).gif"))
+                    }
+                }
+                
+                self.project!.generateGif(scale: CGFloat(self.scale))
+                self.present(activity, animated: true, completion: nil)
+
+            case 3:
+                self.project?.generateGroupOfImages(scale: CGFloat(self.scale))
+                
+                let activity = UIActivityViewController(activityItems: [self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName)")], applicationActivities: nil)
+                activity.completionWithItemsHandler = { (activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) -> Void in
+                    if completed == true {
+                        try! FileManager.default.removeItem(at: self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName)"))
+                    }
+                }
+                
+                self.present(activity, animated: true, completion: nil)
+                
             case 4:
                 let activity = UIActivityViewController(activityItems: [self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).png")], applicationActivities: nil)
                 activity.completionWithItemsHandler = { (activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) -> Void in
@@ -84,7 +106,6 @@ class ProjectExportController: UIViewController {
             default:
                 break
             }
-            //self.dismiss(animated: true, completion: nil)
         }
         
         return btn

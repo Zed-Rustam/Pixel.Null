@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Our application needs permission to write photos...</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -65,6 +63,8 @@
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Our application needs permission to write photos...</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Rubik-Medium.ttf</string>
@@ -141,6 +141,12 @@
 				<key>public.filename-extension</key>
 				<string>pnart</string>
 			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeDescription</key>
+			<string>gif</string>
+			<key>UTTypeIconFiles</key>
+			<array/>
 		</dict>
 	</array>
 	<key>UTImportedTypeDeclarations</key>

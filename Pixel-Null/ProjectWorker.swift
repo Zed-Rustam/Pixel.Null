@@ -9,6 +9,7 @@
 import ImageIO
 import MobileCoreServices
 import UIKit
+import Compression
 
 class ProjectWork{
     private var name : String
@@ -1436,17 +1437,17 @@ class ProjectWork{
         return result
     }
     
-    func createGif() -> CGImageSource{
+    func generateGif(scale : CGFloat) {
         let fileProperties: CFDictionary = [kCGImagePropertyGIFDictionary as String: [kCGImagePropertyGIFLoopCount as String: 0]]  as CFDictionary
         let resData : CFMutableData = CFDataCreateMutable(nil, .zero)
-        
-        if let destination = CGImageDestinationCreateWithURL(getProjectDirectory().appendingPathComponent("anime.png") as CFURL, kUTTypePNG, projectInfo.frames.count, nil) {
+
+        if let destination = CGImageDestinationCreateWithURL(getProjectDirectory().appendingPathComponent("\(userProjectName).gif") as CFURL, kUTTypeGIF, projectInfo.frames.count, nil) {
             CGImageDestinationSetProperties(destination, fileProperties)
             for image in 0..<projectInfo.frames.count {
-                let frameImg = getFrame(frame: image, size: projectSize).cgImage!
+                let frameImg = getFrameWithBackground(frame: image).scale(scaleFactor: scale).cgImage!
                 
                 let frameProperties: CFDictionary = [kCGImagePropertyGIFDictionary as String: [(kCGImagePropertyGIFDelayTime as String): CGFloat(projectInfo.frames[image].delay) / 1000.0, kCGImagePropertyHasAlpha : true, kCGImagePropertyGIFImageColorMap : false]] as CFDictionary
-
+            
                 CGImageDestinationAddImage(destination, frameImg, frameProperties)
             }
             
@@ -1454,8 +1455,16 @@ class ProjectWork{
                print("Failed to finalize the image destination")
             }
         }
-        return CGImageSourceCreateWithData(resData, nil)!
-
+        
+        CGImageSourceCreateWithData(resData, nil)
+    }
+        
+    func generateGroupOfImages(scale : CGFloat) {
+        print("start starting")
+        try! FileManager.default.createDirectory(at: getProjectDirectory().appendingPathComponent("\(userProjectName)"), withIntermediateDirectories: true, attributes: nil)
+        for i in 0..<frameCount {
+            try! getFrameWithBackground(frame: i).scale(scaleFactor: scale).pngData()?.write(to: getProjectDirectory().appendingPathComponent("\(userProjectName)").appendingPathComponent("\(i).png"))
+        }
     }
 }
 
