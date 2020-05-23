@@ -56,7 +56,7 @@ class AboutDeveloperController : UIViewController {
         
         return label
     }()
-
+    
     lazy private var devEmail : UILabel = {
         let label = UILabel()
         label.textColor = getAppColor(color: .enable)

@@ -91,21 +91,20 @@ class ColorSlider : UIView {
         return gest
     }()
     
-    private var nowPosition : CGFloat = 0
+    private var nowPosition : Double = 0
 
-    var delegate : (CGFloat) -> () = {pos in}
+    var delegate : (Double) -> () = {pos in}
 
     var resultColor : UIColor {
         get{
             let sc = CIColor(color : startColor)
             let ec = CIColor(color : endColor)
 
-            let reddiv = (ec.red - sc.red) * nowPosition
-            let greendiv = (ec.green - sc.green) * nowPosition
-            let bluediv = (ec.blue - sc.blue) * nowPosition
-            let alphadiv = (ec.alpha - sc.alpha) * nowPosition
-            
-            return UIColor.init(red: sc.red + reddiv, green: sc.green + greendiv, blue: sc.blue + bluediv, alpha: sc.alpha + alphadiv)
+            let reddiv = Double(ec.red - sc.red) * nowPosition
+            let greendiv = Double(ec.green - sc.green) * nowPosition
+            let bluediv = Double(ec.blue - sc.blue) * nowPosition
+            let alphadiv = Double(ec.alpha - sc.alpha) * nowPosition
+            return UIColor.init(red: sc.red + CGFloat(reddiv), green: sc.green + CGFloat(greendiv), blue: sc.blue + CGFloat(bluediv), alpha: sc.alpha + CGFloat(alphadiv))
         }
     }
     
@@ -134,7 +133,7 @@ class ColorSlider : UIView {
         case .began:
             switch orientation {
                 case .horizontal:
-                    nowPosition = (position.x - 15) / (self.frame.width - 30)
+                    nowPosition = Double(position.x - 15) / Double(self.frame.width - 30)
                     UIView.animate(withDuration: 0.25, animations: {
                         self.selectView.transform = CGAffineTransform(scaleX: 1.25, y: 1.25)
                         self.selectView.center.x = position.x
@@ -149,7 +148,7 @@ class ColorSlider : UIView {
                         }
                     })
                 case .vertical:
-                    nowPosition = (position.y - 15) / (self.frame.height - 30)
+                    nowPosition = Double(position.y - 15) / Double(self.frame.height - 30)
                     UIView.animate(withDuration: 0.25, animations: {
                         self.selectView.transform = CGAffineTransform(scaleX: 1.25, y: 1.25)
                             self.selectView.center.y = position.y
@@ -168,13 +167,13 @@ class ColorSlider : UIView {
         case .changed:
             switch orientation {
               case .horizontal:
-                  nowPosition = (position.x - 15) / (self.frame.width - 30)
+                  nowPosition = Double(position.x - 15) / Double(self.frame.width - 30)
                   UIView.animate(withDuration: 0.25, animations: {
                       self.selectView.center.x = position.x
                         self.selectView.subviews[0].subviews[0].backgroundColor = self.resultColor
                   })
               case .vertical:
-                  nowPosition = (position.y - 15) / (self.frame.height - 30)
+                  nowPosition = Double(position.y - 15) / Double(self.frame.height - 30)
                   UIView.animate(withDuration: 0.25, animations: {
                       self.selectView.center.y = position.y
                     self.selectView.subviews[0].subviews[0].backgroundColor = self.resultColor
@@ -184,7 +183,7 @@ class ColorSlider : UIView {
         case .ended:
             switch orientation {
                 case .horizontal:
-                    nowPosition = (position.x - 15) / (self.frame.width - 30)
+                    nowPosition = Double(position.x - 15) / Double(self.frame.width - 30)
                     UIView.animate(withDuration: 0.25, animations: {
                         self.selectView.transform = CGAffineTransform(scaleX: 1, y: 1)
                         self.selectView.center.x = position.x
@@ -192,7 +191,7 @@ class ColorSlider : UIView {
                         self.selectView.frame.origin.y = 0
                     })
                 case .vertical:
-                    nowPosition = (position.y - 15) / (self.frame.height - 30)
+                    nowPosition = Double(position.y - 15) / Double(self.frame.height - 30)
                     UIView.animate(withDuration: 0.25, animations: {
                         self.selectView.transform = CGAffineTransform(scaleX: 1, y: 1)
                         self.selectView.center.y = position.y
@@ -214,8 +213,7 @@ class ColorSlider : UIView {
         selectView.subviews[0].subviews[0].backgroundColor = self.resultColor
     }
     
-    func setPosition(pos : CGFloat) {
-        //layoutIfNeeded()
+    func setPosition(pos : Double) {
         nowPosition = pos
         print("some shit 2 \(self.frame.height)")
         
@@ -223,13 +221,13 @@ class ColorSlider : UIView {
             case .horizontal:
                 UIView.animate(withDuration: 0.25, animations: {
                     self.selectView.transform = CGAffineTransform(scaleX: 1, y: 1)
-                    self.selectView.center.x = 15 + self.nowPosition * (self.frame.width - 30)
+                    self.selectView.center.x = CGFloat(15 + self.nowPosition * Double(self.frame.width - 30))
                     self.selectView.subviews[0].subviews[0].backgroundColor = self.resultColor
                 })
             case .vertical:
                 UIView.animate(withDuration: 0.25, animations: {
                     self.selectView.transform = CGAffineTransform(scaleX: 1, y: 1)
-                    self.selectView.center.y = 15 + self.nowPosition * (self.frame.height - 30)
+                    self.selectView.center.y = CGFloat(15 + self.nowPosition * Double(self.frame.height - 30))
                     self.selectView.subviews[0].subviews[0].backgroundColor = self.resultColor
                 })
         }

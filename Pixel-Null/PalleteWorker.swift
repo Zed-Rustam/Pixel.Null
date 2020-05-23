@@ -82,11 +82,13 @@ class PalleteWorker {
         return URL(fileURLWithPath: PalleteWorker.getDocumentsDirectoryWithFile().appendingPathComponent("\(palleteName).pnpalette").path)
     }
     
-    init(name : String, colors : [String]){
+    init(name : String, colors : [String], isSave : Bool = true){
         pallete = Pallete(colors: colors)
         self.name = name
-        save()
         
+        if isSave {
+            save()
+        }
     }
     
     init(fileName : String){

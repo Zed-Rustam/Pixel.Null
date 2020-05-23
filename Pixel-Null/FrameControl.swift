@@ -17,20 +17,16 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
     func changeLayerVisible(frame: Int, layer: Int) {
         project.changeLayerVisible(layer: layer, isVisible: !project.layerVisible(layer: layer))
         
-        //UIView.animate(withDuration: 0, animations: {
            self.layers.list.performBatchUpdates({
                self.layers.list.reloadItems(at: [IndexPath(item: layer, section: 0)])
            },completion: {isEnd in
                self.preview.image = self.project.getFrameFromLayers(frame: frame, size: self.project.projectSize)
             self.layers.list.selectItem(at: IndexPath(item: layer, section: 0), animated: false, scrollPosition: .top)
            })
-       //})
         
-       //UIView.animate(withDuration: 0, animations: {
-            self.frames.list.performBatchUpdates({
-                self.frames.list.reloadItems(at: [IndexPath(item: self.project!.FrameSelected, section: 0)])
-            }, completion: nil)
-       // })
+        self.frames.list.performBatchUpdates({
+            self.frames.list.reloadItems(at: [IndexPath(item: self.project!.FrameSelected, section: 0)])
+        }, completion: nil)
     }
 
     func changeFrame(from: Int, to: Int) {

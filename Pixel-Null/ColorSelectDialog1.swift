@@ -4,7 +4,7 @@ class ColorSelectDialog1 : UIView {
     lazy private var blackSlider : ColorSlider = {
         let slider = ColorSlider(startColor: nowSelectColor, endColor: .black, orientation: .vertical)
         slider.delegate = {[weak self] in
-            self!.blackd = (1 - $0)
+            self!.blackd = CGFloat(1 - $0)
             self!.resetColorBlack()
         }
         slider.widthAnchor.constraint(equalToConstant: 30).isActive = true
@@ -13,7 +13,7 @@ class ColorSelectDialog1 : UIView {
     lazy private var whiteSlider : ColorSlider = {
         let slider = ColorSlider(startColor: .white, endColor: nowSelectColor, orientation: .vertical)
         slider.delegate = {[weak self] in
-            self!.whited = (1 - $0)
+            self!.whited = CGFloat(1 - $0)
             self!.resetColor()
         }
         slider.widthAnchor.constraint(equalToConstant: 30).isActive = true
@@ -22,7 +22,7 @@ class ColorSelectDialog1 : UIView {
     lazy private var alphaSlider : ColorSlider = {
         let slider = ColorSlider(startColor: nowSelectColor.withAlphaComponent(0), endColor: nowSelectColor, orientation: .horizontal)
         slider.delegate = {[weak self] in
-            self!.alphad = $0
+            self!.alphad = CGFloat($0)
             self!.resetColorAlpha()
         }
         slider.heightAnchor.constraint(equalToConstant: 30).isActive = true
@@ -144,21 +144,24 @@ class ColorSelectDialog1 : UIView {
         selectedColorShow.color = color
 
         if max(clr.red,clr.green,clr.blue) != 0 {
-            whiteSlider.setPosition(pos: 1 - (min(clr.red,clr.green,clr.blue)) / max(clr.red,clr.green,clr.blue))
+            whiteSlider.setPosition(pos: Double(1 - (min(clr.red,clr.green,clr.blue)) / max(clr.red,clr.green,clr.blue)))
             whited = 1 - (1 - (min(clr.red,clr.green,clr.blue)) / max(clr.red,clr.green,clr.blue))
         } else {
             whiteSlider.setPosition(pos: 1)
             whited = 0
         }
-        blackSlider.setPosition(pos: 1 - max(clr.red,clr.green,clr.blue))
+        blackSlider.setPosition(pos: Double(1 - max(clr.red,clr.green,clr.blue)))
         blackd = 1 - (1 - max(clr.red,clr.green,clr.blue))
         
         circleSelector.setAngle(angle: getAngle(r: clr.red, g: clr.green, b: clr.blue))
         
         print("some test \(clr.alpha)   \(alphaSlider.frame.width)")
-        alphaSlider.setPosition(pos: clr.alpha)
+        alphaSlider.setPosition(pos: Double(clr.alpha))
         alphad = clr.alpha
         selectedColorShow.color = color
+        nowSelectColor = color
+
+        //selectedColorShow.color = color
 
         //nowSelectColor = color
         
@@ -198,6 +201,8 @@ class ColorSelectDialog1 : UIView {
             angle += 0
         }
         
+        //print("check here red : \(r)")
+
         return angle
     }
     
@@ -226,11 +231,12 @@ class ColorSelectDialog1 : UIView {
     }
     
     override func layoutSubviews() {
+        super.layoutSubviews()
         let clr = CIColor(color : selectedColorShow.color)
         circleSelector.setAngle(angle: getAngle(r: clr.red, g: clr.green, b: clr.blue))
-        whiteSlider.setPosition(pos: 1 - min(clr.red,clr.green,clr.blue))
-        blackSlider.setPosition(pos: 1 - max(clr.red,clr.green,clr.blue))
-        alphaSlider.setPosition(pos: clr.alpha)
+        whiteSlider.setPosition(pos: Double(1 - min(clr.red,clr.green,clr.blue)))
+        blackSlider.setPosition(pos: Double(1 - max(clr.red,clr.green,clr.blue)))
+        alphaSlider.setPosition(pos: Double(clr.alpha))
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

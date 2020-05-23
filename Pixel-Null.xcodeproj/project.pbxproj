@@ -30,6 +30,7 @@
 		954BB2DE240D72B50008B9D5 /* Tool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954BB2DD240D72B50008B9D5 /* Tool.swift */; };
 		954C32782453A71000E520A4 /* PalleteCollectionV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954C32772453A71000E520A4 /* PalleteCollectionV2.swift */; };
 		954DAE4B245E161200CB40B1 /* AlignmentSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954DAE4A245E161200CB40B1 /* AlignmentSelector.swift */; };
+		954E6AE32475B3310030A3F3 /* PaletteCollection3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954E6AE22475B3310030A3F3 /* PaletteCollection3.swift */; };
 		954FFE24246B357D00A4EC71 /* QuickLookThumbnailing.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 954FFE23246B357D00A4EC71 /* QuickLookThumbnailing.framework */; };
 		954FFE27246B357D00A4EC71 /* ThumbnailProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954FFE26246B357D00A4EC71 /* ThumbnailProvider.swift */; };
 		954FFE2B246B357D00A4EC71 /* FIles Miniature.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 954FFE21246B357D00A4EC71 /* FIles Miniature.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -85,6 +86,7 @@
 		959DC1132430AD38001A79DF /* PencilSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959DC1122430AD38001A79DF /* PencilSettings.swift */; };
 		95A35C942446357C005780F0 /* FastActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A35C932446357C005780F0 /* FastActionBar.swift */; };
 		95A51E1224444B4700A03606 /* Training.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A51E1124444B4700A03606 /* Training.swift */; };
+		95A52B58247904A800DB1567 /* ProjectExportController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A52B57247904A800DB1567 /* ProjectExportController.swift */; };
 		95A626AF24446099007E75F3 /* PencilController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A626AE24446099007E75F3 /* PencilController.swift */; };
 		95A626B12444616D007E75F3 /* TrainingMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A626B02444616C007E75F3 /* TrainingMain.swift */; };
 		95A64B3D246C724A002CBCDA /* PalleteWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959BCFBE241FEFA300B27CFB /* PalleteWorker.swift */; };
@@ -180,6 +182,7 @@
 		954BB2DD240D72B50008B9D5 /* Tool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tool.swift; sourceTree = "<group>"; };
 		954C32772453A71000E520A4 /* PalleteCollectionV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PalleteCollectionV2.swift; sourceTree = "<group>"; };
 		954DAE4A245E161200CB40B1 /* AlignmentSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlignmentSelector.swift; sourceTree = "<group>"; };
+		954E6AE22475B3310030A3F3 /* PaletteCollection3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaletteCollection3.swift; sourceTree = "<group>"; };
 		954FFE21246B357D00A4EC71 /* FIles Miniature.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "FIles Miniature.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		954FFE23246B357D00A4EC71 /* QuickLookThumbnailing.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLookThumbnailing.framework; path = System/Library/Frameworks/QuickLookThumbnailing.framework; sourceTree = SDKROOT; };
 		954FFE26246B357D00A4EC71 /* ThumbnailProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailProvider.swift; sourceTree = "<group>"; };
@@ -232,6 +235,7 @@
 		959DC1122430AD38001A79DF /* PencilSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PencilSettings.swift; sourceTree = "<group>"; };
 		95A35C932446357C005780F0 /* FastActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastActionBar.swift; sourceTree = "<group>"; };
 		95A51E1124444B4700A03606 /* Training.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Training.swift; sourceTree = "<group>"; };
+		95A52B57247904A800DB1567 /* ProjectExportController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectExportController.swift; sourceTree = "<group>"; };
 		95A626AE24446099007E75F3 /* PencilController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PencilController.swift; sourceTree = "<group>"; };
 		95A626B02444616C007E75F3 /* TrainingMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingMain.swift; sourceTree = "<group>"; };
 		95A64B42246CCA00002CBCDA /* ProjectImportController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectImportController.swift; sourceTree = "<group>"; };
@@ -293,6 +297,7 @@
 			isa = PBXGroup;
 			children = (
 				95023E4024252AF40098187E /* PalleteCreateController.swift */,
+				954E6AE22475B3310030A3F3 /* PaletteCollection3.swift */,
 			);
 			name = PalleteCreate;
 			sourceTree = "<group>";
@@ -488,6 +493,7 @@
 				9555908823F5D580000EF96B /* GalleryControl.swift */,
 				95560A1623C4302900581482 /* GalleryCells.swift */,
 				95560A1923C5442800581482 /* GalleryLayout.swift */,
+				95A52B57247904A800DB1567 /* ProjectExportController.swift */,
 			);
 			name = Gallery;
 			sourceTree = "<group>";
@@ -738,12 +744,14 @@
 				959DB4AA2469B4CC006C4678 /* ToolBarRepositionCollection.swift in Sources */,
 				9537B1A1243C6C880083BE27 /* GridView.swift in Sources */,
 				9540F1BE243330D2008D1657 /* SliderView.swift in Sources */,
+				95A52B58247904A800DB1567 /* ProjectExportController.swift in Sources */,
 				958C0C1E2419653F007B9C95 /* LayersCollectionView.swift in Sources */,
 				954DAE4B245E161200CB40B1 /* AlignmentSelector.swift in Sources */,
 				95144C4D245C26C00070DDF2 /* SelectorSettings.swift in Sources */,
 				95816A4D244B4470007C7A69 /* SymmetryController.swift in Sources */,
 				95E2A0312455197400B02742 /* FillController.swift in Sources */,
 				95DC554E23EC9D2A0011FA2A /* ColorSelector.swift in Sources */,
+				954E6AE32475B3310030A3F3 /* PaletteCollection3.swift in Sources */,
 				95A64B43246CCA00002CBCDA /* ProjectImportController.swift in Sources */,
 				9570657B24169C910044FC39 /* FrameControl.swift in Sources */,
 				95C0EDD62448B2130012D60D /* GridLayer.swift in Sources */,

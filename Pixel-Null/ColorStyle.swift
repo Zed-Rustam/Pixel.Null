@@ -12,11 +12,11 @@ import MobileCoreServices
 
 extension UIImage {
     
-    convenience init?(size : CGSize){
+    convenience init?(size : CGSize, bgColor : UIColor = .clear){
         let rect = CGRect(origin: .zero, size: size)
         
         UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
-        UIColor.clear.setFill()
+        bgColor.setFill()
         UIRectFill(rect)
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
@@ -77,6 +77,16 @@ extension UIImage {
         }
         
         return array
+    }
+    
+    func scale(scaleFactor : CGFloat) -> UIImage {
+        UIGraphicsBeginImageContext(CGSize(width: size.width * scaleFactor, height: size.height * scaleFactor))
+        let context = UIGraphicsGetCurrentContext()!
+        context.interpolationQuality = .none
+        self.draw(in: CGRect(origin: .zero, size: CGSize(width: size.width * scaleFactor, height: size.height * scaleFactor)))
+        let result = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        return result
     }
     
     func getImageFromRect(rect : CGRect) -> UIImage {

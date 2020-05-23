@@ -2,12 +2,12 @@ import UIKit
 extension UIColor{
     
     convenience init(r : Int, g : Int, b : Int, a : Int){
-        self.init(red: CGFloat(Float(r)/255.0), green: CGFloat(Float(g)/255.0), blue: CGFloat(Float(b)/255.0), alpha: CGFloat(Float(a)/255.0))
+        self.init(red: CGFloat(Double(r)/255.0), green: CGFloat(Double(g)/255.0), blue: CGFloat(Double(b)/255.0), alpha: CGFloat(Double(a)/255.0))
     }
     
     public convenience init?(hex: String) {
-        let r, g, b, a: CGFloat
-
+        let r, g, b, a: Int
+        
         if hex.hasPrefix("#") {
             let start = hex.index(hex.startIndex, offsetBy: 1)
             let hexColor = String(hex[start...])
@@ -17,17 +17,15 @@ extension UIColor{
                 var hexNumber: UInt64 = 0
 
                 if scanner.scanHexInt64(&hexNumber) {
-                    r = CGFloat((hexNumber & 0xff000000) >> 24) / 255
-                    g = CGFloat((hexNumber & 0x00ff0000) >> 16) / 255
-                    b = CGFloat((hexNumber & 0x0000ff00) >> 8) / 255
-                    a = CGFloat(hexNumber & 0x000000ff) / 255
-
-                    self.init(red: r, green: g, blue: b, alpha: a)
+                    r = Int((hexNumber & 0xff000000) >> 24)
+                    g = Int((hexNumber & 0x00ff0000) >> 16)
+                    b = Int((hexNumber & 0x0000ff00) >> 8)
+                    a = Int(hexNumber & 0x000000ff)
+                    self.init(r: r, g: g, b: b, a: a)
                     return
                 }
             }
         }
-        
         return nil
     }
     
@@ -64,16 +62,16 @@ extension UIColor{
     static func toHex(color : UIColor) -> String {
         var result = "#"
         let clr = CIColor(color: color)
-        result += String(format : "%02X",Int(clr.red * 255))
-        result += String(format : "%02X",Int(clr.green * 255))
-        result += String(format : "%02X",Int(clr.blue * 255))
-        result += String(format : "%02X",Int(clr.alpha * 255))
+        result += String(format : "%02X",Int(round(clr.red * 255)))
+        result += String(format : "%02X",Int(round(clr.green * 255)))
+        result += String(format : "%02X",Int(round(clr.blue * 255)))
+        result += String(format : "%02X",Int(round(clr.alpha * 255)))
         return result
     }
     
     func getComponents() -> (red : Int,green : Int,blue : Int,alpha : Int) {
         let clr = CIColor(color: self)
-        
+        //print(clr.components)
         return (Int(clr.red * 255),Int(clr.green * 255),Int(clr.blue * 255),Int(clr.alpha * 255))
     }
 }

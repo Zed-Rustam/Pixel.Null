@@ -1,15 +1,14 @@
 //
-//  PalleteCollectionV2.swift
+//  PaletteCollection3.swift
 //  Pixel-Null
 //
-//  Created by Рустам Хахук on 25.04.2020.
+//  Created by Рустам Хахук on 20.05.2020.
 //  Copyright © 2020 Zed Null. All rights reserved.
 //
 
 import UIKit
 
-//MARK: Palette Collection
-class PalleteCollectionV2 : UICollectionView {
+class PaletteCollectionV3 : UICollectionView {
     
     private var colors : [String]
 
@@ -151,7 +150,7 @@ class PalleteCollectionV2 : UICollectionView {
     }
 }
 
-extension PalleteCollectionV2 : UICollectionViewDataSource {
+extension PaletteCollectionV3 : UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         colors.count
     }
@@ -170,7 +169,7 @@ extension PalleteCollectionV2 : UICollectionViewDataSource {
 }
 
 //MARK: Palette Collection Delegate
-extension PalleteCollectionV2 : UICollectionViewDelegate {
+extension PaletteCollectionV3 : UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if selectedColor != indexPath.item {
             selectedColor = indexPath.item
@@ -200,8 +199,7 @@ extension PalleteCollectionV2 : UICollectionViewDelegate {
     }
 }
 
-//MARK: Palette Collection Dalagete
-extension PalleteCollectionV2 : PalleteCollectionDelegate {
+extension PaletteCollectionV3 : PalleteCollectionDelegate {
     
     func addColor(color : UIColor) {
         colors.insert(UIColor.toHex(color: color), at: selectedColor + 1)
@@ -227,7 +225,7 @@ extension PalleteCollectionV2 : PalleteCollectionDelegate {
                 }
             }, completion: {isEnd in
                 if isEnd {
-                    (self.cellForItem(at: IndexPath(item: self.selectedColor, section: 0)) as! PalleteColorCell).setVisible(visible: true)
+                    (self.cellForItem(at: IndexPath(item: self.selectedColor, section: 0)) as! ColorCell).setVisible(visible: true)
                     self.selectItem(at: IndexPath(item: self.selectedColor, section: 0), animated: true, scrollPosition: .left)
                 }
             })
@@ -248,187 +246,94 @@ extension PalleteCollectionV2 : PalleteCollectionDelegate {
     }
 }
 
-//MARK: Palette Collection Layout
-class PalleteCollectionLayout : UICollectionViewLayout {
-    //size of item
-    var itemSize : CGFloat = 44
-    var itemsCountInLine: Int = 0
-    var itemsCountInColumn: Int = 0
-
-    var topOffset : CGFloat = 60
-    var bottomOffset : CGFloat = 60
-
-    //attributes of items
-    private var attributes : [UICollectionViewLayoutAttributes] = []
+class ColorCell: UICollectionViewCell {
     
-    override var collectionViewContentSize: CGSize {
-        return contentSize
-    }
+    lazy private var bg: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.widthAnchor.constraint(equalToConstant: 32).isActive = true
+        view.heightAnchor.constraint(equalToConstant: 32).isActive = true
+        return view
+    }()
     
-    private var contentSize : CGSize = .zero
-    
-    init(itemSize size : CGFloat = 44, itemsSpacing : CGFloat = 4) {
-        itemSize = size
-        super.init()
-    }
-    
-    override func prepare() {
-        layout()
-    }
-    
-    //calculate items attributes
-    private func layout() {
-        //clear all attributes
-        attributes.removeAll()
-        //count items of one row
-        let rowCount = floor((collectionView!.bounds.width) / (itemSize))
-        
-        itemsCountInLine = Int(rowCount)
-        itemsCountInColumn = Int(ceil(CGFloat(collectionView!.numberOfItems(inSection: 0)) / rowCount))
-        
-        //offset for centerize items
-        let offset = (collectionView!.bounds.width - itemSize * rowCount) / 2.0
-        
-        //set attributes
-        for item in 0..<collectionView!.numberOfItems(inSection: 0) {
-            let itemAttribute = UICollectionViewLayoutAttributes(forCellWith: IndexPath(item: item, section: 0))
-            let itemFrame : CGRect = CGRect(origin: CGPoint(x: offset + itemSize * CGFloat(item % Int(rowCount)),y: topOffset + (floor(CGFloat(item) / rowCount)) * itemSize),
-                                            size: CGSize(width: itemSize, height: itemSize))
-            
-            itemAttribute.frame = itemFrame
-            
-            attributes.append(itemAttribute)
-        }
-        
-        contentSize = CGSize(width: collectionView!.bounds.width,
-                             height: topOffset + ceil(CGFloat(collectionView!.numberOfItems(inSection: 0)) / rowCount) * itemSize + bottomOffset)
-    }
-    
-    //get visible attributes
-    override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-        var visibleAttributes : [UICollectionViewLayoutAttributes] = []
-        for attribute in attributes{
-            if attribute.frame.intersects(rect){
-                visibleAttributes.append(attribute)
-            }
-        }
-        return visibleAttributes
-    }
-    
-    override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
-        return attributes[indexPath.item]
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-//MARK: Palette Collection Cell
-class PalleteColorCell : UICollectionViewCell {
-    //color setter and getter
-    var color : UIColor {
+    var color : UIColor? {
         get{
-            return colorView.subviews[0].backgroundColor!
+            return bg.backgroundColor
         }
         set{
-            colorView.subviews[0].backgroundColor = newValue
+            bg.backgroundColor = newValue
         }
     }
     
-    //color view
-    lazy private var colorView : UIView = {
-        let mainView = UIView()
-        mainView.translatesAutoresizingMaskIntoConstraints = false
-        mainView.widthAnchor.constraint(equalToConstant: 32).isActive = true
-        mainView.heightAnchor.constraint(equalToConstant: 32).isActive = true
-        mainView.isOpaque = true
-        
-        mainView.setCorners(corners: 12)
-        mainView.layer.magnificationFilter = .nearest
-        
-        mainView.tintColor = .clear
-        
-        let color = UIView()
-        color.backgroundColor = .clear
-        color.translatesAutoresizingMaskIntoConstraints = false
-        
-        mainView.addSubview(color)
-        color.leftAnchor.constraint(equalTo: mainView.leftAnchor, constant: 0).isActive = true
-        color.rightAnchor.constraint(equalTo: mainView.rightAnchor, constant: 0).isActive = true
-        color.topAnchor.constraint(equalTo: mainView.topAnchor, constant: 0).isActive = true
-        color.bottomAnchor.constraint(equalTo: mainView.bottomAnchor, constant: 0).isActive = true
-        
-        return mainView
-    }()
-    
-    lazy private var selectStroke : UIView = {
-        let mainview = UIView()
-        mainview.translatesAutoresizingMaskIntoConstraints = false
-        mainview.backgroundColor = .clear
-        mainview.setShadow(color: getAppColor(color: .select), radius: 4, opasity: 0.25)
-        
-        mainview.widthAnchor.constraint(equalToConstant: 44).isActive = true
-        mainview.heightAnchor.constraint(equalToConstant: 44).isActive = true
-
-        let stroke = UIView()
-        stroke.layer.borderColor = getAppColor(color: .select).cgColor
-        stroke.layer.borderWidth = 3
-        stroke.setCorners(corners: 18)
-        stroke.translatesAutoresizingMaskIntoConstraints = false
-        stroke.backgroundColor = .clear
-        stroke.widthAnchor.constraint(equalToConstant: 44).isActive = true
-        stroke.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        
-        mainview.addSubview(stroke)
-        stroke.leftAnchor.constraint(equalTo: mainview.leftAnchor, constant: 0).isActive = true
-        stroke.topAnchor.constraint(equalTo: mainview.topAnchor, constant: 0).isActive = true
-
-        return mainview
-    }()
-    
-    //show and hide select scroke
-    func setVisible(visible : Bool, withAnim : Bool = true) {
-        UIView.animate(withDuration: withAnim ? 0.25 : 0.0, animations: {
-            self.selectStroke.alpha = visible ? 1 : 0
-        })
-    }
+    private var select = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        contentView.addSubview(colorView)
-        contentView.addSubview(selectStroke)
-        
-        colorView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 0).isActive = true
-        colorView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 0).isActive = true
-        
-        selectStroke.centerXAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 0).isActive = true
-        selectStroke.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 0).isActive = true
-        setVisible(visible: false, withAnim: false)
-        
-        isOpaque = true
-        contentView.layer.shouldRasterize = true
-        contentView.layer.rasterizationScale = UIScreen.main.scale
+        contentView.addSubview(bg)
+        bg.centerYAnchor.constraint(equalToSystemSpacingBelow: contentView.centerYAnchor, multiplier: 1).isActive = true
+        bg.centerXAnchor.constraint(equalToSystemSpacingAfter: contentView.centerXAnchor, multiplier: 1).isActive = true
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        colorView.backgroundColor = UIColor(patternImage: UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 0.25, orientation: .down))
-        
-    }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-}
-
-//MARK: Palette Collection Delegate
-//protocol for working with collection
-protocol PalleteCollectionDelegate : class {
-    func cloneSelectedColor()
-    func addColor(color : UIColor)
-    func deleteSelectedColor()
-    func changeSelectedColor(color : UIColor)
-    func getSelectItemColor() -> UIColor
+    
+    func setEdgeMode(edge : Int) {
+        let view : UIView? = edge == -1 ? nil : UIView(frame: CGRect(origin: .zero, size: CGSize(width: 32, height: 32)))
+        
+        UIView.animate(withDuration: 0.2, animations: {
+            view?.setCorners(corners: 8)
+        })
+        
+        view?.backgroundColor = .red
+        switch edge {
+        case 0:
+            view?.layer.maskedCorners = [.layerMinXMinYCorner]
+        case 1:
+            view?.layer.maskedCorners = [.layerMaxXMinYCorner]
+        case 2:
+            view?.layer.maskedCorners = [.layerMaxXMaxYCorner]
+        default:
+            view?.layer.maskedCorners = [.layerMaxXMaxYCorner]
+        }
+        
+        bg.mask = view
+    }
+    
+    func setVisible(visible : Bool, withAnim : Bool = true, delay : Double = 0) {
+        select = visible
+        
+        if select {
+            UIView.animate(withDuration: 0.2, delay: 0, options: .curveLinear, animations: {
+                self.contentView.transform = CGAffineTransform(scaleX: 1.01, y: 1.01)
+            }, completion: {isEnd in
+                self.superview?.bringSubviewToFront(self)
+            })
+            
+            UIView.animate(withDuration: withAnim ? 0.2 : 0, delay: delay, options: .curveEaseInOut, animations: {
+                self.bg.setCorners(corners: 8)
+                self.setShadow(color: .black, radius: 16, opasity: 0.75)
+                self.contentView.transform = CGAffineTransform(scaleX: 1.25, y: 1.25)
+            })
+        } else {
+            UIView.animate(withDuration: withAnim ? 0.2 : 0, delay : delay, options: .curveEaseInOut, animations: {
+                self.bg.setCorners(corners: 0)
+                self.contentView.transform = CGAffineTransform(scaleX: 1, y: 1)
+                self.setShadow(color: .black, radius: 16, opasity: 0)
+            },completion: {isEnd in
+                self.superview?.sendSubviewToBack(self)
+            })
+        }
+    }
+    
+    func setSelect(isSelect : Bool,withAnim : Bool = true, delay : Double = 0) {
+        if select {
+            self.bg.layer.borderWidth = 0
+            self.bg.layer.borderColor = getAppColor(color: .select).cgColor
+        
+            self.bg.StrokeAnimate(duration: 0.2, width: 2)
+        } else {
+            self.bg.StrokeAnimate(duration: 0.2, width: 0)
+        }
+    }
 }

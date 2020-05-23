@@ -53,7 +53,7 @@ class ProjectViewNew : UIView {
     lazy private var contentImage : UIImageView = {
        let image = UIImageView()
         image.layer.magnificationFilter = .nearest
-        image.contentMode = .scaleAspectFit
+        image.contentMode = .scaleAspectFill
         return image
     }()
     
@@ -161,12 +161,8 @@ extension ProjectViewNew : UIContextMenuInteractionDelegate {
                     self.delegate!.projectDublicate(view: self)
                 }
             })
-            let getimg = UIAction(title: "Get Image", image : UIImage(systemName: "square.and.arrow.up", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)),identifier: nil, discoverabilityTitle: nil, handler: {action in
-                var array : [UIImage] = []
-                for i in 0..<self.project!.information.frames.count {
-                    array.append(self.project!.getFrame(frame: i, size: self.project!.projectSize))
-                }
-                UIImage.animatedGif(from: array)
+            let getimg = UIAction(title: "Share", image : UIImage(systemName: "square.and.arrow.up", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)),identifier: nil, discoverabilityTitle: nil, handler: {action in
+                self.delegate?.projectExport(proj: self._project!)
             })
             
             let delete = UIAction(title: "Delete",image : UIImage(systemName: "trash", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, discoverabilityTitle: nil, attributes: .destructive, handler: {action in

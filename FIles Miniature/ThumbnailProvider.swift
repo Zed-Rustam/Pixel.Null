@@ -19,7 +19,7 @@ class ThumbnailProvider: QLThumbnailProvider {
 
         if request.fileURL.lastPathComponent.dropFirst(request.fileURL.lastPathComponent.count - 5) == "pnart" {
             
-            handler(QLThumbnailReply(imageFileURL: request.fileURL.appendingPathComponent("frames").appendingPathComponent("frame-0").appendingPathComponent("preview-icon.png")), nil)
+            handler(QLThumbnailReply(imageFileURL: request.fileURL.appendingPathComponent("preview-icon.png")), nil)
             
         } else if request.fileURL.lastPathComponent.dropFirst(request.fileURL.lastPathComponent.count - 9) == "pnpalette" {
             let pallete = PalleteWorker(fileUrl: request.fileURL)

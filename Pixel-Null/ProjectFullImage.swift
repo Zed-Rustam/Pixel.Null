@@ -43,7 +43,6 @@ class ProjectFullImage : UIViewController {
         animationTime += Int(link.duration * 1000)
         if animationTime >= proj.animationDelay {
             animationTime = animationTime % proj.animationDelay
-            //nowFrameIndex = 0
         }
         
         var nowTime = 0

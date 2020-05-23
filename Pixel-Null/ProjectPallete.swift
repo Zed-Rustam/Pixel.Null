@@ -86,8 +86,8 @@ class ProjectPallete : UIViewController {
         return btn
     }()
     
-    lazy private var collection : PalleteCollectionV2 = {
-        let colors = PalleteCollectionV2(colors : project!.information.pallete.colors)
+    lazy private var collection : PaletteCollectionV3 = {
+        let colors = PaletteCollectionV3(colors : project!.information.pallete.colors)
         
         return colors
     }()
@@ -275,11 +275,10 @@ class ProjectPallete : UIViewController {
         palleteEditBap.setShadow(color: UIColor(named: "shadowColor")!, radius: 4, opasity: 1)
         selectedColor.setShadow(color: UIColor(named: "shadowColor")!, radius: 4, opasity: 1)
         palleteBar.setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
-
-
     }
 
     override func viewDidLoad() {
+        
         view.addSubview(collection)
         view.addSubview(palleteBar)
         view.addSubview(selectedColor)

@@ -383,6 +383,27 @@ class ProjectWork{
         return img
     }
     
+    func getFrameWithBackground(frame : Int) -> UIImage {
+        return UIImage.merge(images: [UIImage(size: projectSize,bgColor: UIColor(hex: projectInfo.bgColor)!)!,getFrame(frame: frame, size: projectSize)])!
+    }
+    
+    func generateSpriteList(scale : CGFloat) -> UIImage {
+        UIGraphicsBeginImageContext(CGSize(width: projectSize.width * scale * CGFloat(frameCount), height: projectSize.height * scale))
+        let context = UIGraphicsGetCurrentContext()!
+        context.interpolationQuality = .none
+        UIColor(hex: projectInfo.bgColor)!.setFill()
+        context.fill(CGRect(origin: .zero, size: CGSize(width: projectSize.width * scale * CGFloat(frameCount), height: projectSize.height * scale)))
+        
+        for i in 0..<frameCount {
+            getFrame(frame: i, size: projectSize).scale(scaleFactor: scale).draw(at: CGPoint(x: Int(projectSize.width * scale) * i, y: 0))
+        }
+        
+        let result = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        
+        return result
+    }
+    
     func getFrameFromLayers(frame : Int, size : CGSize) -> UIImage{
         var imgs : [UIImage] = []
         print("  start getting Frame :")
@@ -437,13 +458,17 @@ class ProjectWork{
     func savePreview(frame : Int){
         try! getFrameFromLayers(frame: frame, size: projectSize).pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[frame].frameID)").appendingPathComponent("preview.png"))
         
-        try! scalePreview(preview: getFrameFromLayers(frame: frame, size: projectSize) , size: generateIconSize()).pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[frame].frameID)").appendingPathComponent("preview-icon.png"))
+        if projectInfo.frames[frame].frameID == 0 {
+            try! scalePreview(preview: getFrameFromLayers(frame: frame, size: projectSize) , size: generateIconSize()).pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("preview-icon.png"))
+        }
     }
     
     private func scalePreview(preview : UIImage, size : CGSize) -> UIImage {
         UIGraphicsBeginImageContext(size)
         let context = UIGraphicsGetCurrentContext()!
         context.interpolationQuality = .none
+        context.setFillColor(UIColor(hex: projectInfo.bgColor)!.cgColor)
+        context.fill(CGRect(origin: .zero, size: size))
         
         preview.draw(in: CGRect(origin: .zero, size: size))
         

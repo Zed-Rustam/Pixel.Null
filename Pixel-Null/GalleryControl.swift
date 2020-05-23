@@ -77,6 +77,7 @@ class GalleryControl : UIViewController{
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         gallery.reloadData()
+        gallery.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
     }
     
     override func viewDidLoad() {
@@ -89,7 +90,9 @@ class GalleryControl : UIViewController{
             
             for i in 0..<projs.count  {
                 let name = projs[i].lastPathComponent
-                projects.append(ProjectWork(fileName: name))
+                if name.hasSuffix(".pnart") {
+                    projects.append(ProjectWork(fileName: name))
+                }
             }
             
         } catch {}
@@ -144,7 +147,6 @@ class GalleryControl : UIViewController{
         
     override func viewDidLayoutSubviews() {
         print("some ome")
-        gallery.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
     }
 }
 
@@ -183,6 +185,13 @@ extension GalleryControl : GalleryProjectDelegate {
 }
 
 extension GalleryControl : ProjectActions {
+    
+    func projectExport(proj: ProjectWork) {
+        let exp = ProjectExportController()
+        exp.modalPresentationStyle = .formSheet
+        exp.project = proj
+        show(exp, sender: nil)
+    }
     
     func projectOpen(proj: ProjectWork) {
         //переделять что бы каждый раз не создавалось новое окно, а менялись данные в окне
@@ -300,4 +309,5 @@ protocol ProjectActions : class{
     func projectDublicate(view : ProjectViewNew)
     func projectDelete(view : ProjectViewNew, deletedName : String)
     func projectOpen(proj : ProjectWork)
+    func projectExport(proj : ProjectWork)
 }

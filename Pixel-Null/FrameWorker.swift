@@ -272,4 +272,3 @@ protocol FramesDelegate {
     func continueMoveMode(pos : CGPoint)
     func endMoveMove(worker : FrameWorker)
 }
-

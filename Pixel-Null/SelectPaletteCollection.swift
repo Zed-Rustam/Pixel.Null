@@ -12,10 +12,17 @@ class SelectPaletteCollection : UICollectionView {
     weak var mainController : PeletteSelectController? = nil
     
     private var palettes : [String] = []
+    private var defaultPalettes : [String] = []
+    
     private var layout = UICollectionViewFlowLayout()
+    
     init() {
+        //layout.sectionHeadersPinToVisibleBounds = true
+        
         super.init(frame: .zero, collectionViewLayout: layout)
         register(SelectPaletteCell.self, forCellWithReuseIdentifier: "palette")
+        register(palettesTitle.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "header")
+        
         delegate = self
         dataSource = self
         backgroundColor = .clear
@@ -32,6 +39,7 @@ class SelectPaletteCollection : UICollectionView {
             }
         } catch {}
         
+        defaultPalettes.append("Default pallete")
     }
     
     required init?(coder: NSCoder) {
@@ -47,22 +55,74 @@ class SelectPaletteCollection : UICollectionView {
 
 extension SelectPaletteCollection : UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return palettes.count
+        switch section {
+        case 0:
+            return defaultPalettes.count
+        default:
+            return palettes.count
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = dequeueReusableCell(withReuseIdentifier: "palette", for: indexPath) as! SelectPaletteCell
-        cell.contentView.frame.size = layout.layoutAttributesForItem(at: indexPath)!.frame.size
-        cell.setImage(pallete: PalleteWorker(fileName: palettes[indexPath.item]))
-        
-        return cell
+        switch indexPath.section {
+        case 0:
+            let cell = dequeueReusableCell(withReuseIdentifier: "palette", for: indexPath) as! SelectPaletteCell
+            cell.contentView.frame.size = layout.layoutAttributesForItem(at: indexPath)!.frame.size
+            cell.setImage(pallete: PalleteWorker(name: defaultPalettes[indexPath.row], colors: try! JSONDecoder().decode(Pallete.self, from: NSDataAsset(name: defaultPalettes[indexPath.row])!.data).colors, isSave: false))
+            
+            return cell
+            
+        default:
+            let cell = dequeueReusableCell(withReuseIdentifier: "palette", for: indexPath) as! SelectPaletteCell
+            cell.contentView.frame.size = layout.layoutAttributesForItem(at: indexPath)!.frame.size
+            cell.setImage(pallete: PalleteWorker(fileName: palettes[indexPath.item]))
+            
+            return cell
+        }
     }
+
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        
+        if (kind == UICollectionView.elementKindSectionHeader) {
+            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "header", for: indexPath) as! palettesTitle
+            switch indexPath.section {
+            case 0:
+                headerView.title.text = "App's Palettes"
+            default:
+                headerView.title.text = "User's Palettes"
+            }
+        return headerView
+        }
+        fatalError()
+    }
+
 }
 
 extension SelectPaletteCollection : UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        mainController?.setSelectPalette(palette: PalleteWorker(fileName: palettes[indexPath.item]).colors,name: PalleteWorker(fileName: palettes[indexPath.item]).palleteName)
+        switch indexPath.section {
+        case 0:
+            mainController?.setSelectPalette(palette: try! JSONDecoder().decode(Pallete.self, from: NSDataAsset(name: defaultPalettes[indexPath.row])!.data).colors, name: defaultPalettes[indexPath.row])
+
+        default:
+            mainController?.setSelectPalette(palette: PalleteWorker(fileName: palettes[indexPath.item]).colors,name: PalleteWorker(fileName: palettes[indexPath.item]).palleteName)
+
+        }
+        
         mainController?.dismiss(animated: true, completion: nil)
+    }
+    
+    override func numberOfItems(inSection section: Int) -> Int {
+        switch section {
+        case 0:
+            return defaultPalettes.count
+        default:
+            return palettes.count
+        }
+    }
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 2
     }
 }
 
@@ -193,6 +253,28 @@ class SelectPaletteCell : UICollectionViewCell {
         palette.image = img
         
         titleBg.backgroundColor = UIColor(patternImage: blackImage(image: blurImage(image: getLayerImage(), forRect: CGRect(x: 8, y: 8, width: titleBg.frame.width, height: 16))!))
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+class palettesTitle : UICollectionReusableView {
+    lazy var title : UILabel = {
+        let label = UILabel()
+        label.textColor = getAppColor(color: .enable)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .left
+        
+        label.font = UIFont(name: "Rubik-Bold", size: 24)
+        return label
+    }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        print("header created")
+        addSubviewFullSize(view: title)
     }
     
     required init?(coder: NSCoder) {

@@ -26,6 +26,7 @@ class ColorSelectorController : UIViewController, NavigationProtocol {
             self!.delegate(self!.dialog1.selectedColorShow.color)
         }
         if(!self!.dialog2.isHidden) {
+            print(UIColor.toHex(color: self!.dialog2.result.color))
             self!.delegate(self!.dialog2.result.color)
         }
         if(!self!.dialog3.isHidden) {

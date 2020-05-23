@@ -30,10 +30,6 @@ class MainViewController: UIViewController {
         return true
     }
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .darkContent
-    }
-    
     func setControllers(menus : UIViewController...){
         controllers.removeAll()
         controllers = menus

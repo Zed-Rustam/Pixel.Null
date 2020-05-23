@@ -87,10 +87,6 @@ class Editor : UIViewController {
     private var longTap : UILongPressGestureRecognizer!
     weak var gallery : GalleryControl? = nil
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .darkContent
-    }
-    
     func setProject(proj : ProjectWork){
         project = proj
         control?.setProject(proj : project)

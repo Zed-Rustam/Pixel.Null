@@ -78,9 +78,7 @@ class PalleteCollection : UIViewController, UICollectionViewDelegate, UICollecti
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("was touch")
         if let cell = collectionView.cellForItem(at: indexPath) as? PalleteCell {
-            print("was touch1")
             cell.palleteView.delegate?.palleteOpen(item: palletes[indexPath.item] as! PalleteWorker)
         }
     }
@@ -93,8 +91,10 @@ class PalleteCollection : UIViewController, UICollectionViewDelegate, UICollecti
             
             for i in 0..<projs.count  {
                 var name : String = projs[i].lastPathComponent
-                name.removeLast(10)
-                palletes.append(PalleteWorker(fileName: name))
+                if name.hasSuffix(".pnpalette") {
+                    name.removeLast(10)
+                    palletes.append(PalleteWorker(fileName: name))
+                }
             }
         } catch {}
         
@@ -178,7 +178,7 @@ extension PalleteCollection : PalleteGalleryDelegate {
                         
                         self.palletes.remove(at: i)
 
-                        UIView.animate(withDuration: 0.25, delay: 1, animations: {
+                        UIView.animate(withDuration: 0.25, delay: 0, animations: {
                             cell.palleteView.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
                             cell.palleteView.alpha = 0
                         }, completion: {isEnd in

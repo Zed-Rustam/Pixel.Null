@@ -66,13 +66,15 @@ class PeletteSelectController : UIViewController {
         collection.mainController = self
     }
     
-    override func viewWillLayoutSubviews() {
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         collection.layoutIfNeeded()
         (collection.collectionViewLayout as! UICollectionViewFlowLayout).itemSize = CGSize(width: (view.frame.width - 36) / 3, height: (view.frame.width - 36) / 3)
         
         (collection.collectionViewLayout as! UICollectionViewFlowLayout).minimumLineSpacing = 8
-        
+        (collection.collectionViewLayout as! UICollectionViewFlowLayout).headerReferenceSize = CGSize(width: collection.frame.width, height: 36)
         collection.reloadData()
+    }
+    override func viewWillLayoutSubviews() {
         titleBg.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
     }
 }

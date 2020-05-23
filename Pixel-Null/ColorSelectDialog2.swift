@@ -7,11 +7,11 @@ class ColorSelectDialog2 : UIView {
         slider.heightAnchor.constraint(equalToConstant: 30).isActive = true
         slider.preview = .none
         
-        slider.delegate = {position in
-            self.nowred = position
-            self.redSliderText.filed.text = String(Int(255 * position))
-            self.result.color =  UIColor(red: self.nowred, green: self.nowgreen, blue: self.nowblue, alpha: self.nowalpha)
-            self.alphaSlider.resetGradient(start: UIColor(red: self.nowred, green: self.nowgreen, blue: self.nowblue, alpha: self.nowalpha).withAlphaComponent(0), end: UIColor(red: self.nowred, green: self.nowgreen, blue: self.nowblue, alpha: self.nowalpha).withAlphaComponent(1))
+        slider.delegate = {[unowned self] position in
+            self.nowred = Int(position * 255)
+            self.redSliderText.filed.text = String(self.nowred)
+            self.result.color =  UIColor(r: self.nowred, g: self.nowgreen, b: self.nowblue, a: self.nowalpha)
+            self.alphaSlider.resetGradient(start: UIColor(r: self.nowred, g: self.nowgreen, b: self.nowblue, a: self.nowalpha).withAlphaComponent(0), end: UIColor(r: self.nowred, g: self.nowgreen, b: self.nowblue, a: self.nowalpha).withAlphaComponent(1))
             self.hexText.filed.text = UIColor.toHex(color: self.result.color)
         }
         
@@ -131,11 +131,11 @@ class ColorSelectDialog2 : UIView {
     lazy private var greenSlider : ColorSlider = {
         let slider  = ColorSlider(startColor: .black, endColor: .green, orientation: .horizontal)
         slider.preview = .none
-        slider.delegate = {position in
-           self.nowgreen = position
-           self.greenSliderText.filed.text = String(Int(255 * position))
-           self.result.color = UIColor(red: self.nowred, green: self.nowgreen, blue: self.nowblue, alpha: self.nowalpha)
-           self.alphaSlider.resetGradient(start: UIColor(red: self.nowred, green: self.nowgreen, blue: self.nowblue, alpha: self.nowalpha).withAlphaComponent(0), end: UIColor(red: self.nowred, green: self.nowgreen, blue: self.nowblue, alpha: self.nowalpha).withAlphaComponent(1))
+        slider.delegate = {[unowned self] position in
+           self.nowgreen = Int(position * 255)
+            self.greenSliderText.filed.text = String(self.nowgreen)
+           self.result.color = UIColor(r: self.nowred, g: self.nowgreen, b: self.nowblue, a: self.nowalpha)
+           self.alphaSlider.resetGradient(start: UIColor(r: self.nowred, g: self.nowgreen, b: self.nowblue, a: self.nowalpha).withAlphaComponent(0), end: UIColor(r: self.nowred, g: self.nowgreen, b: self.nowblue, a: self.nowalpha).withAlphaComponent(1))
            self.hexText.filed.text = UIColor.toHex(color: self.result.color)
         }
         slider.heightAnchor.constraint(equalToConstant: 30).isActive = true
@@ -146,12 +146,12 @@ class ColorSelectDialog2 : UIView {
         let slider = ColorSlider(startColor: .black, endColor: .blue, orientation: .horizontal)
         slider.preview = .none
 
-        slider.delegate = {position in
-            self.nowblue = position
-            self.blueSliderText.filed.text = String(Int(255 * position))
-            self.result.color =  UIColor(red: self.nowred, green: self.nowgreen, blue: self.nowblue, alpha: self.nowalpha)
+        slider.delegate = {[unowned self] position in
+            self.nowblue = Int(position * 255)
+            self.blueSliderText.filed.text = String(self.nowblue)
+            self.result.color =  UIColor(r: self.nowred, g: self.nowgreen, b: self.nowblue, a: self.nowalpha)
             
-            self.alphaSlider.resetGradient(start: UIColor(red: self.nowred, green: self.nowgreen, blue: self.nowblue, alpha: self.nowalpha).withAlphaComponent(0), end: UIColor(red: self.nowred, green: self.nowgreen, blue: self.nowblue, alpha: self.nowalpha).withAlphaComponent(1))
+            self.alphaSlider.resetGradient(start: UIColor(r: self.nowred, g: self.nowgreen, b: self.nowblue, a: self.nowalpha).withAlphaComponent(0), end: UIColor(r: self.nowred, g: self.nowgreen, b: self.nowblue, a: self.nowalpha).withAlphaComponent(1))
             
             self.hexText.filed.text = UIColor.toHex(color: self.result.color)
         }
@@ -163,11 +163,11 @@ class ColorSelectDialog2 : UIView {
         let slider = ColorSlider(startColor: UIColor.red.withAlphaComponent(0), endColor: .red, orientation: .horizontal)
         slider.preview = .none
 
-          slider.delegate = {[weak self] in
-              self!.nowalpha = $0
-              self!.alphaSliderText.filed.text = String(Int(255 * $0))
-              self!.result.color = UIColor(red: self!.nowred, green: self!.nowgreen, blue: self!.nowblue, alpha: self!.nowalpha)
-              self!.hexText.filed.text = UIColor.toHex(color: self!.result.color)
+          slider.delegate = {[unowned self] position in
+            self.nowalpha = Int(position * 255)
+            self.alphaSliderText.filed.text = String(self.nowalpha)
+            self.result.color = UIColor(r: self.nowred, g: self.nowgreen, b: self.nowblue, a: self.nowalpha)
+            self.hexText.filed.text = UIColor.toHex(color: self.result.color)
           }
         slider.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
@@ -241,11 +241,11 @@ class ColorSelectDialog2 : UIView {
         } else if($0.text!.count > 1 && $0.text!.first == "0"){
             $0.text!.removeFirst()
         }
-        self!.nowred = CGFloat(Int($0.text!)!) / 255.0
-        self!.redSlider.setPosition(pos: self!.nowred)
+        self!.nowred = Int($0.text!)!
+        self!.redSlider.setPosition(pos: Double(self!.nowred) / 255)
         
-        self!.result.color = UIColor(red: self!.nowred, green: self!.nowgreen, blue: self!.nowblue, alpha: self!.nowalpha)
-        self!.alphaSlider.resetGradient(start: UIColor(red: self!.nowred, green: self!.nowgreen, blue: self!.nowblue, alpha: self!.nowalpha).withAlphaComponent(0), end: UIColor(red: self!.nowred, green: self!.nowgreen, blue: self!.nowblue, alpha: self!.nowalpha).withAlphaComponent(1))
+        self!.result.color = UIColor(r: self!.nowred, g: self!.nowgreen, b: self!.nowblue, a: self!.nowalpha)
+        self!.alphaSlider.resetGradient(start: UIColor(r: self!.nowred, g: self!.nowgreen, b: self!.nowblue, a: self!.nowalpha).withAlphaComponent(0), end: UIColor(r: self!.nowred, g: self!.nowgreen, b: self!.nowblue, a: self!.nowalpha).withAlphaComponent(1))
         self!.hexText.filed.text = UIColor.toHex(color: self!.result.color)
     })
     
@@ -260,10 +260,10 @@ class ColorSelectDialog2 : UIView {
         } else if(field.text!.count > 1 && field.text!.first == "0"){
             field.text!.removeFirst()
         }
-        self.nowgreen = CGFloat(Int(field.text!)!) / 255.0
-        self.greenSlider.setPosition(pos: self.nowgreen)
-        self.result.color = UIColor(red: self.nowred, green: self.nowgreen, blue: self.nowblue, alpha: self.nowalpha)
-        self.alphaSlider.resetGradient(start: UIColor(red: self.nowred, green: self.nowgreen, blue: self.nowblue, alpha: self.nowalpha).withAlphaComponent(0), end: UIColor(red: self.nowred, green: self.nowgreen, blue: self.nowblue, alpha: self.nowalpha).withAlphaComponent(1))
+        self.nowgreen = Int(field.text!)!
+        self.greenSlider.setPosition(pos: Double(self.nowgreen) / 255)
+        self.result.color = UIColor(r: self.nowred, g: self.nowgreen, b: self.nowblue, a: self.nowalpha)
+        self.alphaSlider.resetGradient(start: UIColor(r: self.nowred, g: self.nowgreen, b: self.nowblue, a: self.nowalpha).withAlphaComponent(0), end: UIColor(r: self.nowred, g: self.nowgreen, b: self.nowblue, a: self.nowalpha).withAlphaComponent(1))
         self.hexText.filed.text = UIColor.toHex(color: self.result.color)
     })
     
@@ -278,10 +278,10 @@ class ColorSelectDialog2 : UIView {
         } else if(field.text!.count > 1 && field.text!.first == "0"){
             field.text!.removeFirst()
         }
-        self.nowblue = CGFloat(Int(field.text!)!) / 255.0
-        self.blueSlider.setPosition(pos: self.nowblue)
-        self.result.color = UIColor(red: self.nowred, green: self.nowgreen, blue: self.nowblue, alpha: self.nowalpha)
-        self.alphaSlider.resetGradient(start: UIColor(red: self.nowred, green: self.nowgreen, blue: self.nowblue, alpha: self.nowalpha).withAlphaComponent(0), end: UIColor(red: self.nowred, green: self.nowgreen, blue: self.nowblue, alpha: self.nowalpha).withAlphaComponent(1))
+        self.nowblue = Int(field.text!)!
+        self.blueSlider.setPosition(pos: Double(self.nowblue) / 255)
+        self.result.color = UIColor(r: self.nowred, g: self.nowgreen, b: self.nowblue, a: self.nowalpha)
+        self.alphaSlider.resetGradient(start: UIColor(r: self.nowred, g: self.nowgreen, b: self.nowblue, a: self.nowalpha).withAlphaComponent(0), end: UIColor(r: self.nowred, g: self.nowgreen, b: self.nowblue, a: self.nowalpha).withAlphaComponent(1))
         self.hexText.filed.text = UIColor.toHex(color: self.result.color)
     })
     
@@ -296,9 +296,9 @@ class ColorSelectDialog2 : UIView {
         } else if(field.text!.count > 1 && field.text!.first == "0"){
             field.text!.removeFirst()
         }
-        self.nowalpha = CGFloat(Int(field.text!)!) / 255.0
-        self.alphaSlider.setPosition(pos: self.nowalpha)
-        self.result.color = UIColor(red: self.nowred, green: self.nowgreen, blue: self.nowblue, alpha: self.nowalpha)
+        self.nowalpha = Int(field.text!)!
+        self.alphaSlider.setPosition(pos: Double(self.nowalpha) / 255)
+        self.result.color = UIColor(r: self.nowred, g: self.nowgreen, b: self.nowblue, a: self.nowalpha)
         self.hexText.filed.text = UIColor.toHex(color: self.result.color)
     })
 
@@ -309,30 +309,31 @@ class ColorSelectDialog2 : UIView {
         scrl.layer.masksToBounds = false
         return scrl
     }()
-    
-    private var nowred : CGFloat = 0.0
-    private var nowgreen : CGFloat = 0.0
-    private var nowblue : CGFloat = 0.0
-    private var nowalpha : CGFloat = 0.0
+        
+    private var nowred : Int = 0
+    private var nowgreen : Int = 0
+    private var nowblue : Int = 0
+    private var nowalpha : Int = 0
     
     func setValues(color : UIColor){
         let clr = CIColor(color: color)
         
-        nowred = clr.red
-        nowgreen = clr.green
-        nowblue = clr.blue
-        nowalpha = clr.alpha
+        print("some check \(clr.red)  \(color.getComponents().red)")
+        nowred = Int(round(clr.red * 255))
+        nowgreen = Int(round(clr.green * 255))
+        nowblue = Int(round(clr.blue * 255))
+        nowalpha = Int(round(clr.alpha * 255))
         
-        redSliderText.filed.text = String(Int(clr.red * 255))
-        greenSliderText.filed.text = String(Int(clr.green * 255))
-        blueSliderText.filed.text = String(Int(clr.blue * 255))
-        alphaSliderText.filed.text = String(Int(clr.alpha * 255))
+        redSliderText.filed.text = String(nowred)
+        greenSliderText.filed.text = String(nowgreen)
+        blueSliderText.filed.text = String(nowblue)
+        alphaSliderText.filed.text = String(nowalpha)
         
-        redSlider.setPosition(pos: clr.red)
+        redSlider.setPosition(pos: Double(clr.red))
         
-        greenSlider.setPosition(pos: clr.green)
-        blueSlider.setPosition(pos: clr.blue)
-        alphaSlider.setPosition(pos: clr.alpha)
+        greenSlider.setPosition(pos: Double(clr.green))
+        blueSlider.setPosition(pos: Double(clr.blue))
+        alphaSlider.setPosition(pos: Double(clr.alpha))
         
         hexText.filed.text = UIColor.toHex(color: color)
         
@@ -345,23 +346,22 @@ class ColorSelectDialog2 : UIView {
             var value = s
             value.removeFirst()
             
-            nowred  = CGFloat(UInt8(String(value.removeFirst()) + String(value.removeFirst()), radix: 16)!) / 255.0
-            nowgreen = CGFloat(UInt8(String(value.removeFirst()) + String(value.removeFirst()), radix: 16)!) / 255.0
-            nowblue = CGFloat(UInt8(String(value.removeFirst()) + String(value.removeFirst()), radix: 16)!) / 255.0
-            nowalpha = CGFloat(UInt8(String(value.removeFirst()) + String(value.removeFirst()), radix: 16)!) / 255.0
+            nowred  = Int(String(value.removeFirst()) + String(value.removeFirst()), radix: 16)!
+            nowgreen = Int(String(value.removeFirst()) + String(value.removeFirst()), radix: 16)!
+            nowblue = Int(String(value.removeFirst()) + String(value.removeFirst()), radix: 16)!
+            nowalpha = Int(String(value.removeFirst()) + String(value.removeFirst()), radix: 16)!
 
-            redSliderText.filed.text = String(Int(nowred * 255))
-            greenSliderText.filed.text = String(Int(nowgreen * 255))
-            blueSliderText.filed.text = String(Int(nowblue * 255))
-            alphaSliderText.filed.text = String(Int(nowalpha * 255))
+            redSliderText.filed.text = String(nowred)
+            greenSliderText.filed.text = String(nowgreen)
+            blueSliderText.filed.text = String(nowblue)
+            alphaSliderText.filed.text = String(nowalpha)
             
-            redSlider.setPosition(pos: nowred)
+            redSlider.setPosition(pos: Double(nowred) / 255)
+            greenSlider.setPosition(pos: Double(nowgreen) / 255)
+            blueSlider.setPosition(pos: Double(nowblue) / 255)
+            alphaSlider.setPosition(pos: Double(nowalpha) / 255)
             
-            greenSlider.setPosition(pos: nowgreen)
-            blueSlider.setPosition(pos: nowblue)
-            alphaSlider.setPosition(pos: nowalpha)
-            
-            result.color = UIColor(red: nowred, green: nowgreen, blue: nowblue, alpha: nowalpha)
+            result.color = UIColor(r: nowred, g: nowgreen, b: nowblue, a: nowalpha)
         }
     }
     
