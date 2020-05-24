@@ -60,19 +60,18 @@ class ProjectExportController: UIViewController {
             case 1:
                 let activity = UIActivityViewController(activityItems: [self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).png")], applicationActivities: nil)
                 activity.completionWithItemsHandler = { (activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) -> Void in
-                    if completed == true {
                         try! FileManager.default.removeItem(at: self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).png"))
-                    }
+                    print("deleted")
                 }
+                
                 try! self.project!.getFrameWithBackground(frame: 0).scale(scaleFactor: CGFloat(self.scale)).pngData()?.write(to: self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).png"))
                 
                 self.present(activity, animated: true, completion: nil)
             case 2:
                 let activity = UIActivityViewController(activityItems: [self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).gif")], applicationActivities: nil)
                 activity.completionWithItemsHandler = { (activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) -> Void in
-                    if completed == true {
                         try! FileManager.default.removeItem(at: self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).gif"))
-                    }
+                    print("deleted")
                 }
                 
                 self.project!.generateGif(scale: CGFloat(self.scale))
@@ -83,9 +82,8 @@ class ProjectExportController: UIViewController {
                 
                 let activity = UIActivityViewController(activityItems: [self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName)")], applicationActivities: nil)
                 activity.completionWithItemsHandler = { (activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) -> Void in
-                    if completed == true {
                         try! FileManager.default.removeItem(at: self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName)"))
-                    }
+                        print("deleted")
                 }
                 
                 self.present(activity, animated: true, completion: nil)
@@ -93,9 +91,8 @@ class ProjectExportController: UIViewController {
             case 4:
                 let activity = UIActivityViewController(activityItems: [self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).png")], applicationActivities: nil)
                 activity.completionWithItemsHandler = { (activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) -> Void in
-                    if completed == true {
                         try! FileManager.default.removeItem(at: self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).png"))
-                    }
+                    print("deleted")
                 }
                 
                 try! self.project!.generateSpriteList(scale: CGFloat(self.scale)).pngData()!.write(to: self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).png"))
@@ -124,11 +121,30 @@ class ProjectExportController: UIViewController {
     lazy private var image: UIImageView = {
         let img = UIImageView()
         img.image = #imageLiteral(resourceName: "background")
+        img.contentMode = .scaleAspectFill
         img.layer.magnificationFilter = .nearest
         img.translatesAutoresizingMaskIntoConstraints = false
         img.setCorners(corners: 12)
-        img.widthAnchor.constraint(equalToConstant: 108).isActive = true
-        img.heightAnchor.constraint(equalToConstant: 108).isActive = true
+                
+        if project!.projectSize.width > project!.projectSize.height {
+            img.widthAnchor.constraint(equalToConstant: 108).isActive = true
+            img.heightAnchor.constraint(equalTo: img.widthAnchor, multiplier: max(0.25,project!.projectSize.height / project!.projectSize.width)).isActive = true
+        } else {
+            img.heightAnchor.constraint(equalToConstant: 108).isActive = true
+            img.widthAnchor.constraint(equalTo: img.heightAnchor, multiplier: max(0.25,project!.projectSize.width / project!.projectSize.height)).isActive = true
+        }
+        
+        img.addSubviewFullSize(view: resultImage)
+        
+        return img
+    }()
+    
+    lazy private var resultImage : UIImageView = {
+        let img = UIImageView()
+        
+        img.image = project?.getFrameWithBackground(frame: 0)
+        img.contentMode = .scaleAspectFill
+        img.layer.magnificationFilter = .nearest
         
         return img
     }()
@@ -318,28 +334,28 @@ class ProjectExportController: UIViewController {
         titleBg.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8).isActive = true
         titleBg.heightAnchor.constraint(equalToConstant: 42).isActive = true
         
-        image.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 8).isActive = true
-        image.topAnchor.constraint(equalTo: titleBg.bottomAnchor, constant: 8).isActive = true
+        image.centerXAnchor.constraint(equalTo: view.leftAnchor, constant: 62).isActive = true
+        image.centerYAnchor.constraint(equalTo: titleBg.bottomAnchor, constant: 62).isActive = true
         
-        projectName.leftAnchor.constraint(equalTo: image.rightAnchor, constant: 8).isActive = true
+        projectName.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 124).isActive = true
         projectName.topAnchor.constraint(equalTo: titleBg.bottomAnchor, constant: 8).isActive = true
         projectName.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8).isActive = true
         
-        exportInfo.leftAnchor.constraint(equalTo: image.rightAnchor, constant: 8).isActive = true
+        exportInfo.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 124).isActive = true
         exportInfo.topAnchor.constraint(equalTo: projectName.bottomAnchor, constant: 4).isActive = true
         exportInfo.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8).isActive = true
         
-        sizeInfo.leftAnchor.constraint(equalTo: image.rightAnchor, constant: 8).isActive = true
+        sizeInfo.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 124).isActive = true
         sizeInfo.topAnchor.constraint(equalTo: exportInfo.bottomAnchor, constant: 4).isActive = true
         sizeInfo.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8).isActive = true
         
-        filesSizeInfo.leftAnchor.constraint(equalTo: image.rightAnchor, constant: 8).isActive = true
+        filesSizeInfo.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 124).isActive = true
         filesSizeInfo.topAnchor.constraint(equalTo: exportInfo.bottomAnchor, constant: 4).isActive = true
         filesSizeInfo.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8).isActive = true
         
         exportTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
         exportTitle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
-        exportTitle.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 4).isActive = true
+        exportTitle.topAnchor.constraint(equalTo: titleBg.bottomAnchor, constant: 124).isActive = true
 
         exportSelector.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
         exportSelector.topAnchor.constraint(equalTo: exportTitle.bottomAnchor, constant: 0).isActive = true
