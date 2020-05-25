@@ -48,6 +48,8 @@ class NavigationView : UIView {
             } else {
                 img.tintColor = UIColor(named: "disableColor")
             }
+            img.isUserInteractionEnabled = true
+            img.interactions.append(UIPointerInteraction(delegate: self))
             
             stack.addArrangedSubview(img)
         }
@@ -207,5 +209,11 @@ class NavigationView : UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension NavigationView : UIPointerInteractionDelegate {
+    func pointerInteraction(_ interaction: UIPointerInteraction, styleFor region: UIPointerRegion) -> UIPointerStyle? {
+        return UIPointerStyle(effect: .highlight(.init(view: interaction.view!)))
     }
 }

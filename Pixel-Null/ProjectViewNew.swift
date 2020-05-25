@@ -67,13 +67,19 @@ class ProjectViewNew : UIView {
         return bg
     }()
     
-    lazy private var titleLabel : UILabel = {
+    lazy private var titleLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
         label.font = UIFont(name: "Rubik-Medium", size: 10)
         label.textAlignment = .center
         label.lineBreakMode = .byTruncatingMiddle
         return label
+    }()
+    
+    lazy private var pointer: UIPointerInteraction = {
+        let point = UIPointerInteraction(delegate: self)
+        
+        return point
     }()
     
     func blurImage(image:UIImage, forRect rect: CGRect) -> UIImage? {
@@ -138,6 +144,8 @@ class ProjectViewNew : UIView {
         titleBg.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8).isActive = true
         
         isUserInteractionEnabled = true
+        interactions.append(pointer)
+
         addInteraction(UIContextMenuInteraction(delegate: self))
         
         setCorners(corners: 12)
@@ -181,5 +189,10 @@ extension ProjectViewNew : UIContextMenuInteractionDelegate {
         
         return configuration
     }
-    
+}
+
+extension ProjectViewNew : UIPointerInteractionDelegate {
+    func pointerInteraction(_ interaction: UIPointerInteraction, styleFor region: UIPointerRegion) -> UIPointerStyle? {
+        return UIPointerStyle(effect: .lift(UITargetedPreview(view: self)))
+    }
 }

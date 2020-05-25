@@ -16,7 +16,6 @@ class ProjectExportController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = getAppColor(color: .background)
         view.layer.cornerRadius = 8
-        view.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
         
         view.addSubviewFullSize(view: titleText, paddings: (42,-42,0,0))
         view.addSubview(exitBtn)
@@ -58,9 +57,11 @@ class ProjectExportController: UIViewController {
             case 0:
                 self.present(UIActivityViewController(activityItems: [self.project!.getProjectDirectory()], applicationActivities: nil), animated: true, completion: nil)
             case 1:
+                self.project!.savePreview(frame: 0)
+                
                 let activity = UIActivityViewController(activityItems: [self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).png")], applicationActivities: nil)
                 activity.completionWithItemsHandler = { (activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) -> Void in
-                        try! FileManager.default.removeItem(at: self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).png"))
+                        try? FileManager.default.removeItem(at: self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).png"))
                     print("deleted")
                 }
                 
@@ -70,7 +71,7 @@ class ProjectExportController: UIViewController {
             case 2:
                 let activity = UIActivityViewController(activityItems: [self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).gif")], applicationActivities: nil)
                 activity.completionWithItemsHandler = { (activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) -> Void in
-                        try! FileManager.default.removeItem(at: self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).gif"))
+                        try? FileManager.default.removeItem(at: self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).gif"))
                     print("deleted")
                 }
                 
@@ -82,7 +83,7 @@ class ProjectExportController: UIViewController {
                 
                 let activity = UIActivityViewController(activityItems: [self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName)")], applicationActivities: nil)
                 activity.completionWithItemsHandler = { (activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) -> Void in
-                        try! FileManager.default.removeItem(at: self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName)"))
+                        try? FileManager.default.removeItem(at: self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName)"))
                         print("deleted")
                 }
                 
@@ -91,7 +92,7 @@ class ProjectExportController: UIViewController {
             case 4:
                 let activity = UIActivityViewController(activityItems: [self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).png")], applicationActivities: nil)
                 activity.completionWithItemsHandler = { (activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) -> Void in
-                        try! FileManager.default.removeItem(at: self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).png"))
+                        try? FileManager.default.removeItem(at: self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).png"))
                     print("deleted")
                 }
                 
@@ -366,5 +367,9 @@ class ProjectExportController: UIViewController {
 
         scaleSelector.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
         scaleSelector.topAnchor.constraint(equalTo: scaleTitle.bottomAnchor, constant: 0).isActive = true
+    }
+    
+    override func viewDidLayoutSubviews() {
+        titleBg.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
     }
 }

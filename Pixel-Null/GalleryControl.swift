@@ -21,7 +21,7 @@ class GalleryControl : UIViewController{
                case .phone:
                    layout.setData(columnsCount: 3, delegate: self)
                case .pad:
-                   layout.setData(columnsCount: 3, delegate: self)
+                   layout.setData(columnsCount: 6, delegate: self)
                default:
                    break
                }
@@ -134,8 +134,8 @@ class GalleryControl : UIViewController{
         
         createButton.widthAnchor.constraint(equalToConstant: 42).isActive = true
         createButton.heightAnchor.constraint(equalToConstant: 42).isActive = true
-        createButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
-        createButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 21).isActive = true
+        createButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
+        createButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12).isActive = true
                
         gallery.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 0).isActive = true
         gallery.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: 0).isActive = true
@@ -194,11 +194,10 @@ extension GalleryControl : ProjectActions {
     }
     
     func projectOpen(proj: ProjectWork) {
-        //переделять что бы каждый раз не создавалось новое окно, а менялись данные в окне
         let ed = Editor()
         ed.setProject(proj: proj)
         ed.gallery = self
-        ed.modalPresentationStyle = .currentContext
+        ed.modalPresentationStyle = .overCurrentContext
         ed.modalTransitionStyle = .coverVertical
         self.show(ed, sender: nil)
         

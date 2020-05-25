@@ -93,7 +93,15 @@ class SegmentSelector : UIView {
         stack.distribution = .fillEqually
         
         for i in images {
-            stack.addArrangedSubview(i)
+            let view = UIView()
+            view.translatesAutoresizingMaskIntoConstraints = false
+            view.widthAnchor.constraint(equalToConstant: 36).isActive = true
+            view.heightAnchor.constraint(equalToConstant: 36).isActive = true
+            view.isUserInteractionEnabled = true
+            view.interactions.append(UIPointerInteraction(delegate: self))
+            view.setCorners(corners: 12)
+            view.addSubviewFullSize(view: i,paddings: (0,0,8,-8))
+            stack.addArrangedSubview(view)
         }
         
         return stack
@@ -161,3 +169,8 @@ class SegmentSelector : UIView {
     }
 }
 
+extension SegmentSelector : UIPointerInteractionDelegate {
+    func pointerInteraction(_ interaction: UIPointerInteraction, styleFor region: UIPointerRegion) -> UIPointerStyle? {
+        return UIPointerStyle(effect: .highlight(UITargetedPreview(view: interaction.view!)), shape: UIPointerShape.roundedRect(interaction.view!.frame, radius: 12))
+    }
+}

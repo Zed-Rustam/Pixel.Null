@@ -115,8 +115,8 @@ class PalleteCollection : UIViewController, UICollectionViewDelegate, UICollecti
 
         addButton.widthAnchor.constraint(equalToConstant: 42).isActive = true
         addButton.heightAnchor.constraint(equalToConstant: 42).isActive = true
-        addButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
-        addButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 21).isActive = true
+        addButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
+        addButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12).isActive = true
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

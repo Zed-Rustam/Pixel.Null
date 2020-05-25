@@ -33,7 +33,10 @@ class GalleryTitleCell : UICollectionViewCell{
     
     override init(frame: CGRect) {
         title = UILabel()
+        title.layer.masksToBounds = false
+        title.textAlignment = .justified
         super.init(frame : frame)
+        contentView.layer.masksToBounds = false
         contentView.addSubview(title)
     }
     

@@ -34,7 +34,7 @@ class ToolBar : UIView {
         let collection = ToolBarCollection(frame: self.bounds, tools: getToolsArray())
         collection.barDelegate = self
         collection.translatesAutoresizingMaskIntoConstraints = false
-        
+        collection.layer.masksToBounds = true
         return collection
     }()
     

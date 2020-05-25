@@ -10,18 +10,21 @@ import UIKit
 
 class GalleryLayout : UICollectionViewLayout{
     var columnsCount = 0
-    var padding = 8.0
-    var spacing = 8.0
+    var padding = 12.0
+    var spacing = 12.0
     weak var delegate : GalleryDelegate? = nil
     var columnsHeights : [Double] = []
     var bottomOffset = 0.0
     var attributes : [UICollectionViewLayoutAttributes] = []
+    
     var contentWidth : Double {
         return Double(collectionView!.bounds.width)
     }
+    
     var contentHeight = 0.0
     
     override var collectionViewContentSize: CGSize {
+    
         return CGSize(width: contentWidth, height: contentHeight)
     }
     
@@ -52,12 +55,12 @@ class GalleryLayout : UICollectionViewLayout{
             let attribute = UICollectionViewLayoutAttributes(forCellWith: index)
             attribute.frame = frame
             attributes.append(attribute)
-                
+            
             } else if (delegate?.getItemClass(indexItem: index) == "Title"){
-                let titleHeight = 68.0
+                let titleHeight = 52.0
                 let maxcolumn = columnsHeights.max()!
                 
-                let frame = CGRect(x: padding * 2, y: maxcolumn, width: contentWidth - padding * 2.0, height: titleHeight)
+                let frame = CGRect(x: padding, y: maxcolumn, width: contentWidth - padding * 2.0, height: titleHeight)
                 let attribute = UICollectionViewLayoutAttributes(forCellWith: index)
                 attribute.frame = frame
                 attributes.append(attribute)

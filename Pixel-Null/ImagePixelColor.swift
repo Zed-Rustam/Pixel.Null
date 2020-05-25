@@ -180,5 +180,4 @@ public extension CGBitmapInfo {
         let alphaInfo = CGImageAlphaInfo(rawValue: rawValue & Self.alphaInfoMask.rawValue)
         return alphaInfo == .premultipliedFirst || alphaInfo == .premultipliedLast
     }
-
 }

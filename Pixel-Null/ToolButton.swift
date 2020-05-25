@@ -19,6 +19,8 @@ class ToolButton : UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         button = CircleButton(icon: UIImage(), frame: self.bounds)
+        button.corners = 12
+        button.setbgColor(color: .clear)
         //button.setCorners(corners: 4)
         button.setShadowColor(color: .clear)
         

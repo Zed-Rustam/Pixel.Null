@@ -25,6 +25,7 @@ class CircleButton : UIView, UIGestureRecognizerDelegate {
     
     private var iconScale : CGFloat = 0.5
     
+    lazy private var pointer = UIPointerInteraction(delegate: self)
     var isEnabled : Bool {
         get{
             enabled
@@ -79,6 +80,8 @@ class CircleButton : UIView, UIGestureRecognizerDelegate {
         addSubview(bg)
         addSubview(icon)
 
+        interactions.append(pointer)
+        
         bg.backgroundColor = getAppColor(color: .background)
         
         bg.translatesAutoresizingMaskIntoConstraints = false
@@ -173,5 +176,11 @@ class CircleButton : UIView, UIGestureRecognizerDelegate {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension CircleButton : UIPointerInteractionDelegate {
+    func pointerInteraction(_ interaction: UIPointerInteraction, styleFor region: UIPointerRegion) -> UIPointerStyle? {
+        return UIPointerStyle(effect: .highlight(.init(view: self)),shape: UIPointerShape.roundedRect(self.frame, radius: self.corners))
     }
 }
