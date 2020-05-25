@@ -61,7 +61,7 @@ class FrameList : UICollectionView, UICollectionViewDataSource, UICollectionView
 
         cell.preview?.bgColor = UIColor(hex : project.information.bgColor)!
         DispatchQueue.global(qos: .userInteractive).async {
-            let img = (indexPath.item == self.project.FrameSelected) ? self.project.getFrameFromLayers(frame : indexPath.item,size: CGSize(width: 36, height: 36)) : self.project.getFrame(frame: indexPath.item, size: CGSize(width: 36, height: 36))
+            let img = (indexPath.item == self.project.FrameSelected) ? self.project.getFrameFromLayers(frame : indexPath.item,size: CGSize(width: 36, height: 36)).flip(xFlip: self.project.isFlipX, yFlip: self.project.isFlipY) : self.project.getFrame(frame: indexPath.item, size: CGSize(width: 36, height: 36)).flip(xFlip: self.project.isFlipX, yFlip: self.project.isFlipY)
             //let img = self.project.getFrameFromLayers(frame : indexPath.item,size: CGSize(width: 36, height: 36))
             DispatchQueue.main.async {
                     cell.setImage(img: img)

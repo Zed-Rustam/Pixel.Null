@@ -20,7 +20,7 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
            self.layers.list.performBatchUpdates({
                self.layers.list.reloadItems(at: [IndexPath(item: layer, section: 0)])
            },completion: {isEnd in
-               self.preview.image = self.project.getFrameFromLayers(frame: frame, size: self.project.projectSize)
+               self.preview.image = self.project.getFrameFromLayers(frame: frame, size: self.project.projectSize).flip(xFlip: self.project.isFlipX, yFlip: self.project.isFlipY)
             self.layers.list.selectItem(at: IndexPath(item: layer, section: 0), animated: false, scrollPosition: .top)
            })
         
@@ -38,7 +38,7 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
         layers.checkFrame()
         layers.list.selectItem(at: IndexPath(item: 0, section: 0), animated: true, scrollPosition: .left)
         
-        preview.image = project.getFrame(frame: to, size: project.projectSize)
+        preview.image = project.getFrame(frame: to, size: project.projectSize).flip(xFlip: project.isFlipX, yFlip: project.isFlipY)
         frames.delayField.filed.text = String(project.information.frames[project.FrameSelected].delay)
     }
     
@@ -60,7 +60,7 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
             }, completion: nil)
         })
 
-        preview.image = project.getFrameFromLayers(frame: project.FrameSelected, size: project.projectSize)
+        preview.image = project.getFrameFromLayers(frame: project.FrameSelected, size: project.projectSize).flip(xFlip: project.isFlipX, yFlip: project.isFlipY)
     }
     
     func updateLayerSettings(target: Int) {
@@ -101,7 +101,7 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
                     self.frames.list.selectItem(at: IndexPath(item: self.project.FrameSelected, section: 0), animated: true, scrollPosition: .top)
 
                     self.layers.list.reloadData()
-                    self.preview.image = self.project.getFrameFromLayers(frame: self.project.FrameSelected, size: self.project.projectSize)
+                    self.preview.image = self.project.getFrameFromLayers(frame: self.project.FrameSelected, size: self.project.projectSize).flip(xFlip: self.project.isFlipX, yFlip: self.project.isFlipY)
                 })
             })
             layers.checkFrame()
@@ -120,7 +120,7 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
                     self.layers.list.reloadItems(at: [IndexPath(item: self.project.LayerSelected, section: 0)])
                     self.layers.list.selectItem(at: IndexPath(item: self.project.LayerSelected, section: 0), animated: true, scrollPosition: .left)
 
-                    self.preview.image = self.project.getFrameFromLayers(frame: frame, size: self.project.projectSize)
+                    self.preview.image = self.project.getFrameFromLayers(frame: frame, size: self.project.projectSize).flip(xFlip: self.project.isFlipX, yFlip: self.project.isFlipY)
                 })
             })
             
@@ -175,7 +175,7 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
     }
     
     func updatePreview(){
-        self.preview.image = self.project.getFrameFromLayers(frame: self.project.FrameSelected, size: self.project.projectSize)
+        self.preview.image = self.project.getFrameFromLayers(frame: self.project.FrameSelected, size: self.project.projectSize).flip(xFlip: self.project.isFlipX, yFlip: self.project.isFlipY)
     }
     
     lazy private var frameText : UILabel = {

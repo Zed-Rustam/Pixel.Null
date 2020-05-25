@@ -228,7 +228,7 @@ extension Editor : FrameControlDelegate{
         frameControl.project = project
         frameControl.delegate = self
         
-        frameControl.modalPresentationStyle = .pageSheet
+        frameControl.modalPresentationStyle = .formSheet
         frameControl.modalTransitionStyle = .coverVertical
         frameControl.isModalInPresentation = true
         show(frameControl, sender: self)
@@ -347,13 +347,13 @@ extension Editor : ToolSettingsDelegate {
          let selectorSettings = SelectorSettings()
         selectorSettings.setDefault(mode: canvas.selection.type)
         selectorSettings.delegate = self
-        selectorSettings.modalPresentationStyle = .pageSheet
+        selectorSettings.modalPresentationStyle = .formSheet
         self.show(selectorSettings, sender: self)
     }
     
     func openPencilSettings() {
         let pencilSettings = PencilSettings()
-        pencilSettings.modalPresentationStyle = .pageSheet
+        pencilSettings.modalPresentationStyle = .formSheet
         pencilSettings.delegate = self
         pencilSettings.setSettings(penSize: Int(canvas.pen.size), pixelPerfect: canvas.pen.pixPerfect)
         self.show(pencilSettings, sender: self)
@@ -361,7 +361,7 @@ extension Editor : ToolSettingsDelegate {
     
     func openEraseSettings() {
         let eraseSettings = EraseSettings()
-        eraseSettings.modalPresentationStyle = .pageSheet
+        eraseSettings.modalPresentationStyle = .formSheet
         eraseSettings.delegate = self
         eraseSettings.setSettings(eraseSize: Int(canvas.erase.size))
         self.show(eraseSettings, sender: self)
@@ -370,7 +370,7 @@ extension Editor : ToolSettingsDelegate {
     func openGradientSettings() {
         let gradientSettings = GradientSettings()
         gradientSettings.project = project
-        gradientSettings.modalPresentationStyle = .pageSheet
+        gradientSettings.modalPresentationStyle = .formSheet
         gradientSettings.delegate = self
         gradientSettings.setSettings(stepCount: canvas.gradient.stepCount, startColor: canvas.gradient.startColor, endColor: canvas.gradient.endColor)
         self.show(gradientSettings, sender: self)
@@ -405,7 +405,7 @@ extension Editor {
         toolBar.animationStart()
         timer = CADisplayLink(target: self, selector: #selector(setFrame(_:)))
         canvas.startAnimationMode()
-        canvas.setImageFromAnimation(img: project.getFrame(frame: project.FrameSelected, size: project.projectSize))
+        canvas.setImageFromAnimation(img: project.getFrame(frame: project.FrameSelected, size: project.projectSize).flip(xFlip: project.isFlipX, yFlip: project.isFlipY))
 
         timer.add(to: .main, forMode: .common)
     }
@@ -438,15 +438,13 @@ extension Editor {
                 project.FrameSelected = i
                 control.frames.list.reloadItems(at: [IndexPath(item: i, section: 0),IndexPath(item: nowFrameIndex, section: 0)])
                 nowFrameIndex = i
-                canvas.setImageFromAnimation(img: project.getFrame(frame: i, size: project.projectSize))
+                canvas.setImageFromAnimation(img: project.getFrame(frame: i, size: project.projectSize).flip(xFlip: project.isFlipX, yFlip: project.isFlipY))
                 break
             } else if nowTime >= animationTime {
                 break
             }
         }
     }
-    
-    
 }
 
 extension Editor {

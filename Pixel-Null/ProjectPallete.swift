@@ -131,7 +131,7 @@ class ProjectPallete : UIViewController {
         clr.delegate = {[unowned self] in
             if !self.collection.moving {
                 let palleteSelect = ColorSelectorController()
-                palleteSelect.modalPresentationStyle = .pageSheet
+                palleteSelect.modalPresentationStyle = .formSheet
                 palleteSelect.setColor(clr: clr.color)
                 palleteSelect.delegate = {color in
                     clr.color = color
@@ -219,7 +219,7 @@ class ProjectPallete : UIViewController {
         btn.delegate = {[unowned self] in
             if !self.collection.moving {
                 let palleteSelector = ColorSelectorController()
-                
+                palleteSelector.modalPresentationStyle = .formSheet
                 palleteSelector.delegate = {[unowned self] in
                     self.collection.addColor(color: $0)
                 }
@@ -242,6 +242,7 @@ class ProjectPallete : UIViewController {
         btn.delegate = {[unowned self] in
             if !self.collection.moving {
                 let palleteSelector = ColorSelectorController()
+                palleteSelector.modalPresentationStyle = .formSheet
                 palleteSelector.setColor(clr: self.collection.getSelectItemColor())
                 
                 palleteSelector.delegate = {[unowned self] in

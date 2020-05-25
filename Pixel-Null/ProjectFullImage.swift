@@ -34,7 +34,7 @@ class ProjectFullImage : UIViewController {
         timer.add(to: .main, forMode: .common)
         
         self.proj = proj
-        project.image = proj.getFrame(frame: 0, size: proj.projectSize)
+        project.image = proj.getFrame(frame: 0, size: proj.projectSize).flip(xFlip: proj.isFlipX, yFlip: proj.isFlipY)
         
         project.backgroundColor = proj.backgroundColor
     }
@@ -50,7 +50,7 @@ class ProjectFullImage : UIViewController {
             nowTime += proj.information.frames[i].delay
             if nowTime >= animationTime && nowTime - proj.information.frames[i].delay < animationTime && i != nowFrameIndex {
                 nowFrameIndex = i
-                project.image = proj.getFrame(frame: i, size: proj.projectSize)
+                project.image = proj.getFrame(frame: i, size: proj.projectSize).flip(xFlip: proj.isFlipX, yFlip: proj.isFlipY)
                 break
             } else if nowTime >= animationTime {
                 break

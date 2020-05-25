@@ -95,6 +95,24 @@ class ProjectWork{
         }
     }
     
+    var isFlipX : Bool {
+        get{
+            return projectInfo.flipX
+        }
+        set{
+            projectInfo.flipX = newValue
+        }
+    }
+    
+    var isFlipY : Bool {
+        get{
+            return projectInfo.flipY
+        }
+        set{
+            projectInfo.flipY = newValue
+        }
+    }
+    
     var information : ProjectInfo {
         get{
             return projectInfo
@@ -126,7 +144,7 @@ class ProjectWork{
         selectedLayer = 0
         selectedFrame = 0
                 
-        projectInfo = ProjectInfo(version: 0, width: Int(projSize.width), height: Int(projSize.height), bgColor: UIColor.toHex(color: bgColor),frames:  [ProjectFrame(frameID: 0, delay: 100, layers: [ProjectLayer(layerID: 0, visible: true, locked: false, transparent: 1.0)])], actionList: ActionList(actions: [], lastActiveAction: -1, maxCount: 64), pallete: try! JSONDecoder().decode(Pallete.self, from: NSDataAsset(name: "Default pallete")!.data))
+        projectInfo = ProjectInfo(version: 0, width: Int(projSize.width), height: Int(projSize.height), bgColor: UIColor.toHex(color: bgColor),frames:  [ProjectFrame(frameID: 0, delay: 100, layers: [ProjectLayer(layerID: 0, visible: true, locked: false, transparent: 1.0)])], actionList: ActionList(actions: [], lastActiveAction: -1, maxCount: 64), pallete: try! JSONDecoder().decode(Pallete.self, from: NSDataAsset(name: "Default pallete")!.data), flipX: false, flipY: false, rotate: 0)
              
         let folder = ProjectWork.getDocumentsDirectory().appendingPathComponent(name)
         do {
@@ -157,7 +175,7 @@ class ProjectWork{
     init(fileName : String) {
         selectedLayer = 0
         selectedFrame = 0
-
+        
         name = fileName
         do{
             projectInfo = try JSONDecoder().decode(ProjectInfo.self, from: try Data(contentsOf: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("main.txt")))
@@ -235,7 +253,6 @@ class ProjectWork{
         let img = UIImage(data: try! Data(contentsOf: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(projectName).appendingPathComponent("actions").appendingPathComponent("action-\(imageNum == 1 ? "first" : "second")-\(getActionID(action: actionNum)).png")))!
         return img
     }
-
     
     private func loadActionSelect(actionNum : Int) -> UIImage{
         let img = UIImage(data: try! Data(contentsOf: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(projectName).appendingPathComponent("actions").appendingPathComponent("action-select-\(getActionID(action: actionNum)).png")))!
@@ -245,7 +262,6 @@ class ProjectWork{
     private func loadImagefromUrl(url : URL) -> UIImage {
         return try! UIImage(data: Data(contentsOf: url))!
     }
-    
     
     func loadSelection() -> UIImage{
         let img = UIImage(data: try! Data(contentsOf: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(projectName).appendingPathComponent("selection.png")))!
@@ -907,6 +923,17 @@ class ProjectWork{
                     }
                 }
                 break
+                
+            case .projectFlipX:
+                self.isFlipX.toggle()
+                (delegate as! Editor).resizeProject()
+                    
+            case .projectFlipY:
+                self.isFlipY.toggle()
+                (delegate as! Editor).resizeProject()
+                
+            default:
+                break
             }
             
             delegate.updateCanvas()
@@ -1264,7 +1291,19 @@ class ProjectWork{
                         
                     delegate.updateLayer(layer: LayerSelected)
                 }
+                
+            case .projectFlipX:
+                self.isFlipX.toggle()
+                (delegate as! Editor).resizeProject()
+                
+            case .projectFlipY:
+                self.isFlipY.toggle()
+                (delegate as! Editor).resizeProject()
+                
+            default:
+                break
             }
+            
             delegate.updateCanvas()
             projectInfo.actionList.lastActiveAction += 1
             save()
@@ -1476,6 +1515,9 @@ struct ProjectInfo : Codable {
     var frames : [ProjectFrame]
     var actionList : ActionList
     var pallete : Pallete
+    var flipX : Bool
+    var flipY : Bool
+    var rotate : Int
 }
 
 struct ProjectFrame : Codable {
@@ -1515,5 +1557,7 @@ enum Actions : Int {
     case resizeProject = 15//done
     case changeLayerOpasity = 16//done
     case mergeLayers = 17//done
+    case projectFlipX = 18
+    case projectFlipY = 19
 }
 

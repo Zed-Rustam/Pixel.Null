@@ -124,7 +124,7 @@ extension FramesCollection : UICollectionViewDataSource {
 
         DispatchQueue.global(qos: .userInteractive).async {
             var img : UIImage
-                img = self.project!.getFrameFromLayers(frame : indexPath.item,size: CGSize(width: 36, height: 36))
+                img = self.project!.getFrameFromLayers(frame : indexPath.item,size: CGSize(width: 36, height: 36)).flip(xFlip: self.project!.isFlipX, yFlip: self.project!.isFlipY)
             DispatchQueue.main.async {
                 cell.preview.image = img
            }

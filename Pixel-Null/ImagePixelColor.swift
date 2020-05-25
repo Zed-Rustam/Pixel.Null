@@ -125,7 +125,6 @@ public extension UIImage {
             return .clear
         }
     }
-
 }
 
 public extension UIColor {
@@ -137,7 +136,6 @@ public extension UIColor {
             blue: CGFloat(blue)/255,
             alpha: CGFloat(alpha)/255)
     }
-
 }
 
 public extension CGBitmapInfo {

@@ -12,9 +12,9 @@ class ProjectSettingsController : UIViewController {
     weak var project : ProjectWork? = nil
     weak var editor : Editor? = nil
     
-    
     lazy private var preview : UIView = {
-        let img = UIImageView(image: project!.getFrame(frame: 0, size: project!.projectSize))
+        let img = UIImageView(image: project!.getFrame(frame: 0, size: project!.projectSize).flip(xFlip: project!.isFlipX, yFlip: project!.isFlipY))
+        
         img.translatesAutoresizingMaskIntoConstraints = false
 
         img.layer.magnificationFilter = .nearest
@@ -24,8 +24,8 @@ class ProjectSettingsController : UIViewController {
         
         let mainview = UIView()
         mainview.translatesAutoresizingMaskIntoConstraints = false
-        mainview.widthAnchor.constraint(equalToConstant: view.frame.width - 32).isActive = true
-        mainview.heightAnchor.constraint(equalTo: mainview.widthAnchor).isActive = true
+        //mainview.widthAnchor.constraint(equalToConstant: view.frame.width - 32).isActive = true
+        //mainview.heightAnchor.constraint(equalTo: mainview.widthAnchor).isActive = true
         mainview.layer.magnificationFilter = .nearest
         mainview.layer.cornerRadius = 16
 
@@ -99,6 +99,7 @@ class ProjectSettingsController : UIViewController {
             })
         }
     }
+   
     @objc func onHideKeyboard(notification : NSNotification) {
         UIView.animate(withDuration: 0.2, animations: {
             self.view.frame.origin.y = 0
@@ -107,12 +108,10 @@ class ProjectSettingsController : UIViewController {
         projectName.filed.text?.removeLast(6)
     }
     
-    
     override func viewDidDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: UIApplication.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIApplication.keyboardWillHideNotification, object: nil)
     }
-    
     
     @objc func done() {
         project!.projectName = "\(projectName.filed.text!).pnart"
@@ -203,13 +202,52 @@ class ProjectSettingsController : UIViewController {
                 }
             }
             
-            resize.modalPresentationStyle = .pageSheet
+            resize.modalPresentationStyle = .formSheet
             self.show(resize, sender: self)
         }
         
         return btn
     }()
     
+    lazy private var flipXButton : CircleButton = {
+        let btn = CircleButton(icon: #imageLiteral(resourceName: "flip_horizontal_icon"), frame: .zero,icScale: 0.5)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.widthAnchor.constraint(equalToConstant: 42).isActive = true
+        btn.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        btn.corners = 12
+        
+        btn.delegate = {[unowned self] in
+            self.project?.addAction(action: ["ToolID" : "\(Actions.projectFlipX.rawValue)"])
+            self.project?.isFlipX.toggle()
+            
+            (self.preview.subviews[0] as! UIImageView).image = self.project!.getFrame(frame: 0, size: self.project!.projectSize).flip(xFlip: self.project!.information.flipX, yFlip: self.project!.information.flipY)
+            
+            self.editor?.resizeProject()
+        }
+        
+        return btn
+    }()
+    
+    lazy private var flipYButton : CircleButton = {
+        let btn = CircleButton(icon: #imageLiteral(resourceName: "flip_vertical_icon"), frame: .zero,icScale: 0.5)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.widthAnchor.constraint(equalToConstant: 42).isActive = true
+        btn.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        btn.corners = 12
+        
+        btn.delegate = {[unowned self] in
+            self.project?.addAction(action: ["ToolID" : "\(Actions.projectFlipY.rawValue)"])
+            self.project?.isFlipY.toggle()
+            
+            (self.preview.subviews[0] as! UIImageView).image = self.project!.getFrame(frame: 0, size: self.project!.projectSize).flip(xFlip: self.project!.information.flipX, yFlip: self.project!.information.flipY)
+            self.editor?.resizeProject()
+            //self.projectName.isUserInteractionEnabled = true
+            //self.projectName.filed.becomeFirstResponder()
+        }
+        
+        return btn
+    }()
+
     override func viewDidLoad() {
         view.addSubview(preview)
         view.addSubview(projectName)
@@ -218,9 +256,13 @@ class ProjectSettingsController : UIViewController {
         view.addSubview(backgroundColor)
         view.addSubview(editNameButton)
         view.addSubview(editSizeButton)
+        view.addSubview(flipXButton)
+        view.addSubview(flipYButton)
 
         preview.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
+        preview.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
         preview.topAnchor.constraint(equalTo: view.topAnchor, constant: 16).isActive = true
+        preview.heightAnchor.constraint(equalTo: preview.widthAnchor, constant: 0).isActive = true
         
         projectName.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
         projectName.topAnchor.constraint(equalTo: preview.bottomAnchor, constant: 8).isActive = true
@@ -242,6 +284,12 @@ class ProjectSettingsController : UIViewController {
         editSizeButton.topAnchor.constraint(equalTo: projectSize.topAnchor, constant: 0).isActive = true
         editSizeButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
         
+        flipYButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
+        flipYButton.topAnchor.constraint(equalTo: editSizeButton.bottomAnchor, constant: 16).isActive = true
+        
+        flipXButton.rightAnchor.constraint(equalTo: flipYButton.leftAnchor, constant: -8).isActive = true
+        flipXButton.topAnchor.constraint(equalTo: editSizeButton.bottomAnchor, constant: 16).isActive = true
+
         view.backgroundColor = UIColor(named: "backgroundColor")!
         
         NotificationCenter.default.addObserver(self, selector: #selector(onShowKeyboard(notification:)), name:  UIApplication.keyboardWillShowNotification, object: nil)

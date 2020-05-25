@@ -19,7 +19,7 @@ class ProjectViewNew : UIView {
            // print("some mome \(newValue!.projectName)")
             _project = newValue
             contentImage.backgroundColor = _project!.backgroundColor
-            contentImage.image = _project?.getFrame(frame: 0, size: _project!.projectSize)
+            contentImage.image = _project?.getFrame(frame: 0, size: _project!.projectSize).flip(xFlip: _project!.isFlipX, yFlip: _project!.isFlipY)
             
             let clr1 = self.getLayerImage()
             let clr2 = self.blurImage(image: clr1, forRect: CGRect(x: 8, y: 8, width: self.titleBg.frame.width, height: 16))!

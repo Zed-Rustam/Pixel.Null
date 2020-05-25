@@ -85,7 +85,7 @@ class LayerList : UICollectionView, UICollectionViewDataSource, UICollectionView
         cell.preview?.bgColor = UIColor(hex : project.information.bgColor)!
         
         DispatchQueue.global(qos: .userInteractive).async {
-            let img = self.project.getSmallLayer(frame : self.project.FrameSelected,layer: indexPath.item,size : CGSize(width: 36, height: 36))
+            let img = self.project.getSmallLayer(frame : self.project.FrameSelected,layer: indexPath.item,size : CGSize(width: 36, height: 36)).flip(xFlip: self.project.isFlipX, yFlip: self.project.isFlipY)
             DispatchQueue.main.async {
                 cell.setImage(img: img)
             }
