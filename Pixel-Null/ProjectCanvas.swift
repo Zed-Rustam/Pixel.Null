@@ -114,7 +114,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         
         targetLayer = project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected).flip(xFlip: project.isFlipX, yFlip: project.isFlipY)
         
-        selectionLayer = project.loadSelection()
+        selectionLayer = project.loadSelection().flip(xFlip: project.isFlipX, yFlip: project.isFlipY)
         
         selectionImage.image = selectionLayer
         framesImage?.image = framesLayer
@@ -359,7 +359,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
     }
     
     func setTransformCopyImage() {
-        let imageTransform = UIImage.merge(images: [project.loadCopyImage()])!
+        let imageTransform = UIImage.merge(images: [project.loadCopyImage()])!.flip(xFlip: project.isFlipX, yFlip: project.isFlipY)
         
         selectedTool = 2
         
@@ -475,13 +475,13 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
             
             project.addAction(action :["ToolID" : "\(Actions.transform.rawValue)", "frame" : "\(project.FrameSelected)", "layer" : "\(project.LayerSelected)"])
             
-            try! UIImage.merge(images: [targetLayer])!.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(project.information.frames[project.FrameSelected].frameID)").appendingPathComponent("layer-\(project.information.frames[project.FrameSelected].layers[project.LayerSelected].layerID).png"))
-            try! UIImage.merge(images: [selectionLayer])!.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("selection.png"))
+            try! UIImage.merge(images: [targetLayer.flip(xFlip: project.isFlipX, yFlip: project.isFlipY)])!.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(project.information.frames[project.FrameSelected].frameID)").appendingPathComponent("layer-\(project.information.frames[project.FrameSelected].layers[project.LayerSelected].layerID).png"))
+            try! UIImage.merge(images: [selectionLayer.flip(xFlip: project.isFlipX, yFlip: project.isFlipY)])!.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("selection.png"))
             
             try! wasImg.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
             try! project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID()).png"))
             
-            try! transformView.lastSelect!.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-select-\(project.getNextActionID())-was.png"))
+            try! transformView.lastSelect!.flip(xFlip: project.isFlipX, yFlip: project.isFlipY).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-select-\(project.getNextActionID())-was.png"))
             try! project.loadSelection().pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-select-\(project.getNextActionID()).png"))
             
             ActionLayer = UIImage(size : project.projectSize)
@@ -709,7 +709,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
     func clearSelect() {
      if isSelected {
         project.addAction(action :["ToolID" : "\(Actions.selectionChange.rawValue)", "wasSelected" : "true", "nowSelected" : "false"])
-        try! selectionLayer.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
+        try! selectionLayer.flip(xFlip: project.isFlipX, yFlip: project.isFlipY).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
         
         selectionLayer = UIImage(size: project.projectSize)
         
@@ -717,7 +717,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         
         selectionImage.image = selectionLayer
         
-        try! selectionLayer.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("selection.png"))
+        try! selectionLayer.flip(xFlip: project.isFlipX, yFlip: project.isFlipY).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("selection.png"))
 
         isSelected = false
         barDelegate?.UnDoReDoAction()
@@ -731,11 +731,11 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
 
             try! newLay.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(project.information.frames[project.FrameSelected].frameID)").appendingPathComponent("layer-\(project.information.frames[project.FrameSelected].layers[project.LayerSelected].layerID).png"))
             
-            try! targetLayer.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
+            try! targetLayer.flip(xFlip: project.isFlipX, yFlip: project.isFlipY).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
             
             try! newLay.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID()).png"))
             
-            targetLayer = newLay
+            targetLayer = newLay.flip(xFlip: project.isFlipX, yFlip: project.isFlipY)
             targetImage.image = targetLayer
             
             delegate?.updateFrame(frame: project.FrameSelected)
@@ -1110,7 +1110,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 if selection.type != .magicTool {
                     selectionLayer = selection.finishSelection()
                 } else {
-                    selection.magicSelection(image : UIImage.merge(images: [project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected)])!, point: location)
+                    selection.magicSelection(image : UIImage.merge(images: [project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected)])!.flip(xFlip: project.isFlipX, yFlip: project.isFlipY), point: location)
                     selectionLayer = selection.finishSelection()
                 }
                 
@@ -1130,17 +1130,17 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 project.addAction(action :["ToolID" : "\(Actions.selectionChange.rawValue)", "wasSelected" : "\(isSelected)", "nowSelected" : "\(isselect)"])
                 isSelected = true
                 
-                try! selection.lastSelection?.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
+                try! selection.lastSelection?.flip(xFlip: project.isFlipX, yFlip: project.isFlipY).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
                 
-                try! selectionLayer.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID()).png"))
+                try! selectionLayer.flip(xFlip: project.isFlipX, yFlip: project.isFlipY).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID()).png"))
                 
-                try! selectionLayer.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("selection.png"))
+                try! selectionLayer.flip(xFlip: project.isFlipX, yFlip: project.isFlipY).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("selection.png"))
                 
                 barDelegate?.UnDoReDoAction()
                 isSelected = isselect
 
             case .cancelled:
-                selectionLayer = project.loadSelection()
+                selectionLayer = project.loadSelection().flip(xFlip: project.isFlipX, yFlip: project.isFlipY)
                 selectionImage.image = selectionLayer
             default:
                 break

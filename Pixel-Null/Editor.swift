@@ -396,7 +396,7 @@ extension Editor {
     func startAnimation() {
         project.savePreview(frame: project.FrameSelected)
         nowFrameIndex = project.FrameSelected
-        
+        project.LayerSelected = 0
         for i in 0..<project.FrameSelected {
             animationTime += project.information.frames[i].delay
         }
@@ -457,7 +457,7 @@ extension Editor {
     }
     
     func startTransformWithImage() {
-        if !canvas.selection.isSelectEmpty(select:UIImage.merge(images: [project.loadCopyImage()])!) {
+        if !canvas.selection.isSelectEmpty(select:UIImage.merge(images: [project.loadCopyImage()])!.flip(xFlip: project.isFlipX, yFlip: project.isFlipY)) {
             canvas.transformView.isCopyMode = true
             canvas.transformView.lastToolSelected = 6
             canvas.setTransformCopyImage()
@@ -469,7 +469,7 @@ extension Editor {
     
     func saveSelection(){
         if canvas.isSelected {
-            try! project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected).inner(image : UIImage.merge(images: [canvas.selectionLayer])!).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("copy.png"))
+            try! project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected).inner(image : UIImage.merge(images: [canvas.selectionLayer])!.flip(xFlip: project.isFlipX, yFlip: project.isFlipY)).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("copy.png"))
         }
     }
 }
