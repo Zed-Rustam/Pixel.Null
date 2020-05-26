@@ -249,7 +249,8 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
         preview = FramePreview(frame: CGRect(x: 12, y: 12, width: width, height: 96), image: project.getFrame(frame: project.FrameSelected, size: CGSize(width: 96, height: 96)))
         preview.layer.shadowColor = getAppColor(color: .shadow).cgColor
         preview.bgColor = UIColor(hex : project.information.bgColor)!
-
+        updatePreview()
+        
         view.addSubview(preview)
         view.addSubview(frameText)
         view.addSubview(frames)
