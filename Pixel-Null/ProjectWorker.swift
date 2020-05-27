@@ -412,7 +412,7 @@ class ProjectWork{
         context.fill(CGRect(origin: .zero, size: CGSize(width: projectSize.width * scale * CGFloat(frameCount), height: projectSize.height * scale)))
         
         for i in 0..<frameCount {
-            getFrame(frame: i, size: projectSize).scale(scaleFactor: scale).draw(at: CGPoint(x: Int(projectSize.width * scale) * i, y: 0))
+            getFrame(frame: i, size: projectSize).flip(xFlip: isFlipX, yFlip: isFlipY).scale(scaleFactor: scale).draw(at: CGPoint(x: Int(projectSize.width * scale) * i, y: 0))
         }
         
         let result = UIGraphicsGetImageFromCurrentImageContext()!
@@ -476,7 +476,7 @@ class ProjectWork{
         try! getFrameFromLayers(frame: frame, size: projectSize).pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[frame].frameID)").appendingPathComponent("preview.png"))
         
         if projectInfo.frames[frame].frameID == 0 {
-            try! scalePreview(preview: getFrameFromLayers(frame: frame, size: projectSize) , size: generateIconSize()).pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("preview-icon.png"))
+            try! scalePreview(preview: getFrameFromLayers(frame: frame, size: projectSize) , size: generateIconSize()).flip(xFlip: isFlipX, yFlip: isFlipY).pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("preview-icon.png"))
         }
     }
     
@@ -1483,7 +1483,7 @@ class ProjectWork{
         if let destination = CGImageDestinationCreateWithURL(getProjectDirectory().appendingPathComponent("\(userProjectName).gif") as CFURL, kUTTypeGIF, projectInfo.frames.count, nil) {
             CGImageDestinationSetProperties(destination, fileProperties)
             for image in 0..<projectInfo.frames.count {
-                let frameImg = getFrameWithBackground(frame: image).scale(scaleFactor: scale).cgImage!
+                let frameImg = getFrameWithBackground(frame: image).scale(scaleFactor: scale).flip(xFlip: isFlipX, yFlip: isFlipY).cgImage!
                 
                 let frameProperties: CFDictionary = [kCGImagePropertyGIFDictionary as String: [(kCGImagePropertyGIFDelayTime as String): CGFloat(projectInfo.frames[image].delay) / 1000.0, kCGImagePropertyHasAlpha : true, kCGImagePropertyGIFImageColorMap : false]] as CFDictionary
             
@@ -1502,7 +1502,7 @@ class ProjectWork{
         print("start starting")
         try! FileManager.default.createDirectory(at: getProjectDirectory().appendingPathComponent("\(userProjectName)"), withIntermediateDirectories: true, attributes: nil)
         for i in 0..<frameCount {
-            try! getFrameWithBackground(frame: i).scale(scaleFactor: scale).pngData()?.write(to: getProjectDirectory().appendingPathComponent("\(userProjectName)").appendingPathComponent("\(i).png"))
+            try! getFrameWithBackground(frame: i).scale(scaleFactor: scale).flip(xFlip: isFlipX, yFlip: isFlipY).pngData()?.write(to: getProjectDirectory().appendingPathComponent("\(userProjectName)").appendingPathComponent("\(i).png"))
         }
     }
 }
