@@ -131,76 +131,84 @@ extension UIImage {
         
         dataPtr = CFDataGetBytePtr(data)!
         let componentLayout = cgImage!.bitmapInfo.componentLayout!
-        
+        print("components : \(componentLayout)")
         var array : [pixelData] = []
         
-        for i in 0..<Int(size.width * size.height) {
-            var pix = pixelData(a: 0, r: 0, g: 0, b: 0)
-            
-            if componentLayout.count == 4 {
-                let components = (
-                    dataPtr[i * 4 + 0],
-                    dataPtr[i * 4 + 1],
-                    dataPtr[i * 4 + 2],
-                    dataPtr[i * 4 + 3]
-                )
-
-                switch componentLayout {
-                case .bgra:
-                    pix.a = components.3
-                    pix.r = components.2
-                    pix.g = components.1
-                    pix.b = components.0
-                case .abgr:
-                    pix.a = components.0
-                    pix.r = components.3
-                    pix.g = components.2
-                    pix.b = components.1
-                case .argb:
-                    pix.a = components.0
-                    pix.r = components.1
-                    pix.g = components.2
-                    pix.b = components.3
-                case .rgba:
-                    pix.a = components.3
-                    pix.r = components.0
-                    pix.g = components.1
-                    pix.b = components.2
-                default:
-                    break
-                }
-
-                // If chroma components are premultiplied by alpha and the alpha is `0`,
-                // keep the chroma components to their current values.
-                if cgImage!.bitmapInfo.chromaIsPremultipliedByAlpha && pix.a != 0 {
-                    let invUnitAlpha = 255/CGFloat(pix.a)
-                    pix.r = UInt8((CGFloat(pix.r)*invUnitAlpha).rounded())
-                    pix.g = UInt8((CGFloat(pix.g)*invUnitAlpha).rounded())
-                    pix.b = UInt8((CGFloat(pix.b)*invUnitAlpha).rounded())
-                }
-            } else if componentLayout.count == 3 {
-                pix.a = 255
+        let bytesPerRow = cgImage!.bytesPerRow
+        let bytesPerPixel = cgImage!.bitsPerPixel/8
+        
+        for y in 0..<Int(size.height) {
+            for x in 0..<Int(size.width){
                 
-                let components = (
-                    dataPtr[i * 3 + 0],
-                    dataPtr[i * 3 + 1],
-                    dataPtr[i * 3 + 2]
-                )
+                let pixelOffset = y*bytesPerRow + x*bytesPerPixel
 
-                switch componentLayout {
-                case .bgr:
-                    pix.r = components.2
-                    pix.g = components.1
-                    pix.b = components.0
-                case .rgb:
-                    pix.r = components.0
-                    pix.g = components.1
-                    pix.b = components.2
-                default:
-                    break
+                var pix = pixelData(a: 0, r: 0, g: 0, b: 0)
+                
+                if componentLayout.count == 4 {
+                    let components = (
+                        dataPtr[pixelOffset + 0],
+                        dataPtr[pixelOffset + 1],
+                        dataPtr[pixelOffset + 2],
+                        dataPtr[pixelOffset + 3]
+                    )
+
+                    switch componentLayout {
+                    case .bgra:
+                        pix.a = components.3
+                        pix.r = components.2
+                        pix.g = components.1
+                        pix.b = components.0
+                    case .abgr:
+                        pix.a = components.0
+                        pix.r = components.3
+                        pix.g = components.2
+                        pix.b = components.1
+                    case .argb:
+                        pix.a = components.0
+                        pix.r = components.1
+                        pix.g = components.2
+                        pix.b = components.3
+                    case .rgba:
+                        pix.a = components.3
+                        pix.r = components.0
+                        pix.g = components.1
+                        pix.b = components.2
+                    default:
+                        break
+                    }
+
+                    // If chroma components are premultiplied by alpha and the alpha is `0`,
+                    // keep the chroma components to their current values.
+                    if cgImage!.bitmapInfo.chromaIsPremultipliedByAlpha && pix.a != 0 {
+                        let invUnitAlpha = 255/CGFloat(pix.a)
+                        pix.r = UInt8((CGFloat(pix.r)*invUnitAlpha).rounded())
+                        pix.g = UInt8((CGFloat(pix.g)*invUnitAlpha).rounded())
+                        pix.b = UInt8((CGFloat(pix.b)*invUnitAlpha).rounded())
+                    }
+                } else if componentLayout.count == 3 {
+                    pix.a = 255
+                    
+                    let components = (
+                        dataPtr[pixelOffset + 0],
+                        dataPtr[pixelOffset + 1],
+                        dataPtr[pixelOffset + 2]
+                    )
+
+                    switch componentLayout {
+                    case .bgr:
+                        pix.r = components.2
+                        pix.g = components.1
+                        pix.b = components.0
+                    case .rgb:
+                        pix.r = components.0
+                        pix.g = components.1
+                        pix.b = components.2
+                    default:
+                        break
+                    }
                 }
+                array.append(pix)
             }
-            array.append(pix)
         }
         
         return array

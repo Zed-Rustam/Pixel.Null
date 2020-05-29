@@ -198,7 +198,7 @@ class ProjectWork{
         selectedLayer = 0
         selectedFrame = 0
         
-        let resultImage = UIImage.merge(images: [image])!
+        let resultImage = UIImage(cgImage: image.cgImage!)
         
         projectInfo = ProjectInfo(version: 0, width: Int(resultImage.size.width), height: Int(resultImage.size.height), bgColor: "#00000000", frames: [ProjectFrame(frameID: 0, delay: 100, layers: [ProjectLayer(layerID: 0, visible: true, locked: false, transparent: 1)])], actionList: ActionList(actions: [], lastActiveAction: -1, maxCount: 64), pallete: try! JSONDecoder().decode(Pallete.self, from: NSDataAsset(name: "Default pallete")!.data), flipX: false, flipY: false, rotate: 0)
         
