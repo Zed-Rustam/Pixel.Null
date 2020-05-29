@@ -149,7 +149,6 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         
         bg = UIImageView(frame: frame)
         
-        
         selectionImage = UIImageView(frame: CGRect(x: 0, y: 0, width: project.projectSize.width, height: project.projectSize.height))
         selectionImage.image = selectionLayer
         selectionImage.layer.magnificationFilter = CALayerContentsFilter.nearest
@@ -290,13 +289,13 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         }
     }
     
-    
     func checkTransformChangeBefore(newTool : Int) {
         if newTool == 2 && newTool != selectedTool {
             isTransform = true
             transformView.offset = offset
             transformView.scale = scale
             transformView.angle = 0
+            transformView.lastToolSelected = selectedTool
             transformView.setRect(image: UIImage.merge(images: [selectionLayer])!, isSelected: isSelected)
             move.setImage(image: targetLayer.inner(image: isSelected ? selectionLayer : nil).getImageFromRect(rect: transformView.position), startpos: .zero, selection: selectionLayer.getImageFromRect(rect: transformView.position),size: project.projectSize, startImg: targetLayer.cut(image: isSelected ? selectionLayer : nil))
             
@@ -471,7 +470,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
             print("changed")
             let wasImg = project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected)
             
-            targetLayer = UIImage.merge(images: [targetLayer,ActionLayer])
+            targetLayer = UIImage.merge(images: [ActionLayer])
             targetImage.image = targetLayer
             
             project.addAction(action :["ToolID" : "\(Actions.transform.rawValue)", "frame" : "\(project.FrameSelected)", "layer" : "\(project.LayerSelected)"])
@@ -506,7 +505,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
     func clearTransform() {
         ActionLayer = move.drawOn(position: transformView.startInformation.position, rotation: 0, rotateCenter: .zero)
         
-        targetLayer = UIImage.merge(images: [targetLayer,ActionLayer])!
+        targetLayer = UIImage.merge(images: [ActionLayer])!
         targetImage.image = targetLayer
         
         ActionLayer = UIImage(size: project.projectSize)
@@ -561,10 +560,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
       }
     
     override func layoutSubviews() {
-        print("some changes")
-        
         bg.backgroundColor = UIColor(patternImage:UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 0.1, orientation: .down))
-
     }
     
     func checkActions(){
@@ -600,7 +596,6 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 scale *= sender.scale
                 actionRecognizer.isEnabled = false
                 transformGest.isEnabled = false
-                //let lastOffset = offset
                 
                 let xk = sender.scale * bg.frame.width -  bg.frame.width
                 let posx = (sender.location(in: self).x - bg.frame.origin.x) / bg.frame.width
@@ -775,11 +770,11 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                                 
                 sender.setTranslation(.zero, in: self)
                 
-                    UIView.animate(withDuration: animationDelta,delay: 0,options: .curveLinear, animations: {
-                        self.bg.transform = CGAffineTransform(scaleX: self.scale, y: self.scale)
-                        self.bg.layer.frame.origin = self.offset
+                UIView.animate(withDuration: animationDelta,delay: 0,options: .curveLinear, animations: {
+                    self.bg.transform = CGAffineTransform(scaleX: self.scale, y: self.scale)
+                    self.bg.layer.frame.origin = self.offset
                         
-                   })
+                })
                 
                 let anim = CABasicAnimation(keyPath: "startPos")
                 anim.isAdditive = true
