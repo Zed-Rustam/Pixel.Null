@@ -52,7 +52,9 @@ extension UIImage {
         if images.count == 0 {return nil}
         
         UIGraphicsBeginImageContext(images[0].size)
-        
+        UIGraphicsGetCurrentContext()!.interpolationQuality = .none
+        UIGraphicsGetCurrentContext()!.setShouldAntialias(false)
+
         for i in 0..<images.count{
             images[i].draw(in: CGRect(origin: .zero, size: images[i].size))
         }
@@ -62,21 +64,6 @@ extension UIImage {
         UIGraphicsEndImageContext()
         
         return newImage
-    }
-    
-    func getColorsArray() -> [pixelData] {
-        var array : [pixelData] = []
-        
-        let data: UnsafePointer<UInt8> = CFDataGetBytePtr(self.cgImage!.dataProvider!.data)
-        
-        for i in 0..<Int(self.size.width * self.size.height) {
-            array.append(pixelData(a: data[i * 4 + 3],
-                                   r: data[i * 4 + 2],
-                                   g: data[i * 4 + 1],
-                                   b: data[i * 4]))
-        }
-        
-        return array
     }
     
     func scale(scaleFactor : CGFloat) -> UIImage {
@@ -142,7 +129,7 @@ extension UIImage {
         var endx : Int = 0
         var endy : Int = 0
         
-        let data = getColorsArray()
+        let data = getPixelsArray()
         let group = DispatchGroup()
         
         group.enter()

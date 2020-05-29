@@ -57,7 +57,6 @@ class ProjectExportController: UIViewController {
             case 0:
                 self.present(UIActivityViewController(activityItems: [self.project!.getProjectDirectory()], applicationActivities: nil), animated: true, completion: nil)
             case 1:
-                self.project!.savePreview(frame: 0)
                 
                 let activity = UIActivityViewController(activityItems: [self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).png")], applicationActivities: nil)
                 activity.completionWithItemsHandler = { (activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) -> Void in
@@ -65,7 +64,7 @@ class ProjectExportController: UIViewController {
                     print("deleted")
                 }
                 
-                try! self.project!.getFrameWithBackground(frame: 0).scale(scaleFactor: CGFloat(self.scale)).pngData()?.write(to: self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).png"))
+                try! self.project!.getFrameWithBackground(frame: 0).scale(scaleFactor: CGFloat(self.scale)).flip(xFlip: self.project!.isFlipX, yFlip: self.project!.isFlipY).pngData()?.write(to: self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).png"))
                 
                 self.present(activity, animated: true, completion: nil)
             case 2:
@@ -143,7 +142,7 @@ class ProjectExportController: UIViewController {
     lazy private var resultImage : UIImageView = {
         let img = UIImageView()
         
-        img.image = project?.getFrameWithBackground(frame: 0)
+        img.image = project?.getFrameWithBackground(frame: 0).flip(xFlip: project!.isFlipX, yFlip: project!.isFlipY)
         img.contentMode = .scaleAspectFill
         img.layer.magnificationFilter = .nearest
         

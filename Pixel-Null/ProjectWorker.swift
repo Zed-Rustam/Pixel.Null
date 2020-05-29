@@ -192,6 +192,43 @@ class ProjectWork{
         } catch {}
     }
     
+    init(projectName : String, image : UIImage) {
+        name = projectName
+        
+        selectedLayer = 0
+        selectedFrame = 0
+        
+        let resultImage = UIImage.merge(images: [image])!
+        
+        projectInfo = ProjectInfo(version: 0, width: Int(resultImage.size.width), height: Int(resultImage.size.height), bgColor: "#00000000", frames: [ProjectFrame(frameID: 0, delay: 100, layers: [ProjectLayer(layerID: 0, visible: true, locked: false, transparent: 1)])], actionList: ActionList(actions: [], lastActiveAction: -1, maxCount: 64), pallete: try! JSONDecoder().decode(Pallete.self, from: NSDataAsset(name: "Default pallete")!.data), flipX: false, flipY: false, rotate: 0)
+        
+        let folder = ProjectWork.getDocumentsDirectory().appendingPathComponent(name)
+        do {
+            try FileManager.default.createDirectory(atPath: folder.path, withIntermediateDirectories: true, attributes: nil)
+            try FileManager.default.createDirectory(atPath: folder.appendingPathComponent("frames").path, withIntermediateDirectories: true, attributes: nil)
+
+            try FileManager.default.createDirectory(atPath: folder.appendingPathComponent("frames").appendingPathComponent("frame-0").path, withIntermediateDirectories: true, attributes: nil)
+            try FileManager.default.createDirectory(atPath: folder.appendingPathComponent("actions").path, withIntermediateDirectories: true, attributes: nil)
+
+            try resultImage.pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frames").appendingPathComponent("frame-0").appendingPathComponent("layer-0.png"))
+            try resultImage.pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frames").appendingPathComponent("frame-0").appendingPathComponent("preview.png"))
+            
+            try! scalePreview(preview: resultImage, size: generateIconSize()).pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frames").appendingPathComponent("frame-0").appendingPathComponent("preview-icon.png"))
+            
+            try UIImage(size: resultImage.size)!.pngData()!.write(to: getProjectDirectory().appendingPathComponent("selection.png"))
+            
+            try UIImage(size: resultImage.size)!.pngData()!.write(to: getProjectDirectory().appendingPathComponent("copy.png"))
+
+            let data = try JSONEncoder().encode(projectInfo)
+            
+            try String(data: data, encoding: .utf8)!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("main.txt"), atomically: true, encoding: .utf8)
+            
+        } catch {
+            print(error.localizedDescription)
+        }
+        
+    }
+    
     func getProjectDirectory() -> URL {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         return paths[0].appendingPathComponent("Projects").appendingPathComponent(name)
@@ -423,11 +460,11 @@ class ProjectWork{
     
     func getFrameFromLayers(frame : Int, size : CGSize) -> UIImage{
         var imgs : [UIImage] = []
-        print("  start getting Frame :")
+        //print("  start getting Frame :")
         for i in 0..<projectInfo.frames[frame].layers.count {
             imgs.append(getSmallLayer(frame: frame, layer: (projectInfo.frames[frame].layers.count - i - 1),size: size).withAlpha(projectInfo.frames[frame].layers[projectInfo.frames[frame].layers.count - i - 1].visible ? CGFloat(projectInfo.frames[frame].layers[projectInfo.frames[frame].layers.count - i - 1].transparent) : 0))
         }
-        print("  end getting Frame")
+        //print("  end getting Frame")
 
         return UIImage.merge(images: imgs)!
     }

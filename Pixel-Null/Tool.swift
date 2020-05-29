@@ -245,7 +245,7 @@ class Selection : Tool {
         points.append(point)
         colorForChange = image.pixelColor(x: Int(point.x), y: Int(point.y))
 
-        imageData = image.getColorsArray()
+        imageData = image.getPixelsArray()
         resultData = .init(repeating: pixelData(a: 0, r: 0, g: 0, b: 0), count: imageData.count)
         
         
@@ -273,7 +273,7 @@ class Selection : Tool {
     }
     
     func isSelectEmpty(select : UIImage) -> Bool {
-        let info = select.getColorsArray()
+        let info = select.getPixelsArray()
         let group = DispatchGroup()
         var finalResult = true
         let partCount = 8
@@ -500,7 +500,7 @@ class Fill : Tool {
         colorForChange = image.pixelColor(x: Int(point.x), y: Int(point.y))
         color = fillColor
         
-        imageData = image.getColorsArray()
+        imageData = image.getPixelsArray()
         resultData = .init(repeating: pixelData(a: 0, r: 0, g: 0, b: 0), count: imageData.count)
         
         points.removeAll()
@@ -538,7 +538,7 @@ class Fill : Tool {
         colorForChange = image.pixelColor(x: Int(point.x), y: Int(point.y))
         color = fillColor
         
-        imageData = image.getColorsArray()
+        imageData = image.getPixelsArray()
         resultData = .init(repeating: pixelData(a: 0, r: 0, g: 0, b: 0), count: imageData.count)
         
         points.removeAll()
@@ -558,11 +558,11 @@ class Fill : Tool {
             
             var returnImage = UIGraphicsGetImageFromCurrentImageContext()!
             
-            UIGraphicsGetCurrentContext()!.clear(CGRect(origin: .zero, size: image.size))
+            //UIGraphicsGetCurrentContext()!.clear(CGRect(origin: .zero, size: image.size))
             
-            image.draw(at: .zero)
-            returnImage.draw(at: .zero)
-            returnImage = UIGraphicsGetImageFromCurrentImageContext()!
+            //image.draw(at: .zero)
+            //returnImage.draw(at: .zero)
+            //returnImage = UIGraphicsGetImageFromCurrentImageContext()!
             
             UIGraphicsEndImageContext()
             return returnImage
@@ -645,7 +645,7 @@ class Square : Tool {
         UIGraphicsBeginImageContextWithOptions(image.size, false, 1)
         
         let context = UIGraphicsGetCurrentContext()!
-        context.setStrokeColor(color.cgColor)
+        //context.setStrokeColor(color.cgColor)
         context.setShouldAntialias(false)
         context.setLineCap(.round)
         context.setLineJoin(.round)

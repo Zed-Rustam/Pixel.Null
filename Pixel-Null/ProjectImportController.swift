@@ -10,6 +10,7 @@ import UIKit
 
 class ProjectImportController: UIViewController {
     private var urls : [URL] = []
+    weak var gallery : GalleryControl? = nil
     
     lazy private var titleBg : UIView = {
         let view = UIView()
@@ -19,7 +20,11 @@ class ProjectImportController: UIViewController {
         view.layer.masksToBounds = true
         
         view.addSubviewFullSize(view: titleLabel)
+        view.addSubview(importBtn)
         
+        importBtn.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
+        importBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
+
         let mainview = UIView()
         mainview.translatesAutoresizingMaskIntoConstraints = false
         mainview.addSubviewFullSize(view: view)
@@ -36,7 +41,25 @@ class ProjectImportController: UIViewController {
         return label
     }()
     
-    lazy private var collection : ImportCollectionView = {
+    lazy private var importBtn : CircleButton = {
+        let btn = CircleButton(icon: #imageLiteral(resourceName: "import_icon"), frame: .zero,icScale: 0.33)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.widthAnchor.constraint(equalToConstant: 42).isActive = true
+        btn.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        btn.setShadowColor(color: .clear)
+        
+        btn.delegate = {[unowned self] in
+            self.importFiles()
+            
+            self.gallery?.gallery.reloadData()
+            
+            self.dismiss(animated: true, completion: nil)
+        }
+        
+        return btn
+    }()
+    
+    lazy private var collection: ImportCollectionView = {
         let collect = ImportCollectionView(files: urls)
         collect.translatesAutoresizingMaskIntoConstraints = false
         
@@ -71,5 +94,19 @@ class ProjectImportController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         titleBg.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
+    }
+    
+    func importFiles() {
+        for i in urls {
+            if i.lastPathComponent.hasSuffix(".png") || i.lastPathComponent.hasSuffix(".jpg") {
+                var name = i.lastPathComponent
+                name.removeLast(4)
+                name += ".pnart"
+                if i.startAccessingSecurityScopedResource() {
+                    ProjectWork(projectName: name, image: UIImage(data: try! Data(contentsOf: i))!)
+                    i.stopAccessingSecurityScopedResource()
+                }
+            }
+        }
     }
 }

@@ -69,6 +69,7 @@ class MainViewController: UIViewController {
     
     func importFiles(url : [URL]) {
         let importCollection = ProjectImportController(filesUrl: url)
+        importCollection.gallery = controllers[0] as! GalleryControl
         importCollection.modalPresentationStyle = .formSheet
         
         self.show(importCollection, sender: nil)

@@ -10,6 +10,7 @@ import UIKit
 
 class ImportCollectionView : UICollectionView {
     private var urls : [URL] = []
+    
     private var layout : UICollectionViewFlowLayout = {
         let l = UICollectionViewFlowLayout()
         l.scrollDirection = .vertical
@@ -63,18 +64,53 @@ class ImportCollectionCell : UICollectionViewCell {
         if url.lastPathComponent.hasSuffix(".pnart") {
             fileType.textColor = getAppColor(color: .enable)
             fileType.text = "Project"
+            converttext.text = ""
+            
+            print("open project \(url)")
+            if url.startAccessingSecurityScopedResource() {
+                fileImage.image = UIImage(data: try! Data(contentsOf: url.appendingPathComponent("preview-icon.png")))
+                url.stopAccessingSecurityScopedResource()
+            }
         } else if url.lastPathComponent.hasSuffix(".pnpalette") {
             fileType.textColor = getAppColor(color: .enable)
             fileType.text = "Palette"
         } else if url.lastPathComponent.hasSuffix(".gif") {
             fileType.textColor = getAppColor(color: .enable)
             fileType.text = "Gif"
-        } else if url.lastPathComponent.hasSuffix(".png") || url.lastPathComponent.hasSuffix(".jpeg") {
-            fileType.textColor = getAppColor(color: .enable)
+            
+            converttext.text = "will be converted to project"
+            
+            if url.startAccessingSecurityScopedResource() {
+                fileImage.image = UIImage(data: try! Data(contentsOf: url))
+                url.stopAccessingSecurityScopedResource()
+            }
+        } else if url.lastPathComponent.hasSuffix(".png") || url.lastPathComponent.hasSuffix(".jpeg") || url.lastPathComponent.hasSuffix(".jpg") {
+            var img = UIImage()
+            
+            if url.startAccessingSecurityScopedResource() {
+                img = UIImage(data: try! Data(contentsOf: url))!
+                url.stopAccessingSecurityScopedResource()
+            }
+            let isBig = img.size.width > 512 || img.size.height > 512
+            
+            imageBg.alpha = isBig ? 0.5 : 1
+            
+            fileName.textColor = isBig ? getAppColor(color: .disable) : getAppColor(color: .enable)
+            
+            fileType.textColor = isBig ? getAppColor(color: .disable) : getAppColor(color: .enable)
             fileType.text = "Image"
+            
+            converttext.text = isBig ? "will be ignored" : "will be converted to project"
+            converttext.textColor = isBig ? getAppColor(color: .disable) : getAppColor(color: .enable)
+
+            errortext.text = isBig ? "image size is so big(max 512x512)" : ""
+            errortext.textColor = getAppColor(color: .red)
+            
+            fileImage.image = img
         } else {
             fileType.textColor = getAppColor(color: .disable)
             fileType.text = "Unknown file"
+            converttext.text = "will be ignored"
         }
     }
     
@@ -102,7 +138,7 @@ class ImportCollectionCell : UICollectionViewCell {
         img.heightAnchor.constraint(equalToConstant: 72).isActive = true
         img.layer.magnificationFilter = .nearest
         img.image = #imageLiteral(resourceName: "background")
-        
+        img.contentMode = .scaleAspectFill
         return img
     }()
     
@@ -119,8 +155,28 @@ class ImportCollectionCell : UICollectionViewCell {
     lazy private var fileName : UILabel = {
         let label = UILabel()
         label.textColor = getAppColor(color: .enable)
-        label.font = UIFont(name: "Rubik-Medium", size: 12)
+        label.font = UIFont(name: "Rubik-Medium", size: 10)
         
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    lazy private var converttext : UILabel = {
+        let label = UILabel()
+        label.textColor = getAppColor(color: .enable)
+        label.font = UIFont(name: "Rubik-Medium", size: 10)
+        label.text = "will be convert to project"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    lazy private var errortext : UILabel = {
+        let label = UILabel()
+        label.textColor = getAppColor(color: .enable)
+        label.font = UIFont(name: "Rubik-Medium", size: 10)
+        //label.text = "will be convert to project"
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -134,6 +190,9 @@ class ImportCollectionCell : UICollectionViewCell {
         contentView.addSubview(imageBg)
         contentView.addSubview(fileType)
         contentView.addSubview(fileName)
+        contentView.addSubview(converttext)
+        contentView.addSubview(errortext)
+
 
         imageBg.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 0).isActive = true
         imageBg.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0).isActive = true
@@ -147,6 +206,16 @@ class ImportCollectionCell : UICollectionViewCell {
         fileName.topAnchor.constraint(equalTo: fileType.bottomAnchor, constant: 3).isActive = true
         fileName.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: 0).isActive = true
         fileName.heightAnchor.constraint(equalToConstant: 12).isActive = true
+        
+        converttext.leftAnchor.constraint(equalTo: imageBg.rightAnchor, constant: 6).isActive = true
+        converttext.topAnchor.constraint(equalTo: fileName.bottomAnchor, constant: 3).isActive = true
+        converttext.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: 0).isActive = true
+        converttext.heightAnchor.constraint(equalToConstant: 12).isActive = true
+        
+        errortext.leftAnchor.constraint(equalTo: imageBg.rightAnchor, constant: 6).isActive = true
+        errortext.topAnchor.constraint(equalTo: converttext.bottomAnchor, constant: 3).isActive = true
+        errortext.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: 0).isActive = true
+        errortext.heightAnchor.constraint(equalToConstant: 12).isActive = true
     }
     
     override func layoutSubviews() {

@@ -53,7 +53,7 @@ class TransformView : UIView {
             
         if isSelected {
             lastSelect = image.withTintColor(UIColor(named: "selectColor")!)
-            let data = image.getColorsArray()
+            let data = image.getPixelsArray()
             let group = DispatchGroup()
             
             group.enter()

@@ -347,7 +347,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
     }
     
     func fixAlpha(image : UIImage) -> UIImage {
-        var data = image.getColorsArray()
+        var data = image.getPixelsArray()
         
         for i in 0..<data.count {
             if data[i].a > 0 {
@@ -903,6 +903,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
 
                 ActionLayer = pen.drawOn(image: ActionLayer, point: location,selection: isSelected ? selectionLayer : nil, symmetry: getSymmetry(),color: selectorColor)
                 ActionLayer = pen.drawOn(image: ActionLayer, point: location,selection: isSelected ? selectionLayer : nil, symmetry: getSymmetry(), color: selectorColor)
+                
                 actionImage.image = ActionLayer
             case .changed:
                 location.x = CGFloat(floor(location.x))
@@ -1041,9 +1042,6 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
             default:
                 break
             }
-            
-        //MARK: need finish
-                      
                     
         case 4:
             switch sender.state {
@@ -1053,7 +1051,9 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 if actionImage.bounds.contains(location) {
                     switch fill.style {
                     case .frame:
-                        ActionLayer = fill.drawOnFrame(image: UIImage.merge(images: [project.getFrameFromLayers(frame: project.FrameSelected, size: project.projectSize).flip(xFlip: project.isFlipX, yFlip: project.isFlipY)])!, point: location, selection: isSelected ? selectionLayer : nil, fillColor: selectorColor)
+                        
+                        //MARK: remake
+                        ActionLayer =  UIImage.merge(images: [targetLayer,fill.drawOnFrame(image: UIImage.merge(images: [project.getFrameFromLayers(frame: project.FrameSelected, size: project.projectSize).flip(xFlip: project.isFlipX, yFlip: project.isFlipY)])!, point: location, selection: isSelected ? selectionLayer : nil, fillColor: selectorColor)])
                     case .layer:
                         ActionLayer = fill.drawOn(image:  UIImage.merge(images: [targetLayer])!, point: location,selection: isSelected ? selectionLayer : nil, fillColor: selectorColor)
                     }

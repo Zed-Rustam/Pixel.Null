@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import MobileCoreServices
+import CoreGraphics
 
 class GalleryControl : UIViewController{
     
@@ -43,9 +45,57 @@ class GalleryControl : UIViewController{
         return collection
     }()
     
-    var createButton : CircleButton = {
-        let btn = CircleButton(icon: #imageLiteral(resourceName: "add_icon"), frame: .zero)
+    lazy var createButton : CircleButton = {
+        let btn = CircleButton(icon: #imageLiteral(resourceName: "add_icon"), frame: .zero, icScale: 0.35)
         btn.translatesAutoresizingMaskIntoConstraints = false
+        
+        btn.widthAnchor.constraint(equalToConstant: 42).isActive = true
+        btn.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        
+        btn.delegate = {[unowned self] in
+            let dialog = CreateDialogController()
+            dialog.delegate = self
+            dialog.setDefault()
+            
+            switch UIDevice.current.userInterfaceIdiom {
+                //если айфон, то просто показываем контроллер
+            case .phone:
+                dialog.modalPresentationStyle = .pageSheet
+                self.show(dialog, sender: self)
+                //если айпад то немного химичим
+            case .pad:
+                dialog.modalPresentationStyle = .popover
+                
+                if let popover = dialog.popoverPresentationController {
+                    popover.sourceView = self.createButton
+                    popover.permittedArrowDirections = .any
+                }
+                self.show(dialog, sender: self)
+
+            default:
+                break
+            }
+        }
+        
+        return btn
+    }()
+    
+    lazy var importButton : CircleButton = {
+        let btn = CircleButton(icon: #imageLiteral(resourceName: "import_icon"), frame: .zero,icScale: 0.35)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.widthAnchor.constraint(equalToConstant: 42).isActive = true
+        btn.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        
+        btn.delegate = {[unowned self] in
+            let dialog = UIDocumentBrowserViewController(forOpeningFilesWithContentTypes: ["com.zed.null.project",String(kUTTypePNG),String(kUTTypeJPEG),String(kUTTypeGIF)])
+            dialog.modalPresentationStyle = .pageSheet
+            dialog.delegate = self
+            dialog.allowsDocumentCreation = false
+            dialog.allowsPickingMultipleItems = true
+            
+            self.show(dialog, sender: self)
+        }
+        
         return btn
     }()
     
@@ -102,40 +152,14 @@ class GalleryControl : UIViewController{
         
         self.view.addSubview(gallery)
         
-        
-        
-        createButton.delegate = {[weak self] in
-            let dialog = CreateDialogController()
-            dialog.delegate = self
-            dialog.setDefault()
-            
-            
-            switch UIDevice.current.userInterfaceIdiom {
-                //если айфон, то просто показываем контроллер
-            case .phone:
-                dialog.modalPresentationStyle = .pageSheet
-                self!.show(dialog, sender: self!)
-                //если айпад то немного химичим
-            case .pad:
-                dialog.modalPresentationStyle = .popover
-                
-                if let popover = dialog.popoverPresentationController {
-                    popover.sourceView = self!.createButton
-                    popover.permittedArrowDirections = .any
-                }
-                self!.show(dialog, sender: self!)
-
-            default:
-                break
-            }
-        }
-        
         view.addSubview(createButton)
-        
-        createButton.widthAnchor.constraint(equalToConstant: 42).isActive = true
-        createButton.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        view.addSubview(importButton)
+
         createButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
         createButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12).isActive = true
+        
+        importButton.rightAnchor.constraint(equalTo: createButton.leftAnchor, constant: -6).isActive = true
+        importButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12).isActive = true
                
         gallery.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 0).isActive = true
         gallery.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: 0).isActive = true
@@ -291,6 +315,15 @@ extension GalleryControl : UICollectionViewDelegate {
         if projects[indexPath.item] is ProjectWork {
             self.projectOpen(proj: projects[indexPath.item] as! ProjectWork)
         }
+    }
+}
+
+extension GalleryControl : UIDocumentBrowserViewControllerDelegate {
+    func documentBrowser(_ controller: UIDocumentBrowserViewController, didPickDocumentsAt documentURLs: [URL]) {
+        controller.dismiss(animated: true, completion: {
+            self.show(ProjectImportController(filesUrl: documentURLs), sender: nil)
+        })
+        print(documentURLs)
     }
 }
 
