@@ -273,6 +273,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         self.layer.masksToBounds = true
         self.translatesAutoresizingMaskIntoConstraints = false
         updateLayers()
+        
     }
     
     func transformFlip(flipX : Bool, flipY : Bool) {
@@ -560,15 +561,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
       }
     
     override func layoutSubviews() {
-        let anim = CABasicAnimation(keyPath: #keyPath(CALayer.opacity))
-        anim.duration = 1
-        anim.fromValue = 0.5
-        anim.toValue = 0.1
-        anim.autoreverses = true
-        anim.repeatCount = .infinity
-        anim.timingFunction = .init(name: .easeInEaseOut)
-
-        selectionImage.layer.add(anim, forKey: "test")
+        print("some changes")
         
         bg.backgroundColor = UIColor(patternImage:UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 0.1, orientation: .down))
 
@@ -1117,15 +1110,6 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 selectionImage.image = selectionLayer
                 let isselect = selection.mode == .add ? true : !selection.isSelectEmpty(select: selectionLayer)
                 
-                let anim = CABasicAnimation(keyPath: #keyPath(CALayer.opacity))
-                anim.duration = 1
-                anim.fromValue = 0.5
-                anim.toValue = 0.1
-                anim.autoreverses = true
-                anim.repeatCount = .infinity
-                anim.timingFunction = .init(name: .easeInEaseOut)
-                
-                selectionImage.layer.add(anim, forKey: "test")
                 
                 project.addAction(action :["ToolID" : "\(Actions.selectionChange.rawValue)", "wasSelected" : "\(isSelected)", "nowSelected" : "\(isselect)"])
                 isSelected = true

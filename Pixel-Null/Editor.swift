@@ -115,6 +115,9 @@ class Editor : UIViewController {
         view.addSubview(control)
         
         NotificationCenter.default.addObserver(self, selector: #selector(appMovedToBackground), name: UIApplication.willResignActiveNotification, object: nil)
+        
+         NotificationCenter.default.addObserver(self, selector: #selector(appMovedToForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+        
         NotificationCenter.default.addObserver(self, selector: #selector(rotate), name: UIDevice.orientationDidChangeNotification, object: nil)
 
         view.addSubview(toolBar)
@@ -148,6 +151,7 @@ class Editor : UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: UIApplication.willResignActiveNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
     }
     
     @objc func rotate() {
@@ -170,6 +174,8 @@ class Editor : UIViewController {
         control.setPosition()
         toolBar.setPosition()
         toolBar.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
+        
+        appMovedToForeground()
     }
     
     func showTransform(isShow : Bool) {
@@ -182,6 +188,20 @@ class Editor : UIViewController {
     @objc func appMovedToBackground() {
         project.save()
         project.savePreview(frame: project.FrameSelected)
+    }
+    
+    @objc func appMovedToForeground() {
+        print("ender!")
+        
+        let anim = CABasicAnimation(keyPath: #keyPath(CALayer.opacity))
+
+        anim.duration = 1
+        anim.fromValue = 0.5
+        anim.toValue = 0.1
+        anim.autoreverses = true
+        anim.repeatCount = .infinity
+        anim.timingFunction = .init(name: .easeInEaseOut)
+        canvas.selectionImage.layer.add(anim, forKey: "test")
     }
 }
 

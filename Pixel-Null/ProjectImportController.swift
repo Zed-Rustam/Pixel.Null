@@ -104,6 +104,7 @@ class ProjectImportController: UIViewController {
                 name += ".pnart"
                 if i.startAccessingSecurityScopedResource() {
                     ProjectWork(projectName: name, image: UIImage(data: try! Data(contentsOf: i))!)
+                    self.gallery!.projectAdded(name: name)
                     i.stopAccessingSecurityScopedResource()
                 }
             }
