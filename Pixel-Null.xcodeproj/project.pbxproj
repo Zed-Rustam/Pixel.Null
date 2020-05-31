@@ -103,6 +103,7 @@
 		95C0EDD42448B1450012D60D /* SummetryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C0EDD32448B1450012D60D /* SummetryView.swift */; };
 		95C0EDD62448B2130012D60D /* GridLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C0EDD52448B2130012D60D /* GridLayer.swift */; };
 		95C1233D241E08A600775377 /* PalleteCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C1233C241E08A600775377 /* PalleteCollection.swift */; };
+		95C19B1A24822AEF003B779F /* EditorTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C19B1924822AEF003B779F /* EditorTool.swift */; };
 		95C7278423EB384300ED1A28 /* ColorSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C7278323EB384200ED1A28 /* ColorSelectorController.swift */; };
 		95C7278623EB577900ED1A28 /* CircleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C7278523EB577900ED1A28 /* CircleButton.swift */; };
 		95C7278823EB583D00ED1A28 /* ColorStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C7278723EB583D00ED1A28 /* ColorStyle.swift */; };
@@ -247,6 +248,7 @@
 		95C0EDD32448B1450012D60D /* SummetryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummetryView.swift; sourceTree = "<group>"; };
 		95C0EDD52448B2130012D60D /* GridLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GridLayer.swift; sourceTree = "<group>"; };
 		95C1233C241E08A600775377 /* PalleteCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PalleteCollection.swift; sourceTree = "<group>"; };
+		95C19B1924822AEF003B779F /* EditorTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorTool.swift; sourceTree = "<group>"; };
 		95C7278323EB384200ED1A28 /* ColorSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSelectorController.swift; sourceTree = "<group>"; };
 		95C7278523EB577900ED1A28 /* CircleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleButton.swift; sourceTree = "<group>"; };
 		95C7278723EB583D00ED1A28 /* ColorStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorStyle.swift; sourceTree = "<group>"; };
@@ -387,6 +389,7 @@
 				95144C4C245C26C00070DDF2 /* SelectorSettings.swift */,
 				95144C50245D04C00070DDF2 /* ProjectSettingsController.swift */,
 				95F8AFC2245E0B8F00A26B58 /* ProjectResizeController.swift */,
+				95C19B1924822AEF003B779F /* EditorTool.swift */,
 			);
 			name = Tools;
 			sourceTree = "<group>";
@@ -760,6 +763,7 @@
 				9559B9BC2462CBD80066EA40 /* TransformController.swift in Sources */,
 				956C61FB2427EE34000BF9E4 /* ToolButton.swift in Sources */,
 				9540F1C02433DDB7008D1657 /* ColorSlider.swift in Sources */,
+				95C19B1A24822AEF003B779F /* EditorTool.swift in Sources */,
 				95560A2223C8EBCC00581482 /* ProjectFullImage.swift in Sources */,
 				959BCFC3242254F100B27CFB /* FullColor.swift in Sources */,
 				95144C4B245AE7FB0070DDF2 /* SegmentSelector.swift in Sources */,

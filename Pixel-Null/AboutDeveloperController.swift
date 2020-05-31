@@ -145,7 +145,6 @@ class AboutDeveloperController : UIViewController {
         devTelegramInfo.leftAnchor.constraint(equalTo: devTelegram.rightAnchor, constant: 12).isActive = true
         devTelegramInfo.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
         devTelegramInfo.topAnchor.constraint(equalTo: devEmail.bottomAnchor, constant: 0).isActive = true
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
