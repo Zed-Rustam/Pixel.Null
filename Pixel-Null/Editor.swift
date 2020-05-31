@@ -375,7 +375,7 @@ extension Editor : ToolSettingsDelegate {
         let pencilSettings = PencilSettings()
         pencilSettings.modalPresentationStyle = .formSheet
         pencilSettings.delegate = self
-        pencilSettings.setSettings(penSize: Int(canvas.pen.size), pixelPerfect: canvas.pen.pixPerfect)
+        pencilSettings.setSettings(penSize: Int(canvas.penTool.width), pixelPerfect: canvas.penTool.pixPerfect)
         self.show(pencilSettings, sender: self)
     }
     
@@ -401,8 +401,8 @@ extension Editor : ToolSettingsDelegate {
     }
     
     func setPenSettings(penSize: Int, pixPerfect : Bool) {
-        canvas.pen.size = Double(penSize)
-        canvas.pen.pixPerfect = pixPerfect
+        canvas.penTool.width = penSize
+        canvas.penTool.pixPerfect = pixPerfect
     }
     
     func setGradientSettings(stepCount: Int, startColor: UIColor, endColor: UIColor) {

@@ -8,7 +8,77 @@
 
 import UIKit
 
-class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
+class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
+    
+    //Editor Delegate
+    var selecion: UIImage? {
+        get{
+            return isSelected ? selectionLayer : nil
+        }
+    }
+    
+    var symmetry: CGPoint {
+        get{
+            return CGPoint(x: !isVerticalSymmeyry ? 0 : symmetryView.startX, y: !isHorizontalSymmetry ? 0 : symmetryView.startY)
+        }
+    }
+    
+    var color: UIColor {
+        get{
+            return selectorColor
+        }
+    }
+    
+    var selectLayer : UIImage {
+        get{
+            return targetLayer
+        }
+        set {
+            targetLayer = newValue
+            targetImage.image = targetLayer
+        }
+    }
+    
+    var actionLayer: UIImage {
+        get{
+            return ActionLayer
+        }
+        set{
+            ActionLayer = newValue
+            actionImage.image = ActionLayer
+        }
+    }
+    
+    var editorProject: ProjectWork {
+        get{
+            return project
+        }
+    }
+
+    func startDrawing() {
+        targetImage.isHidden = true
+    }
+    
+    func endDrawing() {
+        targetLayer = actionLayer
+        targetImage.isHidden = false
+        targetImage.image = targetLayer
+        actionLayer = UIImage(size: project.projectSize)!
+        actionImage.image = actionLayer
+        
+        delegate?.updateFrame(frame: project.FrameSelected)
+        delegate?.updateLayer(layer: project.LayerSelected)
+        
+        barDelegate?.UnDoReDoAction()
+    }
+    
+    func actionCancel() {
+        targetImage.isHidden = false
+        actionLayer = UIImage(size: project.projectSize)!
+        actionImage.image = actionLayer
+    }
+    //
+    
     private var bgLayers : UIImage?
     private var targetLayer : UIImage!
     private var fgLayers : UIImage?
@@ -28,7 +98,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
     var selectionImage : UIImageView!
 
     private var grid : GridView!
-    private var symmetry : SymmetryView!
+    private var symmetryView : SymmetryView!
     var transformView : TransformView!
     
     private var symmetryChangeVertical = false
@@ -68,7 +138,9 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         }
     }
     
-    var pen = Pencil()
+    lazy var penTool = PencilTool(editorDelegate: self)
+    
+    //var pen = Pencil()
     var move = Move()
     var erase = Erase()
     var gradient = Gradient()
@@ -192,12 +264,12 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         grid.alpha = 0
         isGridVIsible = false
 
-        symmetry = SymmetryView(frame : self.bounds)
-        symmetry.project = project
-        symmetry.startX = project.projectSize.width / 2.0
-        symmetry.startY = project.projectSize.height / 2.0
-        symmetry.isHorizontal = false
-        symmetry.isVertical = false
+        symmetryView = SymmetryView(frame : self.bounds)
+        symmetryView.project = project
+        symmetryView.startX = project.projectSize.width / 2.0
+        symmetryView.startY = project.projectSize.height / 2.0
+        symmetryView.isHorizontal = false
+        symmetryView.isVertical = false
         
         
         
@@ -248,7 +320,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         bg.addSubview(selectionImage)
         
         self.addSubview(grid)
-        self.addSubview(symmetry)
+        self.addSubview(symmetryView)
         self.addSubview(transformView)
 
         bg.transform = CGAffineTransform(scaleX: scale, y: scale)
@@ -256,9 +328,9 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         (grid.layer as! GridLayer).startPos = CGPoint(x: 0, y: (frame.height - project.projectSize.height * scale) / 2)
         bg.frame.origin = CGPoint(x: 0, y: (frame.height - project.projectSize.height * scale) / 2)
         offset = bg.frame.origin
-        symmetry.offset = offset
-        symmetry.scale = scale
-        symmetry.setNeedsDisplay()
+        symmetryView.offset = offset
+        symmetryView.scale = scale
+        symmetryView.setNeedsDisplay()
         
         isSelected = false
         if project.information.actionList.lastActiveAction >= 0 {
@@ -518,38 +590,38 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
     @objc private func touch(sender : UILongPressGestureRecognizer) {
           switch sender.state {
           case .began:
-              if (CGRect(x: symmetry.offset.x + symmetry.startX * symmetry.scale - 16, y: symmetry.offset.y - 32 - 16, width: 32, height: 32).contains(sender.location(in: self)) ||
-                CGRect(x: symmetry.offset.x + symmetry.startX * symmetry.scale - 16, y: symmetry.offset.y + project.projectSize.height * symmetry.scale + 16, width: 32, height: 24).contains(sender.location(in: self))
+              if (CGRect(x: symmetryView.offset.x + symmetryView.startX * symmetryView.scale - 16, y: symmetryView.offset.y - 32 - 16, width: 32, height: 32).contains(sender.location(in: self)) ||
+                CGRect(x: symmetryView.offset.x + symmetryView.startX * symmetryView.scale - 16, y: symmetryView.offset.y + project.projectSize.height * symmetryView.scale + 16, width: 32, height: 24).contains(sender.location(in: self))
                 ) && isVerticalSymmeyry {
                 symmetryChangeVertical = true
             }
             
-              if (CGRect(x: symmetry.offset.x - 32 - 16, y: symmetry.offset.y + symmetry.startY * symmetry.scale - 16, width: 32, height: 32).contains(sender.location(in: self)) ||
-                CGRect(x: symmetry.offset.x + symmetry.project.projectSize.width * symmetry.scale + 16, y: symmetry.offset.y + symmetry.startY * symmetry.scale - 16, width: 32, height: 32).contains(sender.location(in: self))
+              if (CGRect(x: symmetryView.offset.x - 32 - 16, y: symmetryView.offset.y + symmetryView.startY * symmetryView.scale - 16, width: 32, height: 32).contains(sender.location(in: self)) ||
+                CGRect(x: symmetryView.offset.x + symmetryView.project.projectSize.width * symmetryView.scale + 16, y: symmetryView.offset.y + symmetryView.startY * symmetryView.scale - 16, width: 32, height: 32).contains(sender.location(in: self))
                 ) && isHorizontalSymmetry {
                 symmetryChangeHorizontal = true
             }
             
           case .changed:
             if symmetryChangeVertical {
-                symmetry.startX = ceil((sender.location(in: self).x - offset.x) / scale * 2) / 2.0
-                if symmetry.startX < 0 {
-                    symmetry.startX = 0
-                } else if symmetry.startX > project.projectSize.width {
-                    symmetry.startX = project.projectSize.width
+                symmetryView.startX = ceil((sender.location(in: self).x - offset.x) / scale * 2) / 2.0
+                if symmetryView.startX < 0 {
+                    symmetryView.startX = 0
+                } else if symmetryView.startX > project.projectSize.width {
+                    symmetryView.startX = project.projectSize.width
                 }
             }
             
             if symmetryChangeHorizontal {
-                symmetry.startY = ceil((sender.location(in: self).y - offset.y) / scale * 2) / 2.0
-                if symmetry.startY < 0 {
-                    symmetry.startY = 0
-                } else if symmetry.startY > project.projectSize.height {
-                    symmetry.startY = project.projectSize.height
+                symmetryView.startY = ceil((sender.location(in: self).y - offset.y) / scale * 2) / 2.0
+                if symmetryView.startY < 0 {
+                    symmetryView.startY = 0
+                } else if symmetryView.startY > project.projectSize.height {
+                    symmetryView.startY = project.projectSize.height
                 }
             }
             
-            symmetry.setNeedsDisplay()
+            symmetryView.setNeedsDisplay()
 
           case .ended:
             symmetryChangeVertical = false
@@ -577,9 +649,9 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
     }
     
     func centerizeSymmetry() {
-        symmetry.startX = project.projectSize.width / 2.0
-        symmetry.startY = project.projectSize.height / 2.0
-        symmetry.setNeedsDisplay()
+        symmetryView.startX = project.projectSize.width / 2.0
+        symmetryView.startY = project.projectSize.height / 2.0
+        symmetryView.setNeedsDisplay()
     }
     
     required init?(coder: NSCoder) {
@@ -650,9 +722,9 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 
                 (grid.layer as! GridLayer).add(anim2, forKey: nil)
                 
-                symmetry.offset = offset
-                symmetry.scale = scale
-                symmetry.setNeedsDisplay()
+                symmetryView.offset = offset
+                symmetryView.scale = scale
+                symmetryView.setNeedsDisplay()
                 
                 transformView.offset = offset
                 transformView.scale = scale
@@ -735,14 +807,14 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
    
     func changeSymmetry(vertical : Bool) {
         isVerticalSymmeyry = vertical
-        symmetry.isVertical = vertical
-        symmetry.setNeedsDisplay()
+        symmetryView.isVertical = vertical
+        symmetryView.setNeedsDisplay()
     }
     
     func changeSymmetry(horizontal : Bool) {
         isHorizontalSymmetry = horizontal
-        symmetry.isHorizontal = horizontal
-        symmetry.setNeedsDisplay()
+        symmetryView.isHorizontal = horizontal
+        symmetryView.setNeedsDisplay()
     }
     
     @objc private func onMove(sender : UIPanGestureRecognizer) {
@@ -804,8 +876,8 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
                 
                 (grid.layer as! GridLayer).add(anim2, forKey: nil)
                 
-                symmetry.offset = offset
-                symmetry.setNeedsDisplay()
+                symmetryView.offset = offset
+                symmetryView.setNeedsDisplay()
                 
                 transformView.offset = offset
                 transformView.setNeedsDisplay()
@@ -825,7 +897,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
     }
     
     func getSymmetry() -> CGPoint {
-        return CGPoint(x: !isVerticalSymmeyry ? 0 : symmetry.startX, y: !isHorizontalSymmetry ? 0 : symmetry.startY)
+        return CGPoint(x: !isVerticalSymmeyry ? 0 : symmetryView.startX, y: !isHorizontalSymmetry ? 0 : symmetryView.startY)
     }
     
     func resizeProject(){
@@ -862,9 +934,9 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         (grid.layer as! GridLayer).gridScale = scale
         grid.gridSize = project.projectSize
         
-        symmetry.scale = scale
-        symmetry.offset = offset
-        symmetry.setNeedsDisplay()
+        symmetryView.scale = scale
+        symmetryView.offset = offset
+        symmetryView.setNeedsDisplay()
         
         grid.setNeedsDisplay()
         
@@ -875,6 +947,9 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         var location = sender.location(in: bg)
         location.x *= (project.projectSize.width / actionImage.frame.width)
         location.y *= (project.projectSize.height / actionImage.frame.height)
+        location.x = CGFloat(floor(location.x))
+        location.y = CGFloat(floor(location.y))
+        
         if !actionImage.bounds.contains(location) && sender.state == .began{
             sender.isEnabled = false
             sender.isEnabled = true
@@ -882,56 +957,8 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate {
         
         switch selectedTool {
         case 0:
-            switch sender.state {
-            case .began:
-                location.x = CGFloat(floor(location.x))
-                location.y = CGFloat(floor(location.y))
-                pen.setStartPoint(point: location,startimg: targetLayer)
-                targetImage.isHidden = true
-
-                ActionLayer = pen.drawOn(image: ActionLayer, point: location,selection: isSelected ? selectionLayer : nil, symmetry: getSymmetry(),color: selectorColor)
-                ActionLayer = pen.drawOn(image: ActionLayer, point: location,selection: isSelected ? selectionLayer : nil, symmetry: getSymmetry(), color: selectorColor)
-                
-                actionImage.image = ActionLayer
-            case .changed:
-                location.x = CGFloat(floor(location.x))
-                location.y = CGFloat(floor(location.y))
-                
-                ActionLayer = pen.drawOn(image: ActionLayer, point: location,selection: isSelected ? selectionLayer : nil, symmetry: getSymmetry(), color: selectorColor)
-                
-                actionImage.image = ActionLayer
-            case .ended:
-                let wasImg = project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected)
-                          
-                targetLayer = UIImage.merge(images: [ActionLayer])
-                targetImage.image = targetLayer
-                targetImage.isHidden = false
-
-                project.addAction(action :["ToolID" : "\(Actions.drawing.rawValue)", "frame" : "\(project.FrameSelected)", "layer" : "\(project.LayerSelected)"])
-                
-                try! UIImage.merge(images: [ActionLayer.flip(xFlip: self.project.isFlipX, yFlip: self.project.isFlipY)])!.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(project.information.frames[project.FrameSelected].frameID)").appendingPathComponent("layer-\(project.information.frames[project.FrameSelected].layers[project.LayerSelected].layerID).png"))
-                
-                try! wasImg.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
-                
-                try! project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID()).png"))
-                
-                ActionLayer = UIImage(size : project.projectSize)
-                actionImage.image = ActionLayer
-                
-                delegate?.updateFrame(frame: project.FrameSelected)
-                delegate?.updateLayer(layer: project.LayerSelected)
-                
-                barDelegate?.UnDoReDoAction()
-
-            case .cancelled:
-                ActionLayer = UIImage(size : project.projectSize)
-                actionImage.image = ActionLayer
-                targetImage.isHidden = false
-
-                print("was cancel")
-            default:
-                break
-            }
+            penTool.action(location: location, gestureState: sender.state)
+            break
         case 1:
             switch sender.state {
             case .began:

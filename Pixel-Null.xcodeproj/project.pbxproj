@@ -100,6 +100,7 @@
 		95A799652443B59800F7BBE2 /* MainSettingsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A799642443B59800F7BBE2 /* MainSettingsMenu.swift */; };
 		95A89E3523FA3E7E00DC796C /* FrameWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A89E3423FA3E7E00DC796C /* FrameWorker.swift */; };
 		95AA119C2444C1500048CB96 /* SwiftUIFun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95AA119B2444C1500048CB96 /* SwiftUIFun.swift */; };
+		95AB4B262483B7EC005317F2 /* PencilTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95AB4B252483B7EC005317F2 /* PencilTool.swift */; };
 		95C0EDD42448B1450012D60D /* SummetryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C0EDD32448B1450012D60D /* SummetryView.swift */; };
 		95C0EDD62448B2130012D60D /* GridLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C0EDD52448B2130012D60D /* GridLayer.swift */; };
 		95C1233D241E08A600775377 /* PalleteCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C1233C241E08A600775377 /* PalleteCollection.swift */; };
@@ -245,6 +246,7 @@
 		95A799642443B59800F7BBE2 /* MainSettingsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSettingsMenu.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		95A89E3423FA3E7E00DC796C /* FrameWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameWorker.swift; sourceTree = "<group>"; };
 		95AA119B2444C1500048CB96 /* SwiftUIFun.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIFun.swift; sourceTree = "<group>"; };
+		95AB4B252483B7EC005317F2 /* PencilTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PencilTool.swift; sourceTree = "<group>"; };
 		95C0EDD32448B1450012D60D /* SummetryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummetryView.swift; sourceTree = "<group>"; };
 		95C0EDD52448B2130012D60D /* GridLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GridLayer.swift; sourceTree = "<group>"; };
 		95C1233C241E08A600775377 /* PalleteCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PalleteCollection.swift; sourceTree = "<group>"; };
@@ -390,6 +392,7 @@
 				95144C50245D04C00070DDF2 /* ProjectSettingsController.swift */,
 				95F8AFC2245E0B8F00A26B58 /* ProjectResizeController.swift */,
 				95C19B1924822AEF003B779F /* EditorTool.swift */,
+				95AB4B252483B7EC005317F2 /* PencilTool.swift */,
 			);
 			name = Tools;
 			sourceTree = "<group>";
@@ -820,6 +823,7 @@
 				9570657924164D840044FC39 /* FramesView.swift in Sources */,
 				95A35C942446357C005780F0 /* FastActionBar.swift in Sources */,
 				955145D52405589100524FF9 /* ProjectCanvas.swift in Sources */,
+				95AB4B262483B7EC005317F2 /* PencilTool.swift in Sources */,
 				95C7278423EB384300ED1A28 /* ColorSelectorController.swift in Sources */,
 				95AA119C2444C1500048CB96 /* SwiftUIFun.swift in Sources */,
 				951CBD50244BB8A2004DB89B /* GradientController.swift in Sources */,
