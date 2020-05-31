@@ -383,7 +383,7 @@ extension Editor : ToolSettingsDelegate {
         let eraseSettings = EraseSettings()
         eraseSettings.modalPresentationStyle = .formSheet
         eraseSettings.delegate = self
-        eraseSettings.setSettings(eraseSize: Int(canvas.erase.size))
+        eraseSettings.setSettings(eraseSize: canvas.eraserTool.width)
         self.show(eraseSettings, sender: self)
     }
     
@@ -392,12 +392,12 @@ extension Editor : ToolSettingsDelegate {
         gradientSettings.project = project
         gradientSettings.modalPresentationStyle = .formSheet
         gradientSettings.delegate = self
-        gradientSettings.setSettings(stepCount: canvas.gradient.stepCount, startColor: canvas.gradient.startColor, endColor: canvas.gradient.endColor)
+        gradientSettings.setSettings(stepCount: canvas.gradientTool.stepCount, startColor: canvas.gradientTool.startColor, endColor: canvas.gradientTool.endColor)
         self.show(gradientSettings, sender: self)
     }
     
     func setEraseSettings(eraseSize : Int) {
-        canvas.erase.size = Double(eraseSize)
+        canvas.eraserTool.width = eraseSize
     }
     
     func setPenSettings(penSize: Int, pixPerfect : Bool) {
@@ -406,9 +406,9 @@ extension Editor : ToolSettingsDelegate {
     }
     
     func setGradientSettings(stepCount: Int, startColor: UIColor, endColor: UIColor) {
-        canvas.gradient.stepCount = stepCount
-        canvas.gradient.startColor = startColor
-        canvas.gradient.endColor = endColor
+        canvas.gradientTool.stepCount = stepCount
+        canvas.gradientTool.startColor = startColor
+        canvas.gradientTool.endColor = endColor
     }
 }
 

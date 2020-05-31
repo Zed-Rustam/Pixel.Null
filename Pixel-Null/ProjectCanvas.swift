@@ -139,14 +139,17 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
     }
     
     lazy var penTool = PencilTool(editorDelegate: self)
+    lazy var eraserTool = EraserTool(editorDelegate: self)
+    lazy var shapeTool = ShapeTool(editorDelegate: self)
+    lazy var gradientTool = GradientTool(editorDelegate: self)
     
     //var pen = Pencil()
     var move = Move()
-    var erase = Erase()
-    var gradient = Gradient()
+    //var erase = Erase()
+    //var gradient = Gradient()
     var fill = Fill()
     var selection = Selection()
-    var square = Square()
+    //var square = Square()
 
     var selectedTool : Int = 0
     
@@ -958,105 +961,11 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
         switch selectedTool {
         case 0:
             penTool.action(location: location, gestureState: sender.state)
-            break
         case 1:
-            switch sender.state {
-            case .began:
-                location.x = CGFloat(floor(location.x))
-                location.y = CGFloat(floor(location.y))
-                
-                targetImage.isHidden = true
-                ActionLayer = project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected).flip(xFlip: self.project.isFlipX, yFlip: self.project.isFlipY)
-                
-                erase.setStartPoint(point: location)
-                ActionLayer = erase.drawOn(image: ActionLayer, point: location,selection: isSelected ? selectionLayer : nil,symmetry: getSymmetry())
-                //ActionLayer = erase.drawOn(image: ActionLayer, point: location)
-                actionImage.image = ActionLayer
-                
-            case .changed:
-                location.x = CGFloat(floor(location.x))
-                location.y = CGFloat(floor(location.y))
-                ActionLayer = erase.drawOn(image: ActionLayer, point: location,selection: isSelected ? selectionLayer : nil,symmetry: getSymmetry())
-                actionImage.image = ActionLayer
-                
-            case .ended:
-                let wasImg = project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected)
-                          
-                targetLayer = UIImage.merge(images: [ActionLayer])
-                targetImage.image = targetLayer
-                targetImage.isHidden = false
-                
-                project.addAction(action :["ToolID" : "\(Actions.drawing.rawValue)", "frame" : "\(project.FrameSelected)", "layer" : "\(project.LayerSelected)"])
-                
-                try! UIImage.merge(images: [ActionLayer.flip(xFlip: self.project.isFlipX, yFlip: self.project.isFlipY)])!.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(project.information.frames[project.FrameSelected].frameID)").appendingPathComponent("layer-\(project.information.frames[project.FrameSelected].layers[project.LayerSelected].layerID).png"))
-                
-                try! wasImg.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
-                
-                try! project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID()).png"))
-                
-                ActionLayer = UIImage(size : project.projectSize)
-                actionImage.image = ActionLayer
-                
-                delegate?.updateCanvas()
-                delegate?.updateFrame(frame: project.FrameSelected)
-                delegate?.updateLayer(layer: project.LayerSelected)
-                barDelegate?.UnDoReDoAction()
-
-            case .cancelled:
-                targetImage.isHidden = false
-                ActionLayer = UIImage(size : project.projectSize)
-                actionImage.image = ActionLayer
-            default:
-                break
-            }
+            eraserTool.action(location: location, gestureState: sender.state)
             
         case 3:
-            switch sender.state {
-            case .began:
-                location.x = CGFloat(floor(location.x))
-                location.y = CGFloat(floor(location.y))
-                targetImage.isHidden = true
-
-                gradient.setStartPoint(point: location,startImg: targetLayer)
-                ActionLayer = gradient.drawOn(image: ActionLayer, point: location,selection: isSelected ? selectionLayer : nil)
-                
-                actionImage.image = ActionLayer
-            case .changed:
-                location.x = CGFloat(floor(location.x))
-                location.y = CGFloat(floor(location.y))
-
-                ActionLayer = gradient.drawOn(image: ActionLayer, point: location,selection: isSelected ? selectionLayer : nil)
-                actionImage.image = ActionLayer
-            case .ended:
-                let wasImg = project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected)
-                          
-                targetLayer = UIImage.merge(images: [ActionLayer])
-                targetImage.image = targetLayer
-                targetImage.isHidden = false
-
-                project.addAction(action :["ToolID" : "\(Actions.drawing.rawValue)", "frame" : "\(project.FrameSelected)", "layer" : "\(project.LayerSelected)"])
-                
-                try! UIImage.merge(images: [ActionLayer.flip(xFlip: self.project.isFlipX, yFlip: self.project.isFlipY)])!.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(project.information.frames[project.FrameSelected].frameID)").appendingPathComponent("layer-\(project.information.frames[project.FrameSelected].layers[project.LayerSelected].layerID).png"))
-                
-                try! wasImg.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
-                
-                try! project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID()).png"))
-                
-                ActionLayer = UIImage(size : project.projectSize)
-                actionImage.image = ActionLayer
-                
-                delegate?.updateCanvas()
-                delegate?.updateFrame(frame: project.FrameSelected)
-                delegate?.updateLayer(layer: project.LayerSelected)
-                barDelegate?.UnDoReDoAction()
-
-            case .cancelled:
-                ActionLayer = UIImage(size : project.projectSize)
-                actionImage.image = ActionLayer
-                targetImage.isHidden = false
-            default:
-                break
-            }
+            gradientTool.action(location: location, gestureState: sender.state)
                     
         case 4:
             switch sender.state {
@@ -1153,58 +1062,10 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
             }
             
         case 7:
-            switch sender.state {
-            case .began:
-                location.x = CGFloat(floor(location.x))
-                location.y = CGFloat(floor(location.y))
-                targetImage.isHidden = true
-                square.setStartPoint(point: location,startImg: targetLayer)
-                
-                ActionLayer = square.drawOn(image: ActionLayer, point: location, color: selectorColor, symmetry: getSymmetry(), selection: isSelected ? selectionLayer : nil)
-                actionImage.image = ActionLayer
-            case .changed:
-                location.x = CGFloat(floor(location.x))
-                location.y = CGFloat(floor(location.y))
-
-                ActionLayer = square.drawOn(image: ActionLayer, point: location, color: selectorColor, symmetry: getSymmetry(), selection: isSelected ? selectionLayer : nil)
-                
-                actionImage.image = ActionLayer
-            case .ended:
-                let wasImg = project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected)
-                          
-                targetLayer = UIImage.merge(images: [ActionLayer])
-                targetImage.image = targetLayer
-                targetImage.isHidden = false
-                
-                project.addAction(action :["ToolID" : "\(Actions.drawing.rawValue)", "frame" : "\(project.FrameSelected)", "layer" : "\(project.LayerSelected)"])
-                
-                try! UIImage.merge(images: [ActionLayer.flip(xFlip: project.isFlipX, yFlip: project.isFlipY)])!.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(project.information.frames[project.FrameSelected].frameID)").appendingPathComponent("layer-\(project.information.frames[project.FrameSelected].layers[project.LayerSelected].layerID).png"))
-                
-                try! wasImg.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
-                
-                try! project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID()).png"))
-                
-                ActionLayer = UIImage(size : project.projectSize)
-                actionImage.image = ActionLayer
-                
-                delegate?.updateFrame(frame: project.FrameSelected)
-                delegate?.updateLayer(layer: project.LayerSelected)
-                
-                barDelegate?.UnDoReDoAction()
-
-            case .cancelled:
-                ActionLayer = UIImage(size : project.projectSize)
-                actionImage.image = ActionLayer
-                targetImage.isHidden = false
-                print("was cancel")
-            default:
-                break
-            }
-            
+            shapeTool.action(location: location, gestureState: sender.state)
         case 8:
             switch sender.state {
             case .ended:
-                location.x = CGFloat(floor(location.x))
                 location.y = CGFloat(floor(location.y))
                 if actionImage.bounds.contains(location) {
                     let color = project.getFrameFromLayers(frame: project.FrameSelected, size: project.projectSize).flip(xFlip: project.isFlipX, yFlip: project.isFlipY).pixelColor(x: Int(location.x), y: Int(location.y))

@@ -1,5 +1,5 @@
 //
-//  PencilTool.swift
+//  EraserTool.swift
 //  Pixel-Null
 //
 //  Created by Рустам Хахук on 31.05.2020.
@@ -8,72 +8,59 @@
 
 import UIKit
 
-class PencilTool: DrawTool {
-    
-    var preview: UIImage {
-        get{
-            return UIImage.merge(images: [original,result])!
-        }
-    }
-    
+class EraserTool: DrawTool {
     var result: UIImage
     
     var original: UIImage
+    
+    var preview: UIImage {
+        get{
+            return original.cut(image: result)
+        }
+    }
     
     var delegate: EditorDelegate
     
     var width : Int = 1
     
-    var pixPerfect : Bool = false
-
     private var points : [CGPoint] = []
-    
-    init(editorDelegate: EditorDelegate) {
-        delegate = editorDelegate
-        result = UIImage()
-        original = UIImage()
-    }
     
     func action(location: CGPoint, gestureState: UIGestureRecognizer.State) {
         switch gestureState {
-        case .began:
-            original = delegate.selectLayer
-            result = UIImage(size: original.size)!
-            
-            if !isLikeLast(point: fixPoint(point: location)) {
-                points.append(fixPoint(point: location))
-            }
-            break
-        case .changed:
-            delegate.startDrawing()
+               case .began:
+                   original = delegate.selectLayer
+                   result = UIImage(size: original.size)!
+                   
+                   if !isLikeLast(point: fixPoint(point: location)) {
+                       points.append(fixPoint(point: location))
+                   }
+                   break
+               case .changed:
+                   delegate.startDrawing()
 
-            if !isLikeLast(point: fixPoint(point: location)) {
-                points.append(fixPoint(point: location))
-                points.append(fixPoint(point: location))
-            }
-            
-            pixelPerfect()
-            
-            drawing()
-            break
-            
-        case .ended:
-            points.append(fixPoint(point: location))
-            
-            pixelPerfect()
-            
-            drawing()
-            saveAction()
-            delegate.endDrawing()
-            
-            points.removeAll()
-            break
-            
-        default:
-            delegate.actionCancel()
-            points.removeAll()
-            break
-        }
+                   if !isLikeLast(point: fixPoint(point: location)) {
+                       points.append(fixPoint(point: location))
+                       points.append(fixPoint(point: location))
+                   }
+                                      
+                   drawing()
+                   break
+                   
+               case .ended:
+                    points.append(fixPoint(point: location))
+                                      
+                   drawing()
+                   saveAction()
+                   delegate.endDrawing()
+                   
+                   points.removeAll()
+                   break
+                   
+               default:
+                   delegate.actionCancel()
+                   points.removeAll()
+                   break
+               }
     }
     
     func drawing() {
@@ -118,12 +105,11 @@ class PencilTool: DrawTool {
         
         UIGraphicsEndImageContext()
         
-        result = result.inner(image: delegate.selecion).withTintColor(delegate.color)
+        result = result.inner(image: delegate.selecion)
         delegate.actionLayer = preview
     }
     
     func saveAction() {
-        //save in main file information about action
         delegate.editorProject.addAction(action :["ToolID" : "\(Actions.drawing.rawValue)", "frame" : "\(delegate.editorProject.FrameSelected)", "layer" : "\(delegate.editorProject.LayerSelected)"])
 
         //save result image as layer
@@ -134,6 +120,12 @@ class PencilTool: DrawTool {
 
         //save result image as total action's state
         try! delegate.editorProject.getLayer(frame: delegate.editorProject.FrameSelected, layer: delegate.editorProject.LayerSelected).pngData()?.write(to: delegate.editorProject.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(delegate.editorProject.getNextActionID()).png"))
+    }
+    
+    init(editorDelegate: EditorDelegate) {
+        delegate = editorDelegate
+        result = UIImage()
+        original = UIImage()
     }
     
     private func normalise(radius: Double) -> Double {
@@ -158,23 +150,5 @@ class PencilTool: DrawTool {
     
     private func isLikeLast(point : CGPoint) -> Bool {
         return points.last == point
-    }
-    
-    private func pixelPerfect(){
-        if pixPerfect {
-            main : while true {
-                if points.count > 3 {
-                    for i in 3...points.count {
-                        if abs(points[i - 3].x - points[i - 1].x) > 1 || abs(points[i - 3].y - points[i - 1].y) > 1 {
-                            
-                        } else {
-                            points.remove(at:i - 2)
-                            continue main
-                        }
-                    }
-                }
-                break main
-            }
-        }
     }
 }

@@ -1,5 +1,5 @@
 //
-//  PencilTool.swift
+//  ShapeTool.swift
 //  Pixel-Null
 //
 //  Created by Рустам Хахук on 31.05.2020.
@@ -8,7 +8,10 @@
 
 import UIKit
 
-class PencilTool: DrawTool {
+class ShapeTool: DrawTool {
+    var result: UIImage
+    
+    var original: UIImage
     
     var preview: UIImage {
         get{
@@ -16,22 +19,18 @@ class PencilTool: DrawTool {
         }
     }
     
-    var result: UIImage
-    
-    var original: UIImage
-    
     var delegate: EditorDelegate
     
-    var width : Int = 1
+    var startPoint : CGPoint
+    var endPoint : CGPoint
     
-    var pixPerfect : Bool = false
+    var isFixed = false
+    var squareType : SquareType = .rectangle
 
-    private var points : [CGPoint] = []
-    
-    init(editorDelegate: EditorDelegate) {
-        delegate = editorDelegate
-        result = UIImage()
-        original = UIImage()
+    enum SquareType {
+        case rectangle
+        case oval
+        case line
     }
     
     func action(location: CGPoint, gestureState: UIGestureRecognizer.State) {
@@ -39,56 +38,57 @@ class PencilTool: DrawTool {
         case .began:
             original = delegate.selectLayer
             result = UIImage(size: original.size)!
-            
-            if !isLikeLast(point: fixPoint(point: location)) {
-                points.append(fixPoint(point: location))
-            }
+            startPoint = location.offset(x: 0.5, y: 0.5)
             break
         case .changed:
             delegate.startDrawing()
-
-            if !isLikeLast(point: fixPoint(point: location)) {
-                points.append(fixPoint(point: location))
-                points.append(fixPoint(point: location))
-            }
-            
-            pixelPerfect()
-            
+            endPoint = location.offset(x: 0.5, y: 0.5)
             drawing()
             break
             
         case .ended:
-            points.append(fixPoint(point: location))
-            
-            pixelPerfect()
-            
+            endPoint = location.offset(x: 0.5, y: 0.5)
             drawing()
             saveAction()
             delegate.endDrawing()
-            
-            points.removeAll()
             break
             
         default:
             delegate.actionCancel()
-            points.removeAll()
             break
         }
     }
     
     func drawing() {
+        if isFixed {
+            let width = endPoint.x - startPoint.x
+            let height = endPoint.y - startPoint.y
+            
+            let finalSize = max(abs(width),abs(height))
+            
+            endPoint = CGPoint(x: startPoint.x + finalSize * (width / abs(width)), y: startPoint.y + finalSize * (height / abs(height)))
+        }
+        
         UIGraphicsBeginImageContextWithOptions(original.size, false, 1)
         
         let context = UIGraphicsGetCurrentContext()!
-        context.setStrokeColor(UIColor.black.cgColor)
         context.setShouldAntialias(false)
         context.setLineCap(.round)
         context.setLineJoin(.round)
-        context.setLineWidth(CGFloat(normalise(radius: Double(width))))
+        context.setLineWidth(1)
         
-        context.addLines(between: points)
+        switch squareType {
+        case .rectangle:
+            context.addRect(CGRect(x: min(startPoint.x,endPoint.x), y: min(startPoint.y,endPoint.y), width: abs(endPoint.x - startPoint.x), height: abs(endPoint.y - startPoint.y)))
+            
+        case .oval:
+            context.addEllipse(in: CGRect(x: min(startPoint.x,endPoint.x), y: min(startPoint.y,endPoint.y), width: abs(endPoint.x - startPoint.x), height: abs(endPoint.y - startPoint.y)))
+            
+        case .line:
+            context.addLines(between: [startPoint,endPoint])
+        }
         context.strokePath()
-
+        
         result = UIGraphicsGetImageFromCurrentImageContext()!
         
         if delegate.symmetry.x != 0 {
@@ -136,45 +136,12 @@ class PencilTool: DrawTool {
         try! delegate.editorProject.getLayer(frame: delegate.editorProject.FrameSelected, layer: delegate.editorProject.LayerSelected).pngData()?.write(to: delegate.editorProject.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(delegate.editorProject.getNextActionID()).png"))
     }
     
-    private func normalise(radius: Double) -> Double {
-        if radius <= 2 {
-            return sqrt(radius)
-        }
-        
-        let realRad = sqrt(2) / 2.0 * radius
-        if realRad - floor(realRad) >= 0.5 {
-            return sqrt(2 * pow(floor(realRad), 2))
-        } else {
-            return sqrt(2 * pow(floor(realRad) - 0.5, 2))
-        }
+    init(editorDelegate: EditorDelegate) {
+        delegate = editorDelegate
+        result = UIImage()
+        original = UIImage()
+        startPoint = .zero
+        endPoint = .zero
     }
     
-    private func fixPoint(point: CGPoint) -> CGPoint {
-        if width % 2 == 1 {
-            return point.offset(x: 0.5, y: 0.5)
-        }
-        return point
-    }
-    
-    private func isLikeLast(point : CGPoint) -> Bool {
-        return points.last == point
-    }
-    
-    private func pixelPerfect(){
-        if pixPerfect {
-            main : while true {
-                if points.count > 3 {
-                    for i in 3...points.count {
-                        if abs(points[i - 3].x - points[i - 1].x) > 1 || abs(points[i - 3].y - points[i - 1].y) > 1 {
-                            
-                        } else {
-                            points.remove(at:i - 2)
-                            continue main
-                        }
-                    }
-                }
-                break main
-            }
-        }
-    }
 }

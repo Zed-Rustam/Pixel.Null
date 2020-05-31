@@ -386,29 +386,29 @@ class ToolButton : UICollectionViewCell {
                 squareSelector.selectDelegate = {select in
                     switch select {
                     case 0:
-                        editor.canvas.square.squareType = .rectangle
+                        editor.canvas.shapeTool.squareType = .rectangle
                     case 1:
-                        editor.canvas.square.squareType = .oval
+                        editor.canvas.shapeTool.squareType = .oval
                     case 2:
-                        editor.canvas.square.squareType = .line
+                        editor.canvas.shapeTool.squareType = .line
                     default:
-                        editor.canvas.square.squareType = .rectangle
+                        editor.canvas.shapeTool.squareType = .rectangle
                     }
                 }
 
-                let block = CircleButton(icon: editor.canvas.square.isFixed ? #imageLiteral(resourceName: "block_icon") : #imageLiteral(resourceName: "unblock_icon"), frame: .zero)
-                block.setIconColor(color: editor.canvas.square.isFixed ? UIColor(named: "selectColor")! : UIColor(named: "enableColor")!)
+                let block = CircleButton(icon: editor.canvas.shapeTool.isFixed ? #imageLiteral(resourceName: "block_icon") : #imageLiteral(resourceName: "unblock_icon"), frame: .zero)
+                block.setIconColor(color: editor.canvas.shapeTool.isFixed ? UIColor(named: "selectColor")! : UIColor(named: "enableColor")!)
                 block.widthAnchor.constraint(equalToConstant: 36).isActive = true
                 block.heightAnchor.constraint(equalToConstant: 36).isActive = true
                 block.setShadowColor(color: .clear)
                 
                 block.delegate = {
-                    editor.canvas.square.isFixed.toggle()
-                    block.setIcon(ic: editor.canvas.square.isFixed ? #imageLiteral(resourceName: "block_icon") : #imageLiteral(resourceName: "unblock_icon"))
-                    block.setIconColor(color: editor.canvas.square.isFixed ? UIColor(named: "selectColor")! : UIColor(named: "enableColor")!)
+                    editor.canvas.shapeTool.isFixed.toggle()
+                    block.setIcon(ic: editor.canvas.shapeTool.isFixed ? #imageLiteral(resourceName: "block_icon") : #imageLiteral(resourceName: "unblock_icon"))
+                    block.setIconColor(color: editor.canvas.shapeTool.isFixed ? UIColor(named: "selectColor")! : UIColor(named: "enableColor")!)
                 }
                 
-                switch editor.canvas.square.squareType {
+                switch editor.canvas.shapeTool.squareType {
                 case .rectangle:
                     squareSelector.select = 0
                 case .oval:

@@ -246,9 +246,7 @@ extension ToolBar : ToolBarDelegate {
     func updateButtons(btns : [UIView]) {
         subBar.updateButtons(btns: btns)
     }
-    
 }
-
 
 protocol ToolBarDelegate : class {
     func wasChangedTool(newTool : Int)
