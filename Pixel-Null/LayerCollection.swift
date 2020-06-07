@@ -12,7 +12,7 @@ import UIKit
 class LayersCollection : UICollectionView {
     weak var project : ProjectWork? = nil
     private var layout = ControlList()
-    private var moveCell : LayerControlCell? = nil
+    private var moveCell : FramePreviewCell? = nil
     private var isFinish = false
     private var isMoving = false
     weak var frameDelegate : FrameControlUpdate? = nil
@@ -34,7 +34,7 @@ class LayersCollection : UICollectionView {
         project = proj
         super.init(frame: .zero, collectionViewLayout: layout)
         
-        register(LayerControlCell.self, forCellWithReuseIdentifier: "LayerControl")
+        register(FramePreviewCell.self, forCellWithReuseIdentifier: "LayerControl")
         
         delegate = self
         dataSource = self
@@ -46,6 +46,7 @@ class LayersCollection : UICollectionView {
         backgroundColor = .clear
         
         addGestureRecognizer(moveGesture)
+        setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
     }
     
     @objc func onLongPress(sender : UILongPressGestureRecognizer) {
@@ -54,7 +55,7 @@ class LayersCollection : UICollectionView {
             if let cell = indexPathForItem(at: sender.location(in: self)) {
                 if !isMoving {
                     beginInteractiveMovementForItem(at: cell)
-                    moveCell = cellForItem(at: cell) as? LayerControlCell
+                    moveCell = cellForItem(at: cell) as? FramePreviewCell
 
                     UIView.animate(withDuration: 0.25, animations: {
                         self.moveCell!.contentView.transform = CGAffineTransform(scaleX: 1.25, y: 1.25)
@@ -107,6 +108,11 @@ class LayersCollection : UICollectionView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    override func tintColorDidChange() {
+          super.tintColorDidChange()
+          setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+      }
 }
 
 extension LayersCollection : UICollectionViewDataSource {
@@ -119,21 +125,21 @@ extension LayersCollection : UICollectionViewDataSource {
             return moveCell!
         }
         
-        let cell = dequeueReusableCell(withReuseIdentifier: "LayerControl", for: indexPath) as! LayerControlCell
+        let cell = dequeueReusableCell(withReuseIdentifier: "LayerControl", for: indexPath) as! FramePreviewCell
         
-        cell.preview.image = nil
+        cell.setPreview(image: nil)
 
         DispatchQueue.global(qos: .userInteractive).async {
             let img = self.project!.getSmallLayer(frame: self.project!.FrameSelected, layer: indexPath.item,size: CGSize(width: 36, height: 36)).flip(xFlip: self.project!.isFlipX, yFlip: self.project!.isFlipY)
             DispatchQueue.main.async {
-                cell.preview.image = img
+                cell.setPreview(image: img)
             }
         }
         
-        cell.preview.setBg(color: UIColor(hex : project!.information.bgColor)!)
+        cell.setBackground(color: UIColor(hex : project!.information.bgColor)!)
         
-        cell.preview.framePreview.setVisible(isVisible: project!.layerVisible(layer: indexPath.item), anim: false)
-        cell.preview.setSelect(isSelected: indexPath.item == project!.LayerSelected  ? true : false, anim: false)
+        cell.setVisible(isVisible: project!.layerVisible(layer: indexPath.item), animate: false)
+        cell.setSelect(isSelect: indexPath.item == project!.LayerSelected  ? true : false, animate: false)
         
         return cell
     }
@@ -142,16 +148,16 @@ extension LayersCollection : UICollectionViewDataSource {
 extension LayersCollection : UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if project!.LayerSelected != indexPath.item {
-            let cell = cellForItem(at: indexPath) as! LayerControlCell
-            cell.preview.setSelect(isSelected: true, anim: true)
+            let cell = cellForItem(at: indexPath) as! FramePreviewCell
+            cell.setSelect(isSelect: true, animate: true)
             
             frameDelegate?.changeLayer(frame: project!.FrameSelected, from: project!.LayerSelected, to: indexPath.item)
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        let cell = cellForItem(at: indexPath) as? LayerControlCell
-        cell?.preview.setSelect(isSelected: false, anim: true)
+        let cell = cellForItem(at: indexPath) as? FramePreviewCell
+        cell?.setSelect(isSelect: false, animate: true)
     }
     
     func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
@@ -172,34 +178,34 @@ extension LayersCollection : UICollectionViewDelegate {
 }
 
 
-class LayerControlCell : UICollectionViewCell {
-    var preview : FrameWorker! = nil
-    
-    var visible : Bool {
-        get {
-            return self.preview.alpha == 1 ? true : false
-        }
-        set {
-            self.preview.alpha = newValue ? 1 : 0
-        }
-    }
-    
-    override init(frame: CGRect) {
-        super.init(frame : frame)
-        preview = FrameWorker(frame : CGRect(origin: .zero, size: frame.size))
-        preview.translatesAutoresizingMaskIntoConstraints = false
-               preview.heightAnchor.constraint(equalToConstant: 60).isActive = true
-               preview.widthAnchor.constraint(equalToConstant: 36).isActive = true
-        
-        
-        
-        contentView.addSubview(preview)
-        preview.centerXAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 0).isActive = true
-        preview.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 0).isActive = true
-           
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
+//class LayerControlCell : UICollectionViewCell {
+//    var preview : FrameWorker! = nil
+//
+//    var visible : Bool {
+//        get {
+//            return self.preview.alpha == 1 ? true : false
+//        }
+//        set {
+//            self.preview.alpha = newValue ? 1 : 0
+//        }
+//    }
+//
+//    override init(frame: CGRect) {
+//        super.init(frame : frame)
+//        preview = FrameWorker(frame : CGRect(origin: .zero, size: frame.size))
+//        preview.translatesAutoresizingMaskIntoConstraints = false
+//               preview.heightAnchor.constraint(equalToConstant: 60).isActive = true
+//               preview.widthAnchor.constraint(equalToConstant: 36).isActive = true
+//
+//
+//
+//        contentView.addSubview(preview)
+//        preview.centerXAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 0).isActive = true
+//        preview.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 0).isActive = true
+//
+//    }
+//
+//    required init?(coder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+//    }
+//}

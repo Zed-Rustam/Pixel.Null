@@ -248,6 +248,8 @@ extension Editor : FrameControlDelegate{
         frameControl.project = project
         frameControl.delegate = self
         
+        //let frameControl = LayersController()
+        
         frameControl.modalPresentationStyle = .formSheet
         frameControl.modalTransitionStyle = .coverVertical
         frameControl.isModalInPresentation = true
@@ -456,7 +458,12 @@ extension Editor {
             if nowTime >= animationTime && nowTime - project.information.frames[i].delay < animationTime && i != nowFrameIndex {
                 print("currect frame : \(i)")
                 project.FrameSelected = i
-                control.frames.list.reloadItems(at: [IndexPath(item: i, section: 0),IndexPath(item: nowFrameIndex, section: 0)])
+                
+                UIView.animate(withDuration: 0.0, animations: {
+                    self.control.frames.list.reloadItems(at: [IndexPath(item: i, section: 0),IndexPath(item: self.nowFrameIndex, section: 0)])
+                    self.control.frames.list.selectItem(at: IndexPath(item: i, section: 0), animated: false, scrollPosition: .centeredHorizontally)
+                })
+                
                 nowFrameIndex = i
                 canvas.setImageFromAnimation(img: project.getFrame(frame: i, size: project.projectSize).flip(xFlip: project.isFlipX, yFlip: project.isFlipY))
                 break

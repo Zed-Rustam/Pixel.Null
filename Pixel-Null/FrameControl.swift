@@ -181,20 +181,21 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
     lazy private var frameText : UILabel = {
         let text = UILabel(frame: .zero)
         text.text = NSLocalizedString("Frames", comment: "")
-        text.font = UIFont(name: "Rubik-Medium", size: 28)
+        text.font = UIFont(name: "Rubik-Bold", size: 32)
         text.textColor = UIColor(named: "enableColor")
         text.translatesAutoresizingMaskIntoConstraints = false
-        
+        text.heightAnchor.constraint(equalToConstant: 36).isActive = true
         return text
     }()
     
     lazy private var layerText : UILabel = {
         let text = UILabel(frame: .zero)
         text.text = NSLocalizedString("Layers", comment: "")
-        text.font = UIFont(name: "Rubik-Medium", size: 28)
+        text.font = UIFont(name: "Rubik-Bold", size: 32)
         text.textColor = UIColor(named: "enableColor")
         text.translatesAutoresizingMaskIntoConstraints = false
-        
+        text.heightAnchor.constraint(equalToConstant: 36).isActive = true
+
         return text
     }()
     
@@ -204,7 +205,7 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
         frm.list.frameDelegate = self
 
         frm.translatesAutoresizingMaskIntoConstraints = false
-        frm.heightAnchor.constraint(equalToConstant: 108).isActive = true
+        frm.heightAnchor.constraint(equalToConstant: 118).isActive = true
         return frm
     }()
     
@@ -258,22 +259,22 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
         view.addSubview(layers)
         view.addSubview(exitButton)
         
-        frameText.topAnchor.constraint(equalTo: preview.bottomAnchor).isActive = true
-        frameText.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 8).isActive = true
+        frameText.topAnchor.constraint(equalTo: preview.bottomAnchor,constant: 6).isActive = true
+        frameText.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
         
-        exitButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8).isActive = true
-        exitButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 8).isActive = true
+        exitButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
+        exitButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 12).isActive = true
 
         frames.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
         frames.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
-        frames.topAnchor.constraint(equalTo: frameText.bottomAnchor, constant: 0).isActive = true
+        frames.topAnchor.constraint(equalTo: frameText.bottomAnchor, constant: 6).isActive = true
 
-        layerText.topAnchor.constraint(equalTo: frames.bottomAnchor).isActive = true
-        layerText.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 8).isActive = true
+        layerText.topAnchor.constraint(equalTo: frames.bottomAnchor, constant: 6).isActive = true
+        layerText.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
         
         layers.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
         layers.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
-        layers.topAnchor.constraint(equalTo: layerText.bottomAnchor, constant: 0).isActive = true
+        layers.topAnchor.constraint(equalTo: layerText.bottomAnchor, constant: 12).isActive = true
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {

@@ -13,7 +13,7 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
         let ls = LayersCollection(proj: project!)
         //ls.selfView = self
         ls.translatesAutoresizingMaskIntoConstraints = false
-        ls.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        ls.heightAnchor.constraint(equalToConstant: 70).isActive = true
         
         return ls
     }()
@@ -215,23 +215,23 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
         list.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
         list.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
         
-        transparentField.leftAnchor.constraint(equalTo: leftAnchor, constant: 8).isActive = true
-        transparentField.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 16).isActive = true
+        transparentField.leftAnchor.constraint(equalTo: leftAnchor, constant: 12).isActive = true
+        transparentField.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 12).isActive = true
         
-        cloneButton.leftAnchor.constraint(equalTo: transparentField.rightAnchor, constant: 8).isActive = true
-        cloneButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 16).isActive = true
+        cloneButton.leftAnchor.constraint(equalTo: transparentField.rightAnchor, constant: 6).isActive = true
+        cloneButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 12).isActive = true
 
-        visibleButton.leftAnchor.constraint(equalTo: cloneButton.rightAnchor, constant: 8).isActive = true
-        visibleButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 16).isActive = true
+        visibleButton.leftAnchor.constraint(equalTo: cloneButton.rightAnchor, constant: 6).isActive = true
+        visibleButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 12).isActive = true
 
-        deleteButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -8).isActive = true
-        deleteButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 16).isActive = true
+        deleteButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -12).isActive = true
+        deleteButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 12).isActive = true
        
-        addButton.leftAnchor.constraint(equalTo: visibleButton.rightAnchor, constant: 8).isActive = true
-        addButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 16).isActive = true
+        addButton.leftAnchor.constraint(equalTo: visibleButton.rightAnchor, constant: 6).isActive = true
+        addButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 12).isActive = true
         
-        mergeButton.leftAnchor.constraint(equalTo: addButton.rightAnchor, constant: 8).isActive = true
-        mergeButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 16).isActive = true
+        mergeButton.leftAnchor.constraint(equalTo: addButton.rightAnchor, constant: 6).isActive = true
+        mergeButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 12).isActive = true
 
         checkFrame()
     }

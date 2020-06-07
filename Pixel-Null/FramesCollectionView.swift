@@ -13,7 +13,7 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
         let ls = FramesCollection(proj: project!)
         //ls.selfView = self
         ls.translatesAutoresizingMaskIntoConstraints = false
-        ls.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        ls.heightAnchor.constraint(equalToConstant: 70).isActive = true
         return ls
     }()
     
@@ -122,7 +122,7 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
         super.init(frame : .zero)
         self.translatesAutoresizingMaskIntoConstraints = false
         
-        delayField = TextField(frame: CGRect(x: 12, y: 72, width: 80, height: 36))
+        delayField = TextField(frame: CGRect(x: 12, y: 82, width: 80, height: 36))
         delayField.small = true
         delayField.setHelpText(help: "100")
         delayField.filed.textAlignment = .center
@@ -147,14 +147,14 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
         list.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 0).isActive = true
         list.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 0).isActive = true
         
-        deleteButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -8).isActive = true
-        deleteButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 16).isActive = true
+        deleteButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -12).isActive = true
+        deleteButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 12).isActive = true
         
-        cloneButton.leftAnchor.constraint(equalTo: delayField.rightAnchor, constant: 8).isActive = true
-        cloneButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 16).isActive = true
+        cloneButton.leftAnchor.constraint(equalTo: delayField.rightAnchor, constant: 6).isActive = true
+        cloneButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 12).isActive = true
         
-        addButton.leftAnchor.constraint(equalTo: cloneButton.rightAnchor, constant: 8).isActive = true
-        addButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 16).isActive = true
+        addButton.leftAnchor.constraint(equalTo: cloneButton.rightAnchor, constant: 6).isActive = true
+        addButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 12).isActive = true
     }
     
     required init?(coder: NSCoder) {

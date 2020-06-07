@@ -167,10 +167,7 @@ class GalleryControl : UIViewController{
         gallery.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
         
         self.view.backgroundColor = getAppColor(color: .background)
-    }
-        
-    override func viewDidLayoutSubviews() {
-        print("some ome")
+        gallery.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
     }
 }
 
