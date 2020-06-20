@@ -30,12 +30,9 @@ class CreateDialogController : UIViewController, CreateDialogDelegate{
                 colorDialog.modalPresentationStyle = .pageSheet
                 self!.show(colorDialog, sender: self!)
             case .pad:
-                colorDialog.modalPresentationStyle = .popover
-                
-                if let popover = colorDialog.popoverPresentationController {
-                    popover.sourceView = dialog.backgroundSelector
-                    popover.permittedArrowDirections = [.up,.right]
-                }
+                //colorDialog.modalPresentationStyle = .pageSheet
+                colorDialog.modalPresentationStyle = .overCurrentContext
+                colorDialog.popoverPresentationController?.popoverBackgroundViewClass = PopoverBg.self
                 self!.present(colorDialog, animated: true, completion: nil)
 
             default:
@@ -71,6 +68,7 @@ class CreateDialogController : UIViewController, CreateDialogDelegate{
         
         self.view.backgroundColor = UIColor(named: "backgroundColor")
 
+        //self.popoverPresentationController?.delegate = self
     }
     
     override func viewDidLayoutSubviews() {
@@ -78,5 +76,17 @@ class CreateDialogController : UIViewController, CreateDialogDelegate{
         createDialog.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
         createDialog.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
         createDialog.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
+    }
+}
+
+class PopoverBg : UIPopoverBackgroundView {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        self.layer.shadowColor = getAppColor(color: .shadow).cgColor
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }

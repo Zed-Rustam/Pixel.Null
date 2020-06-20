@@ -161,7 +161,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
         
         for i in project.FrameSelected - 2...project.FrameSelected + 2 {
             if i >= 0 && i < project.information.frames.count && i != project.FrameSelected{
-                imgs.append(project.getFrame(frame: i, size: project.projectSize).withAlpha(pow(0.5,CGFloat(abs(project.FrameSelected - i)))).flip(xFlip: project.isFlipX, yFlip: project.isFlipY))
+                //imgs.append(project.getFrame(frame: i, size: project.projectSize).withAlpha(pow(0.5,CGFloat(abs(project.FrameSelected - i)))).flip(xFlip: project.isFlipX, yFlip: project.isFlipY))
             }
         }
         

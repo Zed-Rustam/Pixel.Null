@@ -9,6 +9,10 @@
 import UIKit
 
 class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlUpdate {
+    func updatePreview() {
+        
+    }
+    
         
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -18,10 +22,9 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
         project.changeLayerVisible(layer: layer, isVisible: !project.layerVisible(layer: layer))
         
            self.layers.list.performBatchUpdates({
-               self.layers.list.reloadItems(at: [IndexPath(item: layer, section: 0)])
+                self.layers.list.reloadItems(at: [IndexPath(item: layer, section: 0)])
            },completion: {isEnd in
-               self.preview.image = self.project.getFrameFromLayers(frame: frame, size: self.project.projectSize).flip(xFlip: self.project.isFlipX, yFlip: self.project.isFlipY)
-            self.layers.list.selectItem(at: IndexPath(item: layer, section: 0), animated: false, scrollPosition: .top)
+                self.layers.list.selectItem(at: IndexPath(item: layer, section: 0), animated: false, scrollPosition: .top)
            })
         
         self.frames.list.performBatchUpdates({
@@ -38,8 +41,7 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
         layers.checkFrame()
         layers.list.selectItem(at: IndexPath(item: 0, section: 0), animated: true, scrollPosition: .left)
         
-        preview.image = project.getFrame(frame: to, size: project.projectSize).flip(xFlip: project.isFlipX, yFlip: project.isFlipY)
-        frames.delayField.filed.text = String(project.information.frames[project.FrameSelected].delay)
+        delegate?.updateFrameSelect(lastFrame: from, newFrame: to)
     }
     
     func changeLayer(frame: Int, from: Int, to: Int) {
@@ -49,6 +51,7 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
     
     func updateFramePosition(from: Int, to: Int) {
         project.replaceFrame(from: from, to: to)
+        delegate?.replaceFrame(from: from, to: to)
     }
     
     func updateLayerPosition(frame: Int, from: Int, to: Int) {
@@ -59,8 +62,6 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
                 self.frames.list.reloadItems(at: [IndexPath(item: self.project!.FrameSelected, section: 0)])
             }, completion: nil)
         })
-
-        preview.image = project.getFrameFromLayers(frame: project.FrameSelected, size: project.projectSize).flip(xFlip: project.isFlipX, yFlip: project.isFlipY)
     }
     
     func updateLayerSettings(target: Int) {
@@ -88,23 +89,20 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
     func deleteFrame(frame: Int) {
         if(project.information.frames.count > 1){
             project.deleteFrame(frame: frame)
-            project.FrameSelected = project.information.frames.count > project.FrameSelected ? project.FrameSelected : project.FrameSelected - 1
+            
+            project.FrameSelected = project.FrameSelected > frame || project.FrameSelected >= project.frameCount ? project.FrameSelected - 1 : project.FrameSelected
             project.LayerSelected = 0
-
-            print("new frame select : \(project.FrameSelected) a last : \(frame)")
-            UIView.animate(withDuration: 0.2, animations: {
-                self.frames.list.performBatchUpdates({
-                    self.frames.list.deleteItems(at: [IndexPath(item: frame, section: 0)])
-                },completion: {isEnd in
-
-                    self.frames.list.reloadItems(at: [IndexPath(item: self.project.FrameSelected, section: 0)])
-                    self.frames.list.selectItem(at: IndexPath(item: self.project.FrameSelected, section: 0), animated: true, scrollPosition: .top)
-
-                    self.layers.list.reloadData()
-                    self.preview.image = self.project.getFrameFromLayers(frame: self.project.FrameSelected, size: self.project.projectSize).flip(xFlip: self.project.isFlipX, yFlip: self.project.isFlipY)
-                })
+            
+            self.frames.list.performBatchUpdates({
+                self.frames.list.deleteItems(at: [IndexPath(item: frame, section: 0)])
+            },completion: {isEnd in
+                if isEnd {
+                    self.frames.list.selectItem(at: IndexPath(item: self.project.FrameSelected, section: 0), animated: false, scrollPosition: .top)
+                    }
             })
+            
             layers.checkFrame()
+            delegate?.deleteFrame(frame: frame)
         }
     }
     
@@ -119,23 +117,21 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
                 },completion: {isEnd in
                     self.layers.list.reloadItems(at: [IndexPath(item: self.project.LayerSelected, section: 0)])
                     self.layers.list.selectItem(at: IndexPath(item: self.project.LayerSelected, section: 0), animated: true, scrollPosition: .left)
-
-                    self.preview.image = self.project.getFrameFromLayers(frame: frame, size: self.project.projectSize).flip(xFlip: self.project.isFlipX, yFlip: self.project.isFlipY)
                 })
             })
-            
-            
         }
     }
     
     func cloneFrame(original: Int) {
         project.cloneFrame(frame: original)
         
-        UIView.animate(withDuration: 0.2, animations: {
+        //UIView.animate(withDuration: 0.2, animations: {
            self.frames.list.performBatchUpdates({
                self.frames.list.insertItems(at: [IndexPath(item: original + 1, section: 0)])
            },completion: nil)
-       })
+       //})
+        
+        delegate?.addFrame(frame: original + 1)
     }
     
     func addFrame(at: Int) {     
@@ -144,6 +140,8 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
                 self.frames.list.insertItems(at: [IndexPath(item: at, section: 0)])
             },completion: nil)
          })
+        
+        delegate?.addFrame(frame: at)
     }
     
     func cloneLayer(frame : Int, original: Int) {
@@ -169,37 +167,13 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
         UIView.animate(withDuration: 0.2, animations: {
             self.layers.list.performBatchUpdates({
                 self.layers.list.deleteItems(at: [IndexPath(item: layer + 1, section: 0)])
+            },completion: {isEnd in
                 self.layers.list.reloadItems(at: [IndexPath(item: layer, section: 0)])
-            },completion: nil)
+                self.layers.list.selectItem(at: IndexPath(item: layer, section: 0), animated: true, scrollPosition: .top)
+            })
         })
     }
-    
-    func updatePreview(){
-        self.preview.image = self.project.getFrameFromLayers(frame: self.project.FrameSelected, size: self.project.projectSize).flip(xFlip: self.project.isFlipX, yFlip: self.project.isFlipY)
-    }
-    
-    lazy private var frameText : UILabel = {
-        let text = UILabel(frame: .zero)
-        text.text = NSLocalizedString("Frames", comment: "")
-        text.font = UIFont(name: "Rubik-Bold", size: 32)
-        text.textColor = UIColor(named: "enableColor")
-        text.translatesAutoresizingMaskIntoConstraints = false
-        text.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        return text
-    }()
-    
-    lazy private var layerText : UILabel = {
-        let text = UILabel(frame: .zero)
-        text.text = NSLocalizedString("Layers", comment: "")
-        text.font = UIFont(name: "Rubik-Bold", size: 32)
-        text.textColor = UIColor(named: "enableColor")
-        text.translatesAutoresizingMaskIntoConstraints = false
-        text.heightAnchor.constraint(equalToConstant: 36).isActive = true
-
-        return text
-    }()
-    
-    
+        
     lazy private var frames : FramesCollectionView = {
         let frm = FramesCollectionView(proj: project)
         frm.list.frameDelegate = self
@@ -212,9 +186,9 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
     lazy private var layers : LayersCollectionView = {
         let lays = LayersCollectionView(frame : .zero,proj: project)
         //lays.list.preview = preview
-        lays.list.frameDelegate = self
+        //lays.list.frameDelegate = self
         lays.translatesAutoresizingMaskIntoConstraints = false
-        lays.heightAnchor.constraint(equalToConstant: 108).isActive = true
+        //lays.heightAnchor.constraint(equalToConstant: 108).isActive = true
 
         return lays
     }()
@@ -234,47 +208,30 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
     
     var delegate : FrameControlDelegate? = nil
     
-    var preview : FramePreview!
     var project : ProjectWork!
     
     override func viewDidLoad() {
         self.view.backgroundColor = UIColor(named: "backgroundColor")
         
-        var width = 96 * (project.projectSize.width / project.projectSize.height)
-        if width > self.view.frame.size.width - 72 {
-            width = self.view.frame.size.width - 72
-        } else if width < 32 {
-            width = 32
-        }
-        
-        preview = FramePreview(frame: CGRect(x: 12, y: 12, width: width, height: 96), image: project.getFrame(frame: project.FrameSelected, size: CGSize(width: 96, height: 96)))
-        preview.layer.shadowColor = getAppColor(color: .shadow).cgColor
-        preview.bgColor = UIColor(hex : project.information.bgColor)!
-        updatePreview()
-        
-        view.addSubview(preview)
-        view.addSubview(frameText)
         view.addSubview(frames)
-        view.addSubview(layerText)
         view.addSubview(layers)
-        view.addSubview(exitButton)
+        //view.addSubview(exitButton)
         
-        frameText.topAnchor.constraint(equalTo: preview.bottomAnchor,constant: 6).isActive = true
-        frameText.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
         
-        exitButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
-        exitButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 12).isActive = true
+        //exitButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
+        //exitButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 12).isActive = true
 
         frames.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
         frames.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
-        frames.topAnchor.constraint(equalTo: frameText.bottomAnchor, constant: 6).isActive = true
+        frames.topAnchor.constraint(equalTo: view.topAnchor, constant: 12).isActive = true
 
-        layerText.topAnchor.constraint(equalTo: frames.bottomAnchor, constant: 6).isActive = true
-        layerText.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
-        
+        frames.list.frameDelegate = self
+        frames.list.editorDelegate = delegate
+
         layers.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
         layers.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
-        layers.topAnchor.constraint(equalTo: layerText.bottomAnchor, constant: 12).isActive = true
+        layers.topAnchor.constraint(equalTo: frames.bottomAnchor, constant: 6).isActive = true
+        layers.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -308,3 +265,4 @@ protocol FrameControlUpdate : class {
     func changeLayerVisible(frame : Int,layer : Int)
     func margeLayers(frame : Int,layer : Int)
 }
+

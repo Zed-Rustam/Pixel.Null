@@ -68,6 +68,7 @@ class GalleryControl : UIViewController{
                 
                 if let popover = dialog.popoverPresentationController {
                     popover.sourceView = self.createButton
+                    popover.delegate = self
                     popover.permittedArrowDirections = .any
                 }
                 self.show(dialog, sender: self)
@@ -322,6 +323,11 @@ extension GalleryControl : UIDocumentBrowserViewControllerDelegate {
         })
         print(documentURLs)
     }
+}
+
+
+extension GalleryControl : UIPopoverPresentationControllerDelegate {
+    
 }
 
 protocol GalleryProjectDelegate : class{

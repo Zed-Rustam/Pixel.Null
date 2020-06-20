@@ -53,6 +53,7 @@
 		95578E0523D4C0B200D8DDF2 /* CreateDIalogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95578E0423D4C0B200D8DDF2 /* CreateDIalogController.swift */; };
 		9559B9BC2462CBD80066EA40 /* TransformController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9559B9BB2462CBD80066EA40 /* TransformController.swift */; };
 		9559B9BE2462D0550066EA40 /* ShapeCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9559B9BD2462D0550066EA40 /* ShapeCollection.swift */; };
+		9560723A24940659009D8DCC /* PaletteCollectionModern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9560723924940659009D8DCC /* PaletteCollectionModern.swift */; };
 		95662D90246DBEB8004970A1 /* ImportCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95662D8F246DBEB8004970A1 /* ImportCollectionView.swift */; };
 		9567F5FD23BFF89C00694B40 /* ColorCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9567F5FC23BFF89C00694B40 /* ColorCreator.swift */; };
 		956C61F72427C3B9000BF9E4 /* ToolBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956C61F62427C3B9000BF9E4 /* ToolBar.swift */; };
@@ -73,6 +74,8 @@
 		957D04142408510800E58210 /* ProjectControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 957D04132408510800E58210 /* ProjectControl.swift */; };
 		95816A4B244B2E6A007C7A69 /* ProjectWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 957DB8DA2412A2780011CDD6 /* ProjectWorker.swift */; };
 		95816A4D244B4470007C7A69 /* SymmetryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95816A4C244B4470007C7A69 /* SymmetryController.swift */; };
+		95850C742498E531003F6153 /* layersTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95850C732498E531003F6153 /* layersTable.swift */; };
+		95850C762498E59C003F6153 /* LayersTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95850C752498E59C003F6153 /* LayersTableCell.swift */; };
 		958C0C1A24180399007B9C95 /* FramesCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 958C0C1924180399007B9C95 /* FramesCollectionView.swift */; };
 		958C0C1C241961DE007B9C95 /* LayerCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 958C0C1B241961DE007B9C95 /* LayerCollection.swift */; };
 		958C0C1E2419653F007B9C95 /* LayersCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 958C0C1D2419653F007B9C95 /* LayersCollectionView.swift */; };
@@ -99,9 +102,6 @@
 		95A67779246A9ABE00B3A3F6 /* AboutDeveloperController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A67778246A9ABE00B3A3F6 /* AboutDeveloperController.swift */; };
 		95A799612443A3E200F7BBE2 /* ThemeSelect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A799602443A3E200F7BBE2 /* ThemeSelect.swift */; };
 		95A799652443B59800F7BBE2 /* MainSettingsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A799642443B59800F7BBE2 /* MainSettingsMenu.swift */; };
-		95A83FC62486660D002A5E29 /* LayersTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A83FC52486660D002A5E29 /* LayersTable.swift */; };
-		95A83FC92486663A002A5E29 /* LayerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A83FC82486663A002A5E29 /* LayerCell.swift */; };
-		95A83FCB248667A5002A5E29 /* LayersProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A83FCA248667A5002A5E29 /* LayersProtocol.swift */; };
 		95A83FCD24866978002A5E29 /* LayersController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A83FCC24866978002A5E29 /* LayersController.swift */; };
 		95AA119C2444C1500048CB96 /* SwiftUIFun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95AA119B2444C1500048CB96 /* SwiftUIFun.swift */; };
 		95AB4B262483B7EC005317F2 /* PencilTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95AB4B252483B7EC005317F2 /* PencilTool.swift */; };
@@ -211,6 +211,7 @@
 		95578E0423D4C0B200D8DDF2 /* CreateDIalogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateDIalogController.swift; sourceTree = "<group>"; };
 		9559B9BB2462CBD80066EA40 /* TransformController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransformController.swift; sourceTree = "<group>"; };
 		9559B9BD2462D0550066EA40 /* ShapeCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShapeCollection.swift; sourceTree = "<group>"; };
+		9560723924940659009D8DCC /* PaletteCollectionModern.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaletteCollectionModern.swift; sourceTree = "<group>"; };
 		95662D8F246DBEB8004970A1 /* ImportCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportCollectionView.swift; sourceTree = "<group>"; };
 		9567F5FC23BFF89C00694B40 /* ColorCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorCreator.swift; sourceTree = "<group>"; };
 		956C61F62427C3B9000BF9E4 /* ToolBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolBar.swift; sourceTree = "<group>"; usesTabs = 0; };
@@ -230,6 +231,8 @@
 		957D04132408510800E58210 /* ProjectControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectControl.swift; sourceTree = "<group>"; };
 		957DB8DA2412A2780011CDD6 /* ProjectWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectWorker.swift; sourceTree = "<group>"; };
 		95816A4C244B4470007C7A69 /* SymmetryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymmetryController.swift; sourceTree = "<group>"; };
+		95850C732498E531003F6153 /* layersTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = layersTable.swift; sourceTree = "<group>"; };
+		95850C752498E59C003F6153 /* LayersTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayersTableCell.swift; sourceTree = "<group>"; };
 		958C0C1924180399007B9C95 /* FramesCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FramesCollectionView.swift; sourceTree = "<group>"; };
 		958C0C1B241961DE007B9C95 /* LayerCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayerCollection.swift; sourceTree = "<group>"; };
 		958C0C1D2419653F007B9C95 /* LayersCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayersCollectionView.swift; sourceTree = "<group>"; };
@@ -251,9 +254,6 @@
 		95A67778246A9ABE00B3A3F6 /* AboutDeveloperController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutDeveloperController.swift; sourceTree = "<group>"; };
 		95A799602443A3E200F7BBE2 /* ThemeSelect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeSelect.swift; sourceTree = "<group>"; };
 		95A799642443B59800F7BBE2 /* MainSettingsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSettingsMenu.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		95A83FC52486660D002A5E29 /* LayersTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayersTable.swift; sourceTree = "<group>"; };
-		95A83FC82486663A002A5E29 /* LayerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayerCell.swift; sourceTree = "<group>"; };
-		95A83FCA248667A5002A5E29 /* LayersProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayersProtocol.swift; sourceTree = "<group>"; };
 		95A83FCC24866978002A5E29 /* LayersController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayersController.swift; sourceTree = "<group>"; };
 		95AA119B2444C1500048CB96 /* SwiftUIFun.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIFun.swift; sourceTree = "<group>"; };
 		95AB4B252483B7EC005317F2 /* PencilTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PencilTool.swift; sourceTree = "<group>"; };
@@ -548,10 +548,9 @@
 		95A83FC72486661F002A5E29 /* Layers */ = {
 			isa = PBXGroup;
 			children = (
-				95A83FC52486660D002A5E29 /* LayersTable.swift */,
-				95A83FC82486663A002A5E29 /* LayerCell.swift */,
-				95A83FCA248667A5002A5E29 /* LayersProtocol.swift */,
 				95A83FCC24866978002A5E29 /* LayersController.swift */,
+				95850C732498E531003F6153 /* layersTable.swift */,
+				95850C752498E59C003F6153 /* LayersTableCell.swift */,
 			);
 			name = Layers;
 			sourceTree = "<group>";
@@ -577,6 +576,7 @@
 				959CB7E0246F59300096EF38 /* PalleteSelectController.swift */,
 				95537EFE2470048E0074C821 /* SelectPaletteCollection.swift */,
 				95513ABA24709D59007E3E9E /* ColorsPalleteNew.swift */,
+				9560723924940659009D8DCC /* PaletteCollectionModern.swift */,
 			);
 			name = "Colors Pallete";
 			sourceTree = "<group>";
@@ -795,6 +795,7 @@
 				9540F1C02433DDB7008D1657 /* ColorSlider.swift in Sources */,
 				95C19B1A24822AEF003B779F /* EditorTool.swift in Sources */,
 				95560A2223C8EBCC00581482 /* ProjectFullImage.swift in Sources */,
+				95850C762498E59C003F6153 /* LayersTableCell.swift in Sources */,
 				959BCFC3242254F100B27CFB /* FullColor.swift in Sources */,
 				95144C4B245AE7FB0070DDF2 /* SegmentSelector.swift in Sources */,
 				95A51E1224444B4700A03606 /* Training.swift in Sources */,
@@ -818,6 +819,7 @@
 				95560A1723C4302900581482 /* GalleryCells.swift in Sources */,
 				95C850232468620900366EA2 /* EditorSettingsController.swift in Sources */,
 				959DC1132430AD38001A79DF /* PencilSettings.swift in Sources */,
+				9560723A24940659009D8DCC /* PaletteCollectionModern.swift in Sources */,
 				95DC554C23EC9A820011FA2A /* ColorSelectDialog1.swift in Sources */,
 				955145D724055D1000524FF9 /* Editor.swift in Sources */,
 				95A67779246A9ABE00B3A3F6 /* AboutDeveloperController.swift in Sources */,
@@ -838,12 +840,11 @@
 				95DC555223EF3FEA0011FA2A /* ColorSelectDialog2.swift in Sources */,
 				95AEFF2F2483D8B200FCAD32 /* ShapeTool.swift in Sources */,
 				95E3D4AA24524AB90057A830 /* ProjectPallete.swift in Sources */,
-				95A83FC92486663A002A5E29 /* LayerCell.swift in Sources */,
+				95850C742498E531003F6153 /* layersTable.swift in Sources */,
 				95C7278823EB583D00ED1A28 /* ColorStyle.swift in Sources */,
 				95662D90246DBEB8004970A1 /* ImportCollectionView.swift in Sources */,
 				959BCFB8241EC64100B27CFB /* PalleteFull.swift in Sources */,
 				95E2A03324551CA500B02742 /* SelectionController.swift in Sources */,
-				95A83FCB248667A5002A5E29 /* LayersProtocol.swift in Sources */,
 				95023E4124252AF40098187E /* PalleteCreateController.swift in Sources */,
 				95A799652443B59800F7BBE2 /* MainSettingsMenu.swift in Sources */,
 				9537B1A6243E48C80083BE27 /* EditorLayer.swift in Sources */,
@@ -871,7 +872,6 @@
 				95C7278623EB577900ED1A28 /* CircleButton.swift in Sources */,
 				957D040E2408283400E58210 /* FramePreview.swift in Sources */,
 				958C0C1A24180399007B9C95 /* FramesCollectionView.swift in Sources */,
-				95A83FC62486660D002A5E29 /* LayersTable.swift in Sources */,
 				95560A1A23C5442800581482 /* GalleryLayout.swift in Sources */,
 				95816A4B244B2E6A007C7A69 /* ProjectWorker.swift in Sources */,
 				956E3107246E770000502A2F /* ThemeController.swift in Sources */,

@@ -9,8 +9,8 @@ import UIKit
 
 class PalleteEditor : UIViewController {
     
-    lazy private var colors : PalleteCollectionV2 = {
-        let clr = PalleteCollectionV2(colors: pallete.colors)
+    lazy private var colors : PaletteCollectionModern = {
+        let clr = PaletteCollectionModern(colors: pallete.colors)
         clr.translatesAutoresizingMaskIntoConstraints = false
         
         return clr

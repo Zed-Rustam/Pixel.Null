@@ -11,23 +11,20 @@ import UIKit
 class FramesCollection : UICollectionView {
     weak var project : ProjectWork? = nil
     private var layout = ControlList()
-    private var moveCell : FramePreviewCell? = nil
-    private var isFinish = false
-    private var isMoving = false
+    //private var moveCell : FramePreviewCell? = nil
+    //private var isFinish = false
+    //private var isMoving = false
+    private var dragIndex : IndexPath? = nil
+    private var previewIndex : IndexPath? = nil
+        
     weak var frameDelegate : FrameControlUpdate? = nil
+    weak var editorDelegate : FrameControlDelegate? = nil
 
     var moving : Bool {
         get{
-            return isMoving
+            return self.hasActiveDrop
         }
     }
-    
-    lazy private var moveGesture : UILongPressGestureRecognizer = {
-        let gesture = UILongPressGestureRecognizer(target: self, action: #selector(onLongPress(sender:)))
-        gesture.minimumPressDuration = 0.35
-        
-        return gesture
-    }()
     
     init(proj : ProjectWork) {
         project = proj
@@ -44,65 +41,16 @@ class FramesCollection : UICollectionView {
         translatesAutoresizingMaskIntoConstraints = false
         backgroundColor = .clear
         
-        addGestureRecognizer(moveGesture)
+        reorderingCadence = .immediate
         
+        dragDelegate = self
+        dropDelegate = self
+        
+        allowsSelection = true
+        allowsMultipleSelection = false
+        dragInteractionEnabled = true
+                
         setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
-    }
-    
-    @objc func onLongPress(sender : UILongPressGestureRecognizer) {
-        switch sender.state {
-        case .began:
-            if let cell = indexPathForItem(at: sender.location(in: self)) {
-                if !isMoving {
-                    beginInteractiveMovementForItem(at: cell)
-                    moveCell = cellForItem(at: cell) as? FramePreviewCell
-
-                    UIView.animate(withDuration: 0.25, animations: {
-                        self.moveCell!.contentView.transform = CGAffineTransform(scaleX: 1.25, y: 1.25)
-                    })
-                    isMoving = true
-                }
-            }
-            
-        case .changed:
-            let location = CGPoint(x: sender.location(in: self).x, y: 30)
-            updateInteractiveMovementTargetPosition(location)
-            
-        case .ended:
-            if isMoving {
-                isFinish = true
-                UIView.animate(withDuration: 0.15, animations: {
-                    self.performBatchUpdates({
-                        self.endInteractiveMovement()
-                    }, completion: {isEnd in
-                        UIView.animate(withDuration: 0.15, animations: {
-                            self.moveCell!.contentView.transform = CGAffineTransform(scaleX: 1, y: 1)
-                        })
-                        self.isMoving = false
-                        self.isFinish = false
-                        self.moveCell = nil
-                    })
-                })
-            }
-            
-        default:
-            if isMoving {
-                isFinish = true
-                UIView.animate(withDuration: 0.15, animations: {
-                    self.performBatchUpdates({
-                        self.cancelInteractiveMovement()
-                    }, completion: {isEnd in
-                        UIView.animate(withDuration: 0.15, animations: {
-                            self.moveCell!.contentView.transform = CGAffineTransform(scaleX: 1, y: 1)
-                        },completion: {isEnd in
-                            self.moveCell = nil
-                            self.isMoving = false
-                            self.isFinish = false
-                        })
-                    })
-                })
-            }
-        }
     }
     
     required init?(coder: NSCoder) {
@@ -121,14 +69,10 @@ extension FramesCollection : UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if moveCell != nil && isFinish {
-            return moveCell!
-        }
-        
         let cell = dequeueReusableCell(withReuseIdentifier: "FrameControl", for: indexPath) as! FramePreviewCell
         
         cell.setPreview(image: nil)
-
+        
         DispatchQueue.global(qos: .userInteractive).async {
             var img : UIImage
                 img = self.project!.getFrameFromLayers(frame : indexPath.item,size: CGSize(width: 36, height: 36)).flip(xFlip: self.project!.isFlipX, yFlip: self.project!.isFlipY)
@@ -141,6 +85,8 @@ extension FramesCollection : UICollectionViewDataSource {
         
         cell.setSelect(isSelect: indexPath.item == project!.FrameSelected  ? true : false, animate: false)
         
+        print("reloading : \(indexPath.item)")
+
         return cell
     }
 }
@@ -150,33 +96,154 @@ extension FramesCollection : UICollectionViewDelegate {
         if project!.FrameSelected != indexPath.item {
             let cell = cellForItem(at: indexPath) as! FramePreviewCell
             cell.setSelect(isSelect: true, animate: true)
-            
-            frameDelegate?.changeFrame(from: project!.FrameSelected, to: indexPath.item)
+            print("reselect")
+            frameDelegate!.changeFrame(from: project!.FrameSelected, to: indexPath.item)
         }
     }
     
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        dragIndex = indexPath
+        let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider:nil ) {action in
+                    let clone = UIAction(title: "Clone",image : UIImage(systemName: "plus.square.on.square", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, handler: {action in
+                            self.project?.addAction(action: ["ToolID" : "\(Actions.frameClone.rawValue)", "frame" : "\(indexPath.item)"])
+                            self.frameDelegate?.cloneFrame(original: indexPath.item)
+                    })
+                    
+                    let delete = UIAction(title: "Delete",image : UIImage(systemName: "trash", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, discoverabilityTitle: nil, attributes: .destructive, handler: {action in
+                        if(self.project!.information.frames.count > 1) {
+                            let frameJson = String(data: try! JSONEncoder().encode(self.project!.information.frames[indexPath.item]), encoding: .utf8)!
+
+                            self.project?.addAction(action: ["ToolID" : "\(Actions.frameDelete.rawValue)", "frame" : "\(indexPath.item)", "lastID" : "\(self.project!.information.frames[indexPath.item].frameID)", "frameStruct" : frameJson])
+
+                         try! FileManager.default.copyItem(at: self.project!.getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(self.project!.information.frames[indexPath.item].frameID)"), to: self.project!.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(self.project!.getNextActionID())"))
+
+                            self.dragIndex = nil
+                            self.frameDelegate?.deleteFrame(frame: indexPath.item)
+                        }
+                    })
+
+                    let delMenu = UIMenu(title: "Delete", image: UIImage(systemName: "trash", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, options : .destructive, children: [delete])
+
+                    let edit = UIMenu(title: "", options: .displayInline, children: [delMenu])
+
+                return UIMenu(title: "", image: nil, identifier: nil, children: self.project!.information.frames.count > 1 ? [clone,edit] : [clone])
+            }
+
+        return configuration
+    }
+
+    func collectionView(_ collectionView: UICollectionView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        if dragIndex != nil && collectionView.cellForItem(at: dragIndex!) != nil {
+            let preview = UITargetedPreview(view: collectionView.cellForItem(at: dragIndex!)!)
+            preview.parameters.backgroundColor = .clear
+            preview.parameters.visiblePath = UIBezierPath(roundedRect: dragIndex!.item == project!.FrameSelected ? (collectionView.cellForItem(at: dragIndex!)!).bounds : collectionView.cellForItem(at: dragIndex!)!.bounds.inset(by: UIEdgeInsets(top: 3, left: 3, bottom: 3, right: 3)), cornerRadius: dragIndex!.item == project!.FrameSelected ? 9 : 6)
+            dragIndex = nil
+            return preview
+        } else {
+            print("non preview")
+            return nil
+        }
+    }
+
+    func collectionView(_ collectionView: UICollectionView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        let preview = UITargetedPreview(view: collectionView.cellForItem(at: dragIndex!)!)
+
+        preview.parameters.backgroundColor = .clear
+        preview.parameters.visiblePath = UIBezierPath(roundedRect: dragIndex!.item == project!.FrameSelected ? (collectionView.cellForItem(at: dragIndex!)!).bounds : collectionView.cellForItem(at: dragIndex!)!.bounds.inset(by: UIEdgeInsets(top: 3, left: 3, bottom: 3, right: 3)), cornerRadius: dragIndex!.item == project!.FrameSelected ? 9 : 6)
+        return preview
+    }
+
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         let cell = cellForItem(at: indexPath) as? FramePreviewCell
         cell?.setSelect(isSelect: false, animate: true)
     }
+}
+
+extension FramesCollection : UICollectionViewDragDelegate {
+    func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        let item = UIDragItem(itemProvider: NSItemProvider())
+        return [item]
+    }
     
-    func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        if sourceIndexPath.item  < project!.FrameSelected && destinationIndexPath.item >= project!.FrameSelected {
-            project?.FrameSelected -= 1
-        } else if sourceIndexPath.item  > project!.FrameSelected && destinationIndexPath.item <= project!.FrameSelected {
-            project?.FrameSelected += 1
-        } else if sourceIndexPath.item == project!.FrameSelected {
-            project?.FrameSelected = destinationIndexPath.item
-        }
-        
-        if sourceIndexPath.item != destinationIndexPath.item {
-            project?.addAction(action: ["ToolID" : "\(Actions.frameReplace.rawValue)", "from" : "\(sourceIndexPath.item)", "to" : "\(destinationIndexPath.item)"])
-        }
-        
-        frameDelegate?.updateFramePosition(from: sourceIndexPath.item, to: destinationIndexPath.item)
+    func collectionView(_ collectionView: UICollectionView, dragPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        let params = UIDragPreviewParameters()
+        params.backgroundColor = .clear
+        params.visiblePath = UIBezierPath(
+            roundedRect: indexPath.item == project!.FrameSelected ? (collectionView.dequeueReusableCell(withReuseIdentifier: "FrameControl", for: indexPath)
+            ).bounds : collectionView.dequeueReusableCell(withReuseIdentifier: "FrameControl", for: indexPath)
+            .bounds.inset(by: UIEdgeInsets(top: 3, left: 3, bottom: 3, right: 3)),
+            cornerRadius: indexPath.item == project!.FrameSelected ? 9 : 6)
+        return params
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, dragSessionAllowsMoveOperation session: UIDragSession) -> Bool {
+        return true
     }
 }
 
+extension FramesCollection : UICollectionViewDropDelegate {
+    func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
+        
+        //print("some body once told me \(coordinator.proposal.operation)")
+        
+        switch coordinator.proposal.operation {
+        case .move:
+            if let destinationIndexPath = coordinator.destinationIndexPath {
+                let sourceIndexPath = coordinator.items[0].sourceIndexPath!
+                
+                if sourceIndexPath.item < project!.FrameSelected && destinationIndexPath.item >= project!.FrameSelected {
+                    project!.FrameSelected -= 1
+                } else if sourceIndexPath.item  > project!.FrameSelected && destinationIndexPath.item <= project!.FrameSelected {
+                    project!.FrameSelected += 1
+                } else if sourceIndexPath.item == project!.FrameSelected {
+                    project!.FrameSelected = destinationIndexPath.item
+                }
+                
+                if sourceIndexPath.item != destinationIndexPath.item {
+                    project?.addAction(action: ["ToolID" : "\(Actions.frameReplace.rawValue)", "from" : "\(sourceIndexPath.item)", "to" : "\(destinationIndexPath.item)"])
+                }
+                
+                frameDelegate?.updateFramePosition(from: sourceIndexPath.item, to: destinationIndexPath.item)
+                
+                performBatchUpdates({
+                    collectionView.deleteItems(at: [coordinator.items[0].sourceIndexPath!])
+                    collectionView.insertItems(at: [coordinator.destinationIndexPath!])
+                }, completion: {isEnd in
+                    collectionView.selectItem(at: IndexPath(item: self.project!.FrameSelected, section: 0), animated: false, scrollPosition: .top)
+                })
+                
+                self.dragInteractionEnabled = false
+                coordinator.drop(coordinator.items[0].dragItem, toItemAt: coordinator.destinationIndexPath!)
+            }
+        default:
+            break
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
+        if collectionView.bounds.contains(session.location(in: collectionView)) {
+            return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+        } else {
+            return UICollectionViewDropProposal(operation: .forbidden, intent: .unspecified)
+        }
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, dropPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        let params = UIDragPreviewParameters()
+        params.backgroundColor = .clear
+        params.visiblePath = UIBezierPath(roundedRect: indexPath.item == project!.FrameSelected ? (collectionView.cellForItem(at: indexPath)!).bounds : collectionView.cellForItem(at: indexPath)!.bounds.inset(by: UIEdgeInsets(top: 3, left: 3, bottom: 3, right: 3)), cornerRadius: indexPath.item == project!.FrameSelected ? 9 : 6)
+        return params
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, dropSessionDidEnd session: UIDropSession) {
+        self.dragInteractionEnabled = true
+    }
+}
 
 class FramePreviewCell : UICollectionViewCell {
     
@@ -231,14 +298,14 @@ class FramePreviewCell : UICollectionViewCell {
         return img
     }()
     
-    lazy private var previewBg : UIView = {
-        let img = UIView()
+    lazy private var previewBg : UIImageView = {
+        let img = UIImageView(image: #imageLiteral(resourceName: "background"))
         img.translatesAutoresizingMaskIntoConstraints = false
         img.widthAnchor.constraint(equalToConstant: 36).isActive = true
         img.heightAnchor.constraint(equalToConstant: 36).isActive = true
         img.setCorners(corners: 6)
-        img.backgroundColor = getAppColor(color: .disable)
         img.addSubviewFullSize(view: preview)
+        img.layer.magnificationFilter = .nearest
         return img
     }()
     
@@ -278,6 +345,10 @@ class FramePreviewCell : UICollectionViewCell {
         bg.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 0).isActive = true
         
         setVisible(isVisible: true, animate: false)
+        
+        addInteraction(UIPointerInteraction(delegate: self))
+        isUserInteractionEnabled = true
+        //contentView.setCorners(corners: 9)
     }
     
     func setSelect(isSelect : Bool, animate : Bool = true) {
@@ -307,6 +378,12 @@ class FramePreviewCell : UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
+
+extension FramePreviewCell : UIPointerInteractionDelegate {
+    func pointerInteraction(_ interaction: UIPointerInteraction, styleFor region: UIPointerRegion) -> UIPointerStyle? {
+         return UIPointerStyle(effect: .lift(UITargetedPreview(view: self)))
+     }
 }
 
 class ControlList : UICollectionViewLayout {

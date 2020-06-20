@@ -206,149 +206,145 @@ class Editor : UIViewController {
 }
 
 extension Editor : FrameControlDelegate{
-    
+
     //открываем окно паллитры проекта
     func openColorSelector() {
         let pallete = ProjectPallete()
-        
+
         //начальный цвет
         pallete.startColor = canvas.selectorColor
-        
+
         //проект для доступа к паллитре
         pallete.project = project
-        
+
         //при завершении выбора
         pallete.selectDelegate = {[unowned self] in
             self.canvas.selectorColor = $0
             self.toolBar.updateSelectedColor(newColor: $0)
         }
         pallete.modalPresentationStyle = .formSheet
-        
+
         self.show(pallete, sender: nil)
     }
-    
+
     func changeMainColor(color: UIColor) {
         canvas.selectorColor = color
         toolBar.updateSelectedColor(newColor: color)
     }
-    
+
     func updateSelection(select: UIImage, isSelected : Bool) {
         canvas.isSelected = isSelected
         canvas.selectionLayer = select
         canvas.selectionImage.image = canvas.selectionLayer
         try! canvas.selectionLayer.pngData()!.write(to: project.getProjectDirectory().appendingPathComponent("selection.png"))
     }
-    
+
     func openFrameControl(project: ProjectWork) {
-        
+
         finishTransform()
         project.savePreview(frame: project.FrameSelected)
-        
+
         let frameControl = FrameControl()
         frameControl.project = project
         frameControl.delegate = self
-        
+
         //let frameControl = LayersController()
-        
+
         frameControl.modalPresentationStyle = .formSheet
         frameControl.modalTransitionStyle = .coverVertical
-        frameControl.isModalInPresentation = true
+        //frameControl.isModalInPresentation = true
         show(frameControl, sender: self)
     }
-    
+
     func updateEditor() {
         control.updateInfo()
         canvas.updateLayers()
     }
-    
+
     func updateCanvas() {
         canvas.updateLayers()
     }
-    
+
     func resizeProject(){
         control.updateInfo()
         canvas.resizeProject()
     }
-    
+
     func updateLayer(layer : Int){
-        UIView.animate(withDuration: 0.0, animations: {
-                self.control.layers.list.reloadItems(at: [IndexPath(item: layer, section: 0)])
-        })
+        UIView.performWithoutAnimation {
+            self.control.layers.list.reloadItems(at: [IndexPath(item: layer, section: 0)])
+        }
     }
-    
+
     func updateLayers(){
-        UIView.animate(withDuration: 0.0, animations: {
+        UIView.performWithoutAnimation {
             self.control.layers.list.reloadData()
-        })
+        }
     }
-    
+
     func updateFrame(frame : Int){
-        UIView.animate(withDuration: 0.0, animations: {
+        UIView.performWithoutAnimation {
             self.control.frames.list.reloadItems(at: [IndexPath(item: frame, section: 0)])
-        })
+        }
     }
-    
+
     func addLayer(layer: Int) {
-        UIView.animate(withDuration: 0.0, animations: {
+        UIView.performWithoutAnimation {
             self.control.layers.list.insertItems(at: [IndexPath(item: layer, section: 0)])
-        })
+        }
     }
-    
+
     func addFrame(frame: Int) {
-        UIView.animate(withDuration: 0.0, animations: {
+        UIView.performWithoutAnimation {
             self.control.frames.list.insertItems(at: [IndexPath(item: frame, section: 0)])
-        })
+        }
     }
-    
+
     func deleteLayer(layer : Int){
-        UIView.animate(withDuration: 0.0, animations: {
-            self.control.layers.list.performBatchUpdates({
-                self.control.layers.list.deleteItems(at: [IndexPath(item: layer, section: 0)])
-            }, completion: nil)
-        })
+        UIView.performWithoutAnimation {
+            self.control.layers.list.deleteItems(at: [IndexPath(item: layer, section: 0)])
+        }
     }
-    
+
     func deleteFrame(frame : Int){
-        UIView.animate(withDuration: 0.0, animations: {
+        UIView.performWithoutAnimation {
             self.control.frames.list.deleteItems(at: [IndexPath(item: frame, section: 0)])
-        })
+        }
     }
-    
+
     func updateFrameSelect(lastFrame : Int, newFrame: Int) {
         if newFrame != lastFrame {
-            UIView.animate(withDuration: 0.0, animations: {
-                self.control.frames.list.performBatchUpdates({
-                    self.control.frames.list.reloadItems(at: [IndexPath(item: lastFrame, section: 0),IndexPath(item: newFrame, section: 0)])
-                })
-            })
+            UIView.performWithoutAnimation {
+                self.control.frames.list.reloadItems(at: [IndexPath(item: lastFrame, section: 0),IndexPath(item: newFrame, section: 0)])
+            }
             control.layers.list.reloadData()
         }
     }
-    
+
     func updateLayerSelect(lastLayer : Int, newLayer: Int) {
         if newLayer != lastLayer {
-            UIView.animate(withDuration: 0.0, animations: {
+            UIView.performWithoutAnimation {
                 self.control.layers.list.reloadItems(at: [IndexPath(item: lastLayer, section: 0),IndexPath(item: newLayer, section: 0)])
-            })
+            }
         }
     }
-    
+
     func replaceLayer(from: Int, to: Int) {
         if from != to {
-            UIView.animate(withDuration: 0.0, animations: {
+            UIView.performWithoutAnimation {
                 self.control.layers.list.moveItem(at: IndexPath(item: from, section: 0), to: IndexPath(item: to, section: 0))
-            })
+            }
         }
     }
+
     func replaceFrame(from: Int, to: Int) {
         if from != to {
-            UIView.animate(withDuration: 0.0, animations: {
+            UIView.performWithoutAnimation {
                 self.control.frames.list.moveItem(at: IndexPath(item: from, section: 0), to: IndexPath(item: to, section: 0))
-            })
+            }
         }
     }
 }
-
 
 extension Editor : ToolSettingsDelegate {
     func openProjectSettings() {
@@ -539,3 +535,4 @@ protocol ToolSettingsDelegate : class{
     func setGradientSettings(stepCount : Int,startColor : UIColor, endColor : UIColor)
 }
 
+//protocol ProjectActionDelegate : class

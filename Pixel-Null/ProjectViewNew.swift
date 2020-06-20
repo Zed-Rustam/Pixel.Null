@@ -73,6 +73,7 @@ class ProjectViewNew : UIView {
         label.font = UIFont(name: "Rubik-Medium", size: 10)
         label.textAlignment = .center
         label.lineBreakMode = .byTruncatingMiddle
+        //label.setShadow(color: UIColor.black, radius: 6, opasity: 0.5)
         return label
     }()
     
@@ -92,7 +93,7 @@ class ProjectViewNew : UIView {
 
         let filter = CIFilter(name: "CIGaussianBlur")
         filter?.setValue(inputImage, forKey: kCIInputImageKey)
-        filter?.setValue((4.0), forKey: kCIInputRadiusKey)
+        filter?.setValue((8.0), forKey: kCIInputRadiusKey)
         let outputImage = filter?.outputImage
 
         var cgImage:CGImage?
@@ -113,7 +114,7 @@ class ProjectViewNew : UIView {
         let context = UIGraphicsGetCurrentContext()!
         image.draw(at: .zero)
         
-        context.setFillColor(UIColor.black.withAlphaComponent(0.25).cgColor)
+        context.setFillColor(UIColor.black.withAlphaComponent(0.1).cgColor)
         context.fill(CGRect(origin: .zero, size: image.size))
         let result = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
@@ -172,14 +173,11 @@ extension ProjectViewNew : UIContextMenuInteractionDelegate {
             let getimg = UIAction(title: "Share", image : UIImage(systemName: "square.and.arrow.up", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)),identifier: nil, discoverabilityTitle: nil, handler: {action in
                 self.delegate?.projectExport(proj: self._project!)
             })
-            
             let delete = UIAction(title: "Delete",image : UIImage(systemName: "trash", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, discoverabilityTitle: nil, attributes: .destructive, handler: {action in
                 if(self.delegate != nil) {
                     self.delegate!.projectDelete(view: self, deletedName: "\(self.projectName).pnart")
                 }
             })
-            
-                        
             let delMenu = UIMenu(title: "Delete", image : UIImage(systemName: "trash", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, options : .destructive, children: [delete])
             
             let edit = UIMenu(title: "", options: .displayInline, children: [delMenu])
@@ -189,6 +187,33 @@ extension ProjectViewNew : UIContextMenuInteractionDelegate {
         
         return configuration
     }
+    
+//    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, previewForHighlightingMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+//        let preview = UITargetedPreview(view: interaction.view!, parameters: UIPreviewParameters(), target: UIPreviewTarget(container: self, center: self.center))
+//        preview.parameters.backgroundColor = .black
+//        preview.parameters.visiblePath = UIBezierPath(roundedRect: self.bounds, cornerRadius: 12)
+//
+//        return preview
+//    }
+//
+//    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, previewForDismissingMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+//        let preview = UITargetedPreview(view: self, parameters: UIPreviewParameters(), target: UIPreviewTarget(container: self, center: self.center))
+//        preview.parameters.backgroundColor = .black
+//        preview.parameters.visiblePath = UIBezierPath(roundedRect: self.bounds, cornerRadius: 12)
+//        return preview
+//    }
+    
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, willDisplayMenuFor configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionAnimating?) {
+        animator?.addAnimations {
+            
+        }
+    }
+//
+//    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, willEndFor configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionAnimating?) {
+//        animator?.addAnimations {
+//            //interaction
+//        }
+//    }
 }
 
 extension ProjectViewNew : UIPointerInteractionDelegate {
