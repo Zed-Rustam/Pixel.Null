@@ -74,6 +74,7 @@
 		957D04142408510800E58210 /* ProjectControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 957D04132408510800E58210 /* ProjectControl.swift */; };
 		95816A4B244B2E6A007C7A69 /* ProjectWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 957DB8DA2412A2780011CDD6 /* ProjectWorker.swift */; };
 		95816A4D244B4470007C7A69 /* SymmetryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95816A4C244B4470007C7A69 /* SymmetryController.swift */; };
+		95839225249E9B5100E164A8 /* FrameSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95839224249E9B5100E164A8 /* FrameSettings.swift */; };
 		95850C742498E531003F6153 /* layersTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95850C732498E531003F6153 /* layersTable.swift */; };
 		95850C762498E59C003F6153 /* LayersTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95850C752498E59C003F6153 /* LayersTableCell.swift */; };
 		958C0C1A24180399007B9C95 /* FramesCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 958C0C1924180399007B9C95 /* FramesCollectionView.swift */; };
@@ -231,6 +232,7 @@
 		957D04132408510800E58210 /* ProjectControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectControl.swift; sourceTree = "<group>"; };
 		957DB8DA2412A2780011CDD6 /* ProjectWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectWorker.swift; sourceTree = "<group>"; };
 		95816A4C244B4470007C7A69 /* SymmetryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymmetryController.swift; sourceTree = "<group>"; };
+		95839224249E9B5100E164A8 /* FrameSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameSettings.swift; sourceTree = "<group>"; };
 		95850C732498E531003F6153 /* layersTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = layersTable.swift; sourceTree = "<group>"; };
 		95850C752498E59C003F6153 /* LayersTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayersTableCell.swift; sourceTree = "<group>"; };
 		958C0C1924180399007B9C95 /* FramesCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FramesCollectionView.swift; sourceTree = "<group>"; };
@@ -438,6 +440,7 @@
 				9570657C2417EA3C0044FC39 /* FrameControl */,
 				9570657724164D3B0044FC39 /* Frame */,
 				9570657624164D2F0044FC39 /* Layer */,
+				95839224249E9B5100E164A8 /* FrameSettings.swift */,
 				955145D624055D1000524FF9 /* Editor.swift */,
 				9537B1A5243E48C80083BE27 /* EditorLayer.swift */,
 				955145D42405589100524FF9 /* ProjectCanvas.swift */,
@@ -860,6 +863,7 @@
 				95A83FCD24866978002A5E29 /* LayersController.swift in Sources */,
 				951CBD50244BB8A2004DB89B /* GradientController.swift in Sources */,
 				95782CE023CD8F3000C2772F /* TextFieldDelegate.swift in Sources */,
+				95839225249E9B5100E164A8 /* FrameSettings.swift in Sources */,
 				95144C51245D04C00070DDF2 /* ProjectSettingsController.swift in Sources */,
 				95746A1E2406DB9200DD2328 /* LayersView.swift in Sources */,
 				95537EFF2470048E0074C821 /* SelectPaletteCollection.swift in Sources */,

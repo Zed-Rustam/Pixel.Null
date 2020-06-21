@@ -151,7 +151,7 @@ extension LayersCollection : UICollectionViewDelegate {
             let cell = cellForItem(at: indexPath) as! FramePreviewCell
             cell.setSelect(isSelect: true, animate: true)
             
-            frameDelegate?.changeLayer(frame: project!.FrameSelected, from: project!.LayerSelected, to: indexPath.item)
+            //frameDelegate?.changeLayer(frame: project!.FrameSelected, from: project!.LayerSelected, to: indexPath.item)
         }
     }
     

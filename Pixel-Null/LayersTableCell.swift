@@ -34,24 +34,42 @@ class LayersTableCell : UICollectionViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.heightAnchor.constraint(equalToConstant: 36).isActive = true
         view.widthAnchor.constraint(equalToConstant: 36).isActive = true
-        view.setShadow(color: getAppColor(color: .shadow), radius: 6, opasity: 1)
         
-        view.addSubviewFullSize(view: previewImage)
+        view.addSubviewFullSize(view: previewImageBack)
         return view
     }()
     
     lazy private var previewImage : UIImageView = {
         let image = UIImageView()
         image.layer.magnificationFilter = .nearest
+        image.setCorners(corners: 6)
+        
+        image.addSubviewFullSize(view: unvisibleImage)
+        return image
+    }()
+    
+    lazy private var unvisibleImage : UIImageView = {
+        let image = UIImageView()
+        image.setCorners(corners: 6)
+        image.image = #imageLiteral(resourceName: "unvisible_icon").withRenderingMode(.alwaysOriginal)
+        image.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        return image
+    }()
+    
+    lazy private var previewImageBack : UIImageView = {
+        let image = UIImageView()
+        image.layer.magnificationFilter = .nearest
         image.image = #imageLiteral(resourceName: "background")
         image.setCorners(corners: 6)
+        
+        image.addSubviewFullSize(view: previewImage)
         
         return image
     }()
     
     lazy private var layerName : UILabel = {
         let label = UILabel()
-        label.text = "New layer 228 aye 4"
+        label.text = "New layer"
         label.font = UIFont(name: "Rubik-Medium", size: 16)
         label.textColor = getAppColor(color: .enable)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -64,22 +82,23 @@ class LayersTableCell : UICollectionViewCell {
         
         contentView.addSubviewFullSize(view: background)
     }
-    
-    override func tintColorDidChange() {
-        super.tintColorDidChange()
-        previewBackground.setShadow(color: getAppColor(color: .shadow), radius: 6, opasity: 1)
-    }
-    
+        
     func setSelected(isSelect : Bool, anim : Bool) {
-        UIView.animate(withDuration: anim ? 0.2 : 0, animations: {
-            self.layerName.textColor = isSelect ? getAppColor(color: .select) : getAppColor(color: .enable)
-        })
-        previewImage.layer.borderColor = getAppColor(color: .select).cgColor
-        previewImage.StrokeAnimate(duration: anim ? 0.2 : 0, width: isSelect ? 3 : 0)
+        self.layerName.textColor = isSelect ? getAppColor(color: .select) : getAppColor(color: .enable)
     }
     
-    func setPreview(image : UIImage){
+    func setPreview(image : UIImage) {
         previewImage.image = image
+    }
+    
+    func setBgColor(color : UIColor) {
+        previewImage.backgroundColor = color
+    }
+    
+    func setVisible(isVisible : Bool, animate : Bool) {
+        UIView.animate(withDuration: animate ? 0.2 : 0, animations: {
+            self.unvisibleImage.alpha = isVisible ? 0 : 1
+        })
     }
     
     required init?(coder: NSCoder) {

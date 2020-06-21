@@ -17,6 +17,8 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
         return ls
     }()
     
+    weak var parentController : UIViewController? = nil
+    
     lazy private var frameText : UILabel = {
            let text = UILabel(frame: .zero)
            text.text = NSLocalizedString("Frames", comment: "")
@@ -50,8 +52,17 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
     lazy var settingsButton : CircleButton = {
         let btn = CircleButton(icon: #imageLiteral(resourceName: "project_settings_icon"), frame: .zero)
         btn.corners = 6
-        btn.delegate = { [weak self] in
+        btn.delegate = { [unowned self] in
+            let frameSettings = FrameSettings()
+            frameSettings.modalPresentationStyle = .popover
             
+            if let popover = frameSettings.popoverPresentationController {
+                popover.sourceView = self
+                popover.sourceRect = btn.frame
+                popover.delegate = self
+                popover.permittedArrowDirections = .any
+                self.parentController?.present(frameSettings, animated: true, completion: nil)
+            }
         }
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
@@ -152,5 +163,12 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+
+extension FramesCollectionView : UIPopoverPresentationControllerDelegate {
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .none
     }
 }

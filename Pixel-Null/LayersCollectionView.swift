@@ -110,45 +110,44 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
                 //self!.cloneButton.isEnabled = false
             }
             
-            //self!.list.frameDelegate?.addLayer(frame: self!.project!.FrameSelected, layer: self!.project!.LayerSelected + 1)
+            self!.list.frameDelegate?.addLayer(frame: self!.project!.FrameSelected, layer: self!.project!.LayerSelected + 1)
         }
+        
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
         btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
                
         return btn
     }()
+    
+    lazy var mergeButton : CircleButton = {
+        let btn = CircleButton(icon: #imageLiteral(resourceName: "layers_merge_icon"), frame: CGRect(x: frame.width - 90, y: 0, width: 36, height: 36))
+        btn.corners = 8
+        btn.delegate = { [unowned self] in
+            if self.project!.layerCount > 1 && self.project!.LayerSelected != self.project!.layerCount - 1 {
+                self.project!.addAction(action: ["ToolID" : "\(Actions.mergeLayers.rawValue)",
+                    "frame" : "\(self.project!.FrameSelected)",
+                    "layer" : "\( self.project!.LayerSelected)",
+                    "firstLayerOpasity" : "\(self.project!.information.frames[self.project!.FrameSelected].layers[self.project!.LayerSelected].transparent)",
+                    "secondLayerOpasity" : "\(self.project!.information.frames[self.project!.FrameSelected].layers[self.project!.LayerSelected + 1].transparent)",
+                    "isFirstLayerVisible" : "\(self.project!.information.frames[self.project!.FrameSelected].layers[self.project!.LayerSelected].visible)",
+                    "isSecondLayerVisible" : "\(self.project!.information.frames[self.project!.FrameSelected].layers[self.project!.LayerSelected + 1].visible)",
+                ])
+
+                try! self.project!.getLayer(frame: self.project!.FrameSelected, layer: self.project!.LayerSelected).pngData()?.write(to: self.project!.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-first-\(self.project!.getNextActionID()).png"))
+                try! self.project!.getLayer(frame: self.project!.FrameSelected, layer: self.project!.LayerSelected + 1).pngData()?.write(to: self.project!.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-second-\(self.project!.getNextActionID()).png"))
+
+                self.project!.mergeLayers(frame: self.project!.FrameSelected, layer: self.project!.LayerSelected)
+            }
+        }
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
+
+        return btn
+    }()
 //
-//    lazy var mergeButton : CircleButton = {
-//        let btn = CircleButton(icon: #imageLiteral(resourceName: "layers_merge_icon"), frame: CGRect(x: frame.width - 90, y: 0, width: 36, height: 36))
-//        btn.corners = 8
-//        btn.delegate = { [unowned self] in
-//            //self!.project!.addLayer(frame : self!.project!.FrameSelected, layerPlace: self!.project!.LayerSelected + 1)
-//            if self.project!.layerCount > 1 && self.project!.LayerSelected != self.project!.layerCount - 1 {
-//                self.project!.addAction(action: ["ToolID" : "\(Actions.mergeLayers.rawValue)",
-//                    "frame" : "\(self.project!.FrameSelected)",
-//                    "layer" : "\( self.project!.LayerSelected)",
-//                    "firstLayerOpasity" : "\(self.project!.information.frames[self.project!.FrameSelected].layers[self.project!.LayerSelected].transparent)",
-//                    "secondLayerOpasity" : "\(self.project!.information.frames[self.project!.FrameSelected].layers[self.project!.LayerSelected + 1].transparent)",
-//                    "isFirstLayerVisible" : "\(self.project!.information.frames[self.project!.FrameSelected].layers[self.project!.LayerSelected].visible)",
-//                    "isSecondLayerVisible" : "\(self.project!.information.frames[self.project!.FrameSelected].layers[self.project!.LayerSelected + 1].visible)",
-//                ])
-//
-//                try! self.project!.getLayer(frame: self.project!.FrameSelected, layer: self.project!.LayerSelected).pngData()?.write(to: self.project!.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-first-\(self.project!.getNextActionID()).png"))
-//                try! self.project!.getLayer(frame: self.project!.FrameSelected, layer: self.project!.LayerSelected + 1).pngData()?.write(to: self.project!.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-second-\(self.project!.getNextActionID()).png"))
-//
-//                self.project!.mergeLayers(frame: self.project!.FrameSelected, layer: self.project!.LayerSelected)
-//                //self.list.frameDelegate?.margeLayers(frame: self.project!.FrameSelected, layer: self.project!.LayerSelected)
-//                self.transparentField.filed.text = "100"
-//            }
-//        }
-//        btn.translatesAutoresizingMaskIntoConstraints = false
-//        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
-//        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
-//
-//        return btn
-//    }()
-//
+
     lazy var transparentField : TextField = {
         let text = TextField()
         text.translatesAutoresizingMaskIntoConstraints = false
@@ -222,15 +221,10 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
         self.addSubview(layerText)
         self.addSubview(list)
         self.addSubview(transparentField)
-        //self.addSubview(deleteButton)
-        //self.addSubview(cloneButton)
-        //self.addSubview(visibleButton)
         self.addSubview(addButton)
-        //self.addSubview(mergeButton)
 
         layerText.leftAnchor.constraint(equalTo: leftAnchor, constant: 12).isActive = true
         layerText.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
-        //list.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
         
         list.leftAnchor.constraint(equalTo: leftAnchor, constant: 0).isActive = true
         list.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
@@ -239,31 +233,16 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
         
         transparentField.leftAnchor.constraint(equalTo: leftAnchor, constant: 12).isActive = true
         transparentField.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 12).isActive = true
-        
-//        cloneButton.leftAnchor.constraint(equalTo: transparentField.rightAnchor, constant: 6).isActive = true
-//        cloneButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 12).isActive = true
-//
-//        visibleButton.leftAnchor.constraint(equalTo: cloneButton.rightAnchor, constant: 6).isActive = true
-//        visibleButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 12).isActive = true
-//
-//        deleteButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -12).isActive = true
-//        deleteButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 12).isActive = true
-//
+
         addButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -12).isActive = true
         addButton.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
-        
-        //mergeButton.leftAnchor.constraint(equalTo: visibleButton.rightAnchor, constant: 6).isActive = true
-        //mergeButton.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 12).isActive = true
 
         checkFrame()
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        
-        //list.layoutIfNeeded()
         list.layout.invalidateLayout()
-        //list.reloadData()
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

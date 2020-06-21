@@ -11,14 +11,10 @@ import UIKit
 class FramesCollection : UICollectionView {
     weak var project : ProjectWork? = nil
     private var layout = ControlList()
-    //private var moveCell : FramePreviewCell? = nil
-    //private var isFinish = false
-    //private var isMoving = false
     private var dragIndex : IndexPath? = nil
     private var previewIndex : IndexPath? = nil
         
     weak var frameDelegate : FrameControlUpdate? = nil
-    weak var editorDelegate : FrameControlDelegate? = nil
 
     var moving : Bool {
         get{
@@ -166,6 +162,7 @@ extension FramesCollection : UICollectionViewDelegate {
 extension FramesCollection : UICollectionViewDragDelegate {
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         let item = UIDragItem(itemProvider: NSItemProvider())
+        item.localObject = ("Frame",self)
         return [item]
     }
     
@@ -179,16 +176,10 @@ extension FramesCollection : UICollectionViewDragDelegate {
             cornerRadius: indexPath.item == project!.FrameSelected ? 9 : 6)
         return params
     }
-    
-    func collectionView(_ collectionView: UICollectionView, dragSessionAllowsMoveOperation session: UIDragSession) -> Bool {
-        return true
-    }
 }
 
 extension FramesCollection : UICollectionViewDropDelegate {
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
-        
-        //print("some body once told me \(coordinator.proposal.operation)")
         
         switch coordinator.proposal.operation {
         case .move:
@@ -225,7 +216,7 @@ extension FramesCollection : UICollectionViewDropDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
-        if collectionView.bounds.contains(session.location(in: collectionView)) {
+        if (session.localDragSession?.items[0].localObject as! (String,UICollectionView)) == ("Frame", self) {
             return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
         } else {
             return UICollectionViewDropProposal(operation: .forbidden, intent: .unspecified)
@@ -256,9 +247,9 @@ class FramePreviewCell : UICollectionViewCell {
         
         view.backgroundColor = getAppColor(color: .background)
         
-        view.addSubview(previewBg)
-        previewBg.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
-        previewBg.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
+        view.addSubview(bgForShadow)
+        bgForShadow.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
+        bgForShadow.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
         
         view.addSubview(linesView)
         
@@ -307,6 +298,15 @@ class FramePreviewCell : UICollectionViewCell {
         img.addSubviewFullSize(view: preview)
         img.layer.magnificationFilter = .nearest
         return img
+    }()
+    
+    lazy private var bgForShadow : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        view.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        view.addSubviewFullSize(view: previewBg)        
+        return view
     }()
     
     lazy private var linesView : UIView = {
@@ -419,9 +419,6 @@ class ControlList : UICollectionViewLayout {
         return visibleAttributes
     }
     
-//    override func layoutAttributesForInteractivelyMovingItem(at indexPath: IndexPath, withTargetPosition position: CGPoint) -> UICollectionViewLayoutAttributes {
-//        return attributes[indexPath.item]
-//    }
     override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
             return attributes[indexPath.item]
     }

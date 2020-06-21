@@ -73,7 +73,7 @@ class ProjectViewNew : UIView {
         label.font = UIFont(name: "Rubik-Medium", size: 10)
         label.textAlignment = .center
         label.lineBreakMode = .byTruncatingMiddle
-        //label.setShadow(color: UIColor.black, radius: 6, opasity: 0.5)
+        label.setShadow(color: UIColor.black, radius: 3, opasity: 0.2)
         return label
     }()
     

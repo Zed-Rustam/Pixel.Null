@@ -727,6 +727,8 @@ class ProjectWork{
                         LayerSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!
                         delegate.updateLayer(layer: LayerSelected)
                     }
+                    
+                    delegate.updateFrame(frame: FrameSelected)
                 }
                 
             case .frameClone:
@@ -786,6 +788,7 @@ class ProjectWork{
                     } else{
                         delegate.updateLayerSelect(lastLayer: lastSelect + 1, newLayer: LayerSelected)
                     }
+                    delegate.updateFrame(frame: FrameSelected)
                 }
                 
             //MARK: Frame delete
@@ -852,7 +855,6 @@ class ProjectWork{
                 setFrameDelay(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!, delay: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["from"]!)!)
                 
             //MARK: Transform
-
                 
             case .transform:
                 try! loadActionWas(actionNum: projectInfo.actionList.lastActiveAction).pngData()?.write(to: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].frameID)").appendingPathComponent("layer-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!].layerID).png"))
@@ -880,7 +882,7 @@ class ProjectWork{
                 
             //MARK: Background change
 
-                
+        
             case .backgroundChange:
                 projectInfo.bgColor = projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["last"]!
                 delegate.updateEditor()
@@ -1112,6 +1114,7 @@ class ProjectWork{
                     } else {
                         delegate.updateLayerSelect(lastLayer: lastSelect + 1, newLayer: LayerSelected)
                     }
+                    delegate.updateFrame(frame: FrameSelected)
                 }
                 
             //MARK: Clone frame
@@ -1273,7 +1276,7 @@ class ProjectWork{
                 
                 (delegate as! Editor).resizeProject()
                 
-            //MARK: Clone layer opasity
+            //MARK: Change layer opasity
 
                 
             case .changeLayerOpasity:
