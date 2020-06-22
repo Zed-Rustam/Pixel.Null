@@ -437,7 +437,7 @@ class Fill : Tool {
             resImg.draw(at: .zero)
             selection?.draw(at: .zero, blendMode: .destinationIn, alpha: 1)
             
-            var returnImage = UIGraphicsGetImageFromCurrentImageContext()!
+            let returnImage = UIGraphicsGetImageFromCurrentImageContext()!
             
             //UIGraphicsGetCurrentContext()!.clear(CGRect(origin: .zero, size: image.size))
             

@@ -211,7 +211,7 @@ class PalleteCreateController : UIViewController {
                    var names : [String] = []
                    
                    for i in 0..<projs.count  {
-                       var name = projs[i].lastPathComponent
+                       let name = projs[i].lastPathComponent
                        names.append(name)
                    }
                    

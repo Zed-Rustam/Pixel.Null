@@ -10,6 +10,7 @@ import UIKit
 
 class FrameSettings : UIViewController {
     override func viewDidLoad() {
-        preferredContentSize = CGSize(width: 256, height: 320)
+        preferredContentSize = CGSize(width: 256, height: 160)
+        view.backgroundColor = getAppColor(color: .background)
     }
 }
