@@ -14,7 +14,7 @@ class FastActionBar : UIView {
     
     lazy private var bgView : UIView = {
        let view = UIView()
-        view.backgroundColor = UIColor(named: "backgroundColor")
+        view.backgroundColor = getAppColor(color: .background)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.setCorners(corners: 16)
         
@@ -81,11 +81,11 @@ class FastActionBar : UIView {
         bgView.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
         bgView.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
         bgView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
-        setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
+        setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
     }
     
     override func tintColorDidChange() {
-        setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
+        setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
     }
     
     required init?(coder: NSCoder) {

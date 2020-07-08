@@ -9,10 +9,10 @@
 import UIKit
 
 class PalleteCreateController : UIViewController {
-    lazy private var colors : PalleteCollectionV2 = {
-        let clrs = PalleteCollectionV2(colors: pallete.colorPallete.colors)
-        
-        (clrs.collectionViewLayout as! PalleteCollectionLayout).topOffset = 60
+    lazy private var colors : PaletteCollectionModern = {
+        let clrs = PaletteCollectionModern(colors: pallete.colorPallete.colors)
+        clrs.translatesAutoresizingMaskIntoConstraints = false
+
         return clrs
     }()
     

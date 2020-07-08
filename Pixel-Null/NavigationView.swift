@@ -17,7 +17,7 @@ class NavigationView : UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.maskedCorners = [.layerMaxXMinYCorner,.layerMinXMinYCorner]
-        view.backgroundColor = UIColor(named: "backgroundColor")
+        view.backgroundColor = getAppColor(color: .background)
         return view
     }()
     private var icons : [UIImage] = []
@@ -44,9 +44,9 @@ class NavigationView : UIView {
             img.translatesAutoresizingMaskIntoConstraints = true
             img.heightAnchor.constraint(equalToConstant: CGFloat(iconSize)).isActive = true
             if i == select {
-                img.tintColor = UIColor(named: "enableColor")
+                img.tintColor = getAppColor(color: .enable)
             } else {
-                img.tintColor = UIColor(named: "disableColor")
+                img.tintColor = getAppColor(color: .disable)
             }
             img.isUserInteractionEnabled = true
             img.interactions.append(UIPointerInteraction(delegate: self))
@@ -175,16 +175,14 @@ class NavigationView : UIView {
 
                     UIView.animate(withDuration: 0.25, animations: {
                         self.iconStack.arrangedSubviews[self.select].transform = CGAffineTransform(scaleX: 1, y: 1)
-                         (self.iconStack.arrangedSubviews[self.select] as! UIImageView).tintColor = UIColor(named: "disableColor")
+                         (self.iconStack.arrangedSubviews[self.select] as! UIImageView).tintColor = getAppColor(color: .disable)
                     })
                     select = Int((sender.location(in: iconStack).x / iconStack.bounds.width) * CGFloat(icons.count))
                     
                     UIView.animate(withDuration: 0.25, animations: {
                         self.iconStack.arrangedSubviews[self.select].transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
-                        (self.iconStack.arrangedSubviews[self.select] as! UIImageView).tintColor = UIColor(named: "enableColor")
+                        (self.iconStack.arrangedSubviews[self.select] as! UIImageView).tintColor = getAppColor(color: .enable)
                     })
-                    
-                    
                 } else {
                     UIView.animate(withDuration: 0.25, animations: {
                         self.iconStack.arrangedSubviews[self.select].transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
@@ -198,7 +196,7 @@ class NavigationView : UIView {
                 UIView.animate(withDuration: 0.25, animations: {
                     self.iconStack.arrangedSubviews[self.pressSelect].transform = CGAffineTransform(scaleX: self.pressSelect == self.select ? 1.2 : 1, y: self.pressSelect == self.select ? 1.2 : 1)
                     
-                    (self.iconStack.arrangedSubviews[self.pressSelect] as! UIImageView).tintColor = self.pressSelect == self.select ? UIColor(named: "enableColor") : UIColor(named: "disableColor")
+                    (self.iconStack.arrangedSubviews[self.pressSelect] as! UIImageView).tintColor = self.pressSelect == self.select ? getAppColor(color: .enable) : getAppColor(color: .disable)
                 })
             }
             break

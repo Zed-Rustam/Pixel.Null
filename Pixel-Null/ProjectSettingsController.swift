@@ -18,14 +18,13 @@ class ProjectSettingsController : UIViewController {
         img.translatesAutoresizingMaskIntoConstraints = false
 
         img.layer.magnificationFilter = .nearest
-        img.setCorners(corners: 16)
+        img.setCorners(corners: 12)
         img.contentMode = .scaleAspectFit
         img.backgroundColor = project?.backgroundColor
         
         let mainview = UIView()
         mainview.translatesAutoresizingMaskIntoConstraints = false
-        //mainview.widthAnchor.constraint(equalToConstant: view.frame.width - 32).isActive = true
-        //mainview.heightAnchor.constraint(equalTo: mainview.widthAnchor).isActive = true
+        
         mainview.layer.magnificationFilter = .nearest
         mainview.layer.cornerRadius = 16
 
@@ -34,36 +33,115 @@ class ProjectSettingsController : UIViewController {
         return mainview
     }()
     
-    lazy private var projectName : TextField = {
-        let text = TextField()
+//    lazy private var projectName : TextField = {
+//        let text = TextField()
+//        text.translatesAutoresizingMaskIntoConstraints = false
+//        text.heightAnchor.constraint(equalToConstant: 42).isActive = true
+//        text.filed.text = project!.projectName
+//        text.filed.text?.removeLast(6)
+//
+//        text.isUserInteractionEnabled = false
+//        text.setHelpText(help: "Project Name")
+//        text.filed.delegate = renameDelegate
+//
+//        let bar = UIToolbar()
+//        let cancel = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(self.cancel))
+//        bar.items = [doneBtn,cancel]
+//        bar.sizeToFit()
+//        text.filed.inputAccessoryView = bar
+//
+//        return text
+//    }()
+    
+    lazy private var nameField : UITextField = {
+       let text = UITextField()
         text.translatesAutoresizingMaskIntoConstraints = false
-        text.heightAnchor.constraint(equalToConstant: 42).isActive = true
-        text.filed.text = project!.projectName
-        text.filed.text?.removeLast(6)
+        text.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        text.backgroundColor = getAppColor(color: .backgroundLight)
+        text.textColor = getAppColor(color: .enable)
+        text.font = UIFont(name: "Rubik-Medium", size: 20)
         
         text.isUserInteractionEnabled = false
-        text.setHelpText(help: "Project Name")
-        text.filed.delegate = renameDelegate
+        text.attributedPlaceholder = NSAttributedString(string: "Project name",attributes: [NSAttributedString.Key.foregroundColor: getAppColor(color: .disable)])
+
+        text.leftViewMode = .always
+        text.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 36))
+        
+        text.rightViewMode = .always
+        text.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 36))
+        
+        text.setCorners(corners: 12)
         
         let bar = UIToolbar()
         let cancel = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(self.cancel))
         bar.items = [doneBtn,cancel]
         bar.sizeToFit()
-        text.filed.inputAccessoryView = bar
         
+        text.inputAccessoryView = bar
+        
+        text.text = project!.projectName
+        text.text?.removeLast(6)
+                
+        return text
+    }()
+    
+    lazy private var backgroundField : UITextField = {
+       let text = UITextField()
+        text.translatesAutoresizingMaskIntoConstraints = false
+        text.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        text.backgroundColor = getAppColor(color: .backgroundLight)
+        text.textColor = getAppColor(color: .enable)
+        text.font = UIFont(name: "Rubik-Medium", size: 20)
+        
+        text.isUserInteractionEnabled = false
+        text.text = "Background"
+
+        text.leftViewMode = .always
+        text.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 36))
+        
+        text.rightViewMode = .always
+        text.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 36))
+        
+        text.setCorners(corners: 12)
+        return text
+    }()
+    
+    lazy private var sizeField : UITextField = {
+       let text = UITextField()
+        text.translatesAutoresizingMaskIntoConstraints = false
+        
+        text.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        text.widthAnchor.constraint(equalToConstant: 164).isActive = true
+
+        text.backgroundColor = getAppColor(color: .backgroundLight)
+        text.textColor = getAppColor(color: .enable)
+        text.font = UIFont(name: "Rubik-Medium", size: 20)
+        
+        text.isUserInteractionEnabled = false
+
+        text.text = "\(Int(project!.projectSize.width))x\(Int(project!.projectSize.height))"
+        text.textAlignment = .center
+        
+        text.leftViewMode = .always
+        text.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 36))
+        
+        text.rightViewMode = .always
+        text.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 36))
+        
+        text.setCorners(corners: 12)
         return text
     }()
     
     lazy private var renameDelegate : TextFieldDelegate = {
         return TextFieldDelegate(method: {[unowned self] in
             if(self.getProjects().contains("\($0.text!).pnart") && "\($0.text!).pnart" != self.project!.projectName) {
-                self.projectName.error = "A project with this name already exists"
+                //self.projectName.error = "A project with this name already exists"
                 self.doneBtn.isEnabled = false
             } else if ($0.text == "" || "\($0.text!).pnart" == self.project!.projectName){
-                self.projectName.error = nil
+               // self.projectName.error = nil
                 self.doneBtn.isEnabled = false
             } else {
-                self.projectName.error = nil
+                //self.projectName.error = nil
                 self.doneBtn.isEnabled = true
             }
             
@@ -93,9 +171,9 @@ class ProjectSettingsController : UIViewController {
         let info = notification.userInfo!
         let rect: CGRect = info[UIResponder.keyboardFrameEndUserInfoKey] as! CGRect
         
-        if view.frame.height - rect.height - 8 < projectName.frame.origin.y + projectName.frame.height && projectName.filed.isFirstResponder {
+        if view.frame.height - rect.height - 8 < nameField.frame.origin.y + nameField.frame.height && nameField.isFirstResponder {
             UIView.animate(withDuration: 0.2, animations: {
-                self.view.frame.origin.y -= (self.projectName.frame.origin.y + self.projectName.frame.height) - (self.view.frame.height - rect.height) + 8
+                self.view.frame.origin.y -= (self.nameField.frame.origin.y + self.nameField.frame.height) - (self.view.frame.height - rect.height) + 8
             })
         }
     }
@@ -104,8 +182,8 @@ class ProjectSettingsController : UIViewController {
         UIView.animate(withDuration: 0.2, animations: {
             self.view.frame.origin.y = 0
         })
-        projectName.filed.text = project!.projectName
-        projectName.filed.text?.removeLast(6)
+        nameField.text = project!.projectName
+        nameField.text?.removeLast(6)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -114,44 +192,23 @@ class ProjectSettingsController : UIViewController {
     }
     
     @objc func done() {
-        project!.projectName = "\(projectName.filed.text!).pnart"
-        projectName.isUserInteractionEnabled = false
-        projectName.endEditing(true)
+        project!.projectName = "\(nameField.text!).pnart"
+        nameField.isUserInteractionEnabled = false
+        nameField.endEditing(true)
     }
     
     @objc func cancel() {
-        projectName.endEditing(true)
-        projectName.isUserInteractionEnabled = false
+        nameField.endEditing(true)
+        nameField.isUserInteractionEnabled = false
     }
-    
-    lazy private var projectBackground : TextField = {
-        let text = TextField()
-        text.translatesAutoresizingMaskIntoConstraints = false
-        text.heightAnchor.constraint(equalToConstant: 42).isActive = true
-        text.filed.text = "Background"
-        text.filed.isUserInteractionEnabled = false
         
-        return text
-    }()
-    
-    lazy private var projectSize : TextField = {
-        let text = TextField()
-        text.translatesAutoresizingMaskIntoConstraints = false
-        text.heightAnchor.constraint(equalToConstant: 42).isActive = true
-        text.widthAnchor.constraint(equalToConstant: 164).isActive = true
-        text.filed.text = "\(Int(project!.projectSize.width))x\(Int(project!.projectSize.height))"
-        text.filed.textAlignment = .center
-        text.filed.isUserInteractionEnabled = false
-        
-        return text
-    }()
     
     lazy private var backgroundColor : ColorSelector = {
        let selector = ColorSelector()
         selector.color = project!.backgroundColor
         selector.translatesAutoresizingMaskIntoConstraints = false
-        selector.widthAnchor.constraint(equalToConstant: 42).isActive = true
-        selector.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        selector.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        selector.heightAnchor.constraint(equalToConstant: 36).isActive = true
         
         selector.delegate = {[unowned self] in
             let projectPallete = ProjectPallete()
@@ -173,13 +230,13 @@ class ProjectSettingsController : UIViewController {
     lazy private var editNameButton : CircleButton = {
         let btn = CircleButton(icon: #imageLiteral(resourceName: "edit_icon"), frame: .zero,icScale: 0.5)
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 42).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
         btn.corners = 12
         
         btn.delegate = {[unowned self] in
-            self.projectName.isUserInteractionEnabled = true
-            self.projectName.filed.becomeFirstResponder()
+            self.nameField.isUserInteractionEnabled = true
+            self.nameField.becomeFirstResponder()
         }
         
         return btn
@@ -188,8 +245,8 @@ class ProjectSettingsController : UIViewController {
     lazy private var editSizeButton : CircleButton = {
         let btn = CircleButton(icon: #imageLiteral(resourceName: "edit_icon"), frame: .zero,icScale: 0.5)
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 42).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
         btn.corners = 12
         btn.delegate = {[unowned self] in
             let resize = ProjectResizeController()
@@ -198,7 +255,7 @@ class ProjectSettingsController : UIViewController {
                 if $0 {
                     (self.preview.subviews[0] as! UIImageView).image = self.project!.getFrame(frame: 0, size: self.project!.projectSize)
                     self.editor?.resizeProject()
-                    self.projectSize.filed.text = "\(Int(self.project!.projectSize.width))x\(Int(self.project!.projectSize.height))"
+                    self.sizeField.text = "\(Int(self.project!.projectSize.width))x\(Int(self.project!.projectSize.height))"
                 }
             }
             
@@ -212,8 +269,8 @@ class ProjectSettingsController : UIViewController {
     lazy private var flipXButton : CircleButton = {
         let btn = CircleButton(icon: #imageLiteral(resourceName: "flip_horizontal_icon"), frame: .zero,icScale: 0.5)
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 42).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
         btn.corners = 12
         
         btn.delegate = {[unowned self] in
@@ -231,8 +288,8 @@ class ProjectSettingsController : UIViewController {
     lazy private var flipYButton : CircleButton = {
         let btn = CircleButton(icon: #imageLiteral(resourceName: "flip_vertical_icon"), frame: .zero,icScale: 0.5)
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 42).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
         btn.corners = 12
         
         btn.delegate = {[unowned self] in
@@ -241,8 +298,6 @@ class ProjectSettingsController : UIViewController {
             
             (self.preview.subviews[0] as! UIImageView).image = self.project!.getFrame(frame: 0, size: self.project!.projectSize).flip(xFlip: self.project!.information.flipX, yFlip: self.project!.information.flipY)
             self.editor?.resizeProject()
-            //self.projectName.isUserInteractionEnabled = true
-            //self.projectName.filed.becomeFirstResponder()
         }
         
         return btn
@@ -250,45 +305,47 @@ class ProjectSettingsController : UIViewController {
 
     override func viewDidLoad() {
         view.addSubview(preview)
-        view.addSubview(projectName)
-        view.addSubview(projectBackground)
-        view.addSubview(projectSize)
+        view.addSubview(nameField)
+        view.addSubview(backgroundField)
+        view.addSubview(sizeField)
         view.addSubview(backgroundColor)
         view.addSubview(editNameButton)
         view.addSubview(editSizeButton)
         view.addSubview(flipXButton)
         view.addSubview(flipYButton)
+        
+        view.setCorners(corners: 32)
 
-        preview.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
-        preview.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
-        preview.topAnchor.constraint(equalTo: view.topAnchor, constant: 16).isActive = true
+        preview.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
+        preview.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        preview.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
         preview.heightAnchor.constraint(equalTo: preview.widthAnchor, constant: 0).isActive = true
         
-        projectName.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
-        projectName.topAnchor.constraint(equalTo: preview.bottomAnchor, constant: 8).isActive = true
-        projectName.rightAnchor.constraint(equalTo: editNameButton.leftAnchor, constant: -8).isActive = true
+        nameField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
+        nameField.topAnchor.constraint(equalTo: preview.bottomAnchor, constant: 12).isActive = true
+        nameField.rightAnchor.constraint(equalTo: editNameButton.leftAnchor, constant: -12).isActive = true
 
-        projectBackground.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
-        projectBackground.topAnchor.constraint(equalTo: projectName.bottomAnchor, constant: 8).isActive = true
-        projectBackground.rightAnchor.constraint(equalTo: backgroundColor.leftAnchor, constant: -8).isActive = true
+        backgroundField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
+        backgroundField.topAnchor.constraint(equalTo: nameField.bottomAnchor, constant: 12).isActive = true
+        backgroundField.rightAnchor.constraint(equalTo: backgroundColor.leftAnchor, constant: -12).isActive = true
         
-        projectSize.topAnchor.constraint(equalTo: projectBackground.bottomAnchor, constant: 8).isActive = true
-        projectSize.rightAnchor.constraint(equalTo: editSizeButton.leftAnchor, constant: -8).isActive = true
+        sizeField.topAnchor.constraint(equalTo: backgroundField.bottomAnchor, constant: 12).isActive = true
+        sizeField.rightAnchor.constraint(equalTo: editSizeButton.leftAnchor, constant: -12).isActive = true
         
-        backgroundColor.topAnchor.constraint(equalTo: projectBackground.topAnchor, constant: 0).isActive = true
-        backgroundColor.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
+        backgroundColor.topAnchor.constraint(equalTo: backgroundField.topAnchor, constant: 0).isActive = true
+        backgroundColor.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
         
-        editNameButton.topAnchor.constraint(equalTo: projectName.topAnchor, constant: 0).isActive = true
-        editNameButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
+        editNameButton.topAnchor.constraint(equalTo: nameField.topAnchor, constant: 0).isActive = true
+        editNameButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
         
-        editSizeButton.topAnchor.constraint(equalTo: projectSize.topAnchor, constant: 0).isActive = true
-        editSizeButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
+        editSizeButton.topAnchor.constraint(equalTo: sizeField.topAnchor, constant: 0).isActive = true
+        editSizeButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
         
-        flipYButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
-        flipYButton.topAnchor.constraint(equalTo: editSizeButton.bottomAnchor, constant: 16).isActive = true
+        flipYButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        flipYButton.topAnchor.constraint(equalTo: editSizeButton.bottomAnchor, constant: 12).isActive = true
         
-        flipXButton.rightAnchor.constraint(equalTo: flipYButton.leftAnchor, constant: -8).isActive = true
-        flipXButton.topAnchor.constraint(equalTo: editSizeButton.bottomAnchor, constant: 16).isActive = true
+        flipXButton.rightAnchor.constraint(equalTo: flipYButton.leftAnchor, constant: -12).isActive = true
+        flipXButton.topAnchor.constraint(equalTo: editSizeButton.bottomAnchor, constant: 12).isActive = true
 
         view.backgroundColor = UIColor(named: "backgroundColor")!
         

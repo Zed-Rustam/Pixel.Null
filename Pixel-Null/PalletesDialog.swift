@@ -78,14 +78,17 @@ class PalletesDialog: UIView {
         return mainview
     }()
     
-    lazy var collection : PalleteCollectionV2 = {
-        let clrs = PalleteCollectionV2(colors: try! JSONDecoder().decode(Pallete.self, from: NSDataAsset(name: "Default pallete")!.data).colors)
-        clrs.setEnableMoving(enable: false)
+    lazy var collection : PaletteCollectionModern = {
+        let clrs = PaletteCollectionModern(colors: try! JSONDecoder().decode(Pallete.self, from: NSDataAsset(name: "Default pallete")!.data).colors)
+        clrs.dragDelegate = nil
+        clrs.dropDelegate = nil
         clrs.layer.masksToBounds = true
         
         clrs.colorDelegate = {[unowned self] in
             self.colorSelected = $0
         }
+        
+        clrs.translatesAutoresizingMaskIntoConstraints = false
         
         (clrs.collectionViewLayout as! PalleteCollectionLayout).topOffset = 16
         (clrs.collectionViewLayout as! PalleteCollectionLayout).bottomOffset = 16
@@ -93,6 +96,7 @@ class PalletesDialog: UIView {
     }()
     
     func setColors(newColors : [String]) {
+        self.collection.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: .top)
         collection.palleteColors = newColors
     }
    
@@ -112,10 +116,8 @@ class PalletesDialog: UIView {
         collection.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
         collection.topAnchor.constraint(equalTo: PalleteBar.bottomAnchor, constant: -8).isActive = true
         collection.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
-
         
         translatesAutoresizingMaskIntoConstraints = false
-        // Do any additional setup after loading the view.
     }
     
     override func layoutSubviews() {

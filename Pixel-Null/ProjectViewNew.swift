@@ -150,6 +150,7 @@ class ProjectViewNew : UIView {
         addInteraction(UIContextMenuInteraction(delegate: self))
         
         setCorners(corners: 12)
+        layer.cornerCurve = .circular
     }
     
     required init?(coder: NSCoder) {

@@ -84,7 +84,7 @@ class ImportCollectionCell : UICollectionViewCell {
                 fileImage.image = UIImage(data: try! Data(contentsOf: url))
                 url.stopAccessingSecurityScopedResource()
             }
-        } else if url.lastPathComponent.hasSuffix(".png") || url.lastPathComponent.hasSuffix(".jpeg") || url.lastPathComponent.hasSuffix(".jpg") {
+        } else if url.lastPathComponent.hasSuffix(".png") || url.lastPathComponent.hasSuffix(".jpeg") || url.lastPathComponent.hasSuffix(".jpg") || url.lastPathComponent.hasSuffix(".PNG") || url.lastPathComponent.hasSuffix(".JPEG") {
             var img = UIImage()
             
             if url.startAccessingSecurityScopedResource() {

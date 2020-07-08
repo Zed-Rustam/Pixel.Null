@@ -169,7 +169,9 @@ class PalleteEditor : UIViewController {
                 let palleteSelector = ColorSelectorController()
                 
                 palleteSelector.delegate = {[unowned self] in
-                    self.colors.addColor(color: $0)
+                    if !self.colors.moving {
+                        self.colors.addColor(color: $0)
+                    }
                 }
                 
                 self.show(palleteSelector, sender: self)

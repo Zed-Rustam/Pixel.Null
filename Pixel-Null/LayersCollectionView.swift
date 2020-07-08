@@ -11,10 +11,8 @@ import UIKit
 class LayersCollectionView : UIView, UITextFieldDelegate {
     lazy var list : LayersTable = {
         let ls = LayersTable(project: project!,delegateFrame: nil)
-        //ls.selfView = self
         ls.translatesAutoresizingMaskIntoConstraints = false
-        //ls.heightAnchor.constraint(equalToConstant: 70).isActive = true
-        
+        ls.contentInset = UIEdgeInsets(top: 24, left: 0, bottom: 24, right: 0)
         return ls
     }()
     
@@ -29,73 +27,6 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
         return text
     }()
     
-//    lazy var deleteButton : CircleButton = {
-//        let btn = CircleButton(icon: #imageLiteral(resourceName: "trash_icon"), frame: .zero)
-//        btn.corners = 6
-//        btn.setbgColor(color: getAppColor(color: .red))
-//        btn.setShadowColor(color: getAppColor(color: .red).withAlphaComponent(0.75))
-//        btn.setIconColor(color: .white)
-//        btn.delegate = {[weak self] in
-//            if (!self!.list.moving && self!.project!.information.frames[self!.project!.FrameSelected].layers.count > 1) {
-//                self!.project?.addAction(action: ["ToolID" : "\(Actions.layerDelete.rawValue)","frame" : "\(self!.project!.FrameSelected)", "layer" : "\(self!.project!.LayerSelected)", "wasVisible" : "\(self!.project!.information.frames[self!.project!.FrameSelected].layers[self!.project!.LayerSelected].visible)", "transparent" : "\(self!.project!.information.frames[self!.project!.FrameSelected].layers[self!.project!.LayerSelected].transparent)"])
-//
-//                try! self!.project?.getLayer(frame: self!.project!.FrameSelected, layer: self!.project!.LayerSelected).pngData()?.write(to: self!.project!.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(self!.project!.getNextActionID()).png"))
-//
-//                self!.list.frameDelegate?.deleteLayer(frame: self!.project!.FrameSelected, layer: self!.project!.LayerSelected)
-//
-//                if(self!.project!.layerCount < 16) {
-//                    self!.addButton.isEnabled = true
-//                    self!.cloneButton.isEnabled = true
-//                }
-//            }
-//        }
-//        btn.translatesAutoresizingMaskIntoConstraints = false
-//        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
-//        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
-//        return btn
-//    }()
-//
-    
-//    lazy var cloneButton : CircleButton = {
-//        let btn = CircleButton(icon: #imageLiteral(resourceName: "clone_icon"), frame: .zero)
-//        btn.corners = 6
-//        btn.delegate = {[weak self] in
-//            if !self!.list.moving {
-//                self!.project?.addAction(action: ["ToolID" : "\(Actions.layerClone.rawValue)", "frame" : "\(self!.project!.FrameSelected)", "layer" : "\(self!.project!.LayerSelected)"])
-//
-//                self!.list.frameDelegate?.cloneLayer(frame: self!.project!.FrameSelected, original: self!.project!.LayerSelected)
-//
-//                if(self!.project!.layerCount >= 16) {
-//                    self!.addButton.isEnabled = false
-//                    self!.cloneButton.isEnabled = false
-//                }
-//            }
-//        }
-//        btn.translatesAutoresizingMaskIntoConstraints = false
-//        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
-//        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
-//
-//        return btn
-//    }()
-//
-//
-    
-//    lazy var visibleButton : CircleButton = {
-//        let btn = CircleButton(icon: #imageLiteral(resourceName: "visible_button_icon"), frame: .zero)
-//       btn.corners = 6
-//       btn.delegate = {[weak self] in
-//           if !self!.list.moving {
-//               self!.list.frameDelegate?.changeLayerVisible(frame: self!.project!.FrameSelected, layer: self!.project!.LayerSelected)
-//               self!.project!.addAction(action: ["ToolID" : "\(Actions.layerVisibleChange.rawValue)", "frame" : "\(self!.project!.FrameSelected)", "layer" : "\(self!.project!.LayerSelected)"])
-//           }
-//       }
-//        btn.translatesAutoresizingMaskIntoConstraints = false
-//        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
-//        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
-//
-//        return btn
-//    }()
-//
     
     lazy var addButton : CircleButton = {
         let btn = CircleButton(icon: #imageLiteral(resourceName: "add_icon"), frame: CGRect(x: frame.width - 90, y: 0, width: 36, height: 36))
@@ -220,21 +151,17 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
         
         self.addSubview(layerText)
         self.addSubview(list)
-        self.addSubview(transparentField)
         self.addSubview(addButton)
 
-        layerText.leftAnchor.constraint(equalTo: leftAnchor, constant: 12).isActive = true
+        layerText.leftAnchor.constraint(equalTo: leftAnchor, constant: 24).isActive = true
         layerText.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
         
         list.leftAnchor.constraint(equalTo: leftAnchor, constant: 0).isActive = true
         list.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
-        list.topAnchor.constraint(equalTo: layerText.bottomAnchor, constant: 6).isActive = true
+        list.topAnchor.constraint(equalTo: layerText.bottomAnchor, constant: 0).isActive = true
         list.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
         
-        transparentField.leftAnchor.constraint(equalTo: leftAnchor, constant: 12).isActive = true
-        transparentField.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 12).isActive = true
-
-        addButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -12).isActive = true
+        addButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -24).isActive = true
         addButton.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
 
         checkFrame()

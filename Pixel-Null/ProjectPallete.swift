@@ -86,9 +86,9 @@ class ProjectPallete : UIViewController {
         return btn
     }()
     
-    lazy private var collection : PaletteCollectionV3 = {
-        let colors = PaletteCollectionV3(colors : project!.information.pallete.colors)
-        
+    lazy private var collection : PaletteCollectionModern = {
+        let colors = PaletteCollectionModern(colors : project!.information.pallete.colors)
+        colors.translatesAutoresizingMaskIntoConstraints = false
         return colors
     }()
     

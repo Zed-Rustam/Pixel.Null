@@ -98,9 +98,18 @@ class ProjectImportController: UIViewController {
     
     func importFiles() {
         for i in urls {
-            if i.lastPathComponent.hasSuffix(".png") || i.lastPathComponent.hasSuffix(".jpg") {
+            if i.lastPathComponent.hasSuffix(".png") || i.lastPathComponent.hasSuffix(".jpg") || i.lastPathComponent.hasSuffix(".PNG") || i.lastPathComponent.hasSuffix(".JPG") {
                 var name = i.lastPathComponent
                 name.removeLast(4)
+                name += ".pnart"
+                if i.startAccessingSecurityScopedResource() {
+                    ProjectWork(projectName: name, image: UIImage(data: try! Data(contentsOf: i))!)
+                    self.gallery!.projectAdded(name: name)
+                    i.stopAccessingSecurityScopedResource()
+                }
+            } else if i.lastPathComponent.hasSuffix(".jpeg") || i.lastPathComponent.hasSuffix(".JPEG") {
+                var name = i.lastPathComponent
+                name.removeLast(5)
                 name += ".pnart"
                 if i.startAccessingSecurityScopedResource() {
                     ProjectWork(projectName: name, image: UIImage(data: try! Data(contentsOf: i))!)

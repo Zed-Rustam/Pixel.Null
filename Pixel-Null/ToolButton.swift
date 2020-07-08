@@ -132,8 +132,8 @@ class ToolButton : UICollectionViewCell {
             }
             button.longPressDelegate = {[weak self] in
                 let impactFeedbackgenerator = UIImpactFeedbackGenerator (style: .heavy)
-                        impactFeedbackgenerator.prepare()
-                        impactFeedbackgenerator.impactOccurred()
+                impactFeedbackgenerator.prepare()
+                impactFeedbackgenerator.impactOccurred()
                 (self!.delegate as! ToolSettingsDelegate).openPencilSettings()
             }
             
@@ -220,7 +220,7 @@ class ToolButton : UICollectionViewCell {
               let editor = self!.delegate as! Editor
             editor.canvas.checkTransformChangeBefore(newTool: 3)
               editor.canvas.selectTool(newTool: 3)
-
+            
             self!.barDelegate.wasChangedTool(newTool: 3)
             self!.barDelegate.updateButtons(btns: [])
             self!.button.setIconColor(color: UIColor(named: "selectColor")!)

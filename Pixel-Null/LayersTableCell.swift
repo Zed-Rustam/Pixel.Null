@@ -11,7 +11,7 @@ import UIKit
 class LayersTableCell : UICollectionViewCell {
     
     private var isUpdateImageMode : Bool = false
-    
+        
     lazy private var background : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -26,6 +26,11 @@ class LayersTableCell : UICollectionViewCell {
         view.addSubview(layerName)
         layerName.leftAnchor.constraint(equalTo: previewBackground.rightAnchor, constant: 6).isActive = true
         layerName.topAnchor.constraint(equalTo: previewBackground.topAnchor, constant: 0).isActive = true
+        
+        view.addSubview(actionsButton)
+        actionsButton.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        actionsButton.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        
         return view
     }()
     
@@ -39,10 +44,30 @@ class LayersTableCell : UICollectionViewCell {
         return view
     }()
     
+    private var actionsButton : UIButton = {
+        let btn = UIButton()
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.setImage(UIImage(systemName: "ellipsis", compatibleWith: UITraitCollection.init(legibilityWeight: .bold)), for: .normal)
+        btn.imageView?.tintColor = getAppColor(color: .enable)
+        btn.showsMenuAsPrimaryAction = true
+        
+        return btn
+    }()
+    
+    var menu : () -> (UIMenu?) = {nil}
+    
+    @objc private func some() {
+        print("action")
+        actionsButton.menu = menu()
+    }
+    
     lazy private var previewImage : UIImageView = {
         let image = UIImageView()
         image.layer.magnificationFilter = .nearest
         image.setCorners(corners: 6)
+        image.contentMode = .scaleAspectFit
         
         image.addSubviewFullSize(view: unvisibleImage)
         return image
@@ -81,6 +106,8 @@ class LayersTableCell : UICollectionViewCell {
         super.init(frame: frame)
         
         contentView.addSubviewFullSize(view: background)
+        
+        actionsButton.addTarget(self, action: #selector(some), for: .touchDown)
     }
         
     func setSelected(isSelect : Bool, anim : Bool) {
@@ -99,6 +126,10 @@ class LayersTableCell : UICollectionViewCell {
         UIView.animate(withDuration: animate ? 0.2 : 0, animations: {
             self.unvisibleImage.alpha = isVisible ? 0 : 1
         })
+    }
+    
+    func setContextMenu(menu : @escaping ()->(UIMenu?)) {
+        self.menu = menu
     }
     
     required init?(coder: NSCoder) {

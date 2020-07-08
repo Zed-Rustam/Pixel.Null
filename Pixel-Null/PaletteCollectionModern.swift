@@ -17,12 +17,17 @@ class PaletteCollectionModern : UICollectionView {
         }
         set {
             colors = newValue
+            selectedColor = 0
+            selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: .top)
             reloadData()
         }
     }
+    
     var moving : Bool = false
     
-    private var layout = PalleteCollectionLayout(itemSize: 36, itemsSpacing: 0)
+    private var layout = PalleteCollectionLayout(itemSize: 32, itemsSpacing: 0)
+    
+    var colorDelegate : (UIColor) -> () = {color in}
     
     private var selectedColor = 0
 
@@ -39,13 +44,24 @@ class PaletteCollectionModern : UICollectionView {
         delegate = self
         
         backgroundColor = .clear
+        reorderingCadence = .immediate
+        
         
         dragDelegate = self
+        dropDelegate = self
+        
+        allowsSelection = true
         dragInteractionEnabled = true
         allowsSelection = true
         isUserInteractionEnabled = true
         layer.shouldRasterize = true
         layer.rasterizationScale = UIScreen.main.scale
+        setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+    }
+    
+    override func tintColorDidChange() {
+        super.tintColorDidChange()
+        setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
     }
     
     required init?(coder: NSCoder) {
@@ -60,8 +76,8 @@ extension PaletteCollectionModern : UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = dequeueReusableCell(withReuseIdentifier: "Color", for: indexPath) as! PaletteCollectionCell
-        cell.setSelect(isSelect: indexPath.item == selectedColor, animate: false)
         cell.setColor(color: UIColor(hex: colors[indexPath.item])!)
+        cell.setSelect(isSelect: indexPath.item == selectedColor, animate: false)
         
         return cell
     }
@@ -73,6 +89,8 @@ extension PaletteCollectionModern : UICollectionViewDelegate {
         cell?.setSelect(isSelect: true, animate: true)
         selectedColor = indexPath.item
         self.bringSubviewToFront(cell!)
+        
+        colorDelegate(UIColor(hex: colors[indexPath.item])!)
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
@@ -92,24 +110,96 @@ extension PaletteCollectionModern : UICollectionViewDelegate {
 extension PaletteCollectionModern : UICollectionViewDragDelegate {
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         let item = UIDragItem(itemProvider: NSItemProvider())
+        
+        item.previewProvider = {
+            let preview = UIDragPreview(view: (self.cellForItem(at: indexPath)! as! PaletteCollectionCell).contentView.subviews[0])
+            return preview
+        }
+        
+        item.localObject = ("Color", self)
+        
+        let impactFeedbackgenerator = UIImpactFeedbackGenerator (style: .heavy)
+        impactFeedbackgenerator.prepare()
+        impactFeedbackgenerator.impactOccurred()
+        moving = true
+        
         return [item]
     }
     
     func collectionView(_ collectionView: UICollectionView, dragPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
         let params = UIDragPreviewParameters()
         params.backgroundColor = .clear
-        params.visiblePath = UIBezierPath(roundedRect: CGRect(origin: .zero, size: cellForItem(at: indexPath)!.bounds.size), cornerRadius: 0)
+        params.visiblePath = UIBezierPath(roundedRect: CGRect(origin: indexPath.item == selectedColor ? CGPoint(x: -6 , y: -6) : .zero, size: indexPath.item == selectedColor ? CGSize(width: 44, height: 44) : CGSize(width: 32, height: 32)), cornerRadius: indexPath.item == selectedColor ? 12 : 0)
+        
+        return params
+    }
+
+    
+}
+
+extension PaletteCollectionModern : UICollectionViewDropDelegate {
+    func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
+        switch coordinator.proposal.operation {
+        case .move:
+            if let destinationIndexPath = coordinator.destinationIndexPath {
+                let sourceIndexPath = coordinator.items[0].sourceIndexPath!
+                
+                if sourceIndexPath.item < selectedColor && destinationIndexPath.item >= selectedColor {
+                    selectedColor -= 1
+                } else if sourceIndexPath.item  > selectedColor && destinationIndexPath.item <= selectedColor {
+                    selectedColor += 1
+                } else if sourceIndexPath.item == selectedColor {
+                    selectedColor = destinationIndexPath.item
+                }
+                
+                colors.insert(colors.remove(at: coordinator.items[0].sourceIndexPath!.item), at: coordinator.destinationIndexPath!.item)
+
+                performBatchUpdates({
+                    collectionView.deleteItems(at: [coordinator.items[0].sourceIndexPath!])
+                    collectionView.insertItems(at: [coordinator.destinationIndexPath!])
+                }, completion: {isEnd in
+                    collectionView.selectItem(at: IndexPath(item: self.selectedColor, section: 0), animated: false, scrollPosition: .top)
+                })
+                
+                self.dragInteractionEnabled = false
+                coordinator.drop(coordinator.items[0].dragItem, toItemAt: coordinator.destinationIndexPath!)
+            }
+        default:
+            break
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
+        if (session.localDragSession?.items[0].localObject as! (String,UICollectionView)) == ("Color", self) {
+            return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+        } else {
+            return UICollectionViewDropProposal(operation: .forbidden, intent: .unspecified)
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, dropPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+        let params = UIDragPreviewParameters()
+        params.backgroundColor = .clear
+        params.visiblePath = UIBezierPath(roundedRect: CGRect(origin: indexPath.item == selectedColor ? CGPoint(x: -6 , y: -6) : .zero, size: indexPath.item == selectedColor ? CGSize(width: 44, height: 44) : CGSize(width: 32, height: 32)), cornerRadius: indexPath.item == selectedColor ? 12 : 0)
         
         return params
     }
     
     
+    func collectionView(_ collectionView: UICollectionView, dropSessionDidEnd session: UIDropSession) {
+        self.dragInteractionEnabled = true
+        moving = false
+    }
 }
 
 class PaletteCollectionCell : UICollectionViewCell {
     
+    var width = NSLayoutConstraint()
+    var height = NSLayoutConstraint()
+
     lazy private var bgColor : UIImageView = {
         let img = UIImageView(image: #imageLiteral(resourceName: "background"))
+        img.translatesAutoresizingMaskIntoConstraints = false
         
         img.layer.magnificationFilter = .nearest
         
@@ -126,7 +216,17 @@ class PaletteCollectionCell : UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        contentView.addSubviewFullSize(view: bgColor)
+        contentView.addSubview(bgColor)
+        width = bgColor.widthAnchor.constraint(equalTo: contentView.widthAnchor)
+        height = bgColor.heightAnchor.constraint(equalTo: contentView.heightAnchor)
+        
+        bgColor.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
+        bgColor.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
+        
+        NSLayoutConstraint.activate([
+            width,
+            height
+        ])
     }
     
     required init?(coder: NSCoder) {
@@ -134,13 +234,24 @@ class PaletteCollectionCell : UICollectionViewCell {
     }
     
     func setSelect(isSelect : Bool, animate : Bool) {
-        self.bgColor.layer.borderColor = getAppColor(color: .select).cgColor
+      
+        self.bgColor.layer.borderColor = UIColor.white.withAlphaComponent(0.9).cgColor
+        
+        
+        if isSelect {
+            width.constant = 12;
+            height.constant = 12;
+        } else {
+            width.constant = 0;
+            height.constant = 0;
+        }
         
         UIView.animate(withDuration: animate ? 0.2 : 0, animations: {
-            self.bgColor.setCorners(corners: isSelect ? 9 : 0)
-            self.bgColor.transform = CGAffineTransform(scaleX: isSelect ? 1.25 : 1, y: isSelect ? 1.25 : 1)
+            self.bgColor.layoutIfNeeded()
             self.bgColor.StrokeAnimate(duration: animate ? 0.2 : 0, width: isSelect ? 3 : 0)
-            self.contentView.setShadow(color: .black, radius: 8, opasity: isSelect ? 0.2 : 0)
+            self.bgColor.setCorners(corners: isSelect ? 12 : 0)
+            self.contentView.setShadow(color: .black, radius: 8, opasity: isSelect ? 0.5 : 0)
+          
         })
     }
     

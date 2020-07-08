@@ -387,14 +387,12 @@ extension FramePreviewCell : UIPointerInteractionDelegate {
 }
 
 class ControlList : UICollectionViewLayout {
-    private var paddingleft = 12
-    private var paddingRight = 12
     private var spacing = 0
     
     var attributes : [UICollectionViewLayoutAttributes] = []
     
     override var collectionViewContentSize: CGSize {
-           return CGSize(width: CGFloat(collectionView!.numberOfItems(inSection: 0) * 42 + (collectionView!.numberOfItems(inSection: 0) - 1) * spacing + paddingleft + paddingRight), height: CGFloat(collectionView!.bounds.height))
+           return CGSize(width: CGFloat(collectionView!.numberOfItems(inSection: 0) * 42 + (collectionView!.numberOfItems(inSection: 0) - 1) * spacing), height: CGFloat(collectionView!.bounds.height))
     }
     
     override func prepare() {
@@ -402,7 +400,7 @@ class ControlList : UICollectionViewLayout {
         
         for item in 0..<collectionView!.numberOfItems(inSection: 0){
             let index = IndexPath(item: item, section: 0)
-            let frame = CGRect(x: paddingleft + item * 42 + item * spacing, y: 0, width: 42, height: 70)
+            let frame = CGRect(x: item * 42 + item * spacing, y: 0, width: 42, height: 70)
             let attribute = UICollectionViewLayoutAttributes(forCellWith: index)
             attribute.frame = frame
             attributes.append(attribute)

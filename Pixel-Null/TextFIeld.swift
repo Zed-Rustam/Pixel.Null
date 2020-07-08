@@ -89,7 +89,7 @@ class TextField : UIView {
     
     func setHelpText(help : String) {
         filed.attributedPlaceholder =
-            NSAttributedString(string: help, attributes: [NSAttributedString.Key.foregroundColor : UIColor(named: "disableColor")!])
+            NSAttributedString(string: help, attributes: [NSAttributedString.Key.foregroundColor : getAppColor(color: .disable)])
     }
     
     func setFIeldDelegate(delegate : UITextFieldDelegate){

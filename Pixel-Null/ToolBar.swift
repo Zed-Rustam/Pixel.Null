@@ -126,6 +126,7 @@ class ToolBar : UIView {
             self.hideItems()
         })
     }
+    
     func hideItems() {
         if isHide {
             print("start hidding")
@@ -146,14 +147,14 @@ class ToolBar : UIView {
     func animationStart(){
         for i in 0..<toolCollection.tools.count {
             (toolCollection.cellForItem(at: IndexPath(item: i, section: 0)) as? ToolButton)?.getButton().isEnabled = false
-            swipeView.backgroundColor = UIColor(named: "disableColor")!
+            swipeView.backgroundColor = getAppColor(color: .disable)
         }
         subBar.updateButtons(btns: [])
     }
     func animationStop(){
         for i in 0..<toolCollection.tools.count {
             (toolCollection.cellForItem(at: IndexPath(item: i, section: 0)) as? ToolButton)?.getButton().isEnabled = true
-            swipeView.backgroundColor = UIColor(named: "enableColor")!
+            swipeView.backgroundColor = getAppColor(color: .enable)
         }
         (toolCollection.cellForItem(at: IndexPath(item: toolCollection.tools.firstIndex(of: nowSelected)!, section: 0)) as! ToolButton).getButton().delegate()
         //toolCollection.reloadData()
@@ -178,20 +179,21 @@ class ToolBar : UIView {
         subBar.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
         subBar.topAnchor.constraint(equalTo: bg.topAnchor, constant: 0).isActive = true
         
+        subBar.updateButtons(btns: [])
+        
         bg.leftAnchor.constraint(equalTo: leftAnchor, constant: 0).isActive = true
         bg.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
         bg.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
         //bg.setShadow(color: ProjectStyle.uiShadowColor, radius: 4, opasity: 0.25)
 
-        
         self.heightAnchor.constraint(equalTo: bg.heightAnchor, constant: 48).isActive = true
-        
         
         addGestureRecognizer(swipeUpGesture)
         addGestureRecognizer(swipeDownGesture)
     }
     override func tintColorDidChange() {
         bg.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
+        subBar.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
     }
     
     func setData(project proj : ProjectWork, delegate del : FrameControlDelegate){

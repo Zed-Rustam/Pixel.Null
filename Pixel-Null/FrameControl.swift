@@ -259,13 +259,14 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
     
     override func viewDidLoad() {
         self.view.backgroundColor = UIColor(named: "backgroundColor")
+        view.setCorners(corners: 24)
         
         view.addSubview(frames)
         view.addSubview(layers)
         
         frames.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
         frames.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
-        frames.topAnchor.constraint(equalTo: view.topAnchor, constant: 12).isActive = true
+        frames.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
 
         frames.list.frameDelegate = self
         frames.parentController = self

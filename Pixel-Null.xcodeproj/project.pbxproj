@@ -38,6 +38,7 @@
 		954FFE2B246B357D00A4EC71 /* FIles Miniature.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 954FFE21246B357D00A4EC71 /* FIles Miniature.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		954FFE99246B66F700A4EC71 /* ThumbnailProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954FFE26246B357D00A4EC71 /* ThumbnailProvider.swift */; };
 		954FFE9A246B6B9800A4EC71 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 954AABB823BBEC4100F52955 /* Assets.xcassets */; };
+		955074AA24A4AF8B00770758 /* CreateDialogNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955074A924A4AF8B00770758 /* CreateDialogNew.swift */; };
 		95513ABB24709D59007E3E9E /* ColorsPalleteNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95513ABA24709D59007E3E9E /* ColorsPalleteNew.swift */; };
 		95513ABD2471E968007E3E9E /* ProjectViewNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95513ABC2471E968007E3E9E /* ProjectViewNew.swift */; };
 		955145D52405589100524FF9 /* ProjectCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955145D42405589100524FF9 /* ProjectCanvas.swift */; };
@@ -50,8 +51,6 @@
 		95560A1A23C5442800581482 /* GalleryLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95560A1923C5442800581482 /* GalleryLayout.swift */; };
 		95560A1F23C79ACC00581482 /* ProjectsActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95560A1E23C79ACC00581482 /* ProjectsActions.swift */; };
 		95560A2223C8EBCC00581482 /* ProjectFullImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95560A2123C8EBCC00581482 /* ProjectFullImage.swift */; };
-		95560A2423CA315100581482 /* CreateDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95560A2323CA315100581482 /* CreateDialog.swift */; };
-		95578E0523D4C0B200D8DDF2 /* CreateDIalogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95578E0423D4C0B200D8DDF2 /* CreateDIalogController.swift */; };
 		9559B9BC2462CBD80066EA40 /* TransformController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9559B9BB2462CBD80066EA40 /* TransformController.swift */; };
 		9559B9BE2462D0550066EA40 /* ShapeCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9559B9BD2462D0550066EA40 /* ShapeCollection.swift */; };
 		9560723A24940659009D8DCC /* PaletteCollectionModern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9560723924940659009D8DCC /* PaletteCollectionModern.swift */; };
@@ -102,7 +101,6 @@
 		95A67779246A9ABE00B3A3F6 /* AboutDeveloperController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A67778246A9ABE00B3A3F6 /* AboutDeveloperController.swift */; };
 		95A799612443A3E200F7BBE2 /* ThemeSelect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A799602443A3E200F7BBE2 /* ThemeSelect.swift */; };
 		95A799652443B59800F7BBE2 /* MainSettingsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A799642443B59800F7BBE2 /* MainSettingsMenu.swift */; };
-		95A83FCD24866978002A5E29 /* LayersController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A83FCC24866978002A5E29 /* LayersController.swift */; };
 		95AA119C2444C1500048CB96 /* SwiftUIFun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95AA119B2444C1500048CB96 /* SwiftUIFun.swift */; };
 		95AB4B262483B7EC005317F2 /* PencilTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95AB4B252483B7EC005317F2 /* PencilTool.swift */; };
 		95AB4B282483B97B005317F2 /* EraserTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95AB4B272483B97B005317F2 /* EraserTool.swift */; };
@@ -197,6 +195,7 @@
 		954FFE23246B357D00A4EC71 /* QuickLookThumbnailing.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLookThumbnailing.framework; path = System/Library/Frameworks/QuickLookThumbnailing.framework; sourceTree = SDKROOT; };
 		954FFE26246B357D00A4EC71 /* ThumbnailProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailProvider.swift; sourceTree = "<group>"; };
 		954FFE28246B357D00A4EC71 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		955074A924A4AF8B00770758 /* CreateDialogNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateDialogNew.swift; sourceTree = "<group>"; };
 		95513ABA24709D59007E3E9E /* ColorsPalleteNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorsPalleteNew.swift; sourceTree = "<group>"; };
 		95513ABC2471E968007E3E9E /* ProjectViewNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectViewNew.swift; sourceTree = "<group>"; };
 		955145D42405589100524FF9 /* ProjectCanvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCanvas.swift; sourceTree = "<group>"; };
@@ -208,8 +207,6 @@
 		95560A1923C5442800581482 /* GalleryLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryLayout.swift; sourceTree = "<group>"; };
 		95560A1E23C79ACC00581482 /* ProjectsActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsActions.swift; sourceTree = "<group>"; };
 		95560A2123C8EBCC00581482 /* ProjectFullImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectFullImage.swift; sourceTree = "<group>"; };
-		95560A2323CA315100581482 /* CreateDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateDialog.swift; sourceTree = "<group>"; };
-		95578E0423D4C0B200D8DDF2 /* CreateDIalogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateDIalogController.swift; sourceTree = "<group>"; };
 		9559B9BB2462CBD80066EA40 /* TransformController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransformController.swift; sourceTree = "<group>"; };
 		9559B9BD2462D0550066EA40 /* ShapeCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShapeCollection.swift; sourceTree = "<group>"; };
 		9560723924940659009D8DCC /* PaletteCollectionModern.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaletteCollectionModern.swift; sourceTree = "<group>"; };
@@ -254,7 +251,6 @@
 		95A67778246A9ABE00B3A3F6 /* AboutDeveloperController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutDeveloperController.swift; sourceTree = "<group>"; };
 		95A799602443A3E200F7BBE2 /* ThemeSelect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeSelect.swift; sourceTree = "<group>"; };
 		95A799642443B59800F7BBE2 /* MainSettingsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSettingsMenu.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		95A83FCC24866978002A5E29 /* LayersController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayersController.swift; sourceTree = "<group>"; };
 		95AA119B2444C1500048CB96 /* SwiftUIFun.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIFun.swift; sourceTree = "<group>"; };
 		95AB4B252483B7EC005317F2 /* PencilTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PencilTool.swift; sourceTree = "<group>"; };
 		95AB4B272483B97B005317F2 /* EraserTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EraserTool.swift; sourceTree = "<group>"; };
@@ -500,7 +496,6 @@
 		9570657C2417EA3C0044FC39 /* FrameControl */ = {
 			isa = PBXGroup;
 			children = (
-				954205E3249F512A006EAE9A /* LayersCollectionView.swift */,
 				9570657A24169C910044FC39 /* FrameControl.swift */,
 				9570657D2417EA6C0044FC39 /* FramesCollection.swift */,
 				958C0C1924180399007B9C95 /* FramesCollectionView.swift */,
@@ -548,7 +543,7 @@
 		95A83FC72486661F002A5E29 /* Layers */ = {
 			isa = PBXGroup;
 			children = (
-				95A83FCC24866978002A5E29 /* LayersController.swift */,
+				954205E3249F512A006EAE9A /* LayersCollectionView.swift */,
 				95850C732498E531003F6153 /* layersTable.swift */,
 				95850C752498E59C003F6153 /* LayersTableCell.swift */,
 			);
@@ -584,8 +579,7 @@
 		95C7278123EB37D700ED1A28 /* Create Dialog */ = {
 			isa = PBXGroup;
 			children = (
-				95560A2323CA315100581482 /* CreateDialog.swift */,
-				95578E0423D4C0B200D8DDF2 /* CreateDIalogController.swift */,
+				955074A924A4AF8B00770758 /* CreateDialogNew.swift */,
 			);
 			name = "Create Dialog";
 			sourceTree = "<group>";
@@ -773,7 +767,6 @@
 				954205E5249F512B006EAE9A /* LayersCollectionView.swift in Sources */,
 				9555908923F5D580000EF96B /* GalleryControl.swift in Sources */,
 				95A626B12444616D007E75F3 /* TrainingMain.swift in Sources */,
-				95578E0523D4C0B200D8DDF2 /* CreateDIalogController.swift in Sources */,
 				959DB4AA2469B4CC006C4678 /* ToolBarRepositionCollection.swift in Sources */,
 				9537B1A1243C6C880083BE27 /* GridView.swift in Sources */,
 				9540F1BE243330D2008D1657 /* SliderView.swift in Sources */,
@@ -824,6 +817,7 @@
 				955145D724055D1000524FF9 /* Editor.swift in Sources */,
 				95A67779246A9ABE00B3A3F6 /* AboutDeveloperController.swift in Sources */,
 				959A533024431C5300F6BF80 /* PalletesDialog.swift in Sources */,
+				955074AA24A4AF8B00770758 /* CreateDialogNew.swift in Sources */,
 				954AABB223BBEC3D00F52955 /* SceneDelegate.swift in Sources */,
 				9523F2C82437C4B700725214 /* EraseSettings.swift in Sources */,
 				95C1233D241E08A600775377 /* PalleteCollection.swift in Sources */,
@@ -856,7 +850,6 @@
 				95AB4B262483B7EC005317F2 /* PencilTool.swift in Sources */,
 				95C7278423EB384300ED1A28 /* ColorSelectorController.swift in Sources */,
 				95AA119C2444C1500048CB96 /* SwiftUIFun.swift in Sources */,
-				95A83FCD24866978002A5E29 /* LayersController.swift in Sources */,
 				951CBD50244BB8A2004DB89B /* GradientController.swift in Sources */,
 				95782CE023CD8F3000C2772F /* TextFieldDelegate.swift in Sources */,
 				95839225249E9B5100E164A8 /* FrameSettings.swift in Sources */,
@@ -868,7 +861,6 @@
 				956E310B246E774200502A2F /* ViewHelper.swift in Sources */,
 				9540F1BC2431A2C5008D1657 /* NavigationView.swift in Sources */,
 				956C61F92427C3CE000BF9E4 /* ToolBarCollection.swift in Sources */,
-				95560A2423CA315100581482 /* CreateDialog.swift in Sources */,
 				95C7278623EB577900ED1A28 /* CircleButton.swift in Sources */,
 				957D040E2408283400E58210 /* FramePreview.swift in Sources */,
 				958C0C1A24180399007B9C95 /* FramesCollectionView.swift in Sources */,
@@ -981,7 +973,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1036,7 +1028,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -1055,7 +1047,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = G7668ALM57;
 				INFOPLIST_FILE = "Pixel-Null/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1078,7 +1070,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = G7668ALM57;
 				INFOPLIST_FILE = "Pixel-Null/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

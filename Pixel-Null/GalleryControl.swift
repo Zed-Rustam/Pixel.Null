@@ -11,9 +11,74 @@ import MobileCoreServices
 import CoreGraphics
 
 class GalleryControl : UIViewController{
-    
+        
     var projects : [Any] = []
-   
+    
+    lazy private var createButtonNew : UIButton = {
+        let btn = UIButton()
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        
+        btn.backgroundColor = getAppColor(color: .background)
+        btn.setCorners(corners: 12, needMask: false, curveType: .continuous)
+        btn.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        
+        btn.setImage(UIImage(systemName: "plus", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))!, for: .normal)
+        btn.tintColor = getAppColor(color: .enable)
+        
+        btn.menu = {
+            let createAction = UIAction(title: "New Project", image: UIImage(systemName: "doc")) {_ in
+                let create = CreateDialogNew()
+                create.delegate = self
+                self.show(create, sender: nil)
+                
+                
+//                let dialog = CreateDialogController()
+//                dialog.delegate = self
+//                dialog.setDefault()
+//
+//                switch UIDevice.current.userInterfaceIdiom {
+//                    //если айфон, то просто показываем контроллер
+//                case .phone:
+//                    dialog.modalPresentationStyle = .pageSheet
+//                    self.show(dialog, sender: self)
+//                    //если айпад то немного химичим
+//                case .pad:
+//                    dialog.modalPresentationStyle = .popover
+//
+//                    if let popover = dialog.popoverPresentationController {
+//                        popover.sourceView = self.createButtonNew
+//                        popover.delegate = self
+//                        popover.permittedArrowDirections = .any
+//                    }
+//                    self.show(dialog, sender: self)
+//
+//                default:
+//                    break
+//                }
+            }
+            
+            let importAction = UIAction(title: "Import Project", image: UIImage(systemName: "arrow.down.doc")) {_ in
+                let dialog = UIDocumentBrowserViewController(forOpeningFilesWithContentTypes: ["com.zed.null.project",String(kUTTypePNG),String(kUTTypeJPEG),String(kUTTypeGIF)])
+                
+                dialog.modalPresentationStyle = .pageSheet
+                dialog.delegate = self
+                dialog.allowsDocumentCreation = false
+                dialog.allowsPickingMultipleItems = true
+                
+                self.show(dialog, sender: self)
+            }
+            
+            
+            let menu = UIMenu(title: "", image: nil, identifier: .none, options: .displayInline, children: [createAction,importAction])
+            return menu
+        }()
+        
+        btn.showsMenuAsPrimaryAction = true
+        
+        return btn
+    }()
     
     lazy var gallery : UICollectionView =  {
         
@@ -38,66 +103,7 @@ class GalleryControl : UIViewController{
         collection.dataSource = self
         collection.backgroundColor = .clear
         collection.contentInsetAdjustmentBehavior = .never
-
-        //collection.layer.shouldRasterize = true
-        //collection.layer.rasterizationScale = UIScreen.main.scale
-        
         return collection
-    }()
-    
-    lazy var createButton : CircleButton = {
-        let btn = CircleButton(icon: #imageLiteral(resourceName: "add_icon"), frame: .zero, icScale: 0.35)
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        
-        btn.widthAnchor.constraint(equalToConstant: 42).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: 42).isActive = true
-        
-        btn.delegate = {[unowned self] in
-            let dialog = CreateDialogController()
-            dialog.delegate = self
-            dialog.setDefault()
-            
-            switch UIDevice.current.userInterfaceIdiom {
-                //если айфон, то просто показываем контроллер
-            case .phone:
-                dialog.modalPresentationStyle = .pageSheet
-                self.show(dialog, sender: self)
-                //если айпад то немного химичим
-            case .pad:
-                dialog.modalPresentationStyle = .popover
-                
-                if let popover = dialog.popoverPresentationController {
-                    popover.sourceView = self.createButton
-                    popover.delegate = self
-                    popover.permittedArrowDirections = .any
-                }
-                self.show(dialog, sender: self)
-
-            default:
-                break
-            }
-        }
-        
-        return btn
-    }()
-    
-    lazy var importButton : CircleButton = {
-        let btn = CircleButton(icon: #imageLiteral(resourceName: "import_icon"), frame: .zero,icScale: 0.35)
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 42).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: 42).isActive = true
-        
-        btn.delegate = {[unowned self] in
-            let dialog = UIDocumentBrowserViewController(forOpeningFilesWithContentTypes: ["com.zed.null.project",String(kUTTypePNG),String(kUTTypeJPEG),String(kUTTypeGIF)])
-            dialog.modalPresentationStyle = .pageSheet
-            dialog.delegate = self
-            dialog.allowsDocumentCreation = false
-            dialog.allowsPickingMultipleItems = true
-            
-            self.show(dialog, sender: self)
-        }
-        
-        return btn
     }()
     
     func updateProjectView(proj : ProjectWork){
@@ -129,6 +135,8 @@ class GalleryControl : UIViewController{
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         gallery.reloadData()
         gallery.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
+        createButtonNew.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+
     }
     
     override func viewDidLoad() {
@@ -153,15 +161,11 @@ class GalleryControl : UIViewController{
         
         self.view.addSubview(gallery)
         
-        view.addSubview(createButton)
-        view.addSubview(importButton)
+        view.addSubview(createButtonNew)
 
-        createButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
-        createButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12).isActive = true
+        createButtonNew.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
+        createButtonNew.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
         
-        importButton.rightAnchor.constraint(equalTo: createButton.leftAnchor, constant: -6).isActive = true
-        importButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12).isActive = true
-               
         gallery.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 0).isActive = true
         gallery.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: 0).isActive = true
         gallery.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
@@ -222,11 +226,6 @@ extension GalleryControl : ProjectActions {
         ed.modalPresentationStyle = .overCurrentContext
         ed.modalTransitionStyle = .coverVertical
         self.show(ed, sender: nil)
-        
-    }
-        //var editor = Editor()
-    
-    func projectRename(view: ProjectViewNew, newName: String) {
         
     }
     
@@ -319,12 +318,13 @@ extension GalleryControl : UICollectionViewDelegate {
 extension GalleryControl : UIDocumentBrowserViewControllerDelegate {
     func documentBrowser(_ controller: UIDocumentBrowserViewController, didPickDocumentsAt documentURLs: [URL]) {
         controller.dismiss(animated: true, completion: {
-            self.show(ProjectImportController(filesUrl: documentURLs), sender: nil)
+            let importMenu = ProjectImportController(filesUrl: documentURLs)
+            importMenu.gallery = self
+            self.show(importMenu, sender: nil)
         })
         print(documentURLs)
     }
 }
-
 
 extension GalleryControl : UIPopoverPresentationControllerDelegate {
     
@@ -340,7 +340,6 @@ protocol GalleryDelegate : class{
 }
 
 protocol ProjectActions : class{
-    func projectRename(view : ProjectViewNew, newName : String)
     func projectDublicate(view : ProjectViewNew)
     func projectDelete(view : ProjectViewNew, deletedName : String)
     func projectOpen(proj : ProjectWork)

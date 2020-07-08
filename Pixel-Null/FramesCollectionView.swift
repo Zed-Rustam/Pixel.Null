@@ -14,6 +14,8 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
         //ls.selfView = self
         ls.translatesAutoresizingMaskIntoConstraints = false
         ls.heightAnchor.constraint(equalToConstant: 70).isActive = true
+        ls.contentInset = UIEdgeInsets(top: 0, left: 24, bottom: 0, right: 24)
+
         return ls
     }()
     
@@ -71,66 +73,8 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
         return btn
     }()
     
-//    lazy var delayField : TextField = {
-//        let field = TextField(frame: .zero)
-//        field.translatesAutoresizingMaskIntoConstraints = false
-//        field.small = true
-//        field.setHelpText(help: "100")
-//        field.filed.textAlignment = .center
-//        field.filed.text = String(project!.information.frames[project!.FrameSelected].delay)
-//        field.setFIeldDelegate(delegate: self)
-//        field.filed.keyboardType = .numberPad
-//
-//        let bar = UIToolbar()
-//        let done = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneSetDelay))
-//        let cancel = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(cancelSetDelay))
-//        bar.items = [done,cancel]
-//        bar.sizeToFit()
-//        field.filed.inputAccessoryView = bar
-//
-//        field.heightAnchor.constraint(equalToConstant: 36).isActive = true
-//        field.widthAnchor.constraint(equalToConstant: 72).isActive = true
-//
-//        return field
-//    }()
-    
     var dublicateButton : CircleButton!
     weak var project : ProjectWork?
-    
-    
-//    func textFieldDidChangeSelection(_ textField: UITextField) {
-//        print("hey!")
-//         if textField.text != "" {
-//            var delay = Int(textField.text!) ?? -1
-//
-//            if delay <= 0 {
-//                textField.text = ""
-//                return
-//            } else if delay > 9999 {
-//                delay = 9999
-//            }
-//            textField.text = String(delay)
-//            //self.project!.setFrameDelay(frame: self.project!.FrameSelected, delay: delay)
-//         }
-//    }
-    
-    
-//    @objc func doneSetDelay() {
-//        endEditing(true)
-//        if delayField.filed.text == "" {
-//            delayField.filed.text = String(project!.information.frames[project!.FrameSelected].delay)
-//        } else {
-//            project?.addAction(action: ["ToolID" : "\(Actions.changeFrameDelay.rawValue)","frame" : "\(project!.FrameSelected)", "from" : "\(project!.information.frames[project!.FrameSelected].delay)", "to" : delayField.filed.text!])
-//
-//            project!.setFrameDelay(frame: project!.FrameSelected, delay: Int(delayField.filed.text!)!)
-//        }
-//
-//    }
-    
-//    @objc func cancelSetDelay() {
-//        endEditing(true)
-//        delayField.filed.text = String(project!.information.frames[project!.FrameSelected].delay)
-//    }
     
     init(proj : ProjectWork) {
         project = proj
@@ -140,18 +84,17 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
 
         self.addSubview(frameText)
         self.addSubview(list)
-        //self.addSubview(delayField)
         self.addSubview(addButton)
         self.addSubview(settingsButton)
 
-        frameText.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 12).isActive = true
+        frameText.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 24).isActive = true
         frameText.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
 
         list.topAnchor.constraint(equalTo: frameText.bottomAnchor, constant: 6).isActive = true
         list.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 0).isActive = true
         list.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 0).isActive = true
 
-        addButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -12).isActive = true
+        addButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -24).isActive = true
         addButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
         
         settingsButton.rightAnchor.constraint(equalTo: addButton.leftAnchor, constant: -6).isActive = true

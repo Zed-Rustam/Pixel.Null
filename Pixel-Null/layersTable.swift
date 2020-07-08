@@ -58,6 +58,69 @@ extension LayersTable : UICollectionViewDataSource {
         cell.setSelected(isSelect: project!.LayerSelected == indexPath.item, anim: false)
         cell.setBgColor(color: project!.backgroundColor)
         cell.setVisible(isVisible: project!.information.frames[project!.FrameSelected].layers[indexPath.item].visible, animate: false)
+        
+        cell.setContextMenu(menu: {
+            let clone = UIAction(title: "Clone",image : UIImage(systemName: "plus.square.on.square", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, handler: {action in
+                self.project?.addAction(action: ["ToolID" : "\(Actions.layerClone.rawValue)", "frame" : "\(self.project!.FrameSelected)", "layer" : "\(self.project!.LayerSelected)"])
+                self.frameDelegate?.cloneLayer(frame: self.project!.FrameSelected, original: indexPath.item)
+            })
+        
+            let merge = UIAction(title: "Merge with bottom layer",image : UIImage(systemName: "link", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, handler: {action in
+                if self.project!.layerCount > 1 && indexPath.item != self.project!.layerCount - 1 {
+                    self.project!.addAction(action: ["ToolID" : "\(Actions.mergeLayers.rawValue)",
+                        "frame" : "\(self.project!.FrameSelected)",
+                        "layer" : "\(indexPath.item)",
+                        "firstLayerOpasity" : "\(self.project!.information.frames[self.project!.FrameSelected].layers[indexPath.item].transparent)",
+                        "secondLayerOpasity" : "\(self.project!.information.frames[self.project!.FrameSelected].layers[indexPath.item + 1].transparent)",
+                        "isFirstLayerVisible" : "\(self.project!.information.frames[self.project!.FrameSelected].layers[indexPath.item].visible)",
+                        "isSecondLayerVisible" : "\(self.project!.information.frames[self.project!.FrameSelected].layers[indexPath.item + 1].visible)",
+                    ])
+
+                    try! self.project!.getLayer(frame: self.project!.FrameSelected, layer: indexPath.item).pngData()?.write(to: self.project!.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-first-\(self.project!.getNextActionID()).png"))
+                    try! self.project!.getLayer(frame: self.project!.FrameSelected, layer: indexPath.item + 1).pngData()?.write(to: self.project!.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-second-\(self.project!.getNextActionID()).png"))
+
+                    self.project!.mergeLayers(frame: self.project!.FrameSelected, layer: indexPath.item)
+                    self.frameDelegate?.margeLayers(frame: self.project!.FrameSelected, layer: indexPath.item)
+                }
+            })
+        
+            let visible = UIAction(title: self.project!.information.frames[self.project!.FrameSelected].layers[indexPath.item].visible ? "Make unvisible" : "Make visible",image : UIImage(systemName: self.project!.information.frames[self.project!.FrameSelected].layers[indexPath.item].visible ? "eye.slash" : "eye", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, handler: {action in
+                self.frameDelegate?.changeLayerVisible(frame: self.project!.FrameSelected, layer: indexPath.item)
+                self.project!.addAction(action: ["ToolID" : "\(Actions.layerVisibleChange.rawValue)", "frame" : "\(self.project!.FrameSelected)", "layer" : "\(indexPath.item)"])
+            })
+                   
+            let delete = UIAction(title: "Delete",image : UIImage(systemName: "trash", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, discoverabilityTitle: nil, attributes: .destructive, handler: {action in
+                       
+                self.project?.addAction(action: ["ToolID" : "\(Actions.layerDelete.rawValue)","frame" : "\(self.project!.FrameSelected)", "layer" : "\(indexPath.item)", "wasVisible" : "\(self.project!.information.frames[self.project!.FrameSelected].layers[indexPath.item].visible)", "transparent" : "\(self.project!.information.frames[self.project!.FrameSelected].layers[indexPath.item].transparent)"])
+        
+                try! self.project?.getLayer(frame: self.project!.FrameSelected, layer: indexPath.item).pngData()?.write(to: self.project!.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(self.project!.getNextActionID()).png"))
+        
+                self.frameDelegate?.deleteLayer(frame: self.project!.FrameSelected, layer: indexPath.item)
+            })
+
+            let delMenu = UIMenu(title: "Delete", image: UIImage(systemName: "trash", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, options : .destructive, children: [delete])
+
+            let edit = UIMenu(title: "", options: .displayInline, children: [delMenu])
+
+                
+            var menu : [UIMenuElement] = []
+            
+            if self.project!.layerCount != 16 {
+                menu.append(clone)
+            }
+            menu.append(visible)
+            
+            if indexPath.item != self.project!.layerCount - 1 {
+                menu.append(merge)
+            }
+            
+            if self.project!.layerCount > 1 {
+                menu.append(edit)
+            }
+            
+            
+            return UIMenu(title: "", image: nil, identifier: nil, children: menu)
+        })
         return cell
     }
 }
@@ -243,13 +306,13 @@ class LayersTableLayout : UICollectionViewLayout {
     }
     
     func layout() {
-        let width = collectionView!.frame.width - 24
+        let width = collectionView!.frame.width - 48
         
         for item in 0..<collectionView!.numberOfItems(inSection: 0) {
             let index = IndexPath(item: item, section: 0)
             
             let attribute = UICollectionViewLayoutAttributes(forCellWith: index)
-            attribute.frame = CGRect(x: 12, y: 6 + 42 * item, width: Int(width), height: 36)
+            attribute.frame = CGRect(x: 24, y: 42 * item, width: Int(width), height: 36)
             
             attributes.append(attribute)
         }
