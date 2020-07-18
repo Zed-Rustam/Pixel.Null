@@ -45,8 +45,10 @@ class FramesCollection : UICollectionView {
         allowsSelection = true
         allowsMultipleSelection = false
         dragInteractionEnabled = true
-                
-        setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        
+        
+        layer.shouldRasterize = true
+        layer.rasterizationScale = UIScreen.main.scale
     }
     
     required init?(coder: NSCoder) {
@@ -55,7 +57,7 @@ class FramesCollection : UICollectionView {
     
     override func tintColorDidChange() {
         super.tintColorDidChange()
-        setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        //setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
     }
 }
 
@@ -136,7 +138,7 @@ extension FramesCollection : UICollectionViewDelegate {
         if dragIndex != nil && collectionView.cellForItem(at: dragIndex!) != nil {
             let preview = UITargetedPreview(view: collectionView.cellForItem(at: dragIndex!)!)
             preview.parameters.backgroundColor = .clear
-            preview.parameters.visiblePath = UIBezierPath(roundedRect: dragIndex!.item == project!.FrameSelected ? (collectionView.cellForItem(at: dragIndex!)!).bounds : collectionView.cellForItem(at: dragIndex!)!.bounds.inset(by: UIEdgeInsets(top: 3, left: 3, bottom: 3, right: 3)), cornerRadius: dragIndex!.item == project!.FrameSelected ? 9 : 6)
+            preview.parameters.visiblePath = UIBezierPath(roundedRect: dragIndex!.item == project!.FrameSelected ? (collectionView.cellForItem(at: dragIndex!)!).bounds : collectionView.cellForItem(at: dragIndex!)!.bounds.inset(by: UIEdgeInsets(top: 3, left: 3, bottom: 3, right: 3)), cornerRadius: dragIndex!.item == project!.FrameSelected ? 11 : 8)
             dragIndex = nil
             return preview
         } else {
@@ -149,7 +151,7 @@ extension FramesCollection : UICollectionViewDelegate {
         let preview = UITargetedPreview(view: collectionView.cellForItem(at: dragIndex!)!)
 
         preview.parameters.backgroundColor = .clear
-        preview.parameters.visiblePath = UIBezierPath(roundedRect: dragIndex!.item == project!.FrameSelected ? (collectionView.cellForItem(at: dragIndex!)!).bounds : collectionView.cellForItem(at: dragIndex!)!.bounds.inset(by: UIEdgeInsets(top: 3, left: 3, bottom: 3, right: 3)), cornerRadius: dragIndex!.item == project!.FrameSelected ? 9 : 6)
+        preview.parameters.visiblePath = UIBezierPath(roundedRect: dragIndex!.item == project!.FrameSelected ? (collectionView.cellForItem(at: dragIndex!)!).bounds : collectionView.cellForItem(at: dragIndex!)!.bounds.inset(by: UIEdgeInsets(top: 3, left: 3, bottom: 3, right: 3)), cornerRadius: dragIndex!.item == project!.FrameSelected ? 11 : 8)
         return preview
     }
 
@@ -173,7 +175,7 @@ extension FramesCollection : UICollectionViewDragDelegate {
             roundedRect: indexPath.item == project!.FrameSelected ? (collectionView.dequeueReusableCell(withReuseIdentifier: "FrameControl", for: indexPath)
             ).bounds : collectionView.dequeueReusableCell(withReuseIdentifier: "FrameControl", for: indexPath)
             .bounds.inset(by: UIEdgeInsets(top: 3, left: 3, bottom: 3, right: 3)),
-            cornerRadius: indexPath.item == project!.FrameSelected ? 9 : 6)
+            cornerRadius: indexPath.item == project!.FrameSelected ? 11 : 8)
         return params
     }
 }
@@ -227,7 +229,7 @@ extension FramesCollection : UICollectionViewDropDelegate {
     func collectionView(_ collectionView: UICollectionView, dropPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
         let params = UIDragPreviewParameters()
         params.backgroundColor = .clear
-        params.visiblePath = UIBezierPath(roundedRect: indexPath.item == project!.FrameSelected ? (collectionView.cellForItem(at: indexPath)!).bounds : collectionView.cellForItem(at: indexPath)!.bounds.inset(by: UIEdgeInsets(top: 3, left: 3, bottom: 3, right: 3)), cornerRadius: indexPath.item == project!.FrameSelected ? 9 : 6)
+        params.visiblePath = UIBezierPath(roundedRect: indexPath.item == project!.FrameSelected ? (collectionView.cellForItem(at: indexPath)!).bounds : collectionView.cellForItem(at: indexPath)!.bounds.inset(by: UIEdgeInsets(top: 3, left: 3, bottom: 3, right: 3)), cornerRadius: indexPath.item == project!.FrameSelected ? 11 : 8)
         return params
     }
     
@@ -243,7 +245,7 @@ class FramePreviewCell : UICollectionViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.widthAnchor.constraint(equalToConstant: 36).isActive = true
         view.heightAnchor.constraint(equalToConstant: 64).isActive = true
-        view.setCorners(corners: 6)
+        view.setCorners(corners: 8)
         
         view.backgroundColor = getAppColor(color: .background)
         
@@ -264,7 +266,7 @@ class FramePreviewCell : UICollectionViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.widthAnchor.constraint(equalToConstant: 42).isActive = true
         view.heightAnchor.constraint(equalToConstant: 70).isActive = true
-        view.setCorners(corners: 9)
+        view.setCorners(corners: 11)
         view.backgroundColor = getAppColor(color: .select)
         
         return view
@@ -273,7 +275,7 @@ class FramePreviewCell : UICollectionViewCell {
     lazy private var preview : UIImageView = {
         let img = UIImageView()
         img.translatesAutoresizingMaskIntoConstraints = false
-        img.setCorners(corners: 6)
+        img.setCorners(corners: 8)
         img.contentMode = .scaleAspectFit
         img.layer.magnificationFilter = .nearest
         img.layer.minificationFilter = .nearest
@@ -294,7 +296,7 @@ class FramePreviewCell : UICollectionViewCell {
         img.translatesAutoresizingMaskIntoConstraints = false
         img.widthAnchor.constraint(equalToConstant: 36).isActive = true
         img.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        img.setCorners(corners: 6)
+        img.setCorners(corners: 8,needMask: true)
         img.addSubviewFullSize(view: preview)
         img.layer.magnificationFilter = .nearest
         return img
@@ -318,12 +320,12 @@ class FramePreviewCell : UICollectionViewCell {
         let topLine = UIView()
         topLine.translatesAutoresizingMaskIntoConstraints = false
         topLine.setCorners(corners: 2)
-        topLine.backgroundColor = getAppColor(color: .enable)
+        topLine.backgroundColor = getAppColor(color: .disable)
         
         let bottomLine = UIView()
         bottomLine.translatesAutoresizingMaskIntoConstraints = false
         bottomLine.setCorners(corners: 2)
-        bottomLine.backgroundColor = getAppColor(color: .enable)
+        bottomLine.backgroundColor = getAppColor(color: .disable)
         
         mainview.addSubviewFullSize(view: topLine, paddings: (0,0,0,-8))
         mainview.addSubviewFullSize(view: bottomLine, paddings: (0,0,8,0))
@@ -348,6 +350,9 @@ class FramePreviewCell : UICollectionViewCell {
         
         addInteraction(UIPointerInteraction(delegate: self))
         isUserInteractionEnabled = true
+        
+        contentView.setShadow(color: getAppColor(color: .shadow), radius: 6, opasity: 1)
+        contentView.layer.shadowPath = UIBezierPath(roundedRect: CGRect(origin: CGPoint(x: 3, y: 3), size: CGSize(width: 36, height: 64)), cornerRadius: 8).cgPath
         //contentView.setCorners(corners: 9)
     }
     
@@ -355,8 +360,8 @@ class FramePreviewCell : UICollectionViewCell {
         UIView.animate(withDuration: animate ? 0.2 : 0,delay: 0, options: .curveLinear, animations: {
             self.selectBg.transform = CGAffineTransform(scaleX: isSelect ? 1 : 0.75, y: isSelect ? 1 : 0.75)
             
-            self.linesView.subviews[0].backgroundColor = isSelect ? getAppColor(color: .select) : getAppColor(color: .enable)
-            self.linesView.subviews[1].backgroundColor = isSelect ? getAppColor(color: .select) : getAppColor(color: .enable)
+            self.linesView.subviews[0].backgroundColor = isSelect ? getAppColor(color: .select) : getAppColor(color: .disable)
+            self.linesView.subviews[1].backgroundColor = isSelect ? getAppColor(color: .select) : getAppColor(color: .disable)
         })
     }
     

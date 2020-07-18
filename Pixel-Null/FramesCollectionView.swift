@@ -31,23 +31,42 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
            return text
        }()
  
-    lazy var addButton : CircleButton = {
-        let btn = CircleButton(icon: #imageLiteral(resourceName: "add_icon"), frame: .zero)
-        btn.corners = 6
-        btn.delegate = { [weak self] in
-            self!.project!.insertFrame(at: self!.project!.FrameSelected + 1)
-            self!.project!.addAction(action: ["ToolID" : "\(Actions.frameAdd.rawValue)", "frame" : "\(self!.project!.FrameSelected + 1)"])
-            
-            if(self!.project!.frameCount >= 128) {
-                self!.addButton.isEnabled = false
-            }
-            
-            self!.list.frameDelegate!.addFrame(at: self!.project!.FrameSelected + 1)
-        }
+//    lazy var addButton : CircleButton = {
+//        let btn = CircleButton(icon: #imageLiteral(resourceName: "add_icon"), frame: .zero)
+//        btn.corners = 6
+//        btn.delegate = { [weak self] in
+//            self!.project!.insertFrame(at: self!.project!.FrameSelected + 1)
+//            self!.project!.addAction(action: ["ToolID" : "\(Actions.frameAdd.rawValue)", "frame" : "\(self!.project!.FrameSelected + 1)"])
+//
+//            if(self!.project!.frameCount >= 128) {
+//                self!.addButton.isEnabled = false
+//            }
+//
+//            self!.list.frameDelegate!.addFrame(at: self!.project!.FrameSelected + 1)
+//        }
+//        btn.translatesAutoresizingMaskIntoConstraints = false
+//        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+//        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
+//
+//        return btn
+//    }()
+    
+    lazy private var addButton : UIButton = {
+        let btn = UIButton()
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
         btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
-
+        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.backgroundColor = getAppColor(color: .background)
+        btn.setCorners(corners: 8,needMask: false)
+        
+        btn.setImage(UIImage(systemName: "plus",withConfiguration: UIImage.SymbolConfiguration.init(weight: .semibold)), for: .normal)
+        btn.imageView?.tintColor = getAppColor(color: .enable)
+        
+        btn.addTarget(self, action: #selector(onPress), for: .touchUpInside)
+        
+        btn.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        btn.layer.shadowPath = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 36, height: 36), cornerRadius: 8).cgPath
+        
         return btn
     }()
     
@@ -75,6 +94,18 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
     
     var dublicateButton : CircleButton!
     weak var project : ProjectWork?
+    
+    
+    @objc func onPress() {
+        project!.insertFrame(at: project!.FrameSelected + 1)
+        project!.addAction(action: ["ToolID" : "\(Actions.frameAdd.rawValue)", "frame" : "\(project!.FrameSelected + 1)"])
+
+        if(project!.frameCount >= 128) {
+            addButton.isEnabled = false
+        }
+
+        list.frameDelegate!.addFrame(at: project!.FrameSelected + 1)
+    }
     
     init(proj : ProjectWork) {
         project = proj

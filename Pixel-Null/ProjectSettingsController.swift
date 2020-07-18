@@ -177,7 +177,7 @@ class ProjectSettingsController : UIViewController {
             })
         }
     }
-   
+    
     @objc func onHideKeyboard(notification : NSNotification) {
         UIView.animate(withDuration: 0.2, animations: {
             self.view.frame.origin.y = 0

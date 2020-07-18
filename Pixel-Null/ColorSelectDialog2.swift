@@ -4,7 +4,7 @@ class ColorSelectDialog2 : UIView {
     
     lazy private var redSlider : ColorSlider = {
         let slider = ColorSlider(startColor: .black, endColor: .red, orientation: .horizontal)
-        slider.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        slider.heightAnchor.constraint(equalToConstant: 36).isActive = true
         slider.preview = .none
         
         slider.delegate = {[unowned self] position in
@@ -138,7 +138,7 @@ class ColorSelectDialog2 : UIView {
            self.alphaSlider.resetGradient(start: UIColor(r: self.nowred, g: self.nowgreen, b: self.nowblue, a: self.nowalpha).withAlphaComponent(0), end: UIColor(r: self.nowred, g: self.nowgreen, b: self.nowblue, a: self.nowalpha).withAlphaComponent(1))
            self.hexText.filed.text = UIColor.toHex(color: self.result.color)
         }
-        slider.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        slider.heightAnchor.constraint(equalToConstant: 36).isActive = true
         return slider
     }()
     
@@ -155,7 +155,7 @@ class ColorSelectDialog2 : UIView {
             
             self.hexText.filed.text = UIColor.toHex(color: self.result.color)
         }
-        slider.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        slider.heightAnchor.constraint(equalToConstant: 36).isActive = true
         return slider
     }()
     
@@ -169,7 +169,7 @@ class ColorSelectDialog2 : UIView {
             self.result.color = UIColor(r: self.nowred, g: self.nowgreen, b: self.nowblue, a: self.nowalpha)
             self.hexText.filed.text = UIColor.toHex(color: self.result.color)
           }
-        slider.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        slider.heightAnchor.constraint(equalToConstant: 36).isActive = true
         
         return slider
     }()
@@ -408,19 +408,19 @@ class ColorSelectDialog2 : UIView {
         alphaSliderText.topAnchor.constraint(equalTo: blueSliderText.bottomAnchor, constant: 12).isActive = true
         
         redSlider.leftAnchor.constraint(equalTo: redSliderText.rightAnchor, constant: 8).isActive = true
-        redSlider.topAnchor.constraint(equalTo: scroll.topAnchor, constant: 3).isActive = true
+        redSlider.topAnchor.constraint(equalTo: scroll.topAnchor, constant: 0).isActive = true
         redSlider.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
         
         greenSlider.leftAnchor.constraint(equalTo: greenSliderText.rightAnchor, constant: 8).isActive = true
-        greenSlider.topAnchor.constraint(equalTo: greenSliderText.topAnchor, constant: 3).isActive = true
+        greenSlider.topAnchor.constraint(equalTo: greenSliderText.topAnchor, constant: 0).isActive = true
         greenSlider.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
         
         blueSlider.leftAnchor.constraint(equalTo: blueSliderText.rightAnchor, constant: 8).isActive = true
-        blueSlider.topAnchor.constraint(equalTo: blueSliderText.topAnchor, constant: 3).isActive = true
+        blueSlider.topAnchor.constraint(equalTo: blueSliderText.topAnchor, constant: 0).isActive = true
         blueSlider.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
         
         alphaSlider.leftAnchor.constraint(equalTo: alphaSliderText.rightAnchor, constant: 8).isActive = true
-        alphaSlider.topAnchor.constraint(equalTo: alphaSliderText.topAnchor, constant: 3).isActive = true
+        alphaSlider.topAnchor.constraint(equalTo: alphaSliderText.topAnchor, constant: 0).isActive = true
         alphaSlider.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
         
         hexText.leftAnchor.constraint(equalTo: leftAnchor, constant: 0).isActive = true

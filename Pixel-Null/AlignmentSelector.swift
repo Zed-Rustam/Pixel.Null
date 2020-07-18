@@ -46,8 +46,8 @@ class AlignmentSelector : UIView {
         let mainview = UIView()
         mainview.translatesAutoresizingMaskIntoConstraints = false
         mainview.addSubviewFullSize(view: view)
-        mainview.widthAnchor.constraint(equalToConstant: 42).isActive = true
-        mainview.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        mainview.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        mainview.heightAnchor.constraint(equalToConstant: 36).isActive = true
 
         return mainview
         
@@ -58,14 +58,14 @@ class AlignmentSelector : UIView {
     }()
     
     @objc func onTap(sender : UITapGestureRecognizer) {
-        let resultPoint = CGPoint(x: Int(sender.location(in: self).x / 42.0), y: Int(sender.location(in: self).y / 42.0))
+        let resultPoint = CGPoint(x: Int(sender.location(in: self).x / 36), y: Int(sender.location(in: self).y / 36))
         
         colorImage(last: nowAlignment, now: getAlignment(point: resultPoint))
         
         nowAlignment = getAlignment(point: resultPoint)
         
         UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.75, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
-            self.selectBg.frame.origin = CGPoint(x: resultPoint.x * 42, y: resultPoint.y * 42)
+            self.selectBg.frame.origin = CGPoint(x: resultPoint.x * 36, y: resultPoint.y * 36)
         },completion: nil)
     }
     
@@ -163,8 +163,8 @@ class AlignmentSelector : UIView {
     init(){
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
-        widthAnchor.constraint(equalToConstant: 126).isActive = true
-        heightAnchor.constraint(equalToConstant: 126).isActive = true
+        widthAnchor.constraint(equalToConstant: 108).isActive = true
+        heightAnchor.constraint(equalToConstant: 108).isActive = true
         addSubviewFullSize(view: bg)
         
         addSubview(selectBg)
@@ -174,8 +174,8 @@ class AlignmentSelector : UIView {
         
         images.forEach({
             $0.translatesAutoresizingMaskIntoConstraints = false
-            $0.widthAnchor.constraint(equalToConstant: 42).isActive = true
-            $0.heightAnchor.constraint(equalToConstant: 42).isActive = true
+            $0.widthAnchor.constraint(equalToConstant: 36).isActive = true
+            $0.heightAnchor.constraint(equalToConstant: 36).isActive = true
             $0.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
             $0.contentMode = .scaleToFill
             $0.image = $0.image?.withRenderingMode(.alwaysTemplate)

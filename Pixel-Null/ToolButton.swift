@@ -293,6 +293,62 @@ class ToolButton : UICollectionViewCell {
 
                 self!.barDelegate.wasChangedTool(newTool: 6)
                 
+                let actionsButton = UIButton()
+                actionsButton.translatesAutoresizingMaskIntoConstraints = false
+                actionsButton.widthAnchor.constraint(equalToConstant: 36).isActive = true
+                actionsButton.heightAnchor.constraint(equalToConstant: 36).isActive = true
+                actionsButton.setImage(UIImage(systemName: "ellipsis.circle"), for: .normal)
+                actionsButton.showsMenuAsPrimaryAction = true
+                
+                actionsButton.imageView?.tintColor = getAppColor(color: .enable)
+                
+                actionsButton.menu = UIMenu(title: "select actions", image: nil, identifier: nil, options: .destructive, children: [
+                    UIAction(title: "copy", image: UIImage(systemName: "doc.on.doc"), identifier: nil, discoverabilityTitle: nil, handler: {action in
+                        editor.saveSelection()
+                    }),
+                    
+                    UIAction(title: "paste", image: UIImage(systemName: "doc.on.clipboard"), identifier: nil, discoverabilityTitle: nil, handler: {action in
+                        editor.startTransformWithImage()
+                    }),
+                    
+                    UIAction(title: "cut", image: UIImage(systemName: "scissors"), identifier: nil, discoverabilityTitle: nil, handler: {action in
+                        editor.saveSelection()
+                        editor.canvas.deleteSelect()
+                    })
+                ])
+                
+                let selectType = UIButton()
+                selectType.translatesAutoresizingMaskIntoConstraints = false
+                selectType.widthAnchor.constraint(equalToConstant: 36).isActive = true
+                selectType.heightAnchor.constraint(equalToConstant: 36).isActive = true
+                selectType.setImage(#imageLiteral(resourceName: "rectangle_icon").withRenderingMode(.alwaysTemplate), for: .normal)
+                selectType.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+                selectType.showsMenuAsPrimaryAction = true
+                selectType.imageView?.tintColor = getAppColor(color: .enable)
+                
+                selectType.menu = UIMenu(title: "select type", image: nil, identifier: nil, options: .destructive, children: [
+                    UIAction(title: "rectangle", image: #imageLiteral(resourceName: "rectangle_icon").withTintColor(.white), identifier: nil, discoverabilityTitle: nil, handler: {action in
+                        selectType.setImage(#imageLiteral(resourceName: "rectangle_icon").withRenderingMode(.alwaysTemplate), for: .normal)
+                        editor.setSelectionSettings(mode: 1)
+                    }),
+                    
+                    UIAction(title: "circle", image: #imageLiteral(resourceName: "circle_icon").withTintColor(.white), identifier: nil, discoverabilityTitle: nil, handler: {action in
+                        selectType.setImage(#imageLiteral(resourceName: "circle_icon").withRenderingMode(.alwaysTemplate), for: .normal)
+                        editor.setSelectionSettings(mode: 2)
+                    }),
+                    
+                    UIAction(title: "custom shape", image: #imageLiteral(resourceName: "custom_shape_selector_icon").withTintColor(.white), identifier: nil, discoverabilityTitle: nil, handler: {action in
+                        selectType.setImage(#imageLiteral(resourceName: "custom_shape_selector_icon").withRenderingMode(.alwaysTemplate), for: .normal)
+                        editor.setSelectionSettings(mode: 0)
+
+                    }),
+                    
+                    UIAction(title: "magic tool", image: #imageLiteral(resourceName: "selection_magic_tool_icon").withTintColor(.white), identifier: nil, discoverabilityTitle: nil, handler: {action in
+                        selectType.setImage(#imageLiteral(resourceName: "selection_magic_tool_icon").withRenderingMode(.alwaysTemplate), for: .normal)
+                        editor.setSelectionSettings(mode: 3)
+                    })
+                ])
+
                 let reverse = CircleButton(icon: #imageLiteral(resourceName: "reverse_selection_icon"), frame: .zero)
                 reverse.widthAnchor.constraint(equalToConstant: 36).isActive = true
                 reverse.heightAnchor.constraint(equalToConstant: 36).isActive = true
@@ -319,33 +375,6 @@ class ToolButton : UICollectionViewCell {
                     editor.canvas.deleteSelect()
                 }
                 
-                let copy = CircleButton(icon: #imageLiteral(resourceName: "copy_select_icon"), frame: .zero)
-                //put.setIconColor(color: ProjectStyle.uiRedColor)
-                copy.widthAnchor.constraint(equalToConstant: 36).isActive = true
-                copy.heightAnchor.constraint(equalToConstant: 36).isActive = true
-                copy.setShadowColor(color: .clear)
-               
-                copy.delegate = {
-                    editor.saveSelection()
-                }
-                
-                let paste = CircleButton(icon: #imageLiteral(resourceName: "selection_paste_icon"), frame: .zero)
-                paste.widthAnchor.constraint(equalToConstant: 36).isActive = true
-                paste.heightAnchor.constraint(equalToConstant: 36).isActive = true
-                paste.setShadowColor(color: .clear)
-                paste.delegate = {
-                    editor.startTransformWithImage()
-                }
-                
-                let cut = CircleButton(icon: #imageLiteral(resourceName: "cut_icon"), frame: .zero)
-                cut.widthAnchor.constraint(equalToConstant: 36).isActive = true
-                cut.heightAnchor.constraint(equalToConstant: 36).isActive = true
-                cut.setShadowColor(color: .clear)
-                cut.delegate = {
-                    editor.saveSelection()
-                    editor.canvas.deleteSelect()
-                }
-                
                 let selectMode = SegmentSelector(imgs: [#imageLiteral(resourceName: "selector_add_mode_icon"),#imageLiteral(resourceName: "selector_remove_mode_icon")])
                 
                 switch editor.canvas.selection.mode {
@@ -359,18 +388,11 @@ class ToolButton : UICollectionViewCell {
                     editor.canvas.selection.mode = select == 0 ? .add : .delete
                 }
                 
-                self!.barDelegate.updateButtons(btns: [reverse,clear,paste,copy,cut,delete,selectMode])
+                self!.barDelegate.updateButtons(btns: [actionsButton,reverse,clear,delete,selectMode,selectType])
                 
                 self!.button.setIconColor(color: UIColor(named: "selectColor")!)
             }
             
-            button.longPressDelegate = {[unowned self] in
-                let impactFeedbackgenerator = UIImpactFeedbackGenerator (style: .heavy)
-                impactFeedbackgenerator.prepare()
-                impactFeedbackgenerator.impactOccurred()
-                
-                (self.delegate as! Editor).openSelectorSettings()
-            }
         case 7:
             button.setIcon(ic: #imageLiteral(resourceName: "sharp_icon"))
             button.setIconColor(color: UIColor(named: "enableColor")!)

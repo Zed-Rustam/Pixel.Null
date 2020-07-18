@@ -140,7 +140,6 @@ class ThemeSelect: UIViewController {
     lazy private var tapgesture = UITapGestureRecognizer(target: self, action: #selector(onTap(sender:)))
     
     @objc func onTap(sender : UITapGestureRecognizer) {
-        print("tap")
         if lightTheme.bounds.contains(sender.location(in: lightTheme)) {
             UserDefaults.standard.set(1, forKey: "themeMode")
             self.view.window?.overrideUserInterfaceStyle = .light

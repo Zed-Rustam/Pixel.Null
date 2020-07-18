@@ -37,6 +37,7 @@ class NavigationView : UIView {
         stack.alignment = .center
         stack.distribution = .fillEqually
         stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.isOpaque = true
         
         for i in 0..<icons.count {
             let img = UIImageView(image: icons[i].withRenderingMode(.alwaysTemplate))
@@ -50,7 +51,7 @@ class NavigationView : UIView {
             }
             img.isUserInteractionEnabled = true
             img.interactions.append(UIPointerInteraction(delegate: self))
-            
+            img.isOpaque = true
             stack.addArrangedSubview(img)
         }
         
@@ -68,6 +69,7 @@ class NavigationView : UIView {
         super.init(frame: .zero)
                 
         addGestureRecognizer(tapGesture)
+        isOpaque = true
     }
     
     func setNavigationCorners(top : Int, bottom : Int){
@@ -92,6 +94,7 @@ class NavigationView : UIView {
         bgView.layer.mask = makeShape(topCorners: topCorners, bottomCorners: bottomCorners)
         
         setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
+        layer.shadowPath = makeShape(topCorners: topCorners, bottomCorners: bottomCorners).path
     }
 
     private func makeShape(topCorners tc : Int, bottomCorners bc : Int) -> CAShapeLayer {

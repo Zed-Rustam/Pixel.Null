@@ -11,23 +11,23 @@ import UIKit
 class ProjectExportController: UIViewController {
     weak var project: ProjectWork? = nil
     
-    lazy private var titleBg: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = getAppColor(color: .background)
-        view.layer.cornerRadius = 8
-        
-        view.addSubviewFullSize(view: titleText, paddings: (42,-42,0,0))
-        view.addSubview(exitBtn)
-        view.addSubview(appendBtn)
-
-        exitBtn.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        exitBtn.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        
-        appendBtn.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        appendBtn.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        return view
-    }()
+//    lazy private var titleBg: UIView = {
+//        let view = UIView()
+//        view.translatesAutoresizingMaskIntoConstraints = false
+//        view.backgroundColor = getAppColor(color: .background)
+//        view.layer.cornerRadius = 8
+//
+//        view.addSubviewFullSize(view: titleText, paddings: (42,-42,0,0))
+//        view.addSubview(exitBtn)
+//        view.addSubview(appendBtn)
+//
+//        exitBtn.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+//        exitBtn.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+//
+//        appendBtn.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+//        appendBtn.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+//        return view
+//    }()
     
     lazy private var exitBtn : CircleButton = {
         let btn = CircleButton(icon: #imageLiteral(resourceName: "cancel_icon"), frame: .zero, icScale: 0.33)
@@ -45,11 +45,11 @@ class ProjectExportController: UIViewController {
     }()
     
     lazy private var appendBtn : CircleButton = {
-        let btn = CircleButton(icon: #imageLiteral(resourceName: "share_icon"), frame: .zero, icScale: 0.4)
+        let btn = CircleButton(icon: #imageLiteral(resourceName: "share_icon"), frame: .zero, icScale: 0.6)
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 42).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: 42).isActive = true
-        btn.corners = 8
+        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.corners = 12
         btn.setShadowColor(color: .clear)
         
         btn.delegate = {[unowned self] in
@@ -110,11 +110,12 @@ class ProjectExportController: UIViewController {
     
     lazy private var titleText: UILabel = {
         let text = UILabel()
-        text.text = "Export project"
-        text.font = UIFont(name: "Rubik-Bold", size: 24)
+        text.text = "Export"
+        text.font = UIFont(name: "Rubik-Bold", size: 32)
         text.textAlignment = .center
         text.translatesAutoresizingMaskIntoConstraints = false
         text.textColor = getAppColor(color: .enable)
+        text.heightAnchor.constraint(equalToConstant: 36).isActive = true
         return text
     }()
     
@@ -127,10 +128,10 @@ class ProjectExportController: UIViewController {
         img.setCorners(corners: 12)
                 
         if project!.projectSize.width > project!.projectSize.height {
-            img.widthAnchor.constraint(equalToConstant: 108).isActive = true
+            img.widthAnchor.constraint(equalToConstant: 96).isActive = true
             img.heightAnchor.constraint(equalTo: img.widthAnchor, multiplier: max(0.25,project!.projectSize.height / project!.projectSize.width)).isActive = true
         } else {
-            img.heightAnchor.constraint(equalToConstant: 108).isActive = true
+            img.heightAnchor.constraint(equalToConstant: 96).isActive = true
             img.widthAnchor.constraint(equalTo: img.heightAnchor, multiplier: max(0.25,project!.projectSize.width / project!.projectSize.height)).isActive = true
         }
         
@@ -314,8 +315,11 @@ class ProjectExportController: UIViewController {
     }
     
     override func viewDidLoad() {
+        view.setCorners(corners: 32)
+        
         view.backgroundColor = getAppColor(color: .background)
-        view.addSubview(titleBg)
+        view.addSubview(titleText)
+        view.addSubview(appendBtn)
         view.addSubview(image)
         view.addSubview(projectName)
         view.addSubview(exportInfo)
@@ -329,46 +333,44 @@ class ProjectExportController: UIViewController {
         view.addSubview(exportTitle)
         view.addSubview(exportSelector)
         
-        titleBg.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 8).isActive = true
-        titleBg.topAnchor.constraint(equalTo: view.topAnchor, constant: 8).isActive = true
-        titleBg.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8).isActive = true
-        titleBg.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        titleText.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
+        titleText.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
         
-        image.centerXAnchor.constraint(equalTo: view.leftAnchor, constant: 62).isActive = true
-        image.centerYAnchor.constraint(equalTo: titleBg.bottomAnchor, constant: 62).isActive = true
         
-        projectName.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 124).isActive = true
-        projectName.topAnchor.constraint(equalTo: titleBg.bottomAnchor, constant: 8).isActive = true
-        projectName.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8).isActive = true
+        appendBtn.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        appendBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
         
-        exportInfo.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 124).isActive = true
+        image.centerXAnchor.constraint(equalTo: view.leftAnchor, constant: 74).isActive = true
+        image.centerYAnchor.constraint(equalTo: titleText.bottomAnchor, constant: 74).isActive = true
+        
+        projectName.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 132).isActive = true
+        projectName.topAnchor.constraint(equalTo: titleText.bottomAnchor, constant: 24).isActive = true
+        projectName.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
+        
+        exportInfo.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 132).isActive = true
         exportInfo.topAnchor.constraint(equalTo: projectName.bottomAnchor, constant: 4).isActive = true
-        exportInfo.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8).isActive = true
+        exportInfo.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
         
-        sizeInfo.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 124).isActive = true
+        sizeInfo.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 132).isActive = true
         sizeInfo.topAnchor.constraint(equalTo: exportInfo.bottomAnchor, constant: 4).isActive = true
-        sizeInfo.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8).isActive = true
+        sizeInfo.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
         
-        filesSizeInfo.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 124).isActive = true
+        filesSizeInfo.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 132).isActive = true
         filesSizeInfo.topAnchor.constraint(equalTo: exportInfo.bottomAnchor, constant: 4).isActive = true
-        filesSizeInfo.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8).isActive = true
+        filesSizeInfo.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
         
-        exportTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
-        exportTitle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
-        exportTitle.topAnchor.constraint(equalTo: titleBg.bottomAnchor, constant: 124).isActive = true
+        exportTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
+        exportTitle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        exportTitle.topAnchor.constraint(equalTo: titleText.bottomAnchor, constant: 132).isActive = true
 
-        exportSelector.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
-        exportSelector.topAnchor.constraint(equalTo: exportTitle.bottomAnchor, constant: 0).isActive = true
+        exportSelector.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
+        exportSelector.topAnchor.constraint(equalTo: exportTitle.bottomAnchor, constant: 6).isActive = true
         
-        scaleTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
-        scaleTitle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
-        scaleTitle.topAnchor.constraint(equalTo: exportSelector.bottomAnchor, constant: 4).isActive = true
+        scaleTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
+        scaleTitle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        scaleTitle.topAnchor.constraint(equalTo: exportSelector.bottomAnchor, constant: 12).isActive = true
 
-        scaleSelector.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
-        scaleSelector.topAnchor.constraint(equalTo: scaleTitle.bottomAnchor, constant: 0).isActive = true
-    }
-    
-    override func viewDidLayoutSubviews() {
-        titleBg.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
+        scaleSelector.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
+        scaleSelector.topAnchor.constraint(equalTo: scaleTitle.bottomAnchor, constant: 6).isActive = true
     }
 }

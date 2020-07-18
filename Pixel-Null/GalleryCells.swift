@@ -16,10 +16,16 @@ class GalleryCell : UICollectionViewCell {
         super.init(frame: frame)
         
         contentView.addSubviewFullSize(view: project)
+        contentView.isOpaque = true
+        
+        contentView.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        contentView.layer.shadowPath = UIBezierPath(roundedRect: project.bounds, cornerRadius: 16).cgPath
     }
     
     public func setProject(proj : ProjectWork){
         project.project = proj
+        contentView.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        contentView.layer.shadowPath = UIBezierPath(roundedRect: project.bounds, cornerRadius: 16).cgPath
     }
     
     required init?(coder: NSCoder) {
@@ -33,10 +39,8 @@ class GalleryTitleCell : UICollectionViewCell{
     
     override init(frame: CGRect) {
         title = UILabel()
-        title.layer.masksToBounds = false
         title.textAlignment = .justified
         super.init(frame : frame)
-        contentView.layer.masksToBounds = false
         contentView.addSubview(title)
     }
     
@@ -48,7 +52,7 @@ class GalleryTitleCell : UICollectionViewCell{
     func setTitle(title t : String){
         title.text = t
         title.textColor = getAppColor(color: .enable)
-        title.font = UIFont(name: "Rubik-Bold", size: 48)
+        title.font = UIFont(name: "Rubik-Bold", size: 42)
         title.frame = contentView.bounds
     }
 }

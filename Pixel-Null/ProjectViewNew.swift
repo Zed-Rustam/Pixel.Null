@@ -59,7 +59,7 @@ class ProjectViewNew : UIView {
     
     lazy private var titleBg : UIView = {
         let bg = UIView()
-        bg.setCorners(corners: 8)
+        bg.setCorners(corners: 8,needMask: false)
         bg.translatesAutoresizingMaskIntoConstraints = false
         bg.heightAnchor.constraint(equalToConstant: 16).isActive = true
         
@@ -86,7 +86,6 @@ class ProjectViewNew : UIView {
     func blurImage(image:UIImage, forRect rect: CGRect) -> UIImage? {
         let context = CIContext(options: nil)
         
-        //let mainimg = UIImage(cgImage: image.cgImage!, scale: 0.01, orientation: .down)
         
         let inputImage = CIImage(cgImage: image.cgImage!)
 
@@ -149,8 +148,7 @@ class ProjectViewNew : UIView {
 
         addInteraction(UIContextMenuInteraction(delegate: self))
         
-        setCorners(corners: 12)
-        layer.cornerCurve = .circular
+        setCorners(corners: 16, needMask: true, curveType: .continuous)
     }
     
     required init?(coder: NSCoder) {

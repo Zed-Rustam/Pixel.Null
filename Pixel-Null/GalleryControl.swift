@@ -23,6 +23,7 @@ class GalleryControl : UIViewController{
         btn.backgroundColor = getAppColor(color: .background)
         btn.setCorners(corners: 12, needMask: false, curveType: .continuous)
         btn.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        btn.layer.shadowPath = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 36, height: 36), cornerRadius: 12).cgPath
         
         btn.setImage(UIImage(systemName: "plus", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))!, for: .normal)
         btn.tintColor = getAppColor(color: .enable)
@@ -134,8 +135,9 @@ class GalleryControl : UIViewController{
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         gallery.reloadData()
-        gallery.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
+        //gallery.setShadow(color: getAppColor(color: .shadow), radius: 32, opasity: 1)
         createButtonNew.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        createButtonNew.layer.shadowPath = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 36, height: 36), cornerRadius: 12).cgPath
 
     }
     
@@ -172,7 +174,7 @@ class GalleryControl : UIViewController{
         gallery.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
         
         self.view.backgroundColor = getAppColor(color: .background)
-        gallery.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
+        //gallery.setShadow(color: getAppColor(color: .shadow), radius: 32, opasity: 1)
     }
 }
 

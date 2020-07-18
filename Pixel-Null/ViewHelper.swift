@@ -75,7 +75,7 @@ extension UIView {
         layer.shadowOpacity = opasity
     }
     
-    func setCorners(corners: CGFloat, needMask: Bool = true, curveType : CALayerCornerCurve = .continuous){
+    func setCorners(corners: CGFloat, needMask: Bool = false, curveType : CALayerCornerCurve = .continuous){
         layer.cornerCurve = curveType
         layer.cornerRadius = corners
         layer.masksToBounds = needMask

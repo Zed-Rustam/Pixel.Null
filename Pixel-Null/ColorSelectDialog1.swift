@@ -7,7 +7,8 @@ class ColorSelectDialog1 : UIView {
             self!.blackd = CGFloat(1 - $0)
             self!.resetColorBlack()
         }
-        slider.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        slider.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        slider.preview = .none
         return slider
     }()
     lazy private var whiteSlider : ColorSlider = {
@@ -16,7 +17,8 @@ class ColorSelectDialog1 : UIView {
             self!.whited = CGFloat(1 - $0)
             self!.resetColor()
         }
-        slider.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        slider.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        slider.preview = .none
         return slider
     }()
     lazy private var alphaSlider : ColorSlider = {
@@ -25,7 +27,8 @@ class ColorSelectDialog1 : UIView {
             self!.alphad = CGFloat($0)
             self!.resetColorAlpha()
         }
-        slider.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        slider.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        slider.preview = .none
         return slider
     }()
     lazy var selectedColorShow : ColorSelector = {

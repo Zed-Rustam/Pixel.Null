@@ -27,7 +27,7 @@ class ToggleView : UIView {
         mainView.translatesAutoresizingMaskIntoConstraints = false
         
         var innerView = UIView()
-        innerView.setCorners(corners: 15)
+        innerView.setCorners(corners: 12)
 
         mainView.addSubview(innerView)
         
@@ -36,18 +36,17 @@ class ToggleView : UIView {
         innerView.rightAnchor.constraint(equalTo: mainView.rightAnchor, constant: 0).isActive = true
         innerView.topAnchor.constraint(equalTo: mainView.topAnchor, constant: 0).isActive = true
         innerView.bottomAnchor.constraint(equalTo: mainView.bottomAnchor, constant: 0).isActive = true
-        innerView.backgroundColor = UIColor(named: "enableColor")
+        innerView.backgroundColor = getAppColor(color: .enable)
         
-        mainView.setShadow(color: .black, radius: 8, opasity: 0.25)
-        mainView.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        mainView.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        mainView.widthAnchor.constraint(equalToConstant: 24).isActive = true
+        mainView.heightAnchor.constraint(equalToConstant: 24).isActive = true
         return mainView
     }()
     
     lazy private var bgView : UIView = {
         let view = UIView()
-        view.setCorners(corners: 9)
-        view.backgroundColor =  UIColor(named: "disableColor")!.withAlphaComponent(0.5)
+        view.setCorners(corners: 6)
+        view.backgroundColor =  getAppColor(color: .backgroundLight)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -65,7 +64,7 @@ class ToggleView : UIView {
     func checkChange(){
         layoutIfNeeded()
         UIView.animate(withDuration: 0.2, animations: {
-            self.bgView.backgroundColor = self.check ? UIColor(named: "enableColor") : UIColor(named: "disableColor")!.withAlphaComponent(0.5)
+            self.bgView.backgroundColor = self.check ? getAppColor(color: .enable) : getAppColor(color: .backgroundLight)
             self.selectorView.frame.origin.x = self.check ? self.frame.width - self.selectorView.frame.width : 0
         })
     }
@@ -78,16 +77,16 @@ class ToggleView : UIView {
         
         bgView.leftAnchor.constraint(equalTo: leftAnchor, constant: 0).isActive = true
         bgView.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
-        bgView.topAnchor.constraint(equalTo: topAnchor, constant: 6).isActive = true
-        bgView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -6).isActive = true
+        bgView.topAnchor.constraint(equalTo: topAnchor, constant: 12).isActive = true
+        bgView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12).isActive = true
         
         selectorView.leftAnchor.constraint(equalTo: leftAnchor, constant: 0).isActive = true
-        selectorView.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
+        selectorView.topAnchor.constraint(equalTo: topAnchor, constant: 6).isActive = true
         
         
         translatesAutoresizingMaskIntoConstraints = false
-        widthAnchor.constraint(equalToConstant: 52).isActive = true
-        heightAnchor.constraint(equalToConstant: 30).isActive = true
+        widthAnchor.constraint(equalToConstant: 48).isActive = true
+        heightAnchor.constraint(equalToConstant: 36).isActive = true
     }
     
     override func layoutSubviews() {

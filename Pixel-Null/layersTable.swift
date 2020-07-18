@@ -31,14 +31,18 @@ class LayersTable : UICollectionView {
         register(LayersTableCell.self, forCellWithReuseIdentifier: "Layer")
         
         backgroundColor = .clear
-        self.setShadow(color: getAppColor(color: .shadow), radius: 6, opasity: 1)
         
+        //layer.shouldRasterize = true
+        //layer.rasterizationScale = UIScreen.main.scale
+    
+        //self.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+    
         self.contentInset = UIEdgeInsets(top: 6, left: 0, bottom: 0, right: 0)
     }
     
     override func tintColorDidChange() {
         super.tintColorDidChange()
-        self.setShadow(color: getAppColor(color: .shadow), radius: 6, opasity: 1)
+        //self.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
     }
     
     required init?(coder: NSCoder) {
@@ -198,7 +202,7 @@ extension LayersTable : UICollectionViewDelegate {
         if (contextingIndex != nil && self.cellForItem(at: IndexPath(item: contextingIndex!, section: 0)) != nil) {
             let target = UITargetedPreview(view: collectionView.cellForItem(at: IndexPath(item: contextingIndex!, section: 0))!)
             target.parameters.backgroundColor = .clear
-            target.parameters.visiblePath = UIBezierPath(roundedRect: collectionView.cellForItem(at: IndexPath(item: contextingIndex!, section: 0))!.bounds, cornerRadius: 6)
+            target.parameters.visiblePath = UIBezierPath(roundedRect: collectionView.cellForItem(at: IndexPath(item: contextingIndex!, section: 0))!.bounds, cornerRadius: 8)
             
             return target
         } else {
@@ -208,7 +212,7 @@ extension LayersTable : UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
         let target = UITargetedPreview(view: collectionView.cellForItem(at: IndexPath(item: contextingIndex!, section: 0))!)
-        target.parameters.visiblePath = UIBezierPath(roundedRect: collectionView.cellForItem(at: IndexPath(item: contextingIndex!, section: 0))!.bounds, cornerRadius: 6)
+        target.parameters.visiblePath = UIBezierPath(roundedRect: collectionView.cellForItem(at: IndexPath(item: contextingIndex!, section: 0))!.bounds, cornerRadius: 8)
         return target
     }
     
@@ -235,7 +239,7 @@ extension LayersTable : UICollectionViewDragDelegate {
     func collectionView(_ collectionView: UICollectionView, dragPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
         let parameters = UIDragPreviewParameters()
         parameters.backgroundColor = .clear
-        parameters.visiblePath = UIBezierPath(roundedRect: self.cellForItem(at: indexPath)!.bounds, cornerRadius: 6)
+        parameters.visiblePath = UIBezierPath(roundedRect: self.cellForItem(at: indexPath)!.bounds, cornerRadius: 8)
         
         return parameters
     }
@@ -289,7 +293,7 @@ extension LayersTable : UICollectionViewDropDelegate {
     func collectionView(_ collectionView: UICollectionView, dropPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
         let params = UIDragPreviewParameters()
         params.backgroundColor = .clear
-        params.visiblePath = UIBezierPath(roundedRect: (collectionView.cellForItem(at: indexPath)!).bounds, cornerRadius: 6)
+        params.visiblePath = UIBezierPath(roundedRect: (collectionView.cellForItem(at: indexPath)!).bounds, cornerRadius: 8)
         return params
     }
     

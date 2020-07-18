@@ -13,7 +13,7 @@ class PencilSettings : UIViewController {
     lazy private var penSizeSlider : SliderView = {
         let slider = SliderView()
         slider.translatesAutoresizingMaskIntoConstraints = false
-        slider.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        slider.heightAnchor.constraint(equalToConstant: 36).isActive = true
         slider.orientation = .horizontal
         slider.delegate = {[unowned self] in
             self.penSizeField.text = "\(Int($0 * 63 + 1))"
@@ -27,15 +27,17 @@ class PencilSettings : UIViewController {
         let field = UITextField()
         field.backgroundColor = getAppColor(color: .backgroundLight)
         field.textColor = getAppColor(color: .enable)
-        field.setCorners(corners: 12)
+        field.setCorners(corners: 8)
         field.delegate = penSizeInputDelegate
         field.textAlignment = .center
         field.keyboardType = .numberPad
         field.font = UIFont(name: "Rubik-Medium", size: 20)
 
+        field.attributedPlaceholder = NSAttributedString(string: "1",attributes: [NSAttributedString.Key.foregroundColor: getAppColor(color: .disable)])
+
         field.translatesAutoresizingMaskIntoConstraints = false
         field.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        field.widthAnchor.constraint(equalToConstant: 54).isActive = true
+        field.widthAnchor.constraint(equalToConstant: 72).isActive = true
         return field
     }()
     

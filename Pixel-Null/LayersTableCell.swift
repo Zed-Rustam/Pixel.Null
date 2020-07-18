@@ -21,7 +21,7 @@ class LayersTableCell : UICollectionViewCell {
         previewBackground.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
         previewBackground.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
         
-        view.setCorners(corners: 6)
+        view.setCorners(corners: 8,curveType: .continuous)
         
         view.addSubview(layerName)
         layerName.leftAnchor.constraint(equalTo: previewBackground.rightAnchor, constant: 6).isActive = true
@@ -41,6 +41,7 @@ class LayersTableCell : UICollectionViewCell {
         view.widthAnchor.constraint(equalToConstant: 36).isActive = true
         
         view.addSubviewFullSize(view: previewImageBack)
+        view.setCorners(corners: 8,needMask: true)
         return view
     }()
     
@@ -58,15 +59,9 @@ class LayersTableCell : UICollectionViewCell {
     
     var menu : () -> (UIMenu?) = {nil}
     
-    @objc private func some() {
-        print("action")
-        actionsButton.menu = menu()
-    }
-    
     lazy private var previewImage : UIImageView = {
         let image = UIImageView()
         image.layer.magnificationFilter = .nearest
-        image.setCorners(corners: 6)
         image.contentMode = .scaleAspectFit
         
         image.addSubviewFullSize(view: unvisibleImage)
@@ -75,7 +70,7 @@ class LayersTableCell : UICollectionViewCell {
     
     lazy private var unvisibleImage : UIImageView = {
         let image = UIImageView()
-        image.setCorners(corners: 6)
+        image.setCorners(corners: 8)
         image.image = #imageLiteral(resourceName: "unvisible_icon").withRenderingMode(.alwaysOriginal)
         image.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         return image
@@ -85,7 +80,7 @@ class LayersTableCell : UICollectionViewCell {
         let image = UIImageView()
         image.layer.magnificationFilter = .nearest
         image.image = #imageLiteral(resourceName: "background")
-        image.setCorners(corners: 6)
+        image.setCorners(corners: 8)
         
         image.addSubviewFullSize(view: previewImage)
         
@@ -96,7 +91,7 @@ class LayersTableCell : UICollectionViewCell {
         let label = UILabel()
         label.text = "New layer"
         label.font = UIFont(name: "Rubik-Medium", size: 16)
-        label.textColor = getAppColor(color: .enable)
+        label.textColor = getAppColor(color: .disable)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 36).isActive = true
         return label
@@ -107,11 +102,14 @@ class LayersTableCell : UICollectionViewCell {
         
         contentView.addSubviewFullSize(view: background)
         
-        actionsButton.addTarget(self, action: #selector(some), for: .touchDown)
-    }
+        contentView.layoutIfNeeded()
         
+        contentView.setShadow(color: getAppColor(color: .shadow), radius: 6, opasity: 1)
+        contentView.layer.shadowPath = UIBezierPath(roundedRect: background.frame, cornerRadius: 8).cgPath
+    }
+    
     func setSelected(isSelect : Bool, anim : Bool) {
-        self.layerName.textColor = isSelect ? getAppColor(color: .select) : getAppColor(color: .enable)
+        self.layerName.textColor = isSelect ? getAppColor(color: .select) : getAppColor(color: .disable)
     }
     
     func setPreview(image : UIImage) {
@@ -130,6 +128,7 @@ class LayersTableCell : UICollectionViewCell {
     
     func setContextMenu(menu : @escaping ()->(UIMenu?)) {
         self.menu = menu
+        actionsButton.menu = self.menu()
     }
     
     required init?(coder: NSCoder) {

@@ -19,7 +19,8 @@ class TrainingMain : UIViewController {
         tv.dataSource = self
         
         let head = UILabel()
-        head.textColor = UIColor(named: "enableColor")
+        head.textColor = getAppColor(color: .enable)
+        
         head.translatesAutoresizingMaskIntoConstraints = false
         head.font = UIFont(name: "Rubik-Bold", size: 48)
         head.text = NSLocalizedString("Training", comment: "")
@@ -54,13 +55,13 @@ class TrainingMain : UIViewController {
 extension TrainingMain : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Table")!
-        cell.textLabel!.textColor = UIColor(named: "enableColor")
+        cell.textLabel!.textColor = getAppColor(color: .enable)
         cell.textLabel!.font = UIFont(name:  "Rubik-Regular", size: 16)
-        cell.backgroundColor = UIColor(named: "disableColor")!.withAlphaComponent(0.25)
-        cell.tintColor = UIColor(named: "enableColor")
+        cell.backgroundColor = getAppColor(color: .backgroundLight)
+        cell.tintColor = getAppColor(color: .enable)
         cell.selectedBackgroundView = {
             let view = UIView()
-            view.backgroundColor = UIColor(named: "disableColor")!.withAlphaComponent(0.5)
+            view.backgroundColor = getAppColor(color: .disable)
             return view
         }()
                 
@@ -134,7 +135,7 @@ extension TrainingMain : UITableViewDelegate, UITableViewDataSource {
         myLabel.frame = CGRect(x: 20, y: 0, width: 200, height: 24)
         myLabel.font = UIFont(name:  "Rubik-Bold", size: 14)
         myLabel.text = self.tableView(tableView, titleForHeaderInSection: section)
-        myLabel.textColor = UIColor(named: "enableColor")
+        myLabel.textColor = getAppColor(color: .enable)
         
         let headerView = UIView()
         headerView.addSubview(myLabel)

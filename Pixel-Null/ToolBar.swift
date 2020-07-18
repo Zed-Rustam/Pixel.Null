@@ -48,7 +48,7 @@ class ToolBar : UIView {
         mainView.translatesAutoresizingMaskIntoConstraints = false
         
         let bgv = UIView()
-        bgv.setCorners(corners: 16)
+        bgv.setCorners(corners: 16, needMask: false, curveType: .continuous)
         bgv.backgroundColor =  UIColor(named: "backgroundColor")
         bgv.translatesAutoresizingMaskIntoConstraints = false
         
@@ -63,13 +63,12 @@ class ToolBar : UIView {
         stack.leftAnchor.constraint(equalTo: bgv.leftAnchor, constant: 0).isActive = true
         stack.rightAnchor.constraint(equalTo: bgv.rightAnchor, constant: 0).isActive = true
         stack.bottomAnchor.constraint(equalTo: bgv.bottomAnchor, constant: 0).isActive = true
-        //stack.topAnchor.constraint(equalTo: bgv.topAnchor, constant: 12).isActive = true
 
         toolCollection.leftAnchor.constraint(equalTo: stack.safeAreaLayoutGuide.leftAnchor, constant: 0).isActive = true
         toolCollection.rightAnchor.constraint(equalTo: stack.safeAreaLayoutGuide.rightAnchor, constant: 0).isActive = true
         toolCollection.bottomAnchor.constraint(equalTo: bgv.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
         
-
+        
         mainView.addSubview(bgv)
         bgv.leftAnchor.constraint(equalTo: mainView.leftAnchor, constant: 0).isActive = true
         bgv.rightAnchor.constraint(equalTo: mainView.rightAnchor, constant: 0).isActive = true
@@ -87,7 +86,8 @@ class ToolBar : UIView {
     
     lazy private var swipeView : UIView = {
         let topview = UIView()
-        topview.setCorners(corners: 2)
+        topview.setCorners(corners: 2, needMask: false)
+        
         topview.backgroundColor = UIColor(named: "enableColor")
         topview.translatesAutoresizingMaskIntoConstraints = false
         topview.widthAnchor.constraint(equalToConstant: 36).isActive = true
@@ -147,7 +147,7 @@ class ToolBar : UIView {
     func animationStart(){
         for i in 0..<toolCollection.tools.count {
             (toolCollection.cellForItem(at: IndexPath(item: i, section: 0)) as? ToolButton)?.getButton().isEnabled = false
-            swipeView.backgroundColor = getAppColor(color: .disable)
+            swipeView.backgroundColor = getAppColor(color: .backgroundLight)
         }
         subBar.updateButtons(btns: [])
     }
@@ -190,10 +190,13 @@ class ToolBar : UIView {
         
         addGestureRecognizer(swipeUpGesture)
         addGestureRecognizer(swipeDownGesture)
+        
+        bg.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
+        bg.layer.shadowPath = UIBezierPath(roundedRect: bg.bounds, cornerRadius: 16).cgPath
     }
     override func tintColorDidChange() {
         bg.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
-        subBar.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
+        bg.layer.shadowPath = UIBezierPath(roundedRect: bg.bounds, cornerRadius: 16).cgPath
     }
     
     func setData(project proj : ProjectWork, delegate del : FrameControlDelegate){
@@ -231,12 +234,12 @@ extension ToolBar : ToolBarDelegate {
     func wasChangedTool(newTool: Int) {
         //if newTool != nowSelected {
             let lastCell = toolCollection.cellForItem(at: IndexPath(item: toolCollection.tools.firstIndex(of: nowSelected)!, section: 0)) as! ToolButton
-            lastCell.getButton().setIconColor(color: UIColor(named: "enableColor")!)
+            lastCell.getButton().setIconColor(color: getAppColor(color: .disable))
             
             nowSelected = newTool
             
             let nowCell = toolCollection.cellForItem(at: IndexPath(item: toolCollection.tools.firstIndex(of: nowSelected)!, section: 0)) as! ToolButton
-            nowCell.getButton().setIconColor(color: UIColor(named: "selectColor")!)
+            nowCell.getButton().setIconColor(color: getAppColor(color: .enable))
        //}
     }
     

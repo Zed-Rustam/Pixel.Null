@@ -173,7 +173,9 @@ class Editor : UIViewController {
     override func viewDidLayoutSubviews() {
         control.setPosition()
         toolBar.setPosition()
-        toolBar.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
+        toolBar.tintColorDidChange()
+        //toolBar.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
+        //toolBar.layer.shadowPath = UIBezierPath(roundedRect: toolBar.bounds, cornerRadius: 16).cgPath
         
         appMovedToForeground()
     }
@@ -240,7 +242,6 @@ extension Editor : FrameControlDelegate{
     }
 
     func openFrameControl(project: ProjectWork) {
-
         finishTransform()
         project.savePreview(frame: project.FrameSelected)
 
@@ -248,12 +249,12 @@ extension Editor : FrameControlDelegate{
         frameControl.project = project
         frameControl.delegate = self
 
-        //let frameControl = LayersController()
-
         frameControl.modalPresentationStyle = .formSheet
-        frameControl.modalTransitionStyle = .coverVertical
-        //frameControl.isModalInPresentation = true
-        show(frameControl, sender: self)
+    
+        //self.view.layer.shouldRasterize = true
+        
+        present(frameControl, animated: true, completion: nil)
+        //show(frameControl, sender: self)
     }
 
     func updateEditor() {
@@ -359,14 +360,6 @@ extension Editor : ToolSettingsDelegate {
     
     func setSelectionSettings(mode: Int) {
         canvas.selection.type = Selection.SelectionType.init(rawValue: mode)!
-    }
-    
-    func openSelectorSettings() {
-         let selectorSettings = SelectorSettings()
-        selectorSettings.setDefault(mode: canvas.selection.type)
-        selectorSettings.delegate = self
-        selectorSettings.modalPresentationStyle = .formSheet
-        self.show(selectorSettings, sender: self)
     }
     
     func openPencilSettings() {
@@ -526,7 +519,6 @@ protocol ToolSettingsDelegate : class{
     func openPencilSettings()
     func openProjectSettings()
     func openEraseSettings()
-    func openSelectorSettings()
     func openGradientSettings()
     
     func setPenSettings(penSize : Int, pixPerfect : Bool)

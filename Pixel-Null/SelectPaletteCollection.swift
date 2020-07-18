@@ -263,7 +263,7 @@ class SelectPaletteCell : UICollectionViewCell {
 class palettesTitle : UICollectionReusableView {
     lazy var title : UILabel = {
         let label = UILabel()
-        label.textColor = getAppColor(color: .enable)
+        label.textColor = getAppColor(color: .disable)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .left
         

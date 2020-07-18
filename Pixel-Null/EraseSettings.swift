@@ -10,24 +10,6 @@ import UIKit
 
 class EraseSettings : UIViewController {
     
-//    lazy private var exitBtn : CircleButton = {
-//        let btn = CircleButton(icon: #imageLiteral(resourceName: "cancel_icon"), frame: .zero)
-//        btn.setShadowColor(color: .clear)
-//        btn.delegate = {[weak self] in
-//            self!.dismiss(animated: true, completion: nil)
-//        }
-//        return btn
-//    }()
-//    lazy private var appendBtn : CircleButton = {
-//       let btn = CircleButton(icon: #imageLiteral(resourceName: "select_icon"), frame:.zero)
-//        btn.setShadowColor(color: .clear)
-//        btn.delegate = {[weak self] in
-//            self!.delegate?.setEraseSettings(eraseSize : Int(self!.eraseSizeInput.filed.text ?? "1")!)
-//            self!.dismiss(animated: true, completion: nil)
-//        }
-//        return btn
-//    }()
-    
     lazy private var eraseSizeField : UITextField = {
         let field = UITextField()
         field.backgroundColor = getAppColor(color: .backgroundLight)
@@ -38,16 +20,18 @@ class EraseSettings : UIViewController {
         field.keyboardType = .numberPad
         field.font = UIFont(name: "Rubik-Medium", size: 20)
 
+        field.attributedPlaceholder = NSAttributedString(string: "1",attributes: [NSAttributedString.Key.foregroundColor: getAppColor(color: .disable)])
+
         field.translatesAutoresizingMaskIntoConstraints = false
         field.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        field.widthAnchor.constraint(equalToConstant: 54).isActive = true
+        field.widthAnchor.constraint(equalToConstant: 72).isActive = true
         return field
     }()
     
     lazy private var eraseSizeSlider : SliderView = {
         let slider = SliderView()
         slider.translatesAutoresizingMaskIntoConstraints = false
-        slider.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        slider.heightAnchor.constraint(equalToConstant: 36).isActive = true
         slider.orientation = .horizontal
         slider.delegate = {[unowned self] in
             self.eraseSizeField.text = "\(Int($0 * 63 + 1))"

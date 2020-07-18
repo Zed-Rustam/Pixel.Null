@@ -57,7 +57,7 @@ class GalleryLayout : UICollectionViewLayout{
             attributes.append(attribute)
             
             } else if (delegate?.getItemClass(indexItem: index) == "Title"){
-                let titleHeight = 52.0
+                let titleHeight = 48.0
                 let maxcolumn = columnsHeights.max()!
                 
                 let frame = CGRect(x: padding, y: maxcolumn, width: contentWidth - padding * 2.0, height: titleHeight)
@@ -66,7 +66,7 @@ class GalleryLayout : UICollectionViewLayout{
                 attributes.append(attribute)
                 
                 for i in 0..<columnsHeights.count {
-                    columnsHeights[i] = maxcolumn + titleHeight
+                    columnsHeights[i] = maxcolumn + titleHeight + 12
                 }
             }
         } 

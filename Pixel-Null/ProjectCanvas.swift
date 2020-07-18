@@ -791,7 +791,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
         if isSelected {
             let newLay = project.getLayer(frame: project.FrameSelected, layer: project.LayerSelected).cut(image: project.loadSelection())
             project.addAction(action :["ToolID" : "\(Actions.drawing.rawValue)", "frame" : "\(project.FrameSelected)", "layer" : "\(project.LayerSelected)"])
-
+            
             try! newLay.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(project.information.frames[project.FrameSelected].frameID)").appendingPathComponent("layer-\(project.information.frames[project.FrameSelected].layers[project.LayerSelected].layerID).png"))
             
             try! targetLayer.flip(xFlip: project.isFlipX, yFlip: project.isFlipY).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))

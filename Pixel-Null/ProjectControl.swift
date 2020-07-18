@@ -144,6 +144,7 @@ class ProjectControl : UIView, UIGestureRecognizerDelegate {
 
     override func layoutSubviews() {
         setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
+        layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: 8).cgPath
     }
 
     required init?(coder: NSCoder) {

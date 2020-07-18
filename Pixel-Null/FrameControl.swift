@@ -258,8 +258,8 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
     weak var project : ProjectWork!
     
     override func viewDidLoad() {
-        self.view.backgroundColor = UIColor(named: "backgroundColor")
-        view.setCorners(corners: 24)
+        self.view.backgroundColor = getAppColor(color: .background)
+        view.setCorners(corners: 32)
         
         view.addSubview(frames)
         view.addSubview(layers)
@@ -270,13 +270,16 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
 
         frames.list.frameDelegate = self
         frames.parentController = self
-
+        
         layers.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
         layers.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
         layers.topAnchor.constraint(equalTo: frames.bottomAnchor, constant: 6).isActive = true
         layers.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
         
         layers.list.frameDelegate = self
+        
+        //view.layer.shouldRasterize = true
+        //view.layer.rasterizationScale = UIScreen.main.scale
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {

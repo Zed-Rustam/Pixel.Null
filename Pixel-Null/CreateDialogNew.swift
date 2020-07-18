@@ -28,7 +28,7 @@ class CreateDialogNew : UIViewController {
         field.translatesAutoresizingMaskIntoConstraints = false
         field.heightAnchor.constraint(equalToConstant: 36).isActive = true
         field.backgroundColor = getAppColor(color: .backgroundLight)
-        field.setCorners(corners: 12)
+        field.setCorners(corners: 8,curveType: .continuous)
         field.font = UIFont(name: "Rubik-Medium", size: 20)
         field.textAlignment = .left
         field.textColor = getAppColor(color: .enable)
@@ -50,7 +50,7 @@ class CreateDialogNew : UIViewController {
         field.heightAnchor.constraint(equalToConstant: 36).isActive = true
         field.background = nil
         field.backgroundColor = getAppColor(color: .backgroundLight)
-        field.setCorners(corners: 12)
+        field.setCorners(corners: 8,curveType: .continuous)
         field.font = UIFont(name: "Rubik-Medium", size: 20)
         field.textAlignment = .left
         field.textColor = getAppColor(color: .enable)
@@ -74,7 +74,7 @@ class CreateDialogNew : UIViewController {
         field.heightAnchor.constraint(equalToConstant: 36).isActive = true
         field.font = UIFont(name: "Rubik-Medium", size: 20)
         field.backgroundColor = getAppColor(color: .backgroundLight)
-        field.setCorners(corners: 12)
+        field.setCorners(corners: 8,curveType: .continuous)
         field.textAlignment = .left
         field.textColor = getAppColor(color: .enable)
         field.text = "64"
@@ -96,7 +96,7 @@ class CreateDialogNew : UIViewController {
         field.heightAnchor.constraint(equalToConstant: 36).isActive = true
         field.background = nil
         field.backgroundColor = getAppColor(color: .backgroundLight)
-        field.setCorners(corners: 12)
+        field.setCorners(corners: 8,curveType: .continuous)
         field.font = UIFont(name: "Rubik-Medium", size: 20)
         field.textAlignment = .left
         field.textColor = getAppColor(color: .enable)
@@ -147,13 +147,23 @@ class CreateDialogNew : UIViewController {
     
     private var createBtn : UIButton = {
        let btn = UIButton()
-        btn.setImage(#imageLiteral(resourceName: "select_icon").withTintColor(getAppColor(color: .enable), renderingMode: .alwaysTemplate), for: .normal)
-        btn.imageView?.tintColor = getAppColor(color: .enable)
-        btn.imageEdgeInsets = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.widthAnchor.constraint(equalToConstant: 128).isActive = true
         btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.setTitle("Create", for: .normal)
+        //btn.titleLabel?.text = "Create"
+        //btn.titleLabel?.textColor = getAppColor(color: .background)
+        btn.setTitleColor(getAppColor(color: .background), for: .normal)
+        btn.setTitleColor(getAppColor(color: .disable), for: .disabled)
         
+        btn.backgroundColor = getAppColor(color: .enable)
+        btn.titleLabel?.font = UIFont(name: "Rubik-Bold", size: 20)
+        
+        btn.setBackgroundImage(UIImage(size: CGSize(width: 8, height: 8), bgColor: getAppColor(color: .enable)), for: .normal)
+        btn.setBackgroundImage(UIImage(size: CGSize(width: 8, height: 8), bgColor: getAppColor(color: .backgroundLight)), for: .disabled)
+        
+        btn.setCorners(corners: 8,curveType: .continuous)
+
         return btn
     }()
     
@@ -173,7 +183,7 @@ class CreateDialogNew : UIViewController {
     
     override func viewDidLoad() {
         view.backgroundColor = getAppColor(color: .background)
-        view.setCorners(corners: 24)
+        //view.setCorners(corners: 32,needMask: false)
         
         view.addSubview(titleLabel)
         view.addSubview(nameField)
@@ -209,7 +219,7 @@ class CreateDialogNew : UIViewController {
         colorSelector.topAnchor.constraint(equalTo: backgroundColor.topAnchor).isActive = true
         
         createBtn.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
-        createBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
+        createBtn.topAnchor.constraint(equalTo: backgroundColor.bottomAnchor, constant: 12).isActive = true
 
         createBtn.addTarget(self, action: #selector(create), for: .touchUpInside)
         

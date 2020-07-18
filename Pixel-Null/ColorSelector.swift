@@ -7,7 +7,7 @@ class ColorSelector : UIView{
         let bg = UIImageView(image: UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!.cropping(to: CGRect(x: 0, y: 0, width: 4, height: 4))!))
         bg.contentMode = .scaleAspectFill
         bg.layer.magnificationFilter = CALayerContentsFilter.nearest
-        bg.setCorners(corners: 12)
+        bg.setCorners(corners: 8,needMask: true)
         bg.translatesAutoresizingMaskIntoConstraints = false
         return bg
     }()

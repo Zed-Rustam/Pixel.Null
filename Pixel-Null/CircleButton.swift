@@ -48,7 +48,8 @@ class CircleButton : UIView, UIGestureRecognizerDelegate {
         get{
             return bg.layer.cornerRadius
         } set {
-            bg.setCorners(corners: newValue)
+            bg.setCorners(corners: newValue,needMask: false)
+            bg.layer.shadowPath = UIBezierPath(roundedRect: bg.bounds, cornerRadius: newValue).cgPath
         }
     }
     
@@ -58,6 +59,7 @@ class CircleButton : UIView, UIGestureRecognizerDelegate {
     
     func setShadowColor(color : UIColor){
         shadowColor = color
+        bg.layer.shadowPath = UIBezierPath(roundedRect: bg.bounds, cornerRadius: bg.layer.cornerRadius).cgPath
         self.setShadow(color: shadowColor, radius: 8, opasity: 1)
     }
     
@@ -97,7 +99,7 @@ class CircleButton : UIView, UIGestureRecognizerDelegate {
         icon.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: iconScale).isActive = true
         icon.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: iconScale).isActive = true
         
-        bg.setCorners(corners: 18)
+        bg.setCorners(corners: 18,needMask: false)
 
 
         isEnabled = true
@@ -114,6 +116,8 @@ class CircleButton : UIView, UIGestureRecognizerDelegate {
         self.addGestureRecognizer(panGesture)
         self.addGestureRecognizer(longPanGesture)
 
+        bg.layer.shadowPath = UIBezierPath(roundedRect: bg.bounds, cornerRadius: bg.layer.cornerRadius).cgPath
+
     }
     
     override func layoutIfNeeded() {
@@ -121,6 +125,7 @@ class CircleButton : UIView, UIGestureRecognizerDelegate {
     }
     
     override func layoutSubviews() {
+        bg.layer.shadowPath = UIBezierPath(roundedRect: bg.bounds, cornerRadius: bg.layer.cornerRadius).cgPath
         self.setShadow(color: shadowColor, radius: 8, opasity: 1)
         self.icon.tintColor = self.iconColor
     }

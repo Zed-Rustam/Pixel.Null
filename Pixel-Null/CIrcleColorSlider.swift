@@ -64,7 +64,7 @@ class CircleSlider : UIView {
         
         gradientBg = CAGradientLayer()
         selectPoint = CAShapeLayer()
-
+        
         super.init(frame : frame)
         
         let b = UIBezierPath()
@@ -84,12 +84,10 @@ class CircleSlider : UIView {
         gradientBg.mask = bg
         
         selectPoint.frame = bounds
-        let b2 = UIBezierPath(ovalIn: CGRect(x: frame.width - 24, y: frame.width / 2 - 12, width: 24, height: 24))
+        let b2 = UIBezierPath(ovalIn: CGRect(x: frame.width - 20, y: frame.width / 2 - 10, width: 20, height: 20))
         selectPoint.path = b2.cgPath
         
         selectPoint.fillColor = UIColor.getColorInGradient(position: CGFloat(Int(selectAngle + 270) % 360) / 360.0, colors: UIColor.red,UIColor.yellow,UIColor.green,UIColor.cyan,UIColor.blue,UIColor.magenta,UIColor.red).cgColor
-        
-        
         
         layer.addSublayer(gradientBg)
         layer.addSublayer(selectPoint)

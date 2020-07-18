@@ -15,76 +15,89 @@ class ProjectPallete : UIViewController {
     
     var selectDelegate : (UIColor) -> () = {color in}
     
-    lazy private var palleteBar : UIView = {
-       let mainview = UIView()
-        mainview.translatesAutoresizingMaskIntoConstraints = false
-        
-        
-        let bgView = UIView()
-        bgView.backgroundColor = UIColor(named: "backgroundColor")!
-        bgView.setCorners(corners: 8)
-        bgView.translatesAutoresizingMaskIntoConstraints = false
-        
-        mainview.addSubview(selectBtn)
-        selectBtn.rightAnchor.constraint(equalTo: mainview.rightAnchor, constant: 0).isActive = true
-        selectBtn.topAnchor.constraint(equalTo: mainview.topAnchor, constant: 0).isActive = true
-        
-        mainview.addSubview(bgView)
-        bgView.leftAnchor.constraint(equalTo: mainview.leftAnchor, constant: 0).isActive = true
-        bgView.rightAnchor.constraint(equalTo: selectBtn.leftAnchor, constant: -6).isActive = true
-        bgView.topAnchor.constraint(equalTo: mainview.topAnchor, constant: 0).isActive = true
-        bgView.bottomAnchor.constraint(equalTo: mainview.bottomAnchor, constant: 0).isActive = true
-
-        let openPalletesBtn = CircleButton(icon: #imageLiteral(resourceName: "pallete_collection_item"), frame: .zero)
+//    lazy private var palleteBar : UIView = {
+//       let mainview = UIView()
+//        mainview.translatesAutoresizingMaskIntoConstraints = false
+//
+//
+//        let bgView = UIView()
+//        bgView.backgroundColor = UIColor(named: "backgroundColor")!
+//        bgView.setCorners(corners: 8)
+//        bgView.translatesAutoresizingMaskIntoConstraints = false
+//
+//        mainview.addSubview(selectBtn)
+//        selectBtn.rightAnchor.constraint(equalTo: mainview.rightAnchor, constant: 0).isActive = true
+//        selectBtn.topAnchor.constraint(equalTo: mainview.topAnchor, constant: 0).isActive = true
+//
+//        mainview.addSubview(bgView)
+//        bgView.leftAnchor.constraint(equalTo: mainview.leftAnchor, constant: 0).isActive = true
+//        bgView.rightAnchor.constraint(equalTo: selectBtn.leftAnchor, constant: -6).isActive = true
+//        bgView.topAnchor.constraint(equalTo: mainview.topAnchor, constant: 0).isActive = true
+//        bgView.bottomAnchor.constraint(equalTo: mainview.bottomAnchor, constant: 0).isActive = true
+//
+//        let openPalletesBtn = CircleButton(icon: #imageLiteral(resourceName: "pallete_collection_item"), frame: .zero)
+//        openPalletesBtn.translatesAutoresizingMaskIntoConstraints = false
+//        openPalletesBtn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+//        openPalletesBtn.heightAnchor.constraint(equalToConstant: 36).isActive = true
+//        openPalletesBtn.setShadowColor(color: .clear)
+//        openPalletesBtn.delegate = {[unowned self] in
+//            let selector = PeletteSelectController()
+//            selector.modalPresentationStyle = .formSheet
+//            selector.selectDelegate = {[unowned self] palette,name in
+//                self.collection.palleteColors = palette.colors
+//                self.collection.reloadData()
+//            }
+//            self.show(selector, sender: nil)
+//        }
+//
+//        bgView.addSubview(openPalletesBtn)
+//        openPalletesBtn.leftAnchor.constraint(equalTo: bgView.leftAnchor, constant: 3).isActive = true
+//        openPalletesBtn.topAnchor.constraint(equalTo: bgView.topAnchor, constant: 3).isActive = true
+//
+//        bgView.addSubview(palleteName)
+//        palleteName.leftAnchor.constraint(equalTo: openPalletesBtn.rightAnchor, constant: 3).isActive = true
+//        palleteName.rightAnchor.constraint(equalTo: bgView.rightAnchor, constant: -12).isActive = true
+//        palleteName.topAnchor.constraint(equalTo: bgView.topAnchor, constant: 0).isActive = true
+//
+//        return mainview
+//    }()
+//
+    
+    lazy private var selectBtn : UIButton = {
+        let openPalletesBtn = UIButton()
         openPalletesBtn.translatesAutoresizingMaskIntoConstraints = false
-        openPalletesBtn.widthAnchor.constraint(equalToConstant: 36).isActive = true
-        openPalletesBtn.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        openPalletesBtn.setShadowColor(color: .clear)
-        openPalletesBtn.delegate = {[unowned self] in
-            let selector = PeletteSelectController()
-            selector.modalPresentationStyle = .formSheet
-            selector.selectDelegate = {[unowned self] palette,name in
-                self.collection.palleteColors = palette.colors
-                self.collection.reloadData()
-            }
-            self.show(selector, sender: nil)
-        }
+        openPalletesBtn.widthAnchor.constraint(equalToConstant: 42).isActive = true
+        openPalletesBtn.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        openPalletesBtn.setImage(#imageLiteral(resourceName: "pallete_collection_item").withRenderingMode(.alwaysTemplate), for: .normal)
+        openPalletesBtn.imageView?.tintColor = getAppColor(color: .enable)
+        openPalletesBtn.addTarget(self, action: #selector(onPress), for: .touchUpInside)
+        openPalletesBtn.imageEdgeInsets = UIEdgeInsets(top: 6, left: 6, bottom: 6, right: 6)
         
-        bgView.addSubview(openPalletesBtn)
-        openPalletesBtn.leftAnchor.constraint(equalTo: bgView.leftAnchor, constant: 3).isActive = true
-        openPalletesBtn.topAnchor.constraint(equalTo: bgView.topAnchor, constant: 3).isActive = true
-        
-        bgView.addSubview(palleteName)
-        palleteName.leftAnchor.constraint(equalTo: openPalletesBtn.rightAnchor, constant: 3).isActive = true
-        palleteName.rightAnchor.constraint(equalTo: bgView.rightAnchor, constant: -12).isActive = true
-        palleteName.topAnchor.constraint(equalTo: bgView.topAnchor, constant: 0).isActive = true
-        
-        return mainview
+        return openPalletesBtn
     }()
     
     lazy private var palleteName : UILabel = {
-        let label = UILabel().setTextColor(color: UIColor(named: "enableColor")!).setFont(font: UIFont(name: "Rubik-Bold", size: 18)!).setText(text: "Project's Pallete")
+        let label = UILabel().setTextColor(color: getAppColor(color: .enable)).setFont(font: UIFont(name: "Rubik-Bold", size: 32)!).setText(text: "Palette")
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 42).isActive = true
         
         return label
     }()
     
-    lazy private var selectBtn : CircleButton = {
-        let btn = CircleButton(icon: #imageLiteral(resourceName: "select_icon"), frame: .zero, icScale: 0.33)
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 42).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: 42).isActive = true
-        btn.corners = 8
-        btn.delegate = {[unowned self] in
-            self.selectDelegate(self.color.color)
-            self.project!.projectPallete = self.collection.palleteColors
-            
-            self.dismiss(animated: true, completion: nil)
-        }
-        
-        return btn
-    }()
+//    lazy private var selectBtn : CircleButton = {
+//        let btn = CircleButton(icon: #imageLiteral(resourceName: "select_icon"), frame: .zero, icScale: 0.33)
+//        btn.translatesAutoresizingMaskIntoConstraints = false
+//        btn.widthAnchor.constraint(equalToConstant: 42).isActive = true
+//        btn.heightAnchor.constraint(equalToConstant: 42).isActive = true
+//        btn.corners = 8
+//        btn.delegate = {[unowned self] in
+//            self.selectDelegate(self.color.color)
+//            self.project!.projectPallete = self.collection.palleteColors
+//            self.dismiss(animated: true, completion: nil)
+//        }
+//
+//        return btn
+//    }()
     
     lazy private var collection : PaletteCollectionModern = {
         let colors = PaletteCollectionModern(colors : project!.information.pallete.colors)
@@ -135,6 +148,7 @@ class ProjectPallete : UIViewController {
                 palleteSelect.setColor(clr: clr.color)
                 palleteSelect.delegate = {color in
                     clr.color = color
+                    self.selectDelegate(self.color.color)
                 }
                 
                 self.show(palleteSelect, sender: self)
@@ -185,6 +199,7 @@ class ProjectPallete : UIViewController {
         btn.delegate = {[unowned self] in
             if !self.collection.moving {
                 self.collection.cloneSelectedColor()
+                self.project!.projectPallete = self.collection.palleteColors
             }
         }
         
@@ -203,6 +218,7 @@ class ProjectPallete : UIViewController {
         btn.delegate = {[unowned self] in
             if !self.collection.moving {
                 self.collection.deleteSelectedColor()
+                self.project!.projectPallete = self.collection.palleteColors
             }
         }
         
@@ -222,6 +238,7 @@ class ProjectPallete : UIViewController {
                 palleteSelector.modalPresentationStyle = .formSheet
                 palleteSelector.delegate = {[unowned self] in
                     self.collection.addColor(color: $0)
+                    self.project!.projectPallete = self.collection.palleteColors
                 }
                 
                 self.show(palleteSelector, sender: self)
@@ -247,6 +264,7 @@ class ProjectPallete : UIViewController {
                 
                 palleteSelector.delegate = {[unowned self] in
                     self.collection.changeSelectedColor(color: $0)
+                    self.project!.projectPallete = self.collection.palleteColors
                 }
                 
                 self.show(palleteSelector, sender: self)
@@ -266,38 +284,62 @@ class ProjectPallete : UIViewController {
         btn.delegate = {[unowned self] in
             if !self.collection.moving {
                 self.collection.addColor(color: self.color.color)
+                self.project!.projectPallete = self.collection.palleteColors
             }
         }
         
         return btn
     }()
     
+    
+    @objc func onPress() {
+        let selector = PeletteSelectController()
+        selector.modalPresentationStyle = .formSheet
+        selector.selectDelegate = {[unowned self] palette,name in
+            self.collection.palleteColors = palette.colors
+            self.collection.reloadData()
+            self.project!.projectPallete = self.collection.palleteColors
+        }
+        self.show(selector, sender: nil)
+    }
+    
+    
     override func viewDidLayoutSubviews() {
         palleteEditBap.setShadow(color: UIColor(named: "shadowColor")!, radius: 4, opasity: 1)
         selectedColor.setShadow(color: UIColor(named: "shadowColor")!, radius: 4, opasity: 1)
-        palleteBar.setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
+        //palleteBar.setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
     }
 
     override func viewDidLoad() {
         
+        view.setCorners(corners: 32)
+        
         view.addSubview(collection)
-        view.addSubview(palleteBar)
+        view.addSubview(palleteName)
+        view.addSubview(selectBtn)
+        //view.addSubview(palleteBar)
         view.addSubview(selectedColor)
         view.addSubview(palleteEditBap)
 
         collection.colorDelegate = {[unowned self] in
             self.color.color = $0
+            self.selectDelegate(self.color.color)
         }
         
         
-        palleteBar.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 6).isActive = true
-        palleteBar.topAnchor.constraint(equalTo: view.topAnchor, constant: 6).isActive = true
-        palleteBar.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -6).isActive = true
-        palleteBar.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        palleteName.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
+        palleteName.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
         
-        collection.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 6).isActive = true
-        collection.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
-        collection.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -6).isActive = true
+        selectBtn.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        selectBtn.centerYAnchor.constraint(equalTo: palleteName.centerYAnchor, constant: 0).isActive = true
+//        palleteBar.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 6).isActive = true
+//        palleteBar.topAnchor.constraint(equalTo: view.topAnchor, constant: 6).isActive = true
+//        palleteBar.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -6).isActive = true
+//        palleteBar.heightAnchor.constraint(equalToConstant: 42).isActive = true
+//
+        collection.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
+        collection.topAnchor.constraint(equalTo: palleteName.bottomAnchor, constant: 12).isActive = true
+        collection.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
         collection.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
         
         selectedColor.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 6).isActive = true

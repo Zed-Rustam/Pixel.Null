@@ -23,7 +23,7 @@ class SliderView : UIView {
     lazy private var bg : UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(named: "disableColor")!.withAlphaComponent(0.25)
-        view.setCorners(corners: 8)
+        view.setCorners(corners: 6)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -31,8 +31,8 @@ class SliderView : UIView {
     lazy private var bg2 : UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(named: "enableColor")
-        view.setCorners(corners: 8)
-        view.frame.size.height = 16
+        view.setCorners(corners: 6)
+        view.frame.size.height = 12
         view.translatesAutoresizingMaskIntoConstraints = true
         return view
     }()
@@ -40,17 +40,16 @@ class SliderView : UIView {
     lazy private var selectorView : UIView = {
         let mainView = UIView()
         mainView.translatesAutoresizingMaskIntoConstraints = false
-        mainView.setShadow(color: .black, radius: 8, opasity: 0.25)
         let view = UIView()
         view.backgroundColor = UIColor(named: "enableColor")
-        view.setCorners(corners: 15)
+        view.setCorners(corners: 12)
         view.translatesAutoresizingMaskIntoConstraints = false
         
         mainView.addSubview(view)
         view.leftAnchor.constraint(equalTo: mainView.leftAnchor, constant: 0).isActive = true
         view.topAnchor.constraint(equalTo: mainView.topAnchor, constant: 0).isActive = true
-        view.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        view.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        view.widthAnchor.constraint(equalToConstant: 24).isActive = true
+        view.heightAnchor.constraint(equalToConstant: 24).isActive = true
         return mainView
     }()
         
@@ -70,15 +69,15 @@ class SliderView : UIView {
         
         bg.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 0).isActive = true
         bg.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 0).isActive = true
-        bg.topAnchor.constraint(equalTo: self.topAnchor, constant: 7).isActive = true
-        bg.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -7).isActive = true
+        bg.topAnchor.constraint(equalTo: self.topAnchor, constant: 12).isActive = true
+        bg.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -12).isActive = true
         
-        bg2.frame = CGRect(x: 0, y: 0, width: 0, height: 16)
+        bg2.frame = CGRect(x: 0, y: 0, width: 0, height: 12)
 
         selectorView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 0).isActive = true
-        selectorView.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
-        selectorView.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        selectorView.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        selectorView.topAnchor.constraint(equalTo: self.topAnchor, constant: 6).isActive = true
+        selectorView.widthAnchor.constraint(equalToConstant: 24).isActive = true
+        selectorView.heightAnchor.constraint(equalToConstant: 24).isActive = true
         
         NotificationCenter.default.addObserver(self, selector: #selector(reset), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
@@ -97,13 +96,13 @@ class SliderView : UIView {
         switch orientation {
             case .horizontal:
                 UIView.animate(withDuration: 0.25, animations: {
-                    self.bg2.frame.size.width =  15 + self.nowPosition * (self.frame.width - 30)
-                    self.selectorView.center.x = 15 + self.nowPosition * (self.frame.width - 30)
+                    self.bg2.frame.size.width =  12 + self.nowPosition * (self.frame.width - 24)
+                    self.selectorView.center.x = 12 + self.nowPosition * (self.frame.width - 24)
                 })
             case .vertical:
                 UIView.animate(withDuration: 0.25, animations: {
-                    self.bg2.frame.size.height = 15 + self.nowPosition * (self.frame.height - 30)
-                    self.selectorView.center.y = 15 + self.nowPosition * (self.frame.height - 30)
+                    self.bg2.frame.size.height = 12 + self.nowPosition * (self.frame.height - 24)
+                    self.selectorView.center.y = 12 + self.nowPosition * (self.frame.height - 24)
                 })
         }
     }
@@ -113,18 +112,18 @@ class SliderView : UIView {
         switch orientation {
             case .horizontal:
                 position = CGPoint(x: sender.location(in: self).x, y: 0)
-                if position.x < 15 {
-                    position.x = 15
-                } else if position.x > self.frame.width - 15 {
-                    position.x = self.frame.width - 15
+                if position.x < 12 {
+                    position.x = 12
+                } else if position.x > self.frame.width - 12 {
+                    position.x = self.frame.width - 12
                 }
             
             case .vertical:
                 position = CGPoint(x: 0, y: sender.location(in: self).y)
-                if position.y < 15 {
-                    position.y = 15
-                } else if position.y > self.frame.height - 15 {
-                    position.y = self.frame.height - 15
+                if position.y < 12 {
+                    position.y = 12
+                } else if position.y > self.frame.height - 12 {
+                    position.y = self.frame.height - 12
                 }
         }
 
@@ -133,7 +132,7 @@ class SliderView : UIView {
         case .began:
             switch orientation {
                 case .horizontal:
-                    nowPosition = (position.x - 15) / (self.frame.width - 30)
+                    nowPosition = (position.x - 12) / (self.frame.width - 24)
                     UIView.animate(withDuration: 0.25, animations: {
                         self.selectorView.transform = CGAffineTransform(scaleX: 1.25, y: 1.25)
                         self.selectorView.center.x = position.x
@@ -141,7 +140,7 @@ class SliderView : UIView {
 
                     })
                 case .vertical:
-                    nowPosition = (position.y - 15) / (self.frame.height - 30)
+                    nowPosition = (position.y - 12) / (self.frame.height - 24)
                     UIView.animate(withDuration: 0.25, animations: {
                         self.selectorView.transform = CGAffineTransform(scaleX: 1.25, y: 1.25)
                             self.selectorView.center.y = position.y
@@ -154,7 +153,7 @@ class SliderView : UIView {
         case .changed:
             switch orientation {
             case .horizontal:
-                nowPosition = (position.x - 15) / (self.frame.width - 30)
+                nowPosition = (position.x - 12) / (self.frame.width - 24)
                 UIView.animate(withDuration: 0.25, animations: {
                     self.bg2.frame.size.width = position.x
                 })
@@ -162,7 +161,7 @@ class SliderView : UIView {
                     self.selectorView.center.x = position.x
                 })
             case .vertical:
-                nowPosition = (position.y - 15) / (self.frame.height - 30)
+                nowPosition = (position.y - 12) / (self.frame.height - 24)
                 UIView.animate(withDuration: 0.25, animations: {
                     self.selectorView.center.y = position.y
                 })
