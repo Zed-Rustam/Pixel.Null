@@ -37,7 +37,6 @@ class NavigationView : UIView {
         stack.alignment = .center
         stack.distribution = .fillEqually
         stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.isOpaque = true
         
         for i in 0..<icons.count {
             let img = UIImageView(image: icons[i].withRenderingMode(.alwaysTemplate))
@@ -51,7 +50,6 @@ class NavigationView : UIView {
             }
             img.isUserInteractionEnabled = true
             img.interactions.append(UIPointerInteraction(delegate: self))
-            img.isOpaque = true
             stack.addArrangedSubview(img)
         }
         

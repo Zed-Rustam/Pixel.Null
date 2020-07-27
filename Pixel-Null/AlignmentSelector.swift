@@ -228,6 +228,7 @@ class AlignmentSelector : UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         selectBg.setShadow(color: UIColor(named: "shadowColor")!, radius: 4, opasity: 1)
+        selectBg.layer.shadowPath = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 36, height: 36), cornerRadius: 12).cgPath
     }
     
     required init?(coder: NSCoder) {

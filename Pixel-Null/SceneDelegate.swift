@@ -23,12 +23,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let gallery = GalleryControl()
         let pallete = PalleteCollection()
         let settings = SettingsController()
-        let training = TrainingController()
+        //let training = TrainingController()
         
         maincontroller.setControllers(menus:
                                     gallery,
                                     pallete,
-                                    training,
                                     settings)
         
         window = UIWindow(windowScene: winscene)

@@ -47,7 +47,7 @@ class ColorSlider : UIView {
     lazy private var bgView : UIView = {
         let mainview = UIView()
         mainview.translatesAutoresizingMaskIntoConstraints = false
-        mainview.setCorners(corners: 12)
+        mainview.setCorners(corners: 12,needMask: true)
         mainview.layer.magnificationFilter = .nearest
         return mainview
     }()
@@ -55,16 +55,19 @@ class ColorSlider : UIView {
     lazy private var selectView : UIView = {
         let mainView = UIView()
         mainView.translatesAutoresizingMaskIntoConstraints = false
+        
         mainView.setShadow(color: UIColor.black, radius: 4, opasity: 0.1)
+        mainView.layer.shadowPath = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 24, height: 24), cornerRadius: 12).cgPath
         
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = startColor
-        
+        view.setCorners(corners: 12,needMask: false)
+
         
         let bgView = UIView()
         bgView.translatesAutoresizingMaskIntoConstraints = false
-        bgView.setCorners(corners: 12,needMask: true)
+        bgView.setCorners(corners: 12,needMask: false)
         bgView.layer.magnificationFilter = .nearest
         
         bgView.addSubview(view)
@@ -283,6 +286,7 @@ class ColorSlider : UIView {
         gradient.frame = bgView.bounds
         bgView.layer.addSublayer(gradient)
         setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
+        layer.shadowPath = UIBezierPath(roundedRect: bgView.bounds, cornerRadius: 12).cgPath
         
         bgView.backgroundColor = UIColor(patternImage: UIImage(cgImage:#imageLiteral(resourceName: "background").cgImage! , scale: 1.0/6, orientation: .down))
         

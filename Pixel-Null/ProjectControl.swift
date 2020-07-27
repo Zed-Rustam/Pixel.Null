@@ -42,10 +42,10 @@ class ProjectControl : UIView, UIGestureRecognizerDelegate {
     private unowned var project : ProjectWork
     lazy private var bg : UIView = {
         let bgView = UIView()
-        bgView.backgroundColor = UIColor(named: "backgroundColor")!
-        bgView.layer.cornerRadius = 16
+        bgView.backgroundColor = getAppColor(color: .background)
+        
+        bgView.setCorners(corners: 16, needMask: false, curveType: .continuous)
         bgView.layer.maskedCorners = [.layerMaxXMaxYCorner,.layerMinXMaxYCorner]
-        bgView.layer.masksToBounds = true
         bgView.translatesAutoresizingMaskIntoConstraints = false
         
         return bgView
@@ -123,13 +123,13 @@ class ProjectControl : UIView, UIGestureRecognizerDelegate {
         
         frames.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 0).isActive = true
         frames.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 0).isActive = true
-        frames.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
-        frames.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        frames.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 6).isActive = true
+        frames.heightAnchor.constraint(equalToConstant: 42).isActive = true
         
         layers.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 0).isActive = true
         layers.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 0).isActive = true
-        layers.topAnchor.constraint(equalTo: frames.bottomAnchor, constant: 8).isActive = true
-        layers.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        layers.topAnchor.constraint(equalTo: frames.bottomAnchor, constant: 6).isActive = true
+        layers.heightAnchor.constraint(equalToConstant: 42).isActive = true
 
         
         self.translatesAutoresizingMaskIntoConstraints = false
@@ -153,7 +153,7 @@ class ProjectControl : UIView, UIGestureRecognizerDelegate {
 }
 
 protocol LayerProtocol {
-    func changeSelect(newSelect : LayerCell)
-    func changeVisible(item : LayerCell)
+    func changeSelect(newSelect : LayerCellNew)
+    func changeVisible(item : LayerCellNew)
     func updatePositions()
 }

@@ -27,7 +27,7 @@ class Editor : UIViewController {
         let mainView = UIView()
         mainView.translatesAutoresizingMaskIntoConstraints = false
         let bg = UIView()
-        bg.backgroundColor = UIColor(named: "backgroundColor")
+        bg.backgroundColor = getAppColor(color: .background)
         bg.setCorners(corners: 8)
         bg.translatesAutoresizingMaskIntoConstraints = false
         
@@ -35,7 +35,7 @@ class Editor : UIViewController {
         
         let title = UILabel()
         title.translatesAutoresizingMaskIntoConstraints = false
-        title.textColor = UIColor(named: "enableColor")
+        title.textColor = getAppColor(color: .enable)
         title.text = "1024x1024"
         title.font = UIFont(name: "Rubik-Bold", size: 16)
         title.textAlignment = .center
@@ -98,7 +98,7 @@ class Editor : UIViewController {
     }
     
     override func viewDidLoad() {
-        control = ProjectControl(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 94 + UIApplication.shared.windows[0].safeAreaInsets.top), proj: project)
+        control = ProjectControl(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 112 + UIApplication.shared.windows[0].safeAreaInsets.top), proj: project)
         control.updateInfo()
         control.layers.frameControlDelegate = self
         canvas = ProjectCanvas(frame: self.view.bounds, proj: project)
@@ -145,7 +145,7 @@ class Editor : UIViewController {
         transformAngle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 6).isActive = true
         transformAngle.topAnchor.constraint(equalTo: transformSize.bottomAnchor, constant: 6).isActive = true
         
-        view.backgroundColor = UIColor(named: "backgroundColor")!
+        view.backgroundColor = getAppColor(color: .background)
         showTransform(isShow: false)
     }
     
@@ -164,19 +164,19 @@ class Editor : UIViewController {
     }
     
     override func viewWillLayoutSubviews() {
-        print("some shit is here")
         toolBar.reLayout()
-        transformSize.setShadow(color: UIColor(named : "shadowColor")!, radius: 8, opasity: 1)
-        transformAngle.setShadow(color: UIColor(named : "shadowColor")!, radius: 8, opasity: 1)
+        transformSize.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
+        transformSize.layer.shadowPath = UIBezierPath(roundedRect: transformSize.bounds, cornerRadius: 8).cgPath
+        
+        transformAngle.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
+        transformAngle.layer.shadowPath = UIBezierPath(roundedRect: transformSize.bounds, cornerRadius: 8).cgPath
     }
     
     override func viewDidLayoutSubviews() {
         control.setPosition()
         toolBar.setPosition()
         toolBar.tintColorDidChange()
-        //toolBar.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
-        //toolBar.layer.shadowPath = UIBezierPath(roundedRect: toolBar.bounds, cornerRadius: 16).cgPath
-        
+
         appMovedToForeground()
     }
     

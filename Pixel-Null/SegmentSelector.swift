@@ -161,7 +161,7 @@ class SegmentSelector : UIView {
     
     override func layoutSubviews() {
         selectBg.setShadow(color: UIColor(named: "shadowColor")!, radius: 4, opasity: 1)
-
+        selectBg.layer.shadowPath = UIBezierPath(roundedRect: selectBg.bounds, cornerRadius: 12).cgPath
     }
     
     required init?(coder: NSCoder) {

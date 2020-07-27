@@ -146,7 +146,7 @@ extension PaletteCollectionModern : UICollectionViewDropDelegate {
                 
                 if sourceIndexPath.item < selectedColor && destinationIndexPath.item >= selectedColor {
                     selectedColor -= 1
-                } else if sourceIndexPath.item  > selectedColor && destinationIndexPath.item <= selectedColor {
+                 } else if sourceIndexPath.item  > selectedColor && destinationIndexPath.item <= selectedColor {
                     selectedColor += 1
                 } else if sourceIndexPath.item == selectedColor {
                     selectedColor = destinationIndexPath.item
@@ -158,7 +158,7 @@ extension PaletteCollectionModern : UICollectionViewDropDelegate {
                     collectionView.deleteItems(at: [coordinator.items[0].sourceIndexPath!])
                     collectionView.insertItems(at: [coordinator.destinationIndexPath!])
                 }, completion: {isEnd in
-                    collectionView.selectItem(at: IndexPath(item: self.selectedColor, section: 0), animated: false, scrollPosition: .top)
+                    collectionView.selectItem(at: IndexPath(item: self.selectedColor, section: 0), animated: false, scrollPosition: .left)
                 })
                 
                 self.dragInteractionEnabled = false
@@ -249,8 +249,9 @@ class PaletteCollectionCell : UICollectionViewCell {
         UIView.animate(withDuration: animate ? 0.2 : 0, animations: {
             self.bgColor.layoutIfNeeded()
             self.bgColor.StrokeAnimate(duration: animate ? 0.2 : 0, width: isSelect ? 3 : 0)
-            self.bgColor.setCorners(corners: isSelect ? 12 : 0)
+            self.bgColor.setCorners(corners: isSelect ? 12 : 0,needMask: true)
             self.contentView.setShadow(color: .black, radius: 8, opasity: isSelect ? 0.5 : 0)
+            self.contentView.layer.shadowPath = UIBezierPath(roundedRect: self.contentView.bounds, cornerRadius: 12).cgPath
           
         })
     }

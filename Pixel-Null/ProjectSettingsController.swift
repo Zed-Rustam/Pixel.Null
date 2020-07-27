@@ -18,7 +18,7 @@ class ProjectSettingsController : UIViewController {
         img.translatesAutoresizingMaskIntoConstraints = false
 
         img.layer.magnificationFilter = .nearest
-        img.setCorners(corners: 12)
+        img.setCorners(corners: 12,needMask: true)
         img.contentMode = .scaleAspectFit
         img.backgroundColor = project?.backgroundColor
         
@@ -356,5 +356,6 @@ class ProjectSettingsController : UIViewController {
     override func viewDidLayoutSubviews() {
         preview.backgroundColor = UIColor(patternImage: UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 1 / ((view.frame.width - 32) / 8.0), orientation: .down))
         preview.setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
+        preview.layer.shadowPath = UIBezierPath(roundedRect: preview.bounds, cornerRadius: 12).cgPath
     }
 }

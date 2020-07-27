@@ -162,7 +162,7 @@ class CreateDialogNew : UIViewController {
         btn.setBackgroundImage(UIImage(size: CGSize(width: 8, height: 8), bgColor: getAppColor(color: .enable)), for: .normal)
         btn.setBackgroundImage(UIImage(size: CGSize(width: 8, height: 8), bgColor: getAppColor(color: .backgroundLight)), for: .disabled)
         
-        btn.setCorners(corners: 8,curveType: .continuous)
+        btn.setCorners(corners: 8,needMask: true, curveType: .continuous)
 
         return btn
     }()
@@ -183,7 +183,7 @@ class CreateDialogNew : UIViewController {
     
     override func viewDidLoad() {
         view.backgroundColor = getAppColor(color: .background)
-        //view.setCorners(corners: 32,needMask: false)
+        view.setCorners(corners: 32)
         
         view.addSubview(titleLabel)
         view.addSubview(nameField)

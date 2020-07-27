@@ -11,25 +11,7 @@ import UIKit
 class GradientSettings : UIViewController {
     
     weak var project : ProjectWork? = nil
-    
-    lazy private var exitBtn : CircleButton = {
-        let btn = CircleButton(icon: #imageLiteral(resourceName: "cancel_icon"), frame: .zero)
-        btn.setShadowColor(color: .clear)
-        btn.delegate = {[weak self] in
-            self!.dismiss(animated: true, completion: nil)
-        }
-        return btn
-    }()
-    lazy private var appendBtn : CircleButton = {
-       let btn = CircleButton(icon: #imageLiteral(resourceName: "select_icon"), frame:.zero)
-        btn.setShadowColor(color: .clear)
-        btn.delegate = {[weak self] in
-            self!.delegate?.setGradientSettings(stepCount: Int(self!.setpCountField.text ?? "1")!, startColor: self!.startColor.color, endColor: self!.endColor.color)
-            self!.dismiss(animated: true, completion: nil)
-        }
-        return btn
-    }()
-    
+
     lazy private var startColor : ColorSelector = {
         let color = ColorSelector()
         color.color = .black
@@ -78,7 +60,7 @@ class GradientSettings : UIViewController {
     lazy private var stepCountSlider : SliderView = {
         let slider = SliderView()
         slider.translatesAutoresizingMaskIntoConstraints = false
-        slider.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        slider.heightAnchor.constraint(equalToConstant: 36).isActive = true
         slider.orientation = .horizontal
         slider.delegate = {[unowned self] in
             self.setpCountField.text = "\(Int($0 * 64))"
@@ -93,7 +75,7 @@ class GradientSettings : UIViewController {
         let field = UITextField()
         field.backgroundColor = getAppColor(color: .backgroundLight)
         field.textColor = getAppColor(color: .enable)
-        field.setCorners(corners: 12)
+        field.setCorners(corners: 8)
         field.delegate = stepCountInputDelegate
         field.textAlignment = .center
         field.keyboardType = .numberPad
@@ -199,7 +181,7 @@ class GradientSettings : UIViewController {
         
         let inView = UIImageView()
         inView.translatesAutoresizingMaskIntoConstraints = false
-        inView.setCorners(corners: 12)
+        inView.setCorners(corners: 8,needMask: true)
         inView.layer.magnificationFilter = .nearest
         
         mainView.addSubview(inView)
@@ -316,6 +298,7 @@ class GradientSettings : UIViewController {
         bgView.setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
         
         gradientPreview.subviews[0].setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
+        gradientPreview.layer.shadowPath = UIBezierPath(roundedRect: gradientPreview.bounds, cornerRadius: 8).cgPath
         
         gradientPreview.subviews[0].backgroundColor = UIColor(patternImage:UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 1.0/6.0, orientation: .down))
     }

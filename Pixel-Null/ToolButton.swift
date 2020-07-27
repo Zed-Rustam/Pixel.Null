@@ -35,7 +35,7 @@ class ToolButton : UICollectionViewCell {
         switch id {
         case -5:
             button.setIcon(ic: #imageLiteral(resourceName: "symmetry_icon"))
-            button.setIconColor(color: UIColor(named: "enableColor")!)
+            button.setIconColor(color: getAppColor(color: .enable))
             button.delegate = {[weak self] in
                 let editor = self!.delegate as! Editor
                 editor.canvas.checkTransformChangeBefore(newTool: -5)
@@ -47,21 +47,21 @@ class ToolButton : UICollectionViewCell {
                 btnVert.setShadowColor(color: .clear)
                 btnVert.widthAnchor.constraint(equalToConstant: 36).isActive = true
                 btnVert.heightAnchor.constraint(equalToConstant: 36).isActive = true
-                btnVert.setIconColor(color: editor.canvas.isVerticalSymmeyry ? UIColor(named: "selectColor")! : UIColor(named: "enableColor")!)
+                btnVert.setIconColor(color: editor.canvas.isVerticalSymmeyry ? getAppColor(color: .select) : getAppColor(color: .enable))
                 
                 btnVert.delegate = {
                     editor.canvas.changeSymmetry(vertical: !editor.canvas.isVerticalSymmeyry)
-                    btnVert.setIconColor(color: editor.canvas.isVerticalSymmeyry ? UIColor(named: "selectColor")! : UIColor(named: "enableColor")!)
+                    btnVert.setIconColor(color: editor.canvas.isVerticalSymmeyry ? getAppColor(color: .select) : getAppColor(color: .enable))
                 }
                 
                 let btnHor = CircleButton(icon: #imageLiteral(resourceName: "symmetry_horizontal_icon"), frame: .zero)
                 btnHor.setShadowColor(color: .clear)
                 btnHor.widthAnchor.constraint(equalToConstant: 36).isActive = true
                 btnHor.heightAnchor.constraint(equalToConstant: 36).isActive = true
-                btnHor.setIconColor(color: editor.canvas.isHorizontalSymmetry ? UIColor(named: "selectColor")! : UIColor(named: "enableColor")!)
+                btnHor.setIconColor(color: editor.canvas.isHorizontalSymmetry ? getAppColor(color: .select) : getAppColor(color: .enable))
                 btnHor.delegate = {
                     editor.canvas.changeSymmetry(horizontal: !editor.canvas.isHorizontalSymmetry)
-                    btnHor.setIconColor(color: editor.canvas.isHorizontalSymmetry ? UIColor(named: "selectColor")! : UIColor(named: "enableColor")!)
+                    btnHor.setIconColor(color: editor.canvas.isHorizontalSymmetry ? getAppColor(color: .select) : getAppColor(color: .enable))
                 }
                 
                 let btnCent = CircleButton(icon: #imageLiteral(resourceName: "symmetry_centerize"), frame: .zero)
@@ -469,7 +469,7 @@ class SelectionButton : UICollectionViewCell, UIGestureRecognizerDelegate {
         color.widthAnchor.constraint(equalToConstant: 24).isActive = true
         color.heightAnchor.constraint(equalToConstant: 24).isActive = true
         color.color = .black
-        color.background.setCorners(corners: 6)
+        color.background.setCorners(corners: 6,needMask: true)
         //color.setCorners(corners: 0)
         color.delegate = {[weak self] in
             self!.delegate?.openColorSelector()

@@ -91,7 +91,7 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
         self.layers.list.performBatchUpdates({
             self.layers.list.reloadItems(at: [IndexPath(item: layer, section: 0)])
         },completion: {isEnd in
-            self.layers.list.selectItem(at: IndexPath(item: layer, section: 0), animated: false, scrollPosition: .top)
+            self.layers.list.selectItem(at: IndexPath(item: layer, section: 0), animated: false, scrollPosition: .left)
         })
         
         UIView.performWithoutAnimation {
@@ -99,7 +99,7 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
                 self.frames.list.reloadItems(at: [IndexPath(item: self.project!.FrameSelected, section: 0)])
             }, completion: {isEnd in
                 if isEnd {
-                    self.frames.list.selectItem(at: IndexPath(item: self.project!.FrameSelected, section: 0), animated: false, scrollPosition: .top)
+                    self.frames.list.selectItem(at: IndexPath(item: self.project!.FrameSelected, section: 0), animated: false, scrollPosition: .left)
                 }
             })
         }
@@ -138,7 +138,7 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
                 self.layers.list.reloadItems(at: [IndexPath(item: target, section: 0)])
 
             }, completion: {isEnd in
-                self.layers.list.selectItem(at: IndexPath(item: self.project!.LayerSelected, section: 0), animated: true, scrollPosition: .top)
+                self.layers.list.selectItem(at: IndexPath(item: self.project!.LayerSelected, section: 0), animated: true, scrollPosition: .left)
             })
         })
     }
@@ -172,7 +172,7 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
                     self.frames.list.reloadItems(at: [IndexPath(item: self.project!.FrameSelected, section: 0)])
                 }, completion: {isEnd in
                     if isEnd {
-                        self.frames.list.selectItem(at: IndexPath(item: self.project.FrameSelected, section: 0), animated: false, scrollPosition: .top)
+                        self.frames.list.selectItem(at: IndexPath(item: self.project.FrameSelected, section: 0), animated: false, scrollPosition: .left)
                     }
                 })
             }
@@ -202,7 +202,7 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
                 self.frames.list.reloadItems(at: [IndexPath(item: self.project!.FrameSelected, section: 0)])
             }, completion: {isEnd in
                 if isEnd {
-                    self.frames.list.selectItem(at: IndexPath(item: self.project.FrameSelected, section: 0), animated: false, scrollPosition: .top)
+                    self.frames.list.selectItem(at: IndexPath(item: self.project.FrameSelected, section: 0), animated: false, scrollPosition: .left)
                 }
             })
         }

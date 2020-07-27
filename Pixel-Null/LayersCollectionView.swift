@@ -27,27 +27,23 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
         return text
     }()
     
-    
-    lazy var addButton : CircleButton = {
-        let btn = CircleButton(icon: #imageLiteral(resourceName: "add_icon"), frame: CGRect(x: frame.width - 90, y: 0, width: 36, height: 36))
-        btn.corners = 8
-        btn.delegate = { [weak self] in
-            self!.project!.addLayer(frame : self!.project!.FrameSelected, layerPlace: self!.project!.LayerSelected + 1)
-            
-            self!.project!.addAction(action: ["ToolID" : "\(Actions.layerAdd.rawValue)", "frame" : "\(self!.project!.FrameSelected)", "layer" : "\( self!.project!.LayerSelected + 1)"])
-            
-            if(self!.project!.layerCount >= 16) {
-                self!.addButton.isEnabled = false
-                //self!.cloneButton.isEnabled = false
-            }
-            
-            self!.list.frameDelegate?.addLayer(frame: self!.project!.FrameSelected, layer: self!.project!.LayerSelected + 1)
-        }
-        
+    lazy private var addButton : UIButton = {
+        let btn = UIButton()
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
         btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
-               
+        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.backgroundColor = getAppColor(color: .background)
+        btn.setCorners(corners: 8,needMask: false)
+        
+        btn.setImage(UIImage(systemName: "plus",withConfiguration: UIImage.SymbolConfiguration.init(weight: .semibold)), for: .normal)
+        
+        btn.imageView?.tintColor = getAppColor(color: .enable)
+        
+        btn.addTarget(self, action: #selector(onPress), for: .touchUpInside)
+        
+        btn.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        btn.layer.shadowPath = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 36, height: 36), cornerRadius: 8).cgPath
+        
         return btn
     }()
     
@@ -115,6 +111,20 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
     @objc func cancelAction() {
         transparentField.filed.text = "\(Int(project!.information.frames[project!.FrameSelected].layers[project!.LayerSelected].transparent * 100))"
         transparentField.endEditing(true)
+    }
+    
+    
+    @objc func onPress() {
+        project!.addLayer(frame : project!.FrameSelected, layerPlace: project!.LayerSelected + 1)
+        
+        project!.addAction(action: ["ToolID" : "\(Actions.layerAdd.rawValue)", "frame" : "\(project!.FrameSelected)", "layer" : "\( project!.LayerSelected + 1)"])
+        
+        if(project!.layerCount >= 16) {
+            addButton.isEnabled = false
+            //self!.cloneButton.isEnabled = false
+        }
+        
+        list.frameDelegate?.addLayer(frame: project!.FrameSelected, layer: project!.LayerSelected + 1)
     }
     
     func textFieldDidChangeSelection(_ textField: UITextField) {

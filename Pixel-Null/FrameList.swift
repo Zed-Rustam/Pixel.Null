@@ -12,20 +12,20 @@ class FrameList : UICollectionView, UICollectionViewDataSource, UICollectionView
     var tapgesture : UITapGestureRecognizer!
     weak var layers : LayerList? = nil
     weak var canvas : ProjectCanvas?
-    var selectedCell : FrameCell? = nil
+    var selectedCell : LayerCellNew? = nil
     weak var editor : Editor? = nil
     
-    func changeSelect(newSelect: FrameCell) {
+    func changeSelect(newSelect: LayerCellNew) {
         let itemIndex = indexPath(for: newSelect)!.item
  
         canvas?.transformView.needToSave = false
         editor?.finishTransform()
         
-        let itemNew = cellForItem(at: IndexPath(item: itemIndex, section: 0)) as! FrameCell
+        let itemNew = cellForItem(at: IndexPath(item: itemIndex, section: 0)) as! LayerCellNew
         
         selectedCell?.setSelect(isSelect: false, animate: true)
         
-        let newCell = cellForItem(at: IndexPath(item: indexPath(for: itemNew)!.item, section: 0)) as! FrameCell
+        let newCell = cellForItem(at: IndexPath(item: indexPath(for: itemNew)!.item, section: 0)) as! LayerCellNew
         newCell.setSelect(isSelect: true, animate: true)
         selectedCell = newCell
         
@@ -56,10 +56,11 @@ class FrameList : UICollectionView, UICollectionViewDataSource, UICollectionView
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Frame", for: indexPath) as! FrameCell
-        print("here 1")
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Frame", for: indexPath) as! LayerCellNew
 
-        cell.preview?.bgColor = UIColor(hex : project.information.bgColor)!
+        cell.setBackground(clr: UIColor(hex : project.information.bgColor)!)
+        cell.setVisible(visible: true)
+        
         DispatchQueue.global(qos: .userInteractive).async {
             let img = (indexPath.item == self.project.FrameSelected) ? self.project.getFrameFromLayers(frame : indexPath.item,size: CGSize(width: 36, height: 36)).flip(xFlip: self.project.isFlipX, yFlip: self.project.isFlipY) : self.project.getFrame(frame: indexPath.item, size: CGSize(width: 36, height: 36)).flip(xFlip: self.project.isFlipX, yFlip: self.project.isFlipY)
             //let img = self.project.getFrameFromLayers(frame : indexPath.item,size: CGSize(width: 36, height: 36))
@@ -83,7 +84,7 @@ class FrameList : UICollectionView, UICollectionViewDataSource, UICollectionView
         
         tapgesture = UITapGestureRecognizer(target: self, action: #selector(tap(sender:)))
 
-        register(FrameCell.self, forCellWithReuseIdentifier: "Frame")
+        register(LayerCellNew.self, forCellWithReuseIdentifier: "Frame")
         
         delegate = self
         dataSource = self
@@ -102,48 +103,10 @@ class FrameList : UICollectionView, UICollectionViewDataSource, UICollectionView
         if sender.state == .ended {
             if let item = indexPathForItem(at: sender.location(in: sender.view)) {
                 if item.item != project.FrameSelected {
-                    changeSelect(newSelect: cellForItem(at: item) as! FrameCell)
+                    changeSelect(newSelect: cellForItem(at: item) as! LayerCellNew)
                 }
             }
         }
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-class FrameCell : UICollectionViewCell, UIGestureRecognizerDelegate {
-    var preview : FramePreview?
-    private var select = false
-    
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
-    }
-    
-    func setSelect(isSelect : Bool, animate : Bool){
-           select = isSelect
-           if select {
-               self.StrokeAnimate(duration: animate ? 0.25 : 0,width: 2)
-           } else {
-               self.StrokeAnimate(duration: animate ? 0.25 : 0,width: 0)
-           }
-       }
-    
-    override init(frame: CGRect) {
-        preview = FramePreview(frame: CGRect(origin: .zero, size: frame.size), image: UIImage())
-        super.init(frame: frame)
-        
-        layer.borderColor = getAppColor(color: .select).cgColor
-        layer.masksToBounds = false
-        layer.cornerRadius = 8
-        
-        addSubview(preview!)
-
-    }
-    
-    func setImage(img : UIImage){
-        preview?.image = img
     }
     
     required init?(coder: NSCoder) {

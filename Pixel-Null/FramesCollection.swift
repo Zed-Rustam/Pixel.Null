@@ -47,8 +47,6 @@ class FramesCollection : UICollectionView {
         dragInteractionEnabled = true
         
         
-        layer.shouldRasterize = true
-        layer.rasterizationScale = UIScreen.main.scale
     }
     
     required init?(coder: NSCoder) {
@@ -83,7 +81,6 @@ extension FramesCollection : UICollectionViewDataSource {
         
         cell.setSelect(isSelect: indexPath.item == project!.FrameSelected  ? true : false, animate: false)
         
-        print("reloading : \(indexPath.item)")
 
         return cell
     }
@@ -351,9 +348,15 @@ class FramePreviewCell : UICollectionViewCell {
         addInteraction(UIPointerInteraction(delegate: self))
         isUserInteractionEnabled = true
         
-        contentView.setShadow(color: getAppColor(color: .shadow), radius: 6, opasity: 1)
-        contentView.layer.shadowPath = UIBezierPath(roundedRect: CGRect(origin: CGPoint(x: 3, y: 3), size: CGSize(width: 36, height: 64)), cornerRadius: 8).cgPath
-        //contentView.setCorners(corners: 9)
+        bg.layoutIfNeeded()
+        
+        bg.setShadow(color: getAppColor(color: .shadow), radius: 6, opasity: 1)
+        bg.layer.shadowPath = UIBezierPath(roundedRect: bg.bounds, cornerRadius: 8).cgPath
+    }
+    
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
     }
     
     func setSelect(isSelect : Bool, animate : Bool = true) {

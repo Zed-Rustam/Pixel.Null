@@ -43,18 +43,13 @@ class EditorSettingsController: UIViewController {
         bg.setCorners(corners: 16)
         bg.translatesAutoresizingMaskIntoConstraints = false
         
-        let mainView = UIView()
-        mainView.translatesAutoresizingMaskIntoConstraints = false
-        mainView.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
-        mainView.addSubviewFullSize(view: bg)
+        bg.addSubview(sliderView)
         
-        mainView.addSubview(sliderView)
-        
-        sliderView.centerXAnchor.constraint(equalTo: mainView.centerXAnchor, constant: 0).isActive = true
-        sliderView.topAnchor.constraint(equalTo: mainView.topAnchor, constant: 8).isActive = true
+        sliderView.centerXAnchor.constraint(equalTo: bg.centerXAnchor, constant: 0).isActive = true
+        sliderView.topAnchor.constraint(equalTo: bg.topAnchor, constant: 8).isActive = true
 
-        mainView.addSubviewFullSize(view: collection, paddings: (0,0,16,0))
-        return mainView
+        bg.addSubviewFullSize(view: collection, paddings: (0,0,16,0))
+        return bg
     }()
     
     lazy private var sliderView: UIView = {
@@ -106,6 +101,11 @@ class EditorSettingsController: UIViewController {
         
         //self.navigationController?.interactivePopGestureRecognizer?.delegate = collection
     }
+    override func viewDidLayoutSubviews() {
+        toolBarBg.layoutIfNeeded()
+        toolBarBg.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
+        toolBarBg.layer.shadowPath = UIBezierPath(roundedRect: toolBarBg.bounds, cornerRadius: 16).cgPath
+    }
     
     override func viewDidDisappear(_ animated: Bool) {
         self.navigationController?.interactivePopGestureRecognizer?.reset()
@@ -140,9 +140,5 @@ class EditorSettingsController: UIViewController {
         UIView.animate(withDuration: 0.25, delay: 0.5, animations: {
             self.toolBarBg.alpha = 1
         })
-    }
-    
-    override func viewDidLayoutSubviews() {
-        toolBarBg.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
     }
 }
