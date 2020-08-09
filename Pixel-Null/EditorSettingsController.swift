@@ -15,9 +15,9 @@ class EditorSettingsController: UIViewController {
         let label = UILabel()
         label.text = NSLocalizedString("Editor settings", comment: "")
         label.textColor = getAppColor(color: .enable)
-        label.font = UIFont(name: "Rubik-Bold", size: 48)
+        label.font = UIFont(name: "Rubik-Bold", size: 32)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .center
+        label.textAlignment = .left
         label.adjustsFontSizeToFitWidth = true
         label.baselineAdjustment = .alignCenters
         
@@ -75,15 +75,15 @@ class EditorSettingsController: UIViewController {
         view.addSubview(toolsPosition)
         view.addSubview(toolBarBg)
 
-        themeTitle.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
-        themeTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
-        themeTitle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
+        themeTitle.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24).isActive = true
+        themeTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
+        themeTitle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
         
-        toolsPosition.topAnchor.constraint(equalTo: themeTitle.bottomAnchor, constant: 16).isActive = true
-        toolsPosition.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
-        toolsPosition.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
+        toolsPosition.topAnchor.constraint(equalTo: themeTitle.bottomAnchor, constant: 24).isActive = true
+        toolsPosition.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
+        toolsPosition.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
         
-        toolBarBg.topAnchor.constraint(equalTo: toolsPosition.bottomAnchor, constant: 16).isActive = true
+        toolBarBg.topAnchor.constraint(equalTo: toolsPosition.bottomAnchor, constant: 12).isActive = true
         toolBarBg.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
         toolBarBg.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
         toolBarBg.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 16).isActive = true

@@ -27,9 +27,9 @@ class LayersTableCell : UICollectionViewCell {
         layerName.leftAnchor.constraint(equalTo: previewBackground.rightAnchor, constant: 6).isActive = true
         layerName.topAnchor.constraint(equalTo: previewBackground.topAnchor, constant: 0).isActive = true
         
-        view.addSubview(actionsButton)
-        actionsButton.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        actionsButton.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        view.addSubview(renameButton)
+        renameButton.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        renameButton.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         
         return view
     }()
@@ -45,14 +45,13 @@ class LayersTableCell : UICollectionViewCell {
         return view
     }()
     
-    private var actionsButton : UIButton = {
+    private var renameButton : UIButton = {
         let btn = UIButton()
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
         btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        btn.setImage(UIImage(systemName: "ellipsis", compatibleWith: UITraitCollection.init(legibilityWeight: .bold)), for: .normal)
+        btn.setImage(UIImage(systemName: "pencil", compatibleWith: UITraitCollection.init(legibilityWeight: .bold)), for: .normal)
         btn.imageView?.tintColor = getAppColor(color: .enable)
-        btn.showsMenuAsPrimaryAction = true
         
         return btn
     }()
@@ -108,6 +107,10 @@ class LayersTableCell : UICollectionViewCell {
         //contentView.layer.shadowPath = UIBezierPath(roundedRect: background.frame, cornerRadius: 8).cgPath
     }
     
+    @objc func onRename() {
+        
+    }
+    
     func setSelected(isSelect : Bool, anim : Bool) {
         self.layerName.textColor = isSelect ? getAppColor(color: .select) : getAppColor(color: .disable)
     }
@@ -128,7 +131,7 @@ class LayersTableCell : UICollectionViewCell {
     
     func setContextMenu(menu : @escaping ()->(UIMenu?)) {
         self.menu = menu
-        actionsButton.menu = self.menu()
+        renameButton.menu = self.menu()
     }
     
     required init?(coder: NSCoder) {

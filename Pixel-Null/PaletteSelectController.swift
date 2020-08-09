@@ -41,8 +41,7 @@ class PaletteSelectController: UIViewController {
     lazy private var colorPalette: PaletteCollectionModern = {
         let palette = PaletteCollectionModern(colors: try! JSONDecoder().decode(Pallete.self, from: NSDataAsset(name: "Default pallete")!.data).colors)
         
-        palette.dropDelegate = nil
-        palette.dragDelegate = nil
+        palette.disableDragAndDrop()
         
         palette.colorDelegate = {[unowned self] in
             self.delegate?.changeColor(newColor: $0, sender: self)

@@ -272,6 +272,10 @@ class ProjectWork{
         projectInfo.frames[frame].layers.insert(ProjectLayer(layerID: layerID, visible: true, locked: false, transparent: 1.0), at: layerPlace)
     }
 
+    func renameLayer(frame: Int, layer: Int, newName: String){
+        projectInfo.frames[frame].layers[layer].name = newName
+    }
+    
     func replaceLayer(frame : Int, from : Int, to : Int){
         let layer = projectInfo.frames[frame].layers.remove(at: from)
         projectInfo.frames[frame].layers.insert(layer, at: to)
@@ -1571,6 +1575,7 @@ struct ProjectLayer : Codable {
     var visible : Bool
     var locked : Bool
     var transparent : Float
+    var name: String?
 }
 
 struct ActionList : Codable {
@@ -1597,7 +1602,8 @@ enum Actions : Int {
     case resizeProject = 15//done
     case changeLayerOpasity = 16//done
     case mergeLayers = 17//done
-    case projectFlipX = 18
-    case projectFlipY = 19
+    case projectFlipX = 18//done
+    case projectFlipY = 19//done
+    case renameLayer = 20//done
 }
 

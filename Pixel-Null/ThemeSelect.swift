@@ -13,10 +13,10 @@ class ThemeSelect: UIViewController {
         let label = UILabel()
         label.text = NSLocalizedString("Theme", comment: "")
         label.textColor = getAppColor(color: .enable)
-        label.font = UIFont(name: "Rubik-Bold", size: 48)
+        label.font = UIFont(name: "Rubik-Bold", size: 32)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.heightAnchor.constraint(equalToConstant: 48).isActive = true
-        label.textAlignment = .center
+        label.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        label.textAlignment = .left
         return label
     }()
     
@@ -25,7 +25,7 @@ class ThemeSelect: UIViewController {
         label.text = NSLocalizedString("Use system theme", comment: "")
         label.textColor = getAppColor(color: .enable)
         
-        label.font = UIFont(name: "Rubik-Medium", size: 24)
+        label.font = UIFont(name: "Rubik-Medium", size: 20)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 36).isActive = true
         label.adjustsFontSizeToFitWidth = true
@@ -64,7 +64,7 @@ class ThemeSelect: UIViewController {
         img.translatesAutoresizingMaskIntoConstraints = false
         img.widthAnchor.constraint(equalToConstant: 48).isActive = true
         img.heightAnchor.constraint(equalToConstant: 48).isActive = true
-        img.setCorners(corners: 12)
+        img.setCorners(corners: 12, needMask: true)
         
         img.image = #imageLiteral(resourceName: "theme_icon_light")
         return img
@@ -75,7 +75,7 @@ class ThemeSelect: UIViewController {
         img.translatesAutoresizingMaskIntoConstraints = false
         img.widthAnchor.constraint(equalToConstant: 48).isActive = true
         img.heightAnchor.constraint(equalToConstant: 48).isActive = true
-        img.setCorners(corners: 12)
+        img.setCorners(corners: 12, needMask: true)
         
         img.image = #imageLiteral(resourceName: "theme_icon_dark")
         return img
@@ -157,7 +157,6 @@ class ThemeSelect: UIViewController {
         super.viewDidLoad()
 
         view.backgroundColor = getAppColor(color: .background)
-        // Do any additional setup after loading the view.
         
         view.addSubview(themeTitle)
         view.addSubview(useSystemTheme)
@@ -165,18 +164,18 @@ class ThemeSelect: UIViewController {
         view.addSubview(bgThemeSelect)
         view.isUserInteractionEnabled = true
         
-        themeTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 8).isActive = true
-        themeTitle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8).isActive = true
-        themeTitle.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12).isActive = true
+        themeTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
+        themeTitle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        themeTitle.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24).isActive = true
         
-        useSystemTheme.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 8).isActive = true
-        useSystemTheme.rightAnchor.constraint(equalTo: toggle.leftAnchor, constant: -8).isActive = true
+        useSystemTheme.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
+        useSystemTheme.rightAnchor.constraint(equalTo: toggle.leftAnchor, constant: -12).isActive = true
         //useSystemTheme.topAnchor.constraint(equalTo: themeTitle.bottomAnchor, constant: 12).isActive = true
         useSystemTheme.centerYAnchor.constraint(equalTo: toggle.centerYAnchor, constant: 0).isActive = true
         
         
         toggle.topAnchor.constraint(equalTo: themeTitle.bottomAnchor, constant: 15).isActive = true
-        toggle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8).isActive = true
+        toggle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
         
         bgThemeSelect.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
         bgThemeSelect.topAnchor.constraint(equalTo: useSystemTheme.bottomAnchor, constant: 12).isActive = true

@@ -74,6 +74,11 @@ class ProjectPallete: UIViewController {
     lazy private var collection: PaletteCollectionModern = {
         let colors = PaletteCollectionModern(colors : project!.information.pallete.colors)
         colors.translatesAutoresizingMaskIntoConstraints = false
+        
+        colors.replaceColorsDelegate = {
+            self.project!.projectPallete = self.collection.palleteColors
+        }
+        
         return colors
     }()
     
@@ -248,11 +253,8 @@ class ProjectPallete: UIViewController {
         collection.topAnchor.constraint(equalTo: palleteName.bottomAnchor, constant: 12).isActive = true
         collection.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
         collection.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
-                        
+        
         view.backgroundColor = UIColor(named: "backgroundColor")
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
         collection.selectItem(at: IndexPath(item: 0, section: 0), animated: true, scrollPosition: .left)
     }
 }

@@ -60,8 +60,8 @@ class ToolBarRepositionCollection : UICollectionView , UIGestureRecognizerDelega
                     cell.contentView.subviews[0].transform = CGAffineTransform(scaleX: 1.25, y: 1.25)
                 })
                 
-                cell.contentView.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 0.5)
-
+                cell.contentView.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+                
                 isMoving = true
                 moveCell = cell
             }
@@ -80,7 +80,7 @@ class ToolBarRepositionCollection : UICollectionView , UIGestureRecognizerDelega
                        UIView.animate(withDuration: 0.15, animations: {
                         self.moveCell!.contentView.subviews[0].transform = CGAffineTransform(scaleX: 1, y: 1)
                        })
-                        self.moveCell!.contentView.setShadow(color: .clear, radius: 8, opasity: 0.5)
+                        self.moveCell!.contentView.setShadow(color: .clear, radius: 8, opasity: 1)
 
                        self.isMoving = false
                        self.isFinish = false
@@ -100,7 +100,7 @@ class ToolBarRepositionCollection : UICollectionView , UIGestureRecognizerDelega
                         UIView.animate(withDuration: 0.15, animations: {
                             self.moveCell!.contentView.subviews[0].transform = CGAffineTransform(scaleX: 1, y: 1)
                         },completion: {isEnd in
-                            self.moveCell!.contentView.setShadow(color: .clear, radius: 8, opasity: 0.5)
+                            self.moveCell!.contentView.setShadow(color: .clear, radius: 8, opasity: 1)
                             self.moveCell = nil
                             self.isMoving = false
                             self.isFinish = false
