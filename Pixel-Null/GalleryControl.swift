@@ -128,7 +128,7 @@ class GalleryControl : UIViewController{
         }
     }
         
-    private func getDocumentsDirectory() -> URL {
+    public static func getDocumentsDirectory() -> URL {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         return paths[0].appendingPathComponent("Projects")
     }
@@ -142,12 +142,14 @@ class GalleryControl : UIViewController{
     }
     
     override func viewDidLoad() {
-        
+                
         createProject()
+        
+        print(GalleryControl.getDocumentsDirectory())
         
         let f = FileManager()
         do {
-            let projs = try f.contentsOfDirectory(at: getDocumentsDirectory(), includingPropertiesForKeys: nil)
+            let projs = try f.contentsOfDirectory(at: GalleryControl.getDocumentsDirectory(), includingPropertiesForKeys: nil)
             
             for i in 0..<projs.count  {
                 let name = projs[i].lastPathComponent
@@ -234,7 +236,7 @@ extension GalleryControl : ProjectActions {
     func projectDublicate(view: ProjectViewNew) {
         var index : Int = 1
         
-        let projs = try! FileManager.default.contentsOfDirectory(at: getDocumentsDirectory(), includingPropertiesForKeys: nil)
+        let projs = try! FileManager.default.contentsOfDirectory(at: GalleryControl.getDocumentsDirectory(), includingPropertiesForKeys: nil)
         
         ind : while true {
             for i in 0..<projs.count  {

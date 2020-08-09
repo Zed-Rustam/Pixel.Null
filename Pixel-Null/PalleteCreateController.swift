@@ -155,7 +155,7 @@ class PalleteCreateController : UIViewController {
         
         btn.delegate = {[unowned self] in
             if !self.colors.moving {
-                let palleteSelector = ColorSelectorController()
+                let palleteSelector = ColorDialogController()
                 
                 palleteSelector.delegate = {[unowned self] in
                     self.colors.addColor(color: $0)
@@ -177,8 +177,8 @@ class PalleteCreateController : UIViewController {
         
         btn.delegate = {[unowned self] in
             if !self.colors.moving {
-                let palleteSelector = ColorSelectorController()
-                palleteSelector.setColor(clr: self.colors.getSelectItemColor())
+                let palleteSelector = ColorDialogController()
+                palleteSelector.setStartColor(clr: self.colors.getSelectItemColor())
                 
                 palleteSelector.delegate = {[unowned self] in
                     self.colors.changeSelectedColor(color: $0)

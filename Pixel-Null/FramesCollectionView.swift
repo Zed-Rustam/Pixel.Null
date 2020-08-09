@@ -15,7 +15,7 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
         ls.translatesAutoresizingMaskIntoConstraints = false
         ls.heightAnchor.constraint(equalToConstant: 70).isActive = true
         ls.contentInset = UIEdgeInsets(top: 0, left: 24, bottom: 0, right: 24)
-
+        
         return ls
     }()
     
@@ -130,6 +130,9 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
         
         settingsButton.rightAnchor.constraint(equalTo: addButton.leftAnchor, constant: -6).isActive = true
         settingsButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
+        
+        
+        setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
         
         //delayField.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 12).isActive = true
         //delayField.topAnchor.constraint(equalTo: list.bottomAnchor, constant: 6).isActive = true

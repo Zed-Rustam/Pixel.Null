@@ -145,7 +145,7 @@ class ColorsPaletteNew : UIView {
         titleBg.rightAnchor.constraint(equalTo: rightAnchor, constant: -8).isActive = true
         titleBg.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8).isActive = true
         
-        setCorners(corners: 12)
+        setCorners(corners: 12,needMask: true)
 
         isUserInteractionEnabled = true
         addInteraction(UIContextMenuInteraction(delegate: self))

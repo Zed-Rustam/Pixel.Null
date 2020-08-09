@@ -12,20 +12,21 @@ class PaletteCollectionModern : UICollectionView {
     var colors : [String]
     
     var palleteColors : [String] {
-        get{
+        get {
             return colors
         }
         set {
             colors = newValue
             selectedColor = 0
-            selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: .top)
+            //deselectItem(at: IndexPath(item: 0, section: 0), animated: false)
+            //selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: .top)
             reloadData()
         }
     }
     
     var moving : Bool = false
     
-    private var layout = PalleteCollectionLayout(itemSize: 32, itemsSpacing: 0)
+    private var layout = PalleteCollectionLayout(itemSize: 28, itemsSpacing: 0)
     
     var colorDelegate : (UIColor) -> () = {color in}
     
@@ -54,18 +55,15 @@ class PaletteCollectionModern : UICollectionView {
         dragInteractionEnabled = true
         allowsSelection = true
         isUserInteractionEnabled = true
-        layer.shouldRasterize = true
-        layer.rasterizationScale = UIScreen.main.scale
-        setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
-    }
-    
-    override func tintColorDidChange() {
-        super.tintColorDidChange()
-        setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func removeSelection() {
+        selectedColor = -1
+        reloadData()
     }
 }
 
@@ -227,8 +225,11 @@ class PaletteCollectionCell : UICollectionViewCell {
             width,
             height
         ])
+        
+        contentView.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        contentView.layer.shadowPath = UIBezierPath(roundedRect: bgColor.bounds, cornerRadius: 12).cgPath
     }
-    
+        
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

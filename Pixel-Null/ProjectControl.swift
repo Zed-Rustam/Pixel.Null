@@ -74,9 +74,7 @@ class ProjectControl : UIView, UIGestureRecognizerDelegate {
     }
     
     @objc private func swipe(sender : UISwipeGestureRecognizer) {
-        print(sender.direction)
         if sender.direction == .up && !isHide {
-            
             isHide = true
             UIView.animate(withDuration: 0.25, animations: {
                 self.frame.origin.y = -52

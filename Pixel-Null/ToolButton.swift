@@ -314,6 +314,9 @@ class ToolButton : UICollectionViewCell {
                     UIAction(title: "cut", image: UIImage(systemName: "scissors"), identifier: nil, discoverabilityTitle: nil, handler: {action in
                         editor.saveSelection()
                         editor.canvas.deleteSelect()
+                    }),
+                    UIAction(title: "reverse", image: #imageLiteral(resourceName: "reverse_selection_icon"), identifier: nil, discoverabilityTitle: nil, handler: {action in
+                        editor.canvas.reverseSelection()
                     })
                 ])
                 
@@ -327,35 +330,26 @@ class ToolButton : UICollectionViewCell {
                 selectType.imageView?.tintColor = getAppColor(color: .enable)
                 
                 selectType.menu = UIMenu(title: "select type", image: nil, identifier: nil, options: .destructive, children: [
-                    UIAction(title: "rectangle", image: #imageLiteral(resourceName: "rectangle_icon").withTintColor(.white), identifier: nil, discoverabilityTitle: nil, handler: {action in
+                    UIAction(title: "rectangle", image: #imageLiteral(resourceName: "rectangle_icon").withRenderingMode(.alwaysTemplate).withTintColor(.white), identifier: nil, discoverabilityTitle: nil, handler: {action in
                         selectType.setImage(#imageLiteral(resourceName: "rectangle_icon").withRenderingMode(.alwaysTemplate), for: .normal)
                         editor.setSelectionSettings(mode: 1)
                     }),
                     
-                    UIAction(title: "circle", image: #imageLiteral(resourceName: "circle_icon").withTintColor(.white), identifier: nil, discoverabilityTitle: nil, handler: {action in
+                    UIAction(title: "circle", image: #imageLiteral(resourceName: "circle_icon").withRenderingMode(.alwaysTemplate).withTintColor(.white), identifier: nil, discoverabilityTitle: nil, handler: {action in
                         selectType.setImage(#imageLiteral(resourceName: "circle_icon").withRenderingMode(.alwaysTemplate), for: .normal)
                         editor.setSelectionSettings(mode: 2)
                     }),
                     
-                    UIAction(title: "custom shape", image: #imageLiteral(resourceName: "custom_shape_selector_icon").withTintColor(.white), identifier: nil, discoverabilityTitle: nil, handler: {action in
+                    UIAction(title: "custom shape", image: #imageLiteral(resourceName: "custom_shape_selector_icon").withRenderingMode(.alwaysTemplate).withTintColor(.white), identifier: nil, discoverabilityTitle: nil, handler: {action in
                         selectType.setImage(#imageLiteral(resourceName: "custom_shape_selector_icon").withRenderingMode(.alwaysTemplate), for: .normal)
                         editor.setSelectionSettings(mode: 0)
-
                     }),
                     
-                    UIAction(title: "magic tool", image: #imageLiteral(resourceName: "selection_magic_tool_icon").withTintColor(.white), identifier: nil, discoverabilityTitle: nil, handler: {action in
+                    UIAction(title: "magic tool", image: #imageLiteral(resourceName: "selection_magic_tool_icon").withRenderingMode(.alwaysTemplate).withTintColor(.white), identifier: nil, discoverabilityTitle: nil, handler: {action in
                         selectType.setImage(#imageLiteral(resourceName: "selection_magic_tool_icon").withRenderingMode(.alwaysTemplate), for: .normal)
                         editor.setSelectionSettings(mode: 3)
                     })
                 ])
-
-                let reverse = CircleButton(icon: #imageLiteral(resourceName: "reverse_selection_icon"), frame: .zero)
-                reverse.widthAnchor.constraint(equalToConstant: 36).isActive = true
-                reverse.heightAnchor.constraint(equalToConstant: 36).isActive = true
-                reverse.setShadowColor(color: .clear)
-                reverse.delegate = {
-                    editor.canvas.reverseSelection()
-                }
                 
                 let clear = CircleButton(icon: #imageLiteral(resourceName: "selection_clear_icon"), frame: .zero)
                 clear.widthAnchor.constraint(equalToConstant: 36).isActive = true
@@ -388,7 +382,7 @@ class ToolButton : UICollectionViewCell {
                     editor.canvas.selection.mode = select == 0 ? .add : .delete
                 }
                 
-                self!.barDelegate.updateButtons(btns: [actionsButton,reverse,clear,delete,selectMode,selectType])
+                self!.barDelegate.updateButtons(btns: [actionsButton,clear,delete,selectMode,selectType])
                 
                 self!.button.setIconColor(color: UIColor(named: "selectColor")!)
             }

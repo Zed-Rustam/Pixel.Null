@@ -59,8 +59,9 @@ extension UIColor{
         }
     }
 
-    static func toHex(color : UIColor) -> String {
-        var result = "#"
+    static func toHex(color : UIColor, withHeshTag: Bool = true) -> String {
+        var result = withHeshTag ? "#" : ""
+        
         let clr = CIColor(color: color)
         result += String(format : "%02X",Int(round(clr.red * 255)))
         result += String(format : "%02X",Int(round(clr.green * 255)))
@@ -75,3 +76,4 @@ extension UIColor{
         return (Int(clr.red * 255),Int(clr.green * 255),Int(clr.blue * 255),Int(clr.alpha * 255))
     }
 }
+

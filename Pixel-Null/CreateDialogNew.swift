@@ -122,13 +122,15 @@ class CreateDialogNew : UIViewController {
         clr.color = .clear
         
         clr.delegate = {
-            let colorSelectorMenu = ColorSelectorController()
-            colorSelectorMenu.setColor(clr: clr.color)
+            let colorSelectorMenu = ColorDialogController()
+            
             colorSelectorMenu.delegate = {color in
                 clr.color = color
             }
             
-            self.show(colorSelectorMenu, sender: nil)
+            colorSelectorMenu.setStartColor(clr: clr.color)
+            
+            self.present(colorSelectorMenu, animated: true, completion: nil)
         }
         
         

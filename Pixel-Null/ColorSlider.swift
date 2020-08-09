@@ -26,6 +26,12 @@ class ColorSlider : UIView {
     var orientation : Orientation = .horizontal
     var preview : Preview = .up
     
+    var position: CGFloat {
+        get{
+            return CGFloat(nowPosition)
+        }
+    }
+    
     lazy private var gradient : CAGradientLayer = {
         var gr = CAGradientLayer()
         gr.colors = [startColor.cgColor,endColor.cgColor]
@@ -214,8 +220,14 @@ class ColorSlider : UIView {
     func resetGradient(start : UIColor,end : UIColor){
         startColor = start
         endColor = end
+        
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        
         gradient.colors = [startColor.cgColor, endColor.cgColor]
         selectView.subviews[0].subviews[0].backgroundColor = self.resultColor
+        
+        CATransaction.commit()
     }
     
     func setPosition(pos : Double) {

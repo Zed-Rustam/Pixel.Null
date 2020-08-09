@@ -4,7 +4,6 @@
 //
 //  Created by Рустам Хахук on 16.06.2020.
 //  Copyright © 2020 Zed Null. All rights reserved.
-//
 
 import UIKit
 
@@ -35,8 +34,8 @@ class LayersTable : UICollectionView {
         //layer.shouldRasterize = true
         //layer.rasterizationScale = UIScreen.main.scale
     
-        //self.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
-    
+        self.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        
         self.contentInset = UIEdgeInsets(top: 6, left: 0, bottom: 0, right: 0)
     }
     
@@ -47,6 +46,17 @@ class LayersTable : UICollectionView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func resetShadow(){
+        let path = UIBezierPath()
+        
+        for i in 0..<project!.layerCount {
+            let rect = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: Int(100), height: 36 * i), cornerRadius: 8)
+            path.append(rect)
+        }
+        
+        self.layer.shadowPath = path.cgPath
     }
 }
 
@@ -135,10 +145,10 @@ extension LayersTable : UICollectionViewDelegate {
             let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider:nil ) {action in
                 let clone = UIAction(title: "Clone",image : UIImage(systemName: "plus.square.on.square", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, handler: {action in
                     self.project?.addAction(action: ["ToolID" : "\(Actions.layerClone.rawValue)", "frame" : "\(self.project!.FrameSelected)", "layer" : "\(self.project!.LayerSelected)"])
-              
+
                     self.frameDelegate?.cloneLayer(frame: self.project!.FrameSelected, original: indexPath.item)
                 })
-            
+
                 let merge = UIAction(title: "Merge with bottom layer",image : UIImage(systemName: "link", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, handler: {action in
                     if self.project!.layerCount > 1 && indexPath.item != self.project!.layerCount - 1 {
                         self.project!.addAction(action: ["ToolID" : "\(Actions.mergeLayers.rawValue)",
@@ -157,18 +167,18 @@ extension LayersTable : UICollectionViewDelegate {
                         self.frameDelegate?.margeLayers(frame: self.project!.FrameSelected, layer: indexPath.item)
                     }
                 })
-            
+
                 let visible = UIAction(title: self.project!.information.frames[self.project!.FrameSelected].layers[indexPath.item].visible ? "Make unvisible" : "Make visible",image : UIImage(systemName: self.project!.information.frames[self.project!.FrameSelected].layers[indexPath.item].visible ? "eye.slash" : "eye", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, handler: {action in
                     self.frameDelegate?.changeLayerVisible(frame: self.project!.FrameSelected, layer: indexPath.item)
                     self.project!.addAction(action: ["ToolID" : "\(Actions.layerVisibleChange.rawValue)", "frame" : "\(self.project!.FrameSelected)", "layer" : "\(indexPath.item)"])
                 })
-                       
+
                 let delete = UIAction(title: "Delete",image : UIImage(systemName: "trash", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, discoverabilityTitle: nil, attributes: .destructive, handler: {action in
-                           
+
                     self.project?.addAction(action: ["ToolID" : "\(Actions.layerDelete.rawValue)","frame" : "\(self.project!.FrameSelected)", "layer" : "\(indexPath.item)", "wasVisible" : "\(self.project!.information.frames[self.project!.FrameSelected].layers[indexPath.item].visible)", "transparent" : "\(self.project!.information.frames[self.project!.FrameSelected].layers[indexPath.item].transparent)"])
-            
+
                     try! self.project?.getLayer(frame: self.project!.FrameSelected, layer: indexPath.item).pngData()?.write(to: self.project!.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(self.project!.getNextActionID()).png"))
-            
+
                     self.frameDelegate?.deleteLayer(frame: self.project!.FrameSelected, layer: indexPath.item)
                 })
 
@@ -176,23 +186,23 @@ extension LayersTable : UICollectionViewDelegate {
 
                 let edit = UIMenu(title: "", options: .displayInline, children: [delMenu])
 
-                    
+
                 var menu : [UIMenuElement] = []
-                
+
                 if self.project!.layerCount != 16 {
                     menu.append(clone)
                 }
                 menu.append(visible)
-                
+
                 if indexPath.item != self.project!.layerCount - 1 {
                     menu.append(merge)
                 }
-                
+
                 if self.project!.layerCount > 1 {
                     menu.append(edit)
                 }
-                
-                
+
+
                 return UIMenu(title: "", image: nil, identifier: nil, children: menu)
             }
         return configuration
@@ -203,7 +213,7 @@ extension LayersTable : UICollectionViewDelegate {
             let target = UITargetedPreview(view: collectionView.cellForItem(at: IndexPath(item: contextingIndex!, section: 0))!)
             target.parameters.backgroundColor = .clear
             target.parameters.visiblePath = UIBezierPath(roundedRect: collectionView.cellForItem(at: IndexPath(item: contextingIndex!, section: 0))!.bounds, cornerRadius: 8)
-            
+
             return target
         } else {
             return nil
@@ -215,7 +225,7 @@ extension LayersTable : UICollectionViewDelegate {
         target.parameters.visiblePath = UIBezierPath(roundedRect: collectionView.cellForItem(at: IndexPath(item: contextingIndex!, section: 0))!.bounds, cornerRadius: 8)
         return target
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = cellForItem(at: indexPath) as? LayersTableCell
         cell?.setSelected(isSelect: true, anim: true)
@@ -270,7 +280,7 @@ extension LayersTable : UICollectionViewDropDelegate {
                     collectionView.deleteItems(at: [coordinator.items[0].sourceIndexPath!])
                     collectionView.insertItems(at: [coordinator.destinationIndexPath!])
                 }, completion: {isEnd in
-                    collectionView.selectItem(at: IndexPath(item: self.project!.LayerSelected, section: 0), animated: false, scrollPosition: .top)
+                    collectionView.selectItem(at: IndexPath(item: self.project!.LayerSelected, section: 0), animated: false, scrollPosition: .left)
                 })
                 
                 self.dragInteractionEnabled = false
@@ -279,7 +289,6 @@ extension LayersTable : UICollectionViewDropDelegate {
         default:
             break
         }
-
     }
     
     func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {

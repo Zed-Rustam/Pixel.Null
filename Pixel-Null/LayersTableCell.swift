@@ -104,8 +104,8 @@ class LayersTableCell : UICollectionViewCell {
         
         contentView.layoutIfNeeded()
         
-        contentView.setShadow(color: getAppColor(color: .shadow), radius: 6, opasity: 1)
-        contentView.layer.shadowPath = UIBezierPath(roundedRect: background.frame, cornerRadius: 8).cgPath
+        //contentView.setShadow(color: getAppColor(color: .shadow), radius: 6, opasity: 1)
+        //contentView.layer.shadowPath = UIBezierPath(roundedRect: background.frame, cornerRadius: 8).cgPath
     }
     
     func setSelected(isSelect : Bool, anim : Bool) {

@@ -27,20 +27,45 @@ class PalleteCollection : UIViewController, UICollectionViewDelegate, UICollecti
     private var palletes : [Any] = []
     private var layout : GalleryLayout!
     
-    lazy private var addButton : CircleButton = {
-        let btn = CircleButton(icon: #imageLiteral(resourceName: "add_icon"), frame: .zero)
-        btn.delegate = {[weak self] in
-            let create = PalleteCreateController()
-            create.isModalInPresentation = true
-            create.delegate = self
-            
-            self!.show(create, sender: self!)
-        }
+//    lazy private var addButton : CircleButton = {
+//        let btn = CircleButton(icon: #imageLiteral(resourceName: "add_icon"), frame: .zero)
+//        btn.delegate = {[weak self] in
+//            let create = PalleteCreateController()
+//            create.isModalInPresentation = true
+//            create.delegate = self
+//
+//            self!.show(create, sender: self!)
+//        }
+//        btn.translatesAutoresizingMaskIntoConstraints = false
+//
+//
+//        return btn
+//    }()
+    
+    lazy private var addButton: UIButton = {
+        let btn = UIButton()
+        btn.setImage(UIImage(systemName: "plus", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))?.withRenderingMode(.alwaysTemplate), for: .normal)
+        
+        btn.imageView?.tintColor = getAppColor(color: .enable)
+        
+        btn.backgroundColor = getAppColor(color: .background)
+        
+        btn.setCorners(corners: 12)
+        
         btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
         
-        
+        btn.addTarget(self, action: #selector(onAdd), for: .touchUpInside)
         return btn
     }()
+    
+    @objc func onAdd(){
+        let create = PalleteCreateController()
+        create.isModalInPresentation = true
+        create.delegate = self
+        show(create, sender: self)
+    }
     
     func getItemHeight(indexItem: IndexPath) -> Double {
         if (palletes[indexItem.item] is PalleteWorker){
@@ -57,7 +82,6 @@ class PalleteCollection : UIViewController, UICollectionViewDelegate, UICollecti
             return "Title"
         }
     }
-    
  
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return palletes.count
@@ -98,6 +122,9 @@ class PalleteCollection : UIViewController, UICollectionViewDelegate, UICollecti
             }
         } catch {}
         
+        palletes.append(NSLocalizedString("System", comment: ""))
+        
+        
         layout = GalleryLayout()
         layout.columnsCount = 3
         layout.bottomOffset = 72 + Double(UIApplication.shared.windows[0].safeAreaInsets.bottom / 2) + 4
@@ -116,7 +143,7 @@ class PalleteCollection : UIViewController, UICollectionViewDelegate, UICollecti
         addButton.widthAnchor.constraint(equalToConstant: 42).isActive = true
         addButton.heightAnchor.constraint(equalToConstant: 42).isActive = true
         addButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
-        addButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12).isActive = true
+        addButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -125,7 +152,8 @@ class PalleteCollection : UIViewController, UICollectionViewDelegate, UICollecti
     }
     
     override func viewDidLayoutSubviews() {
-        collection.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
+        addButton.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        addButton.layer.shadowPath = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 36, height: 36), cornerRadius: 12).cgPath
     }
 }
 

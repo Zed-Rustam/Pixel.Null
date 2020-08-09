@@ -11,12 +11,14 @@ import UIKit
 //MARK: Palette Collection Layout
 class PalleteCollectionLayout : UICollectionViewLayout {
     //size of item
-    var itemSize : CGFloat = 44
+    var itemSize: CGFloat = 44
     var itemsCountInLine: Int = 0
     var itemsCountInColumn: Int = 0
 
-    var topOffset : CGFloat = 24
-    var bottomOffset : CGFloat = 60
+    var topOffset: CGFloat = 24
+    var bottomOffset: CGFloat = 60
+    var leftOffset: CGFloat = 12
+    var rightOffset: CGFloat = 12
 
     //attributes of items
     private var attributes : [UICollectionViewLayoutAttributes] = []
@@ -41,18 +43,18 @@ class PalleteCollectionLayout : UICollectionViewLayout {
         //clear all attributes
         attributes.removeAll()
         //count items of one row
-        let rowCount = floor((collectionView!.bounds.width) / (itemSize))
+        let rowCount = floor((collectionView!.bounds.width - rightOffset - leftOffset) / (itemSize))
         
         itemsCountInLine = Int(rowCount)
         itemsCountInColumn = Int(ceil(CGFloat(collectionView!.numberOfItems(inSection: 0)) / rowCount))
         
         //offset for centerize items
-        let offset = (collectionView!.bounds.width - itemSize * rowCount) / 2.0
+        let offset = (collectionView!.bounds.width - itemSize * rowCount - leftOffset - rightOffset) / 2.0
         
         //set attributes
         for item in 0..<collectionView!.numberOfItems(inSection: 0) {
             let itemAttribute = UICollectionViewLayoutAttributes(forCellWith: IndexPath(item: item, section: 0))
-            let itemFrame : CGRect = CGRect(origin: CGPoint(x: offset + itemSize * CGFloat(item % Int(rowCount)),y: topOffset + (floor(CGFloat(item) / rowCount)) * itemSize),
+            let itemFrame : CGRect = CGRect(origin: CGPoint(x: offset + itemSize * CGFloat(item % Int(rowCount)) + leftOffset,y: topOffset + (floor(CGFloat(item) / rowCount)) * itemSize),
                                             size: CGSize(width: itemSize, height: itemSize))
             
             itemAttribute.frame = itemFrame

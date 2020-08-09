@@ -17,10 +17,9 @@ class SelectPaletteCollection : UICollectionView {
     private var layout = UICollectionViewFlowLayout()
     
     init() {
-        //layout.sectionHeadersPinToVisibleBounds = true
-        
         super.init(frame: .zero, collectionViewLayout: layout)
         register(SelectPaletteCell.self, forCellWithReuseIdentifier: "palette")
+        
         register(palettesTitle.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "header")
         
         delegate = self
@@ -54,6 +53,7 @@ class SelectPaletteCollection : UICollectionView {
 }
 
 extension SelectPaletteCollection : UICollectionViewDataSource {
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section {
         case 0:
@@ -91,6 +91,7 @@ extension SelectPaletteCollection : UICollectionViewDataSource {
             default:
                 headerView.title.text = "User's Palettes"
             }
+            
         return headerView
         }
         fatalError()
@@ -99,6 +100,7 @@ extension SelectPaletteCollection : UICollectionViewDataSource {
 }
 
 extension SelectPaletteCollection : UICollectionViewDelegate {
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch indexPath.section {
         case 0:
@@ -124,6 +126,10 @@ extension SelectPaletteCollection : UICollectionViewDelegate {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 2
     }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: self.frame.size.width, height: 48)
+    }
 }
 
 
@@ -135,6 +141,7 @@ class SelectPaletteCell : UICollectionViewCell {
         view.addSubviewFullSize(view: bgPal)
         view.addSubviewFullSize(view: palette)
 
+        view.setCorners(corners: 12,needMask: true)
         return view
     }()
     
@@ -142,7 +149,6 @@ class SelectPaletteCell : UICollectionViewCell {
         let img = UIImageView()
         img.translatesAutoresizingMaskIntoConstraints = false
         img.layer.magnificationFilter = .nearest
-        img.setCorners(corners: 12)
         return img
     }()
     
@@ -151,7 +157,6 @@ class SelectPaletteCell : UICollectionViewCell {
         img.translatesAutoresizingMaskIntoConstraints = false
         img.layer.magnificationFilter = .nearest
         img.image = #imageLiteral(resourceName: "background")
-        img.setCorners(corners: 12)
         return img
     }()
     
@@ -263,11 +268,11 @@ class SelectPaletteCell : UICollectionViewCell {
 class palettesTitle : UICollectionReusableView {
     lazy var title : UILabel = {
         let label = UILabel()
-        label.textColor = getAppColor(color: .disable)
+        label.textColor = getAppColor(color: .enable)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .left
         
-        label.font = UIFont(name: "Rubik-Bold", size: 24)
+        label.font = UIFont(name: "Rubik-Bold", size: 32)
         return label
     }()
     

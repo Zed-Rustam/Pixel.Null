@@ -32,7 +32,6 @@ class FramesView : UIView {
         return btn
     }()
     
-    
     @objc func onPress() {
         isPlay.toggle()
         playButton.setImage(self.isPlay ? #imageLiteral(resourceName: "pause_icon").withRenderingMode(.alwaysTemplate) : #imageLiteral(resourceName: "play_icon").withRenderingMode(.alwaysTemplate), for: .normal)

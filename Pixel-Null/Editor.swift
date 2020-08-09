@@ -85,6 +85,7 @@ class Editor : UIViewController {
     }
     
     private var longTap : UILongPressGestureRecognizer!
+   
     weak var gallery : GalleryControl? = nil
     
     func setProject(proj : ProjectWork){
@@ -98,7 +99,10 @@ class Editor : UIViewController {
     }
     
     override func viewDidLoad() {
-        control = ProjectControl(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 112 + UIApplication.shared.windows[0].safeAreaInsets.top), proj: project)
+        control = ProjectControl(frame:.zero, proj: project)
+        
+        control.translatesAutoresizingMaskIntoConstraints = false
+
         control.updateInfo()
         control.layers.frameControlDelegate = self
         canvas = ProjectCanvas(frame: self.view.bounds, proj: project)
@@ -114,6 +118,11 @@ class Editor : UIViewController {
         view.addSubview(canvas)
         view.addSubview(control)
         
+        control.heightAnchor.constraint(equalToConstant: 118 + UIApplication.shared.windows[0].safeAreaInsets.top).isActive = true
+        control.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
+        control.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
+        control.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
+
         NotificationCenter.default.addObserver(self, selector: #selector(appMovedToBackground), name: UIApplication.willResignActiveNotification, object: nil)
         
          NotificationCenter.default.addObserver(self, selector: #selector(appMovedToForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
@@ -137,7 +146,7 @@ class Editor : UIViewController {
         control.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
         control.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
         control.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
-        control.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 108).isActive = true
+        control.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 114).isActive = true
         
         transformSize.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 6).isActive = true
         transformSize.topAnchor.constraint(equalTo: control.bottomAnchor, constant: 6).isActive = true

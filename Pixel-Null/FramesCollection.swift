@@ -350,8 +350,8 @@ class FramePreviewCell : UICollectionViewCell {
         
         bg.layoutIfNeeded()
         
-        bg.setShadow(color: getAppColor(color: .shadow), radius: 6, opasity: 1)
-        bg.layer.shadowPath = UIBezierPath(roundedRect: bg.bounds, cornerRadius: 8).cgPath
+        //bg.setShadow(color: getAppColor(color: .shadow), radius: 6, opasity: 1)
+        //bg.layer.shadowPath = UIBezierPath(roundedRect: bg.bounds, cornerRadius: 8).cgPath
     }
     
     

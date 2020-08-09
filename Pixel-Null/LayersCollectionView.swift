@@ -73,46 +73,6 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
 
         return btn
     }()
-//
-
-    lazy var transparentField : TextField = {
-        let text = TextField()
-        text.translatesAutoresizingMaskIntoConstraints = false
-        text.widthAnchor.constraint(equalToConstant: 72).isActive = true
-        text.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        text.setHelpText(help: "100")
-        text.filed.text = "\(Int(project!.information.frames[project!.FrameSelected].layers[project!.LayerSelected].transparent * 100))"
-        
-        text.filed.textAlignment = .center
-        text.filed.keyboardType = .numberPad
-
-        text.filed.delegate = self
-        let bar = UIToolbar()
-        bar.items = [done,cancel]
-        bar.sizeToFit()
-        text.filed.inputAccessoryView = bar
-        return text
-    }()
-    
-    let done = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneAction))
-    let cancel = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(cancelAction))
-    
-    @objc func doneAction() {
-        project?.addAction(action: ["ToolID" : "\(Actions.changeLayerOpasity.rawValue)","frame" : "\(project!.FrameSelected)","layer" : "\(project!.LayerSelected)", "from" : "\(project!.information.frames[project!.FrameSelected].layers[project!.LayerSelected].transparent)", "to" : "\(Float(transparentField.filed.text!)! / 100.0)"])
-        
-        project?.setLayerOpasity(frame: project!.FrameSelected, layer: project!.LayerSelected, newOpasity: Int(transparentField.filed.text!)!)
-        transparentField.endEditing(true)
-        
-//        list.frameDelegate?.updateLayerSettings(target: project!.LayerSelected)
-//        list.frameDelegate?.updateFrameSettings(target: project!.FrameSelected)
-//        list.frameDelegate?.updatePreview()
-    }
-    
-    @objc func cancelAction() {
-        transparentField.filed.text = "\(Int(project!.information.frames[project!.FrameSelected].layers[project!.LayerSelected].transparent * 100))"
-        transparentField.endEditing(true)
-    }
-    
     
     @objc func onPress() {
         project!.addLayer(frame : project!.FrameSelected, layerPlace: project!.LayerSelected + 1)
@@ -138,7 +98,6 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
                 delay = 100
             }
             textField.text = String(delay)
-            //self.project!.setFrameDelay(frame: self.project!.FrameSelected, delay: delay)
          }
     }
     
@@ -147,10 +106,8 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
     func checkFrame(){
         if(project!.layerCount >= 16) {
             addButton.isEnabled = false
-            //cloneButton.isEnabled = false
         } else {
             addButton.isEnabled = true
-            //cloneButton.isEnabled = true
         }
     }
     

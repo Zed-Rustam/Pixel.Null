@@ -56,7 +56,7 @@ class ThumbnailProvider: QLThumbnailProvider {
         
         let img = renderer.image{context in
             for i in 0..<pallete.colors.count {
-                UIColor(hex : pallete.colors[i])!.setFill()
+                UIColor(hex: pallete.colors[i])!.setFill()
                 context.fill(CGRect(x: i % 16, y: i / 16, width: 1, height: 1))
             }
         }
