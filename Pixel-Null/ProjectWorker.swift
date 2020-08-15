@@ -599,6 +599,9 @@ class ProjectWork{
     
     func unDo(delegate : FrameControlDelegate){
         if projectInfo.actionList.lastActiveAction >= 0 {
+            
+            delegate.historyChange(action: projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction], isRedo: false)
+            
             switch Actions.init(rawValue: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["ToolID"]!)!)! {
             case .drawing:
                 try! loadActionWas(actionNum: projectInfo.actionList.lastActiveAction).pngData()?.write(to: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].frameID)").appendingPathComponent("layer-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!].layerID).png"))
@@ -993,6 +996,9 @@ class ProjectWork{
     
     func reDo(delegate : FrameControlDelegate){
         if projectInfo.actionList.lastActiveAction < projectInfo.actionList.actions.count - 1 {
+        
+            delegate.historyChange(action: projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1], isRedo: true)
+            
             switch Actions.init(rawValue: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["ToolID"]!)!)! {
             //MARK: Drawing Action
                 

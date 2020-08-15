@@ -12,6 +12,8 @@ class ToolBar : UIView {
     
     private var isHide = false
 
+    var toolbarChangesDelegate: (Bool,Bool)->() = {_,_ in}
+    
     lazy private var swipeUpGesture : UISwipeGestureRecognizer = {
         let swipe = UISwipeGestureRecognizer(target: self, action: #selector(swipe(sender:)))
         swipe.delaysTouchesBegan = false
@@ -112,12 +114,16 @@ class ToolBar : UIView {
         print(sender.direction)
         if sender.direction == .up && isHide {
             isHide = false
+            toolbarChangesDelegate(subBar.isHide, isHide)
+
             UIView.animate(withDuration: 0.25, animations: {
                 self.frame.origin.y -= 42
             })
         }
         if sender.direction == .down && !isHide {
             isHide = true
+            toolbarChangesDelegate(subBar.isHide, isHide)
+
             UIView.animate(withDuration: 0.25, animations: {
                 self.frame.origin.y += 42
             })
@@ -234,7 +240,8 @@ extension ToolBar : ToolBarDelegate {
     func wasChangedTool(newTool: Int) {
         //if newTool != nowSelected {
             let lastCell = toolCollection.cellForItem(at: IndexPath(item: toolCollection.tools.firstIndex(of: nowSelected)!, section: 0)) as! ToolButton
-            lastCell.getButton().setIconColor(color: getAppColor(color: .disable))
+            lastCell.getButton().setIconColor(color: getAppColor(color: .enable))
+        lastCell.getButton().setbgColor(color: .clear)
             
             nowSelected = newTool
             
@@ -250,6 +257,7 @@ extension ToolBar : ToolBarDelegate {
     
     func updateButtons(btns : [UIView]) {
         subBar.updateButtons(btns: btns)
+        toolbarChangesDelegate(subBar.isHide, isHide)
     }
 }
 

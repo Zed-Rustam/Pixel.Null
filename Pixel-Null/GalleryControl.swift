@@ -32,33 +32,29 @@ class GalleryControl : UIViewController{
             let createAction = UIAction(title: "New Project", image: UIImage(systemName: "doc")) {_ in
                 let create = CreateDialogNew()
                 create.delegate = self
+                
+                
+                switch UIDevice.current.userInterfaceIdiom {
+                    //если айфон, то просто показываем контроллер
+                case .phone:
+                    create.modalPresentationStyle = .pageSheet
+                    //если айпад то немного химичим
+                case .pad:
+                    create.modalPresentationStyle = .popover
+
+                    if let popover = create.popoverPresentationController {
+                        popover.sourceView = self.createButtonNew
+                        popover.delegate = self
+                        popover.permittedArrowDirections = .any
+                    }
+
+                default:
+                    break
+                }
+                
                 self.show(create, sender: nil)
-                
-                
-//                let dialog = CreateDialogController()
-//                dialog.delegate = self
-//                dialog.setDefault()
-//
-//                switch UIDevice.current.userInterfaceIdiom {
-//                    //если айфон, то просто показываем контроллер
-//                case .phone:
-//                    dialog.modalPresentationStyle = .pageSheet
-//                    self.show(dialog, sender: self)
-//                    //если айпад то немного химичим
-//                case .pad:
-//                    dialog.modalPresentationStyle = .popover
-//
-//                    if let popover = dialog.popoverPresentationController {
-//                        popover.sourceView = self.createButtonNew
-//                        popover.delegate = self
-//                        popover.permittedArrowDirections = .any
-//                    }
-//                    self.show(dialog, sender: self)
-//
-//                default:
-//                    break
-//                }
             }
+        
             
             let importAction = UIAction(title: "Import Project", image: UIImage(systemName: "arrow.down.doc")) {_ in
                 let dialog = UIDocumentBrowserViewController(forOpeningFilesWithContentTypes: ["com.zed.null.project",String(kUTTypePNG),String(kUTTypeJPEG),String(kUTTypeGIF)])

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CreateDialogNew : UIViewController {
+class CreateDialogNew : UIViewController, UIPopoverPresentationControllerDelegate {
     
     weak var delegate : GalleryProjectDelegate? = nil
 
@@ -130,7 +130,19 @@ class CreateDialogNew : UIViewController {
             
             colorSelectorMenu.setStartColor(clr: clr.color)
             
-            self.present(colorSelectorMenu, animated: true, completion: nil)
+            switch UIDevice.current.userInterfaceIdiom {
+                //если айфон, то просто показываем контроллер
+            case .phone:
+                colorSelectorMenu.modalPresentationStyle = .pageSheet
+                //если айпад то немного химичим
+            case .pad:
+                colorSelectorMenu.modalPresentationStyle = .currentContext
+
+            default:
+                break
+            }
+            
+            self.show(colorSelectorMenu, sender: nil)
         }
         
         

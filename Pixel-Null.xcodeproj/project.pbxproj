@@ -131,6 +131,7 @@
 		95E3D4AA24524AB90057A830 /* ProjectPallete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95E3D4A924524AB90057A830 /* ProjectPallete.swift */; };
 		95F8AFC3245E0B8F00A26B58 /* ProjectResizeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F8AFC2245E0B8F00A26B58 /* ProjectResizeController.swift */; };
 		95FC4151240A8ECE00B7F315 /* LayerList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95FC4150240A8ECE00B7F315 /* LayerList.swift */; };
+		95FD24CC24E85BB6001E49B0 /* ActionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95FD24CB24E85BB6001E49B0 /* ActionInfo.swift */; };
 		95FFC435244DA3C40011A5DC /* TransformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95FFC434244DA3C40011A5DC /* TransformView.swift */; };
 /* End PBXBuildFile section */
 
@@ -281,6 +282,7 @@
 		95E3D4A924524AB90057A830 /* ProjectPallete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectPallete.swift; sourceTree = "<group>"; };
 		95F8AFC2245E0B8F00A26B58 /* ProjectResizeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectResizeController.swift; sourceTree = "<group>"; };
 		95FC4150240A8ECE00B7F315 /* LayerList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayerList.swift; sourceTree = "<group>"; };
+		95FD24CB24E85BB6001E49B0 /* ActionInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionInfo.swift; sourceTree = "<group>"; };
 		95FFC434244DA3C40011A5DC /* TransformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransformView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -479,6 +481,7 @@
 				9537B1A4243E48A80083BE27 /* Grid */,
 				95C0EDD22448B0F20012D60D /* Symmetry */,
 				95FFC436244DA3CD0011A5DC /* Transform */,
+				95FD24CB24E85BB6001E49B0 /* ActionInfo.swift */,
 			);
 			name = Editor;
 			sourceTree = "<group>";
@@ -802,6 +805,7 @@
 				95A64B43246CCA00002CBCDA /* ProjectImportController.swift in Sources */,
 				9570657B24169C910044FC39 /* FrameControl.swift in Sources */,
 				95C0EDD62448B2130012D60D /* GridLayer.swift in Sources */,
+				95FD24CC24E85BB6001E49B0 /* ActionInfo.swift in Sources */,
 				956C61F72427C3B9000BF9E4 /* ToolBar.swift in Sources */,
 				954AABB423BBEC3D00F52955 /* MainViewController.swift in Sources */,
 				9559B9BC2462CBD80066EA40 /* TransformController.swift in Sources */,

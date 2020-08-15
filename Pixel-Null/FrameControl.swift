@@ -1,11 +1,3 @@
-//
-//  FrameControl.swift
-//  new Testing
-//
-//  Created by Рустам Хахук on 09.03.2020.
-//  Copyright © 2020 Zed Null. All rights reserved.
-//
-
 import UIKit
 
 class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlUpdate {
@@ -20,7 +12,7 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
             self.layers.transform = CGAffineTransform(translationX: 0, y: isStart ? -self.frames.frame.size.height : 0)
         })
     }
-        
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -294,13 +286,12 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
     }
     
     @objc func keyboardWillShow(_ notification: Notification){
-        print(view.safeAreaInsets.top)        
+        print(view.safeAreaInsets.top)
         let keyboardsize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue.height
         
         layers.list.contentInset.bottom = keyboardsize - frames.bounds.size.height + 24 - UIApplication.shared.windows[0].safeAreaInsets.bottom
 
         layers.list.selectItem(at: IndexPath(row: layers.list.renamingLayer, section: 0), animated: true, scrollPosition: .top)
-
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -331,4 +322,3 @@ protocol FrameControlUpdate : class {
     func margeLayers(frame : Int,layer : Int)
     func onRenameLayerModeStart(isStart: Bool)
 }
-

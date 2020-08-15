@@ -12,6 +12,12 @@ class FastActionBar : UIView {
     
     private var hide = true
     
+    var isHide: Bool {
+        get{
+            return hide
+        }
+    }
+    
     lazy private var bgView : UIView = {
        let view = UIView()
         view.backgroundColor = getAppColor(color: .background)

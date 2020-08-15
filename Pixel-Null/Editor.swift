@@ -14,6 +14,11 @@ class Editor : UIViewController {
     var control : ProjectControl!
     private var animationTime : Int = 0
     private var nowFrameIndex : Int = 0
+    
+    lazy private var actionInfo: ActionInfo = {
+        let info = ActionInfo()
+        return info
+    }()
 
     lazy var toolBar : ToolBar = {
         let tb = ToolBar(frame: .zero)
@@ -119,7 +124,7 @@ class Editor : UIViewController {
 
         view.addSubview(canvas)
         view.addSubview(control)
-        
+
         control.heightAnchor.constraint(equalToConstant: 118 + UIApplication.shared.windows[0].safeAreaInsets.top).isActive = true
         control.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
         control.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
@@ -134,6 +139,12 @@ class Editor : UIViewController {
         view.addSubview(toolBar)
         view.addSubview(transformSize)
         view.addSubview(transformAngle)
+        
+        view.addSubview(actionInfo)
+        
+        actionInfo.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
+        actionInfo.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
+        actionInfo.bottomAnchor.constraint(equalTo: toolBar.topAnchor, constant: -12).isActive = true
 
         toolBar.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
         toolBar.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
@@ -159,6 +170,17 @@ class Editor : UIViewController {
         view.backgroundColor = getAppColor(color: .background)
         showTransform(isShow: false)
         
+        actionInfo.transform = CGAffineTransform(translationX: 0, y: 42)
+        actionInfo.alpha = 0
+        
+        toolBar.toolbarChangesDelegate = {isSubbarHide, isHide in
+            var offset = isSubbarHide ? 42 : 0
+            offset += isHide ? 42 : 0
+            
+            UIView.animate(withDuration: 0.2, animations: {
+                self.actionInfo.transform = CGAffineTransform(translationX: 0, y: CGFloat(offset))
+            })
+        }
 
     }
     
@@ -221,6 +243,11 @@ class Editor : UIViewController {
 }
 
 extension Editor : FrameControlDelegate{
+    
+    func historyChange(action: [String : String], isRedo: Bool) {
+        actionInfo.setAction(action: action, isRedo: isRedo,project: project)
+    }
+    
 
     //открываем окно паллитры проекта
     func openColorSelector() {
@@ -526,6 +553,8 @@ protocol FrameControlDelegate : class {
     
     func changeMainColor(color : UIColor)
     func openColorSelector()
+    
+    func historyChange(action: [String : String], isRedo: Bool)
 }
 
 protocol ToolSettingsDelegate : class{
