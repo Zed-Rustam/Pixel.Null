@@ -16,12 +16,23 @@ class PalleteCreateController : UIViewController {
         return clrs
     }()
     
-    lazy private var name : TextField = {
-        let text = TextField(frame: .zero)
-        text.filed.text = pallete.palleteName
-        text.filed.delegate = nameDelegate
-        text.setHelpText(help: "Pallete Name")
-        text.filed.font = UIFont(name: "Rubik-Medium", size: 18)
+    lazy private var name : UITextField = {
+        let text = UITextField(frame: .zero)
+        text.text = pallete.palleteName
+        text.delegate = nameDelegate
+        text.attributedPlaceholder = NSAttributedString(string: "Palette Name", attributes: [NSAttributedString.Key.foregroundColor : getAppColor(color: .disable)])
+        
+        text.backgroundColor = getAppColor(color: .backgroundLight)
+        text.setCorners(corners: 12)
+        
+        
+        text.leftViewMode = .always
+        text.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 42))
+        
+        text.rightViewMode = .always
+        text.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 42))
+        
+        text.font = UIFont(name: "Rubik-Medium", size: 18)
         text.translatesAutoresizingMaskIntoConstraints = false
         text.heightAnchor.constraint(equalToConstant: 42).isActive = true
         
@@ -29,37 +40,37 @@ class PalleteCreateController : UIViewController {
         let done = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneBtn))
         bar.items = [done]
         bar.sizeToFit()
-        text.filed.inputAccessoryView = bar
+        text.inputAccessoryView = bar
         
         return text
-    }()
-    
-    lazy private var nameBg : UIView = {
-        let bg = UIView()
-        bg.translatesAutoresizingMaskIntoConstraints = false
-        
-        bg.addSubviewFullSize(view: name)
-        bg.heightAnchor.constraint(equalToConstant: 42).isActive = true
-        
-        bg.backgroundColor = UIColor(named : "backgroundColor")
-        return bg
     }()
     
     @objc func doneBtn() {
         view.endEditing(true)
     }
     
+    lazy private var errorText: UILabel = {
+        let lbl = UILabel()
+        lbl.translatesAutoresizingMaskIntoConstraints = false
+        lbl.heightAnchor.constraint(equalToConstant: 24).isActive = true
+        
+        lbl.textColor = getAppColor(color: .red)
+        lbl.font = UIFont(name: "Rubik-Medium", size: 10)
+        lbl.text = ""
+        return lbl
+    }()
+    
     lazy private var createButton : CircleButton = {
         let btn = CircleButton(icon: #imageLiteral(resourceName: "select_icon"), frame: .zero, icScale: 0.35)
         btn.delegate = {[unowned self] in
             self.pallete.colors = self.colors.palleteColors
             self.pallete.save()
-            self.pallete.rename(newName : self.name.filed.text!)
+            self.pallete.rename(newName : self.name.text!)
             self.delegate?.palleteAdded(newPallete : self.pallete)
             self.dismiss(animated: true, completion: nil)
         }
         
-        btn.corners = 8
+        btn.corners = 12
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.widthAnchor.constraint(equalToConstant: 42).isActive = true
         btn.heightAnchor.constraint(equalToConstant: 42).isActive = true
@@ -73,7 +84,7 @@ class PalleteCreateController : UIViewController {
             self!.pallete.delete()
             self!.dismiss(animated: true, completion: nil)
         }
-        btn.corners = 8
+        btn.corners = 12
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.widthAnchor.constraint(equalToConstant: 42).isActive = true
         btn.heightAnchor.constraint(equalToConstant: 42).isActive = true
@@ -81,15 +92,16 @@ class PalleteCreateController : UIViewController {
         return btn
     }()
     
-    lazy private var palleteEditBap : UIView = {
+    lazy private var paletteEditBap : UIView = {
         let mainView = UIView()
         mainView.translatesAutoresizingMaskIntoConstraints = false
-        mainView.widthAnchor.constraint(equalToConstant: 156).isActive = true
-        mainView.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        mainView.heightAnchor.constraint(equalToConstant: 42 + UIApplication.shared.windows[0].safeAreaInsets.bottom).isActive = true
         
         let bg = UIView()
         bg.translatesAutoresizingMaskIntoConstraints = false
         bg.setCorners(corners: 12)
+        bg.layer.maskedCorners = [.layerMinXMaxYCorner,.layerMaxXMaxYCorner]
+        
         bg.backgroundColor = UIColor(named : "backgroundColor")
         mainView.addSubviewFullSize(view: bg)
         
@@ -190,7 +202,7 @@ class PalleteCreateController : UIViewController {
         
         return btn
     }()
-
+    
     private var pallete : PalleteWorker!
     
     private var nameDelegate : TextFieldDelegate!
@@ -225,50 +237,59 @@ class PalleteCreateController : UIViewController {
     override func viewDidLoad() {
         pallete = PalleteWorker(name: getPalleteName(), colors: ["#00000000"])
         
-        nameDelegate = TextFieldDelegate(method: {[weak self] in
+        nameDelegate = TextFieldDelegate(method: {[unowned self] in
             if $0.text == "" {
-                self!.createButton.isEnabled = false
-                self!.name.error = nil
-            } else if self!.getProjects().contains("\($0.text!).pnpalette") && "\($0.text!)" != self!.pallete.palleteName {
-                self!.name.error = NSLocalizedString("Palette exist error", comment: "")
-                self!.createButton.isEnabled = false
+                self.createButton.isEnabled = false
+                self.errorText.text = ""
+            } else if self.getProjects().contains("\($0.text!).pnpalette") && "\($0.text!)" != self.pallete.palleteName {
+                self.errorText.text = NSLocalizedString("Palette exist error", comment: "")
+                self.createButton.isEnabled = false
             } else {
-                self!.name.error = nil
-                self!.createButton.isEnabled = true
+                errorText.text = ""
+                self.createButton.isEnabled = true
             }
         })
         
-        self.view.backgroundColor = getAppColor(color: .background)
+        view.backgroundColor = getAppColor(color: .background)
+        view.setCorners(corners: 32)
         
-        self.view.addSubview(colors)
-        self.view.addSubview(nameBg)
-        self.view.addSubview(createButton)
-        self.view.addSubview(cancelButton)
-        self.view.addSubview(palleteEditBap)
+        view.addSubview(colors)
+        view.addSubview(name)
+        view.addSubview(errorText)
+        view.addSubview(createButton)
+        view.addSubview(cancelButton)
+        view.addSubview(paletteEditBap)
 
         colors.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 0).isActive = true
         colors.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: 0).isActive = true
-        colors.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
+        colors.topAnchor.constraint(equalTo: name.bottomAnchor, constant: 24).isActive = true
         colors.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
 
-        createButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -6).isActive = true
-        createButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 6).isActive = true
         
-        cancelButton.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 6).isActive = true
-        cancelButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 6).isActive = true
+        errorText.leftAnchor.constraint(equalTo: name.leftAnchor).isActive = true
+        errorText.rightAnchor.constraint(equalTo: name.rightAnchor).isActive = true
+        errorText.topAnchor.constraint(equalTo: name.bottomAnchor).isActive = true
 
-        nameBg.leftAnchor.constraint(equalTo: cancelButton.rightAnchor, constant: 6).isActive = true
-        nameBg.rightAnchor.constraint(equalTo: createButton.leftAnchor, constant: -6).isActive = true
-        nameBg.topAnchor.constraint(equalTo: view.topAnchor, constant: 6).isActive = true
+        createButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -24).isActive = true
+        createButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
+        
+        cancelButton.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 24).isActive = true
+        cancelButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
 
-        palleteEditBap.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -8).isActive = true
-        palleteEditBap.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -6).isActive = true
+        name.leftAnchor.constraint(equalTo: cancelButton.rightAnchor, constant: 12).isActive = true
+        name.rightAnchor.constraint(equalTo: createButton.leftAnchor, constant: -12).isActive = true
+        name.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
+
+        paletteEditBap.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: 0).isActive = true
+        paletteEditBap.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 0).isActive = true
+        paletteEditBap.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
         
         self.view.isUserInteractionEnabled = true
     }
     
     override func viewDidLayoutSubviews() {
-        palleteEditBap.setShadow(color: getAppColor(color: .shadow), radius: 4, opasity: 1)
+        paletteEditBap.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        paletteEditBap.layer.shadowPath = UIBezierPath(roundedRect: paletteEditBap.bounds, cornerRadius: 12).cgPath
     }
     override func viewDidAppear(_ animated: Bool) {
         colors.selectItem(at: IndexPath(item: 0, section: 0), animated: true, scrollPosition: .left)

@@ -144,7 +144,7 @@ class ProjectWork{
         selectedLayer = 0
         selectedFrame = 0
                 
-        projectInfo = ProjectInfo(version: 0, width: Int(projSize.width), height: Int(projSize.height), bgColor: UIColor.toHex(color: bgColor),frames:  [ProjectFrame(frameID: 0, delay: 100, layers: [ProjectLayer(layerID: 0, visible: true, locked: false, transparent: 1.0)])], actionList: ActionList(actions: [], lastActiveAction: -1, maxCount: 64), pallete: try! JSONDecoder().decode(Pallete.self, from: NSDataAsset(name: "Default pallete")!.data), flipX: false, flipY: false, rotate: 0)
+        projectInfo = ProjectInfo(version: 0, width: Int(projSize.width), height: Int(projSize.height), bgColor: UIColor.toHex(color: bgColor),frames:  [ProjectFrame(frameID: 0, delay: 100, layers: [ProjectLayer(layerID: 0, visible: true, locked: false, transparent: 1.0, name: "New layer")])], actionList: ActionList(actions: [], lastActiveAction: -1, maxCount: 64), pallete: try! JSONDecoder().decode(Pallete.self, from: NSDataAsset(name: "Default pallete")!.data), flipX: false, flipY: false, rotate: 0)
              
         let folder = ProjectWork.getDocumentsDirectory().appendingPathComponent(name)
         do {
@@ -200,7 +200,7 @@ class ProjectWork{
         
         let resultImage = UIImage(cgImage: image.cgImage!)
         
-        projectInfo = ProjectInfo(version: 0, width: Int(resultImage.size.width), height: Int(resultImage.size.height), bgColor: "#00000000", frames: [ProjectFrame(frameID: 0, delay: 100, layers: [ProjectLayer(layerID: 0, visible: true, locked: false, transparent: 1)])], actionList: ActionList(actions: [], lastActiveAction: -1, maxCount: 64), pallete: try! JSONDecoder().decode(Pallete.self, from: NSDataAsset(name: "Default pallete")!.data), flipX: false, flipY: false, rotate: 0)
+        projectInfo = ProjectInfo(version: 0, width: Int(resultImage.size.width), height: Int(resultImage.size.height), bgColor: "#00000000", frames: [ProjectFrame(frameID: 0, delay: 100, layers: [ProjectLayer(layerID: 0, visible: true, locked: false, transparent: 1,name: "New layer")])], actionList: ActionList(actions: [], lastActiveAction: -1, maxCount: 64), pallete: try! JSONDecoder().decode(Pallete.self, from: NSDataAsset(name: "Default pallete")!.data), flipX: false, flipY: false, rotate: 0)
         
         let folder = ProjectWork.getDocumentsDirectory().appendingPathComponent(name)
         do {
@@ -269,7 +269,7 @@ class ProjectWork{
             print("hey check error : \(error.localizedDescription)")
         }
 
-        projectInfo.frames[frame].layers.insert(ProjectLayer(layerID: layerID, visible: true, locked: false, transparent: 1.0), at: layerPlace)
+        projectInfo.frames[frame].layers.insert(ProjectLayer(layerID: layerID, visible: true, locked: false, transparent: 1.0,name: "New layer"), at: layerPlace)
     }
 
     func renameLayer(frame: Int, layer: Int, newName: String){
@@ -366,8 +366,7 @@ class ProjectWork{
             print("hey check error : \(error.localizedDescription)")
         }
         
-        // print()
-        projectInfo.frames[frame].layers.insert(ProjectLayer(layerID: layerID, visible: projectInfo.frames[frame].layers[layer].visible, locked: projectInfo.frames[frame].layers[layer].locked, transparent: projectInfo.frames[frame].layers[layer].transparent), at: layer + 1)
+        projectInfo.frames[frame].layers.insert(ProjectLayer(layerID: layerID, visible: projectInfo.frames[frame].layers[layer].visible, locked: projectInfo.frames[frame].layers[layer].locked, transparent: projectInfo.frames[frame].layers[layer].transparent, name: projectInfo.frames[frame].layers[layer].name), at: layer + 1)
     }
        
     func changeLayerVisible(layer : Int,isVisible : Bool){
@@ -975,6 +974,9 @@ class ProjectWork{
                 self.isFlipY.toggle()
                 (delegate as! Editor).resizeProject()
                 
+            case .renameLayer:
+                renameLayer(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!, layer: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!, newName: projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["oldName"]!)
+                
             default:
                 break
             }
@@ -1344,6 +1346,9 @@ class ProjectWork{
                 self.isFlipY.toggle()
                 (delegate as! Editor).resizeProject()
                 
+            case .renameLayer:
+                renameLayer(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!, layer: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!, newName: projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["newName"]!)
+                
             default:
                 break
             }
@@ -1402,6 +1407,8 @@ class ProjectWork{
         case .mergeLayers:
             try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-first-\(getActionID(action: projectInfo.actionList.actions.count - 1)).png"))
             try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-second-\(getActionID(action: projectInfo.actionList.actions.count - 1)).png"))
+        case .renameLayer:
+           try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: projectInfo.actionList.actions.count - 1))"))
         default:
             break
         }
@@ -1431,6 +1438,8 @@ class ProjectWork{
         case .mergeLayers:
             try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-first-\(getActionID(action: 0)).png"))
             try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-second-\(getActionID(action: 0)).png"))
+        case .renameLayer:
+           try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: 0))"))
         default:
             break
         }

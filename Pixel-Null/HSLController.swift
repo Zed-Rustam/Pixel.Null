@@ -41,7 +41,9 @@ class HSLController: UIViewController {
         return d
     }()
 
-    override func viewDidLoad() {        
+    override func viewDidLoad() {
+        overrideUserInterfaceStyle = UIUserInterfaceStyle.init(rawValue: UserDefaults.standard.integer(forKey: "themeMode"))!
+        
         view.addSubview(circle)
         view.addSubview(dark)
         view.addSubview(transp)

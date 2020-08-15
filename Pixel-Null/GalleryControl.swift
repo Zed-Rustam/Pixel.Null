@@ -220,17 +220,16 @@ extension GalleryControl : ProjectActions {
         let exp = ProjectExportController()
         exp.modalPresentationStyle = .formSheet
         exp.project = proj
-        show(exp, sender: nil)
+        show(exp, sender: self)
     }
     
     func projectOpen(proj: ProjectWork) {
         let ed = Editor()
         ed.setProject(proj: proj)
         ed.gallery = self
-        ed.modalPresentationStyle = .overCurrentContext
+        ed.modalPresentationStyle = .currentContext
         ed.modalTransitionStyle = .coverVertical
-        self.show(ed, sender: nil)
-        
+        show(ed, sender: self)
     }
     
     func projectDublicate(view: ProjectViewNew) {

@@ -27,21 +27,6 @@ class PalleteCollection : UIViewController, UICollectionViewDelegate, UICollecti
     private var palletes : [Any] = []
     private var layout : GalleryLayout!
     
-//    lazy private var addButton : CircleButton = {
-//        let btn = CircleButton(icon: #imageLiteral(resourceName: "add_icon"), frame: .zero)
-//        btn.delegate = {[weak self] in
-//            let create = PalleteCreateController()
-//            create.isModalInPresentation = true
-//            create.delegate = self
-//
-//            self!.show(create, sender: self!)
-//        }
-//        btn.translatesAutoresizingMaskIntoConstraints = false
-//
-//
-//        return btn
-//    }()
-    
     lazy private var addButton: UIButton = {
         let btn = UIButton()
         btn.setImage(UIImage(systemName: "plus", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))?.withRenderingMode(.alwaysTemplate), for: .normal)

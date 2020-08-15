@@ -10,6 +10,8 @@ import UIKit
 
 class LayersTableCell : UICollectionViewCell {
     
+    var delegate: LayersTableDelegate? = nil
+    
     private var isUpdateImageMode : Bool = false
         
     lazy private var background : UIView = {
@@ -24,12 +26,10 @@ class LayersTableCell : UICollectionViewCell {
         view.setCorners(corners: 8,curveType: .continuous)
         
         view.addSubview(layerName)
+
         layerName.leftAnchor.constraint(equalTo: previewBackground.rightAnchor, constant: 6).isActive = true
+        layerName.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -6).isActive = true
         layerName.topAnchor.constraint(equalTo: previewBackground.topAnchor, constant: 0).isActive = true
-        
-        view.addSubview(renameButton)
-        renameButton.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        renameButton.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         
         return view
     }()
@@ -44,20 +44,7 @@ class LayersTableCell : UICollectionViewCell {
         view.setCorners(corners: 8,needMask: true)
         return view
     }()
-    
-    private var renameButton : UIButton = {
-        let btn = UIButton()
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        btn.setImage(UIImage(systemName: "pencil", compatibleWith: UITraitCollection.init(legibilityWeight: .bold)), for: .normal)
-        btn.imageView?.tintColor = getAppColor(color: .enable)
         
-        return btn
-    }()
-    
-    var menu : () -> (UIMenu?) = {nil}
-    
     lazy private var previewImage : UIImageView = {
         let image = UIImageView()
         image.layer.magnificationFilter = .nearest
@@ -86,13 +73,28 @@ class LayersTableCell : UICollectionViewCell {
         return image
     }()
     
-    lazy private var layerName : UILabel = {
-        let label = UILabel()
+    lazy private var layerName : UITextField = {
+        let label = UITextField()
         label.text = "New layer"
         label.font = UIFont(name: "Rubik-Medium", size: 16)
         label.textColor = getAppColor(color: .disable)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        
+        label.delegate = self
+        
+        label.isEnabled = false
+
+        let done = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(onRenameDone))
+        
+        let cancel = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(onRenameCancel))
+
+        let bar = UIToolbar()
+        bar.items = [done,cancel]
+        bar.sizeToFit()
+
+        label.inputAccessoryView = bar
+        
         return label
     }()
     
@@ -102,17 +104,34 @@ class LayersTableCell : UICollectionViewCell {
         contentView.addSubviewFullSize(view: background)
         
         contentView.layoutIfNeeded()
-        
-        //contentView.setShadow(color: getAppColor(color: .shadow), radius: 6, opasity: 1)
-        //contentView.layer.shadowPath = UIBezierPath(roundedRect: background.frame, cornerRadius: 8).cgPath
+        contentView.isUserInteractionEnabled = true
+        background.isUserInteractionEnabled = true
     }
     
-    @objc func onRename() {
-        
+     func StartRename() {
+        print("press")
+        layerName.isEnabled = true
+        layerName.becomeFirstResponder()
+        print("nowFrame: \(frame.origin)")
+    }
+    
+    @objc func onRenameDone(){
+        delegate?.finishRenaming(newName: layerName.text!)
+        layerName.isEnabled = false
+    }
+    
+    @objc func onRenameCancel(){
+        delegate?.onCancelRenaming()
+        layerName.isEnabled = false
     }
     
     func setSelected(isSelect : Bool, anim : Bool) {
-        self.layerName.textColor = isSelect ? getAppColor(color: .select) : getAppColor(color: .disable)
+        layerName.textColor = isSelect ? getAppColor(color: .select) : getAppColor(color: .disable)
+        
+    }
+    
+    func setName(name: String){
+        layerName.text = name
     }
     
     func setPreview(image : UIImage) {
@@ -129,13 +148,19 @@ class LayersTableCell : UICollectionViewCell {
         })
     }
     
-    func setContextMenu(menu : @escaping ()->(UIMenu?)) {
-        self.menu = menu
-        renameButton.menu = self.menu()
+    func isVisibleName(isVisible: Bool){
+        layerName.alpha = isVisible ? 1 : 0.5
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+}
+
+
+extension LayersTableCell: UITextFieldDelegate {
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        delegate?.changeNamelayer()
+    }
 }

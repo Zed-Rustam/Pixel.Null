@@ -156,6 +156,7 @@ class ColorDialogController: UIViewController {
             i.view.topAnchor.constraint(equalTo: navigation.bottomAnchor,constant: 12).isActive = true
             i.view.setNeedsLayout()
             i.view.layoutIfNeeded()
+            i.overrideUserInterfaceStyle = UIUserInterfaceStyle.init(rawValue: UserDefaults.standard.integer(forKey: "themeMode"))!
         }
     }
     

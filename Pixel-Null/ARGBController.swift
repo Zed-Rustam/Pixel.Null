@@ -1,11 +1,3 @@
-//
-//  ARGBController.swift
-//  Pixel-Null
-//
-//  Created by Рустам Хахук on 08.08.2020.
-//  Copyright © 2020 Zed Null. All rights reserved.
-//
-
 import UIKit
 
 class ARGBController: UIViewController {
@@ -155,7 +147,7 @@ class ARGBController: UIViewController {
         
         field.backgroundColor = getAppColor(color: .backgroundLight)
         field.setCorners(corners: 8)
-
+        
         field.font = UIFont(name: "Rubik-Medium", size: 20)
         field.textColor = getAppColor(color: .enable)
         field.textAlignment = .center
@@ -206,6 +198,8 @@ class ARGBController: UIViewController {
     }
     
     override func viewDidLoad() {
+        overrideUserInterfaceStyle = UIUserInterfaceStyle.init(rawValue: UserDefaults.standard.integer(forKey: "themeMode"))!
+
         view.addSubview(redSlider)
         view.addSubview(greenSlider)
         view.addSubview(blueSlider)

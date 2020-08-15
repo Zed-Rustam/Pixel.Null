@@ -218,7 +218,6 @@ class ProjectPallete: UIViewController {
         self.show(selector, sender: nil)
     }
     
-    
     override func viewDidLayoutSubviews() {
         toolBar.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
         toolBar.layer.shadowPath = UIBezierPath(roundedRect: toolBar.bounds, cornerRadius: 12).cgPath

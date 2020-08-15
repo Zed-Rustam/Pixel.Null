@@ -37,7 +37,7 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor(named: "backgroundColor")
+        self.view.backgroundColor = getAppColor(color: .background)
         
         self.view.addSubview(controllers[0].view)
         self.view.addSubview(controllers[1].view)

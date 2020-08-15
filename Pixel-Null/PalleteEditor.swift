@@ -16,33 +16,18 @@ class PalleteEditor : UIViewController {
         return clr
     }()
     
-    lazy private var exitButton : CircleButton = {
-        let btn = CircleButton(icon: #imageLiteral(resourceName: "select_icon"), frame: .zero, icScale: 0.35)
+    lazy private var exitButton : UIButton = {
+        let btn = UIButton()
+        btn.setImage(#imageLiteral(resourceName: "select_icon").withRenderingMode(.alwaysTemplate), for: .normal)
+        btn.imageView?.tintColor = getAppColor(color: .enable)
         
-        btn.delegate = {[unowned self] in
-            self.pallete.colors = self.colors.palleteColors
-            self.pallete.save()
-            self.delegate()
-            self.dismiss(animated: true, completion: nil)
-        }
-        btn.corners = 8
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 42).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        btn.imageEdgeInsets = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
 
-        return btn
-    }()
-
-    lazy private var renameButton : CircleButton = {
-        let btn = CircleButton(icon: #imageLiteral(resourceName: "edit_icon"), frame: .zero, icScale: 0.35)
+        btn.backgroundColor = getAppColor(color: .background)
         
-        btn.delegate = {[unowned self] in
-            self.palleteName.filed.isEnabled = true
-            self.palleteName.filed.becomeFirstResponder()
-            self.exitButton.isEnabled = false
-        }
+        btn.addTarget(self, action: #selector(onCreate), for: .touchUpInside)
         
-        btn.corners = 8
+        btn.setCorners(corners: 12)
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.widthAnchor.constraint(equalToConstant: 42).isActive = true
         btn.heightAnchor.constraint(equalToConstant: 42).isActive = true
@@ -50,41 +35,41 @@ class PalleteEditor : UIViewController {
         return btn
     }()
     
-    lazy private var palleteBar : UIView = {
-       let mainview = UIView()
-        //mainview.setShadow(color: ProjectStyle.uiShadowColor, radius: 8, opasity: 0.25)
-        mainview.translatesAutoresizingMaskIntoConstraints = false
-        mainview.heightAnchor.constraint(equalToConstant: 42).isActive = true
+    lazy private var errorText: UILabel = {
+        let lbl = UILabel()
+        lbl.translatesAutoresizingMaskIntoConstraints = false
+        lbl.heightAnchor.constraint(equalToConstant: 24).isActive = true
         
-        let bgView = UIView()
-        bgView.backgroundColor = UIColor(named : "backgroundColor")
-        bgView.setCorners(corners: 8)
-        bgView.translatesAutoresizingMaskIntoConstraints = false
-        
-       
-        mainview.addSubviewFullSize(view: bgView,paddings: (0,0,0,0))
-        bgView.addSubviewFullSize(view: palleteName,paddings: (0,0,0,0))
-        
-        return mainview
+        lbl.textColor = getAppColor(color: .red)
+        lbl.font = UIFont(name: "Rubik-Medium", size: 10)
+        lbl.text = ""
+        return lbl
     }()
     
-    lazy private var palleteName : TextField = {
-        let label = TextField()
-        label.filed.font = UIFont(name: "Rubik-Bold", size: 20)
-        label.filed.text = pallete.palleteName
-        label.subviews[0].setCorners(corners: 8)
-        label.filed.isEnabled = false
+    lazy private var palleteName : UITextField = {
+        let label = UITextField()
+        label.font = UIFont(name: "Rubik-Bold", size: 20)
+        label.text = pallete.palleteName
+        label.setCorners(corners: 12)
+        label.textColor = getAppColor(color: .enable)
+        label.isEnabled = true
+        label.backgroundColor = getAppColor(color: .backgroundLight)
         
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 42).isActive = true
         
-        label.filed.delegate = nameDelegate
+        label.delegate = nameDelegate
+        
+        let leftView: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 42))
+        
+        label.leftViewMode = .always
+        label.leftView = leftView
         
         let bar = UIToolbar()
         bar.items = [done,cancel]
         bar.sizeToFit()
         
-        label.filed.inputAccessoryView = bar
+        label.inputAccessoryView = bar
         
         return label
     }()
@@ -95,12 +80,12 @@ class PalleteEditor : UIViewController {
     lazy private var palleteEditBap : UIView = {
         let mainView = UIView()
         mainView.translatesAutoresizingMaskIntoConstraints = false
-        mainView.widthAnchor.constraint(equalToConstant: 156).isActive = true
-        mainView.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        mainView.heightAnchor.constraint(equalToConstant: 42 + UIApplication.shared.windows[0].safeAreaInsets.bottom).isActive = true
         
         let bg = UIView()
         bg.translatesAutoresizingMaskIntoConstraints = false
         bg.setCorners(corners: 12)
+        bg.layer.maskedCorners = [.layerMinXMinYCorner,.layerMaxXMinYCorner]
         bg.backgroundColor = UIColor(named : "backgroundColor")
         mainView.addSubviewFullSize(view: bg)
         
@@ -205,16 +190,22 @@ class PalleteEditor : UIViewController {
     }()
 
     lazy private var nameDelegate : TextFieldDelegate = {
-       let del = TextFieldDelegate(method: {[weak self] in
+       let del = TextFieldDelegate(method: {[unowned self] in
             if $0.text == "" {
-                self!.done.isEnabled = false
-                self!.palleteName.error = nil
-            } else if self!.getProjects().contains("\($0.text!).pnpalette") && $0.text! != self!.pallete.palleteName {
-                self!.palleteName.error = "A pallete with this name already exists"
-                self!.done.isEnabled = false
+                self.exitButton.isEnabled = false
+                self.done.isEnabled = false
+                self.exitButton.imageView?.tintColor = getAppColor(color: .disable)
+                self.errorText.text = ""
+            } else if self.getProjects().contains("\($0.text!).pnpalette") && $0.text! != self.pallete.palleteName {
+                self.errorText.text = "A pallete with this name already exists"
+                self.exitButton.isEnabled = false
+                self.exitButton.imageView?.tintColor = getAppColor(color: .disable)
+                self.done.isEnabled = false
             } else {
-                self!.palleteName.error = nil
-                self!.done.isEnabled = true
+                self.errorText.text = ""
+                self.exitButton.isEnabled = true
+                self.exitButton.imageView?.tintColor = getAppColor(color: .enable)
+                self.done.isEnabled = true
             }
         })
         
@@ -224,6 +215,15 @@ class PalleteEditor : UIViewController {
     var pallete : PalleteWorker!
     
     var delegate : () -> () = {}
+    
+    
+    @objc func onCreate() {
+        pallete.rename(newName: palleteName.text!)
+        pallete.colors = colors.palleteColors
+        pallete.save()
+        delegate()
+        dismiss(animated: true, completion: nil)
+    }
     
     private func getProjects() -> [String] {
         do{
@@ -244,21 +244,25 @@ class PalleteEditor : UIViewController {
     }
 
     @objc func doneBtn() {
-        pallete.rename(newName: palleteName.filed.text!)
         palleteName.endEditing(true)
         self.exitButton.isEnabled = true
-        self.palleteName.filed.isEnabled = false
+        exitButton.imageView?.tintColor = getAppColor(color: .enable)
     }
     
     @objc func cancelBtn(){
-        palleteName.filed.text = pallete.palleteName
+        palleteName.text = pallete.palleteName
         palleteName.endEditing(true)
         self.exitButton.isEnabled = true
-        self.palleteName.filed.isEnabled = false
+        errorText.text = ""
+        exitButton.imageView?.tintColor = getAppColor(color: .enable)
     }
     
     override func viewDidLayoutSubviews() {
-        palleteEditBap.setShadow(color: UIColor(named : "shadowColor")!, radius: 4, opasity: 1)
+        palleteEditBap.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        palleteEditBap.layer.shadowPath = UIBezierPath(roundedRect: palleteEditBap.bounds, cornerRadius: 12).cgPath
+        
+        exitButton.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        exitButton.layer.shadowPath = UIBezierPath(roundedRect: exitButton.bounds, cornerRadius: 12).cgPath
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -267,29 +271,33 @@ class PalleteEditor : UIViewController {
     
     override func viewDidLoad() {
         view.backgroundColor = UIColor(named: "backgroundColor")
-
+        view.setCorners(corners: 32)
+        
         view.addSubview(colors)
         view.addSubview(exitButton)
-        view.addSubview(renameButton)
-        view.addSubview(palleteBar)
+        view.addSubview(palleteName)
+        view.addSubview(errorText)
         view.addSubview(palleteEditBap)
-
+        
         colors.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 0).isActive = true
         colors.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: 0).isActive = true
-        colors.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
+        colors.topAnchor.constraint(equalTo: palleteName.bottomAnchor, constant: 24).isActive = true
         colors.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
         
-        palleteBar.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 6).isActive = true
-        palleteBar.rightAnchor.constraint(equalTo: renameButton.leftAnchor, constant: -6).isActive = true
-        palleteBar.topAnchor.constraint(equalTo: view.topAnchor, constant: 6).isActive = true
+        palleteName.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 24).isActive = true
+        palleteName.rightAnchor.constraint(equalTo: exitButton.leftAnchor, constant: -12).isActive = true
+        palleteName.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
 
-        exitButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -6).isActive = true
-        exitButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 6).isActive = true
+        errorText.leftAnchor.constraint(equalTo: palleteName.leftAnchor,constant: 12).isActive = true
+        errorText.rightAnchor.constraint(equalTo: palleteName.rightAnchor).isActive = true
+        errorText.topAnchor.constraint(equalTo: palleteName.bottomAnchor).isActive = true
+
+        exitButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -24).isActive = true
+        exitButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
         
-        renameButton.rightAnchor.constraint(equalTo: exitButton.leftAnchor, constant: -6).isActive = true
-        renameButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 6).isActive = true
-        
-        palleteEditBap.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -8).isActive = true
-        palleteEditBap.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
+        palleteEditBap.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: 0).isActive = true
+        palleteEditBap.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 0).isActive = true
+       
+        palleteEditBap.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
     }
 }

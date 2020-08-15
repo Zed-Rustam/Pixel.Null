@@ -12,7 +12,6 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
     lazy var list : LayersTable = {
         let ls = LayersTable(project: project!,delegateFrame: nil)
         ls.translatesAutoresizingMaskIntoConstraints = false
-        ls.contentInset = UIEdgeInsets(top: 24, left: 0, bottom: 24, right: 0)
         return ls
     }()
     

@@ -38,10 +38,10 @@ class PeletteSelectController : UIViewController {
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         collection.layoutIfNeeded()
-        (collection.collectionViewLayout as! UICollectionViewFlowLayout).itemSize = CGSize(width: (view.frame.width - 36) / 3, height: (view.frame.width - 36) / 3)
+        (collection.collectionViewLayout as! UICollectionViewFlowLayout).itemSize = CGSize(width: (view.frame.width - 48) / 3, height: (view.frame.width - 48) / 3)
         
-        (collection.collectionViewLayout as! UICollectionViewFlowLayout).minimumLineSpacing = 8
-        (collection.collectionViewLayout as! UICollectionViewFlowLayout).headerReferenceSize = CGSize(width: collection.frame.width, height: 36)
+        (collection.collectionViewLayout as! UICollectionViewFlowLayout).minimumLineSpacing = 12
+        (collection.collectionViewLayout as! UICollectionViewFlowLayout).headerReferenceSize = CGSize(width: collection.frame.width, height: 64)
         collection.reloadData()
     }
 }

@@ -67,6 +67,7 @@ class PalleteWorker {
         let color = pallete.colors.remove(at: from)
         pallete.colors.insert(color , at: to)
     }
+    
     func delete(){
         try? FileManager.default.removeItem(atPath: PalleteWorker.getDocumentsDirectory().appendingPathComponent("\(palleteName).pnpalette").path)
     }

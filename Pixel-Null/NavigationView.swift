@@ -48,6 +48,7 @@ class NavigationView : UIView {
             } else {
                 img.tintColor = getAppColor(color: .disable)
             }
+            
             img.isUserInteractionEnabled = true
             img.interactions.append(UIPointerInteraction(delegate: self))
             stack.addArrangedSubview(img)
@@ -68,14 +69,7 @@ class NavigationView : UIView {
                 
         addGestureRecognizer(tapGesture)
         isOpaque = true
-    }
-    
-    func setNavigationCorners(top : Int, bottom : Int){
-        topCorners = top
-        bottomCorners = bottom
-    }
-    
-    override func layoutSubviews() {
+        
         addSubview(bgView)
         bgView.addSubview(iconStack)
         
@@ -88,8 +82,16 @@ class NavigationView : UIView {
         iconStack.rightAnchor.constraint(equalTo: bgView.rightAnchor, constant: -CGFloat(leadingOffset)).isActive = true
         iconStack.topAnchor.constraint(equalTo: bgView.topAnchor, constant: 0).isActive = true
         iconStack.bottomAnchor.constraint(equalTo: bgView.bottomAnchor, constant: -CGFloat(bottomOffset)).isActive = true
-        
+    }
+    
+    func setNavigationCorners(top : Int, bottom : Int){
+        topCorners = top
+        bottomCorners = bottom
+    }
+    
+    override func layoutSubviews() {
         bgView.layer.mask = makeShape(topCorners: topCorners, bottomCorners: bottomCorners)
+        
         
         setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
         layer.shadowPath = makeShape(topCorners: topCorners, bottomCorners: bottomCorners).path

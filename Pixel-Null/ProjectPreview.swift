@@ -32,7 +32,7 @@ func loadRandomProject() -> UIImage {
 //        return #imageLiteral(resourceName: "theme_icon_light")
 //    }
 
-    var projects: [String] = []
+    let projects: [String] = []
     
 //    for i in 0..<projs.count  {
 //        let name = projs[i].lastPathComponent

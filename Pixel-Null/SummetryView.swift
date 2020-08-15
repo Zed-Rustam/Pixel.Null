@@ -22,21 +22,25 @@ class SymmetryView : UIView {
         super.init(frame : frame)
         isOpaque = false
         isUserInteractionEnabled = true
+        overrideUserInterfaceStyle = UIUserInterfaceStyle.init(rawValue: UserDefaults.standard.integer(forKey: "themeMode"))!
     }
     
     override func draw(_ layer: CALayer, in ctx: CGContext) {
         ctx.clear(self.bounds)
-        ctx.setStrokeColor(UIColor(named: "enableColor")!.cgColor)
+        ctx.setStrokeColor(getAppColor(color: .enable).cgColor)
         ctx.setLineWidth(1)
+        
         if isVertical {
             ctx.addLines(between: [CGPoint(x: offset.x + startX * scale, y: offset.y - 16),CGPoint(x: offset.x + startX * scale, y: offset.y + project.projectSize.height * scale + 16)])
         }
+        
         if isHorizontal {
             ctx.addLines(between: [CGPoint(x: offset.x - 16, y: offset.y + startY * scale),CGPoint(x: offset.x + project.projectSize.width * scale + 16, y: offset.y + startY * scale)])
         }
+        
         ctx.strokePath()
         
-        ctx.setFillColor(UIColor(named: "enableColor")!.cgColor)
+        ctx.setFillColor(getAppColor(color: .enable).cgColor)
         if isVertical {
             ctx.addEllipse(in: CGRect(x: offset.x + startX * scale - 16, y: offset.y - 32 - 16, width: 32, height: 32))
             ctx.addEllipse(in: CGRect(x: offset.x + startX * scale - 16, y: offset.y + project.projectSize.height * scale + 16, width: 32, height: 32))
@@ -50,8 +54,9 @@ class SymmetryView : UIView {
     }
     
     override func draw(_ rect: CGRect) {
-        print("some draw")
+        
     }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

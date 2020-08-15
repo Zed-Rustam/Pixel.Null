@@ -10,6 +10,9 @@ import UIKit
 class LayersTable : UICollectionView {
     let layout = LayersTableLayout()
     
+    var renamingLayer: Int = -1
+    var renamingMode: Bool = false
+    
     weak var project : ProjectWork? = nil
     weak var frameDelegate : FrameControlUpdate? = nil
     var contextingIndex : Int? = nil
@@ -31,32 +34,17 @@ class LayersTable : UICollectionView {
         
         backgroundColor = .clear
         
-        //layer.shouldRasterize = true
-        //layer.rasterizationScale = UIScreen.main.scale
-    
         self.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
-        
-        self.contentInset = UIEdgeInsets(top: 6, left: 0, bottom: 0, right: 0)
+        self.contentInset = UIEdgeInsets(top: 24, left: 0, bottom: 24, right: 0)
     }
     
     override func tintColorDidChange() {
         super.tintColorDidChange()
-        //self.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        self.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    func resetShadow(){
-        let path = UIBezierPath()
-        
-        for i in 0..<project!.layerCount {
-            let rect = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: Int(100), height: 36 * i), cornerRadius: 8)
-            path.append(rect)
-        }
-        
-        self.layer.shadowPath = path.cgPath
     }
 }
 
@@ -72,70 +60,16 @@ extension LayersTable : UICollectionViewDataSource {
         cell.setSelected(isSelect: project!.LayerSelected == indexPath.item, anim: false)
         cell.setBgColor(color: project!.backgroundColor)
         cell.setVisible(isVisible: project!.information.frames[project!.FrameSelected].layers[indexPath.item].visible, animate: false)
-        
-        cell.setContextMenu(menu: {
-            let clone = UIAction(title: "Clone",image : UIImage(systemName: "plus.square.on.square", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, handler: {action in
-                self.project?.addAction(action: ["ToolID" : "\(Actions.layerClone.rawValue)", "frame" : "\(self.project!.FrameSelected)", "layer" : "\(self.project!.LayerSelected)"])
-                self.frameDelegate?.cloneLayer(frame: self.project!.FrameSelected, original: indexPath.item)
-            })
-        
-            let merge = UIAction(title: "Merge with bottom layer",image : UIImage(systemName: "link", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, handler: {action in
-                if self.project!.layerCount > 1 && indexPath.item != self.project!.layerCount - 1 {
-                    self.project!.addAction(action: ["ToolID" : "\(Actions.mergeLayers.rawValue)",
-                        "frame" : "\(self.project!.FrameSelected)",
-                        "layer" : "\(indexPath.item)",
-                        "firstLayerOpasity" : "\(self.project!.information.frames[self.project!.FrameSelected].layers[indexPath.item].transparent)",
-                        "secondLayerOpasity" : "\(self.project!.information.frames[self.project!.FrameSelected].layers[indexPath.item + 1].transparent)",
-                        "isFirstLayerVisible" : "\(self.project!.information.frames[self.project!.FrameSelected].layers[indexPath.item].visible)",
-                        "isSecondLayerVisible" : "\(self.project!.information.frames[self.project!.FrameSelected].layers[indexPath.item + 1].visible)",
-                    ])
-
-                    try! self.project!.getLayer(frame: self.project!.FrameSelected, layer: indexPath.item).pngData()?.write(to: self.project!.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-first-\(self.project!.getNextActionID()).png"))
-                    try! self.project!.getLayer(frame: self.project!.FrameSelected, layer: indexPath.item + 1).pngData()?.write(to: self.project!.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-second-\(self.project!.getNextActionID()).png"))
-
-                    self.project!.mergeLayers(frame: self.project!.FrameSelected, layer: indexPath.item)
-                    self.frameDelegate?.margeLayers(frame: self.project!.FrameSelected, layer: indexPath.item)
-                }
-            })
-        
-            let visible = UIAction(title: self.project!.information.frames[self.project!.FrameSelected].layers[indexPath.item].visible ? "Make unvisible" : "Make visible",image : UIImage(systemName: self.project!.information.frames[self.project!.FrameSelected].layers[indexPath.item].visible ? "eye.slash" : "eye", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, handler: {action in
-                self.frameDelegate?.changeLayerVisible(frame: self.project!.FrameSelected, layer: indexPath.item)
-                self.project!.addAction(action: ["ToolID" : "\(Actions.layerVisibleChange.rawValue)", "frame" : "\(self.project!.FrameSelected)", "layer" : "\(indexPath.item)"])
-            })
-                   
-            let delete = UIAction(title: "Delete",image : UIImage(systemName: "trash", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, discoverabilityTitle: nil, attributes: .destructive, handler: {action in
-                       
-                self.project?.addAction(action: ["ToolID" : "\(Actions.layerDelete.rawValue)","frame" : "\(self.project!.FrameSelected)", "layer" : "\(indexPath.item)", "wasVisible" : "\(self.project!.information.frames[self.project!.FrameSelected].layers[indexPath.item].visible)", "transparent" : "\(self.project!.information.frames[self.project!.FrameSelected].layers[indexPath.item].transparent)"])
-        
-                try! self.project?.getLayer(frame: self.project!.FrameSelected, layer: indexPath.item).pngData()?.write(to: self.project!.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(self.project!.getNextActionID()).png"))
-        
-                self.frameDelegate?.deleteLayer(frame: self.project!.FrameSelected, layer: indexPath.item)
-            })
-
-            let delMenu = UIMenu(title: "Delete", image: UIImage(systemName: "trash", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, options : .destructive, children: [delete])
-
-            let edit = UIMenu(title: "", options: .displayInline, children: [delMenu])
-
-                
-            var menu : [UIMenuElement] = []
-            
-            if self.project!.layerCount != 16 {
-                menu.append(clone)
-            }
-            menu.append(visible)
-            
-            if indexPath.item != self.project!.layerCount - 1 {
-                menu.append(merge)
-            }
-            
-            if self.project!.layerCount > 1 {
-                menu.append(edit)
-            }
-            
-            
-            return UIMenu(title: "", image: nil, identifier: nil, children: menu)
-        })
+        cell.delegate = self
+        cell.isVisibleName(isVisible: (renamingMode && indexPath.item != renamingLayer) ? false : true)
+        cell.setName(name: project!.information.frames[project!.FrameSelected].layers[indexPath.item].name ?? "")
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if renamingMode && renamingLayer == indexPath.item {
+            (cell as! LayersTableCell).StartRename()
+        }
     }
 }
 
@@ -149,6 +83,18 @@ extension LayersTable : UICollectionViewDelegate {
                     self.frameDelegate?.cloneLayer(frame: self.project!.FrameSelected, original: indexPath.item)
                 })
 
+                let rename = UIAction(title: "Rename",image : UIImage(systemName: "pencil", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, handler: {action in
+                    
+                    self.frameDelegate?.onRenameLayerModeStart(isStart: true)
+                    self.renamingLayer = indexPath.item
+                    self.renamingMode = true
+                    self.reloadData()
+                    
+                    self.isUserInteractionEnabled = false
+
+                })
+
+                
                 let merge = UIAction(title: "Merge with bottom layer",image : UIImage(systemName: "link", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, handler: {action in
                     if self.project!.layerCount > 1 && indexPath.item != self.project!.layerCount - 1 {
                         self.project!.addAction(action: ["ToolID" : "\(Actions.mergeLayers.rawValue)",
@@ -167,11 +113,13 @@ extension LayersTable : UICollectionViewDelegate {
                         self.frameDelegate?.margeLayers(frame: self.project!.FrameSelected, layer: indexPath.item)
                     }
                 })
-
+                
                 let visible = UIAction(title: self.project!.information.frames[self.project!.FrameSelected].layers[indexPath.item].visible ? "Make unvisible" : "Make visible",image : UIImage(systemName: self.project!.information.frames[self.project!.FrameSelected].layers[indexPath.item].visible ? "eye.slash" : "eye", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, handler: {action in
                     self.frameDelegate?.changeLayerVisible(frame: self.project!.FrameSelected, layer: indexPath.item)
                     self.project!.addAction(action: ["ToolID" : "\(Actions.layerVisibleChange.rawValue)", "frame" : "\(self.project!.FrameSelected)", "layer" : "\(indexPath.item)"])
                 })
+                
+                
 
                 let delete = UIAction(title: "Delete",image : UIImage(systemName: "trash", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, discoverabilityTitle: nil, attributes: .destructive, handler: {action in
 
@@ -193,6 +141,7 @@ extension LayersTable : UICollectionViewDelegate {
                     menu.append(clone)
                 }
                 menu.append(visible)
+                menu.append(rename)
 
                 if indexPath.item != self.project!.layerCount - 1 {
                     menu.append(merge)
@@ -201,7 +150,6 @@ extension LayersTable : UICollectionViewDelegate {
                 if self.project!.layerCount > 1 {
                     menu.append(edit)
                 }
-
 
                 return UIMenu(title: "", image: nil, identifier: nil, children: menu)
             }
@@ -350,4 +298,40 @@ class LayersTableLayout : UICollectionViewLayout {
     override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
         return attributes[indexPath.item]
     }
+}
+
+extension LayersTable: LayersTableDelegate{
+    func changeNamelayer() {
+        print("yes")
+        //self.selectItem(at: IndexPath(row: renamingLayer, section: 0), animated: false, scrollPosition: .top)
+    }
+    func finishRenaming(newName: String){
+        
+        project!.addAction(action: ["ToolID":"\(Actions.renameLayer.rawValue)","frame" : "\(project!.FrameSelected)","layer" : "\(renamingLayer)", "oldName" : project!.information.frames[project!.FrameSelected].layers[renamingLayer].name ?? "", "newName" : newName])
+
+        project!.renameLayer(frame: project!.FrameSelected, layer: renamingLayer, newName: newName)
+
+        renamingLayer = -1
+        renamingMode = false
+        reloadData()
+        self.frameDelegate?.onRenameLayerModeStart(isStart: false)
+        self.contentInset.bottom = 24
+        self.isUserInteractionEnabled = true
+    }
+    
+    func onCancelRenaming() {
+        renamingLayer = -1
+        renamingMode = false
+        reloadData()
+        self.frameDelegate?.onRenameLayerModeStart(isStart: false)
+        self.contentInset.bottom = 24
+        self.isUserInteractionEnabled = true
+    }
+}
+
+
+protocol LayersTableDelegate: class{
+    func changeNamelayer()
+    func finishRenaming(newName: String)
+    func onCancelRenaming()
 }

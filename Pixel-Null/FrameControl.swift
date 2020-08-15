@@ -13,6 +13,13 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
         
     }
     
+    func onRenameLayerModeStart(isStart: Bool){
+        UIView.animate(withDuration: 0.2, animations: {
+            self.frames.alpha = isStart ? 0 : 1
+            self.frames.transform = CGAffineTransform(translationX: 0, y: isStart ? -self.frames.frame.size.height : 0)
+            self.layers.transform = CGAffineTransform(translationX: 0, y: isStart ? -self.frames.frame.size.height : 0)
+        })
+    }
         
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -278,8 +285,22 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
         
         layers.list.frameDelegate = self
         
-        //view.layer.shouldRasterize = true
-        //view.layer.rasterizationScale = UIScreen.main.scale
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow),
+            name: UIResponder.keyboardDidShowNotification,
+            object: nil
+        )
+    }
+    
+    @objc func keyboardWillShow(_ notification: Notification){
+        print(view.safeAreaInsets.top)        
+        let keyboardsize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue.height
+        
+        layers.list.contentInset.bottom = keyboardsize - frames.bounds.size.height + 24 - UIApplication.shared.windows[0].safeAreaInsets.bottom
+
+        layers.list.selectItem(at: IndexPath(row: layers.list.renamingLayer, section: 0), animated: true, scrollPosition: .top)
+
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -308,5 +329,6 @@ protocol FrameControlUpdate : class {
     func updatePreview()
     func changeLayerVisible(frame : Int,layer : Int)
     func margeLayers(frame : Int,layer : Int)
+    func onRenameLayerModeStart(isStart: Bool)
 }
 

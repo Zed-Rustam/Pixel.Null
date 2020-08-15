@@ -103,7 +103,7 @@ class ProjectImportController: UIViewController {
                 name.removeLast(4)
                 name += ".pnart"
                 if i.startAccessingSecurityScopedResource() {
-                    ProjectWork(projectName: name, image: UIImage(data: try! Data(contentsOf: i))!)
+                    ProjectWork(projectName: name, image: UIImage(data: try! Data(contentsOf: i))!).save()
                     self.gallery!.projectAdded(name: name)
                     i.stopAccessingSecurityScopedResource()
                 }
@@ -112,10 +112,12 @@ class ProjectImportController: UIViewController {
                 name.removeLast(5)
                 name += ".pnart"
                 if i.startAccessingSecurityScopedResource() {
-                    ProjectWork(projectName: name, image: UIImage(data: try! Data(contentsOf: i))!)
+                    ProjectWork(projectName: name, image: UIImage(data: try! Data(contentsOf: i))!).save()
                     self.gallery!.projectAdded(name: name)
                     i.stopAccessingSecurityScopedResource()
                 }
+            } else if i.lastPathComponent.hasSuffix(".pnart") {
+                
             }
         }
     }

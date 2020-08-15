@@ -211,13 +211,15 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
     }
     
     init(frame: CGRect, proj : ProjectWork) {
-        
+
         project = proj
         ActionLayer = UIImage(size : project.projectSize)
         selectionLayer = proj.loadSelection()
         
         super.init(frame: frame)
         
+        overrideUserInterfaceStyle = UIUserInterfaceStyle.init(rawValue: UserDefaults.standard.integer(forKey: "themeMode"))!
+
         let startScale = frame.width / project.projectSize.width
         scale = startScale
         k = project.projectSize.height / project.projectSize.width

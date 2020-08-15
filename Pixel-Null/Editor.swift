@@ -22,7 +22,7 @@ class Editor : UIViewController {
         
         return tb
     }()
-    
+        
     lazy var transformSize : UIView = {
         let mainView = UIView()
         mainView.translatesAutoresizingMaskIntoConstraints = false
@@ -99,6 +99,8 @@ class Editor : UIViewController {
     }
     
     override func viewDidLoad() {
+        overrideUserInterfaceStyle = UIUserInterfaceStyle.init(rawValue: UserDefaults.standard.integer(forKey: "themeMode"))!
+        
         control = ProjectControl(frame:.zero, proj: project)
         
         control.translatesAutoresizingMaskIntoConstraints = false
@@ -156,6 +158,8 @@ class Editor : UIViewController {
         
         view.backgroundColor = getAppColor(color: .background)
         showTransform(isShow: false)
+        
+
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -235,9 +239,9 @@ extension Editor : FrameControlDelegate{
         }
         pallete.modalPresentationStyle = .formSheet
 
-        self.show(pallete, sender: nil)
+        self.show(pallete, sender: self)
     }
-
+    
     func changeMainColor(color: UIColor) {
         canvas.selectorColor = color
         toolBar.updateSelectedColor(newColor: color)

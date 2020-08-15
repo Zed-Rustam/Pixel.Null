@@ -22,10 +22,12 @@ class SelectPaletteCollection : UICollectionView {
         
         register(palettesTitle.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "header")
         
+        layout.headerReferenceSize = CGSize(width: self.frame.size.width, height: 64)
+        
         delegate = self
         dataSource = self
         backgroundColor = .clear
-        contentInset = UIEdgeInsets(top: 24, left: 8, bottom: 0, right: 8)
+        contentInset = UIEdgeInsets(top: 24, left: 12, bottom: 0, right: 12)
         
         let f = FileManager()
         do {
@@ -45,11 +47,6 @@ class SelectPaletteCollection : UICollectionView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
-    }
 }
 
 extension SelectPaletteCollection : UICollectionViewDataSource {
@@ -96,7 +93,6 @@ extension SelectPaletteCollection : UICollectionViewDataSource {
         }
         fatalError()
     }
-
 }
 
 extension SelectPaletteCollection : UICollectionViewDelegate {
@@ -128,7 +124,8 @@ extension SelectPaletteCollection : UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: self.frame.size.width, height: 48)
+        print("set size")
+        return CGSize(width: self.frame.size.width, height: 64)
     }
 }
 
@@ -190,6 +187,11 @@ class SelectPaletteCell : UICollectionViewCell {
         titleBg.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8).isActive = true
         titleBg.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -8).isActive = true
         titleBg.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8).isActive = true
+    }
+    
+    override func layoutSubviews() {
+        cellBg.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
+        cellBg.layer.shadowPath = UIBezierPath(roundedRect: cellBg.bounds, cornerRadius: 12).cgPath
     }
     
     
