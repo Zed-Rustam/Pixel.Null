@@ -227,7 +227,7 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
                 self.layers.list.reloadItems(at: [IndexPath(item: layer, section: 0)])
             },completion: {isEnd in
                 if isEnd {
-                    self.layers.list.selectItem(at: IndexPath(item: self.project.LayerSelected, section: 0), animated: true, scrollPosition: .top)
+                    self.layers.list.selectItem(at: IndexPath(item: self.project.LayerSelected, section: 0), animated: true, scrollPosition: .left)
                 }
             })
         })
@@ -259,6 +259,7 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
     override func viewDidLoad() {
         self.view.backgroundColor = getAppColor(color: .background)
         view.setCorners(corners: 32)
+        view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         
         view.addSubview(frames)
         view.addSubview(layers)
@@ -277,21 +278,6 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
         
         layers.list.frameDelegate = self
         
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(keyboardWillShow),
-            name: UIResponder.keyboardDidShowNotification,
-            object: nil
-        )
-    }
-    
-    @objc func keyboardWillShow(_ notification: Notification){
-        print(view.safeAreaInsets.top)
-        let keyboardsize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue.height
-        
-        layers.list.contentInset.bottom = keyboardsize - frames.bounds.size.height + 24 - UIApplication.shared.windows[0].safeAreaInsets.bottom
-
-        layers.list.selectItem(at: IndexPath(row: layers.list.renamingLayer, section: 0), animated: true, scrollPosition: .top)
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {

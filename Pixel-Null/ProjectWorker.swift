@@ -979,6 +979,9 @@ class ProjectWork{
                 
             case .renameLayer:
                 renameLayer(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!, layer: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!, newName: projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["oldName"]!)
+               
+            case .allFramesDelayChenge:
+                changeDelayForAllFrames(delays: stringToArray(str: projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["oldDelays"]!))
                 
             default:
                 break
@@ -993,6 +996,16 @@ class ProjectWork{
     
     //MARK: ReDo
     
+    
+    private func stringToArray(str: String) -> [Int]{
+        let nums = str.split(separator: " ")
+        var array: [Int] = []
+        for i in nums {
+            array.append(Int(i)!)
+        }
+        
+        return array
+    }
     
     func reDo(delegate : FrameControlDelegate){
         if projectInfo.actionList.lastActiveAction < projectInfo.actionList.actions.count - 1 {
@@ -1355,6 +1368,8 @@ class ProjectWork{
             case .renameLayer:
                 renameLayer(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!, layer: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!, newName: projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["newName"]!)
                 
+            case .allFramesDelayChenge:
+                changeDelayForAllFrames(delay: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["newDelay"]!)!)
             default:
                 break
             }
@@ -1413,8 +1428,6 @@ class ProjectWork{
         case .mergeLayers:
             try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-first-\(getActionID(action: projectInfo.actionList.actions.count - 1)).png"))
             try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-second-\(getActionID(action: projectInfo.actionList.actions.count - 1)).png"))
-        case .renameLayer:
-           try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: projectInfo.actionList.actions.count - 1))"))
         default:
             break
         }
@@ -1444,8 +1457,6 @@ class ProjectWork{
         case .mergeLayers:
             try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-first-\(getActionID(action: 0)).png"))
             try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-second-\(getActionID(action: 0)).png"))
-        case .renameLayer:
-           try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: 0))"))
         default:
             break
         }
@@ -1462,6 +1473,18 @@ class ProjectWork{
             return (Int(projectInfo.actionList.actions[projectInfo.actionList.actions.count - 1]["ActionID"]!)!) % projectInfo.actionList.maxCount
         } else {
             return 0
+        }
+    }
+    
+    func changeDelayForAllFrames(delay: Int){
+        for i in 0..<projectInfo.frames.count {
+            projectInfo.frames[i].delay = delay
+        }
+    }
+    
+    func changeDelayForAllFrames(delays : [Int]){
+        for i in 0..<projectInfo.frames.count {
+            projectInfo.frames[i].delay = delays[i]
         }
     }
     
@@ -1620,5 +1643,6 @@ enum Actions : Int {
     case projectFlipX = 18//done
     case projectFlipY = 19//done
     case renameLayer = 20//done
+    case allFramesDelayChenge = 21
 }
 

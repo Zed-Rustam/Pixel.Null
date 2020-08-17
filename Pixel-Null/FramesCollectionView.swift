@@ -76,6 +76,7 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
         btn.delegate = { [unowned self] in
             let frameSettings = FrameSettings()
             frameSettings.modalPresentationStyle = .popover
+            frameSettings.setInfo(project: self.project!)
             
             if let popover = frameSettings.popoverPresentationController {
                 popover.sourceView = self

@@ -27,7 +27,7 @@ class SelectPaletteCollection : UICollectionView {
         delegate = self
         dataSource = self
         backgroundColor = .clear
-        contentInset = UIEdgeInsets(top: 24, left: 12, bottom: 0, right: 12)
+        contentInset = UIEdgeInsets(top: 12, left: 12, bottom: 0, right: 12)
         
         let f = FileManager()
         do {

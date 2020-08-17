@@ -73,19 +73,43 @@ class ActionInfo: UIView {
         switch Actions.init(rawValue: Int(action["ToolID"]!)!) {
         case .backgroundChange:
             title.text! += "Background color change"
-            info.text = "Background color change on color #FFFFFFFF"
+            info.text = "Background color change on color \(isRedo ? action["now"]! : action["last"]!)"
             
         case .frameAdd:
             title.text! += "Frame added"
             info.text = (isRedo ? "Add new" : "Delete ") + "frame on position \(Int(action["frame"]!)! + 1)"
             
-        case .layerAdd:
-            title.text! += "Layer added"
-            info.text = (isRedo ? "Add new" : "Delete ") + "layer if frame \(Int(action["frame"]!)! + 1) on position \(Int(action["layer"]!)! + 1)"
-            
         case .frameReplace:
             title.text! += "Frame replaced"
             info.text = "Replaced frame from position \(isRedo ? Int(action["from"]!)! + 1 : Int(action["to"]!)! + 1) to \(isRedo ? Int(action["to"]!)! + 1 : Int(action["from"]!)! + 1)"
+            
+        case .frameClone:
+            title.text! += "Frame cloned"
+            info.text = "Frame \(Int(action["frame"]!)! + 1) cloned"
+            
+        case .frameDelete:
+            title.text! += "Frame Deleted"
+            info.text = "Frame \(Int(action["frame"]!)! + 1) deleted"
+            
+        case .selectionChange:
+            title.text! += "Selection"
+            info.text = "Selection changed"
+            
+        case .transform:
+            title.text! += "Transform"
+            info.text = "Project was transformation"
+            
+        case .projectFlipX:
+            title.text! += "Project flip"
+            info.text = "Project fliped in X directory"
+            
+        case .projectFlipY:
+            title.text! += "Project flip"
+            info.text = "Project fliped in Y directory"
+            
+        case .layerAdd:
+            title.text! += "Layer added"
+            info.text = (isRedo ? "Add new" : "Delete ") + "layer if frame \(Int(action["frame"]!)! + 1) on position \(Int(action["layer"]!)! + 1)"
             
         case .layerReplace:
             title.text! += "Layer replaced"
@@ -98,6 +122,22 @@ class ActionInfo: UIView {
         case .layerVisibleChange:
             title.text! += "Layer visibility change"
             info.text = "layer \(Int(action["layer"]!)! + 1) in frame \(Int(action["frame"]!)! + 1) become \(!project.information.frames[Int(action["frame"]!)!].layers[Int(action["layer"]!)!].visible ? "visible" : "unvisible")"
+            
+        case .resizeProject:
+            title.text! += "Project resized"
+            info.text = "project resized to \(isRedo ? action["newSizeX"]! : action["lastSizeX"]!)x\(isRedo ? action["newSizeY"]! : action["lastSizeY"]!)"
+            
+        case .mergeLayers:
+            title.text! += "Layers merge"
+            info.text = "layer \(Int(action["layer"]!)! + 1) merge with next layer"
+            
+        case .changeFrameDelay:
+            title.text! += "Frame delay changed"
+            info.text = "changed delay for frame \(Int(action["frame"]!)! + 1) to \(Int(action[isRedo ? "to" : "from"]!)!)"
+            
+        case .allFramesDelayChenge:
+            title.text! += "Change all frame's delay"
+            info.text = "Delay for all frames is \(Int(action["newDelay"]!)!)"
             
         default:
             title.text! += "Uncnown action"

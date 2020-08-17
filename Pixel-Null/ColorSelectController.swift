@@ -161,15 +161,11 @@ class ColorDialogController: UIViewController {
     }
     
     override func viewDidLayoutSubviews() {
-        navigation.setShadow(color: .clear, radius: 0, opasity: 0)
-        
         colorsView.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
         colorsView.layer.shadowPath = UIBezierPath(roundedRect: colorsView.bounds, cornerRadius: 12).cgPath
         
         selectButton.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
         selectButton.layer.shadowPath = UIBezierPath(roundedRect: selectButton.bounds, cornerRadius: 12).cgPath
-        
-        
     }
     
     @objc func onPress(){

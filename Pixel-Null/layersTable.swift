@@ -36,6 +36,22 @@ class LayersTable : UICollectionView {
         
         self.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
         self.contentInset = UIEdgeInsets(top: 24, left: 0, bottom: 24, right: 0)
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow),
+            name: UIResponder.keyboardDidShowNotification,
+            object: nil
+        )
+    }
+    
+    @objc func keyboardWillShow(_ notification: Notification){
+        let keyboardsize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue.height
+        
+        if renamingMode {
+        contentInset.bottom = keyboardsize - 118 + 24 - UIApplication.shared.windows[0].safeAreaInsets.bottom
+        selectItem(at: IndexPath(row: renamingLayer, section: 0), animated: true, scrollPosition: .top)
+        }
     }
     
     override func tintColorDidChange() {
@@ -303,8 +319,8 @@ class LayersTableLayout : UICollectionViewLayout {
 extension LayersTable: LayersTableDelegate{
     func changeNamelayer() {
         print("yes")
-        //self.selectItem(at: IndexPath(row: renamingLayer, section: 0), animated: false, scrollPosition: .top)
     }
+    
     func finishRenaming(newName: String){
         
         project!.addAction(action: ["ToolID":"\(Actions.renameLayer.rawValue)","frame" : "\(project!.FrameSelected)","layer" : "\(renamingLayer)", "oldName" : project!.information.frames[project!.FrameSelected].layers[renamingLayer].name ?? "", "newName" : newName])
@@ -313,7 +329,10 @@ extension LayersTable: LayersTableDelegate{
 
         renamingLayer = -1
         renamingMode = false
+        
         reloadData()
+        selectItem(at: IndexPath(row: project!.LayerSelected, section: 0), animated: false, scrollPosition: .left)
+
         self.frameDelegate?.onRenameLayerModeStart(isStart: false)
         self.contentInset.bottom = 24
         self.isUserInteractionEnabled = true
@@ -322,7 +341,10 @@ extension LayersTable: LayersTableDelegate{
     func onCancelRenaming() {
         renamingLayer = -1
         renamingMode = false
+        
         reloadData()
+        selectItem(at: IndexPath(row: project!.LayerSelected, section: 0), animated: false, scrollPosition: .left)
+
         self.frameDelegate?.onRenameLayerModeStart(isStart: false)
         self.contentInset.bottom = 24
         self.isUserInteractionEnabled = true
