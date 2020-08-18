@@ -311,19 +311,23 @@ class ToolButton : UICollectionViewCell {
                 actionsButton.imageView?.tintColor = getAppColor(color: .enable)
                 
                 actionsButton.menu = UIMenu(title: "select actions", image: nil, identifier: nil, options: .destructive, children: [
+                    UIAction(title: "delete", image: UIImage(systemName: "trash",withConfiguration: UIImage.SymbolConfiguration.init(weight: .bold)), identifier: nil, discoverabilityTitle: nil, attributes: .destructive, handler: {action in
+                        editor.canvas.deleteSelect()
+                    }),
+                    UIAction(title: "clear", image: UIImage(systemName: "clear",withConfiguration: UIImage.SymbolConfiguration.init(weight: .bold)), identifier: nil, discoverabilityTitle: nil, handler: {action in
+                        editor.canvas.clearSelect()
+                    }),
                     UIAction(title: "copy", image: UIImage(systemName: "doc.on.doc"), identifier: nil, discoverabilityTitle: nil, handler: {action in
                         editor.saveSelection()
                     }),
-                    
                     UIAction(title: "paste", image: UIImage(systemName: "doc.on.clipboard"), identifier: nil, discoverabilityTitle: nil, handler: {action in
                         editor.startTransformWithImage()
                     }),
-                    
                     UIAction(title: "cut", image: UIImage(systemName: "scissors"), identifier: nil, discoverabilityTitle: nil, handler: {action in
                         editor.saveSelection()
                         editor.canvas.deleteSelect()
                     }),
-                    UIAction(title: "reverse", image: #imageLiteral(resourceName: "reverse_selection_icon"), identifier: nil, discoverabilityTitle: nil, handler: {action in
+                    UIAction(title: "reverse", image: UIImage(systemName: "arrow.right.arrow.left.square", withConfiguration: UIImage.SymbolConfiguration.init(weight: .bold)), identifier: nil, discoverabilityTitle: nil, handler: {action in
                         editor.canvas.reverseSelection()
                     })
                 ])
@@ -359,24 +363,6 @@ class ToolButton : UICollectionViewCell {
                     })
                 ])
                 
-                let clear = CircleButton(icon: #imageLiteral(resourceName: "selection_clear_icon"), frame: .zero)
-                clear.widthAnchor.constraint(equalToConstant: 36).isActive = true
-                clear.heightAnchor.constraint(equalToConstant: 36).isActive = true
-                clear.setShadowColor(color: .clear)
-                
-                clear.delegate = {
-                    editor.canvas.clearSelect()
-                }
-                
-                let delete = CircleButton(icon: #imageLiteral(resourceName: "selection_delete_icon"), frame: .zero)
-                delete.setIconColor(color: UIColor(named: "redColor")!)
-                delete.widthAnchor.constraint(equalToConstant: 36).isActive = true
-                delete.heightAnchor.constraint(equalToConstant: 36).isActive = true
-                delete.setShadowColor(color: .clear)
-                delete.delegate = {
-                    editor.canvas.deleteSelect()
-                }
-                
                 let selectMode = SegmentSelector(imgs: [#imageLiteral(resourceName: "selector_add_mode_icon"),#imageLiteral(resourceName: "selector_remove_mode_icon")])
                 
                 switch editor.canvas.selection.mode {
@@ -390,7 +376,7 @@ class ToolButton : UICollectionViewCell {
                     editor.canvas.selection.mode = select == 0 ? .add : .delete
                 }
                 
-                self.barDelegate.updateButtons(btns: [actionsButton,clear,delete,selectMode,selectType])
+                self.barDelegate.updateButtons(btns: [actionsButton,selectMode,selectType])
                 
                 self.button.setIconColor(color: UIColor(named: "selectColor")!)
                 self.button.setbgColor(color: getAppColor(color: .select).withAlphaComponent(0.1))

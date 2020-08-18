@@ -19,6 +19,8 @@ class ProjectControl : UIView, UIGestureRecognizerDelegate {
         return FramesView(frame: .zero, proj: project)
     }()
     
+    var ControlHideDelegate: (Bool)->() = {_ in}
+    
     lazy private var swipeUpGesture : UISwipeGestureRecognizer = {
         let swipe = UISwipeGestureRecognizer(target: self, action: #selector(swipe(sender:)))
         swipe.delaysTouchesBegan = false
@@ -76,6 +78,7 @@ class ProjectControl : UIView, UIGestureRecognizerDelegate {
     @objc private func swipe(sender : UISwipeGestureRecognizer) {
         if sender.direction == .up && !isHide {
             isHide = true
+            ControlHideDelegate(isHide)
             UIView.animate(withDuration: 0.25, animations: {
                 self.frame.origin.y = -52
                 self.frames.alpha = 0
@@ -83,6 +86,7 @@ class ProjectControl : UIView, UIGestureRecognizerDelegate {
         }
         if sender.direction == .down && isHide {
             isHide = false
+            ControlHideDelegate(isHide)
             UIView.animate(withDuration: 0.25, animations: {
                 self.frame.origin.y = 0
                 self.frames.alpha = 1

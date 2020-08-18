@@ -143,13 +143,9 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
     lazy var shapeTool = ShapeTool(editorDelegate: self)
     lazy var gradientTool = GradientTool(editorDelegate: self)
     
-    //var pen = Pencil()
     var move = Move()
-    //var erase = Erase()
-    //var gradient = Gradient()
     var fill = Fill()
     var selection = Selection()
-    //var square = Square()
 
     var selectedTool : Int = 0
     
@@ -358,6 +354,13 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
         actionImage.image = ActionLayer
         selectionLayer = move.drawSelectionOn(position: transformView.position, rotation: transformView.Radians(CGFloat(transformView.angle)), rotateCenter: CGPoint(x: transformView.lastSize.width, y: transformView.lastSize.height))
         selectionImage.image = selectionLayer
+        
+        if flipY {
+            transformView.isFlipY.toggle()
+        }
+        if flipX {
+            transformView.isFlipX.toggle()
+        }
     }
     
     func selectTool(newTool : Int){

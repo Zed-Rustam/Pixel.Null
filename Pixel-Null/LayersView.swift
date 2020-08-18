@@ -26,9 +26,6 @@ class LayersView : UIView {
         
         btn.addTarget(self, action: #selector(onPress), for: .touchUpInside)
         
-        btn.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
-        btn.layer.shadowPath = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 36, height: 36), cornerRadius: 8).cgPath
-        
         return btn
     }()
     
@@ -73,6 +70,17 @@ class LayersView : UIView {
         array.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
 
         translatesAutoresizingMaskIntoConstraints = false
+        
+    }
+    
+    override func layoutSubviews() {
+        settingsButton.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        settingsButton.layer.shadowPath = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 36, height: 36), cornerRadius: 8).cgPath
+    }
+    
+    override func tintColorDidChange() {
+        settingsButton.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        settingsButton.layer.shadowPath = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 36, height: 36), cornerRadius: 8).cgPath
     }
     
     required init?(coder: NSCoder) {

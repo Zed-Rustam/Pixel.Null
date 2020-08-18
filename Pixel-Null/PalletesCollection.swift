@@ -8,24 +8,47 @@
 
 import UIKit
 
-class PalleteCollection : UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, GalleryDelegate {
+class PalleteCollection : UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+    
+    lazy private var mainTitle: UILabel = {
+        let lbl = UILabel()
+        lbl.textColor = getAppColor(color: .enable)
+        lbl.text = "Palettes"
+        lbl.font = UIFont(name: "Rubik-Bold", size: 42)
+        lbl.textAlignment = .left
+        lbl.translatesAutoresizingMaskIntoConstraints = false
+        lbl.heightAnchor.constraint(equalToConstant: 48).isActive = true
+        return lbl
+    }()
     
     lazy private var collection : UICollectionView = {
         let col = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
-        col.register(PalleteCell.self, forCellWithReuseIdentifier: "Pallete")
-        col.register(GalleryTitleCell.self, forCellWithReuseIdentifier: "Title")
+        col.register(PaletteGroup.self, forCellWithReuseIdentifier: "Pallete")
+        col.register(PalettesSectionTitle.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Title")
+
         col.delegate = self
         col.dataSource = self
         col.backgroundColor = .clear
-        col.contentInsetAdjustmentBehavior = .never
+        
+        
+        //col.contentInsetAdjustmentBehavior = .never
         col.translatesAutoresizingMaskIntoConstraints = false
         col.isUserInteractionEnabled = true
-        //col.layer.shouldRasterize = true
-        //col.layer.rasterizationScale = UIScreen.main.scale
+        
+        col.contentInset = UIEdgeInsets(top: 48, left: 12, bottom: 0, right: 12)
+
+        col.addSubview(mainTitle)
+        
+        mainTitle.topAnchor.constraint(equalTo: col.topAnchor, constant: 0).isActive = true
+        mainTitle.leftAnchor.constraint(equalTo: col.leftAnchor, constant: 0).isActive = true
+        mainTitle.rightAnchor.constraint(equalTo: col.rightAnchor, constant: 0).isActive = true
+        mainTitle.transform = CGAffineTransform(translationX: 0, y: -36)
+
+        
         return col
     }()
-    private var palletes : [Any] = []
-    private var layout : GalleryLayout!
+    private var palletes : [PalleteWorker] = []
+    private var layout: UICollectionViewFlowLayout!
     
     lazy private var addButton: UIButton = {
         let btn = UIButton()
@@ -51,49 +74,55 @@ class PalleteCollection : UIViewController, UICollectionViewDelegate, UICollecti
         create.delegate = self
         show(create, sender: self)
     }
-    
-    func getItemHeight(indexItem: IndexPath) -> Double {
-        if (palletes[indexItem.item] is PalleteWorker){
-            return Double(Pallete.getKoef(count: (palletes[indexItem.item] as! PalleteWorker).colors.count))
-        } else {
-            return 0.0
-        }
-    }
-    
-    func getItemClass(indexItem: IndexPath) -> String {
-        if (palletes[indexItem.item] is PalleteWorker){
-            return "Project"
-        } else {
-            return "Title"
-        }
-    }
  
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return palletes.count
+        switch section {
+        case 0:
+            return palletes.count
+        default:
+            return 1
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if(palletes[indexPath.item] is String){
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Title", for: indexPath) as! GalleryTitleCell
-            cell.setTitle(title : palletes[indexPath.item] as! String)
+        switch indexPath.section {
+        case 0:
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Pallete", for: indexPath) as! PaletteGroup
+            cell.setPalette(newPal: palletes[indexPath.item])
+            cell.delegate = self
+            cell.isSystem = false
             return cell
-        } else if (palletes[indexPath.item] is PalleteWorker){
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Pallete", for: indexPath) as! PalleteCell
-            cell.setPallete(pallete: palletes[indexPath.item] as! PalleteWorker)
-            cell.palleteView.delegate = self
+        default:
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Pallete", for: indexPath) as! PaletteGroup
+            cell.setPalette(newPal: PalleteWorker(name:"Default pallete", colors: try! JSONDecoder().decode(Pallete.self, from: NSDataAsset(name:"Default pallete")!.data).colors, isSave: false))
+            cell.delegate = self
+            cell.isSystem = true
             return cell
         }
-        return UICollectionViewCell()
+    }
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 2
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        
+        print("im here")
+        
+        let title = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Title", for: indexPath) as! PalettesSectionTitle
+        
+        title.setText(text: indexPath.section == 0 ? "User's" : "System")
+        
+        //title.frame = CGRect(x: 0, y: 0, width: 100, height: 48)
+        
+        return title
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let cell = collectionView.cellForItem(at: indexPath) as? PalleteCell {
-            cell.palleteView.delegate?.palleteOpen(item: palletes[indexPath.item] as! PalleteWorker)
-        }
+        self.palleteOpen(item: palletes[indexPath.item])
     }
     
     override func viewDidLoad() {
-        palletes.append(NSLocalizedString("Palettes", comment: ""))
         let f = FileManager()
         do {
             let projs = try f.contentsOfDirectory(at: PalleteWorker.getDocumentsDirectory(), includingPropertiesForKeys: nil)
@@ -107,13 +136,12 @@ class PalleteCollection : UIViewController, UICollectionViewDelegate, UICollecti
             }
         } catch {}
         
-        palletes.append(NSLocalizedString("System", comment: ""))
-        
-        
-        layout = GalleryLayout()
-        layout.columnsCount = 3
-        layout.bottomOffset = 72 + Double(UIApplication.shared.windows[0].safeAreaInsets.bottom / 2) + 4
-        layout.delegate = self
+        layout = UICollectionViewFlowLayout()
+        layout.minimumLineSpacing = 12
+        layout.minimumInteritemSpacing = 12
+        let itemSize = Int((view.frame.size.width - 48) / 3)
+        layout.itemSize = CGSize(width: itemSize, height: itemSize + 24)
+        layout.headerReferenceSize = CGSize(width: view.frame.size.width - 24, height: 72)
         
         view.backgroundColor = UIColor(named: "backgroundColor")
         
@@ -170,7 +198,8 @@ extension PalleteCollection : PalleteGalleryDelegate {
                 break
             }
             
-        PalleteWorker.clone(original: "\(pallete.palleteName).pnpalette", clone: "\(pallete.palleteName)(\(index)).pnpalette")
+        PalleteWorker(name: "\(pallete.palleteName)(\(index))", colors: pallete.colors).save()
+        
         let proj = PalleteWorker(fileName: "\(pallete.palleteName)(\(index))")
             
         palletes.append(proj)
@@ -184,27 +213,15 @@ extension PalleteCollection : PalleteGalleryDelegate {
             pallete.delete()
             
             for1 : for i in 0..<palletes.count {
-                if palletes[i] is PalleteWorker {
-                    if (palletes[i] as! PalleteWorker).palleteName == pallete.palleteName {
-                        
-                        let cell = self.collection.cellForItem(at: IndexPath(item: i, section: 0)) as! PalleteCell
-                        
-                        self.palletes.remove(at: i)
+                if palletes[i].palleteName == pallete.palleteName {
+                    
+                    self.palletes.remove(at: i)
 
-                        UIView.animate(withDuration: 0.25, delay: 0, animations: {
-                            cell.palleteView.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
-                            cell.palleteView.alpha = 0
-                        }, completion: {isEnd in
-                            self.collection.performBatchUpdates({
-                                self.collection.deleteItems(at: [IndexPath(item: i, section: 0)])
-                            },completion: {isEnd in
-                                cell.palleteView.transform = CGAffineTransform(scaleX: 1, y: 1)
-                                cell.palleteView.alpha = 1
-                            })
-                            
-                        })
-                        break for1
-                    }
+                    self.collection.performBatchUpdates({
+                        self.collection.deleteItems(at: [IndexPath(item: i, section: 0)])
+                    },completion: nil)
+                    
+                    break for1
                 }
             }
        }

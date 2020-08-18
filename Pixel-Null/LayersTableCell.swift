@@ -44,7 +44,7 @@ class LayersTableCell : UICollectionViewCell {
         view.setCorners(corners: 8,needMask: true)
         return view
     }()
-        
+    
     lazy private var previewImage : UIImageView = {
         let image = UIImageView()
         image.layer.magnificationFilter = .nearest
@@ -108,11 +108,9 @@ class LayersTableCell : UICollectionViewCell {
         background.isUserInteractionEnabled = true
     }
     
-     func StartRename() {
-        print("press")
+    func StartRename() {
         layerName.isEnabled = true
         layerName.becomeFirstResponder()
-        print("nowFrame: \(frame.origin)")
     }
     
     @objc func onRenameDone(){

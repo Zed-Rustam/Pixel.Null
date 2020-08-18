@@ -51,6 +51,8 @@ class ToolBar : UIView {
         
         let bgv = UIView()
         bgv.setCorners(corners: 16, needMask: false, curveType: .continuous)
+        bgv.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        
         bgv.backgroundColor =  UIColor(named: "backgroundColor")
         bgv.translatesAutoresizingMaskIntoConstraints = false
         

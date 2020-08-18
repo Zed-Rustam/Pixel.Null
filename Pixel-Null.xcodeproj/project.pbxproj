@@ -125,6 +125,8 @@
 		95C850232468620900366EA2 /* EditorSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C850222468620900366EA2 /* EditorSettingsController.swift */; };
 		95DC554E23EC9D2A0011FA2A /* ColorSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95DC554D23EC9D2A0011FA2A /* ColorSelector.swift */; };
 		95DC555023EDF8280011FA2A /* CIrcleColorSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95DC554F23EDF8280011FA2A /* CIrcleColorSlider.swift */; };
+		95DFED5D24EC1DCA00C6009A /* PaletteGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95DFED5C24EC1DCA00C6009A /* PaletteGroup.swift */; };
+		95DFED5F24EC295100C6009A /* PalettesSectionTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95DFED5E24EC295100C6009A /* PalettesSectionTitle.swift */; };
 		95E2A02F2455185800B02742 /* EraseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95E2A02E2455185800B02742 /* EraseController.swift */; };
 		95E2A0312455197400B02742 /* FillController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95E2A0302455197400B02742 /* FillController.swift */; };
 		95E2A03324551CA500B02742 /* SelectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95E2A03224551CA500B02742 /* SelectionController.swift */; };
@@ -276,6 +278,8 @@
 		95C850222468620900366EA2 /* EditorSettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorSettingsController.swift; sourceTree = "<group>"; };
 		95DC554D23EC9D2A0011FA2A /* ColorSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorSelector.swift; sourceTree = "<group>"; };
 		95DC554F23EDF8280011FA2A /* CIrcleColorSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIrcleColorSlider.swift; sourceTree = "<group>"; };
+		95DFED5C24EC1DCA00C6009A /* PaletteGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaletteGroup.swift; sourceTree = "<group>"; };
+		95DFED5E24EC295100C6009A /* PalettesSectionTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PalettesSectionTitle.swift; sourceTree = "<group>"; };
 		95E2A02E2455185800B02742 /* EraseController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EraseController.swift; sourceTree = "<group>"; };
 		95E2A0302455197400B02742 /* FillController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FillController.swift; sourceTree = "<group>"; };
 		95E2A03224551CA500B02742 /* SelectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionController.swift; sourceTree = "<group>"; };
@@ -466,13 +470,11 @@
 		955145D32405587700524FF9 /* Editor */ = {
 			isa = PBXGroup;
 			children = (
-				95A83FC72486661F002A5E29 /* Layers */,
 				954BB2DC240D72A40008B9D5 /* Tools */,
 				956C61F52427C3A4000BF9E4 /* ToolBar */,
 				9570657C2417EA3C0044FC39 /* FrameControl */,
-				9570657724164D3B0044FC39 /* Frame */,
-				9570657624164D2F0044FC39 /* Layer */,
-				95839224249E9B5100E164A8 /* FrameSettings.swift */,
+				9570657724164D3B0044FC39 /* FramePreviews */,
+				9570657624164D2F0044FC39 /* LayerPreviews */,
 				955145D624055D1000524FF9 /* Editor.swift */,
 				9537B1A5243E48C80083BE27 /* EditorLayer.swift */,
 				955145D42405589100524FF9 /* ProjectCanvas.swift */,
@@ -514,30 +516,30 @@
 			name = ToolBar;
 			sourceTree = "<group>";
 		};
-		9570657624164D2F0044FC39 /* Layer */ = {
+		9570657624164D2F0044FC39 /* LayerPreviews */ = {
 			isa = PBXGroup;
 			children = (
 				95746A1D2406DB9200DD2328 /* LayersView.swift */,
 				95FC4150240A8ECE00B7F315 /* LayerList.swift */,
 			);
-			name = Layer;
+			name = LayerPreviews;
 			sourceTree = "<group>";
 		};
-		9570657724164D3B0044FC39 /* Frame */ = {
+		9570657724164D3B0044FC39 /* FramePreviews */ = {
 			isa = PBXGroup;
 			children = (
 				9570657424164C350044FC39 /* FrameList.swift */,
 				9570657824164D840044FC39 /* FramesView.swift */,
 			);
-			name = Frame;
+			name = FramePreviews;
 			sourceTree = "<group>";
 		};
 		9570657C2417EA3C0044FC39 /* FrameControl */ = {
 			isa = PBXGroup;
 			children = (
+				95DFED5A24EBD47600C6009A /* Frames */,
+				95A83FC72486661F002A5E29 /* Layers */,
 				9570657A24169C910044FC39 /* FrameControl.swift */,
-				9570657D2417EA6C0044FC39 /* FramesCollection.swift */,
-				958C0C1924180399007B9C95 /* FramesCollectionView.swift */,
 			);
 			name = FrameControl;
 			sourceTree = "<group>";
@@ -600,10 +602,9 @@
 		95C1233B241E088800775377 /* Colors Pallete */ = {
 			isa = PBXGroup;
 			children = (
+				95DFED5B24EC1D5700C6009A /* Colors Gallery */,
 				95023E3F24252ADE0098187E /* PalleteCreate */,
 				959BCFB9241FECA500B27CFB /* PalleteEditor */,
-				95C1233C241E08A600775377 /* PalletesCollection.swift */,
-				959BCFB7241EC64100B27CFB /* PalleteFull.swift */,
 				959BCFBE241FEFA300B27CFB /* PalleteWorker.swift */,
 				954C32772453A71000E520A4 /* PalleteCollectionLayout.swift */,
 				959CB7E0246F59300096EF38 /* PalleteSelectController.swift */,
@@ -666,6 +667,27 @@
 				95513ABC2471E968007E3E9E /* ProjectViewNew.swift */,
 			);
 			name = Project;
+			sourceTree = "<group>";
+		};
+		95DFED5A24EBD47600C6009A /* Frames */ = {
+			isa = PBXGroup;
+			children = (
+				9570657D2417EA6C0044FC39 /* FramesCollection.swift */,
+				958C0C1924180399007B9C95 /* FramesCollectionView.swift */,
+				95839224249E9B5100E164A8 /* FrameSettings.swift */,
+			);
+			name = Frames;
+			sourceTree = "<group>";
+		};
+		95DFED5B24EC1D5700C6009A /* Colors Gallery */ = {
+			isa = PBXGroup;
+			children = (
+				95C1233C241E08A600775377 /* PalletesCollection.swift */,
+				959BCFB7241EC64100B27CFB /* PalleteFull.swift */,
+				95DFED5C24EC1DCA00C6009A /* PaletteGroup.swift */,
+				95DFED5E24EC295100C6009A /* PalettesSectionTitle.swift */,
+			);
+			name = "Colors Gallery";
 			sourceTree = "<group>";
 		};
 		95FFC436244DA3CD0011A5DC /* Transform */ = {
@@ -797,6 +819,8 @@
 				9540F1BE243330D2008D1657 /* SliderView.swift in Sources */,
 				95A52B58247904A800DB1567 /* ProjectExportController.swift in Sources */,
 				95611D4024DB156D00EEDAD2 /* ProjectPreview.swift in Sources */,
+				95DFED5D24EC1DCA00C6009A /* PaletteGroup.swift in Sources */,
+				95DFED5F24EC295100C6009A /* PalettesSectionTitle.swift in Sources */,
 				954DAE4B245E161200CB40B1 /* AlignmentSelector.swift in Sources */,
 				95816A4D244B4470007C7A69 /* SymmetryController.swift in Sources */,
 				95E2A0312455197400B02742 /* FillController.swift in Sources */,

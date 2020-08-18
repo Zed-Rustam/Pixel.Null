@@ -25,6 +25,24 @@ class FrameSettings : UIViewController {
         return img
     }()
     
+    lazy private var bg: UIView = {
+        let view = UIView()
+        view.setCorners(corners: 12,needMask: true)
+        
+        view.backgroundColor = UIColor(patternImage: UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 8 / 196, orientation: .down))
+        
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.widthAnchor.constraint(equalToConstant: 196).isActive = true
+        view.heightAnchor.constraint(equalToConstant: 196).isActive = true
+        view.layer.magnificationFilter = .nearest
+        
+        view.addSubview(framePreview)
+        framePreview.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        framePreview.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+
+        return view
+    }()
+    
     lazy private var actionsBtn: UIButton = {
         let btn = UIButton()
         btn.translatesAutoresizingMaskIntoConstraints = false
@@ -39,7 +57,9 @@ class FrameSettings : UIViewController {
         btn.showsMenuAsPrimaryAction = true
         btn.menu = UIMenu(title: "", image: nil, identifier: .none, children: [
             UIAction(title: "Set for all frames", image: nil, identifier: nil, discoverabilityTitle: nil, handler: {action in
-                                
+                              
+                let newDelay = Int(self.delayField.text!) ?? self.project!.information.frames[self.project!.FrameSelected].delay >= 10 ? Int(self.delayField.text!) ?? self.project!.information.frames[self.project!.FrameSelected].delay : 10
+
                 var delays: String = ""
                 
                 for i in self.project!.information.frames {
@@ -47,8 +67,10 @@ class FrameSettings : UIViewController {
                 }
                 delays.removeLast()
                 
-                self.project!.addAction(action: ["ToolID" : "\(Actions.allFramesDelayChenge.rawValue)", "newDelay" : "\(Int(self.delayField.text!) ?? self.project!.information.frames[self.project!.FrameSelected].delay)", "oldDelays" : "\(delays)"])
-                self.project!.changeDelayForAllFrames(delay: Int(self.delayField.text!) ?? self.project!.information.frames[self.project!.FrameSelected].delay)
+                self.project!.addAction(action: ["ToolID" : "\(Actions.allFramesDelayChenge.rawValue)", "newDelay" : "\(newDelay)", "oldDelays" : "\(delays)"])
+                self.project!.changeDelayForAllFrames(delay: newDelay)
+                self.delayField.text = "\(newDelay)"
+
             })
         ])
         
@@ -97,14 +119,16 @@ class FrameSettings : UIViewController {
     }()
     
     let done = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(onDone))
-
+    
     let cancel = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(onCancel))
 
     @objc func onDone(){
-        project!.addAction(action: ["ToolID" : "\(Actions.changeFrameDelay.rawValue)", "from" : "\(project!.information.frames[project!.FrameSelected].delay)", "to" : "\(delayField.text!)", "frame" : "\(project!.FrameSelected)"])
-        project!.setFrameDelay(frame: project!.FrameSelected, delay: Int(delayField.text!)!)
+        let newDelay = Int(delayField.text!)! >= 10 ? delayField.text! : "10"
+        project!.addAction(action: ["ToolID" : "\(Actions.changeFrameDelay.rawValue)", "from" : "\(project!.information.frames[project!.FrameSelected].delay)", "to" : "\(newDelay)", "frame" : "\(project!.FrameSelected)"])
+        project!.setFrameDelay(frame: project!.FrameSelected, delay: Int(newDelay)!)
         
         delayField.attributedPlaceholder = NSAttributedString(string: "\(project!.information.frames[project!.FrameSelected].delay)", attributes: [NSAttributedString.Key.foregroundColor : getAppColor(color: .disable)])
+        delayField.text = newDelay
         
         delayField.endEditing(true)
     }
@@ -118,13 +142,13 @@ class FrameSettings : UIViewController {
         preferredContentSize = CGSize(width: 220, height: 268)
         view.backgroundColor = getAppColor(color: .background)
 
-        view.addSubview(framePreview)
+        view.addSubview(bg)
         view.addSubview(actionsBtn)
         view.addSubview(delayField)
         view.addSubview(delayLabel)
         
-        framePreview.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
-        framePreview.bottomAnchor.constraint(equalTo: actionsBtn.topAnchor, constant: -12).isActive = true
+        bg.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
+        bg.bottomAnchor.constraint(equalTo: actionsBtn.topAnchor, constant: -12).isActive = true
         
         actionsBtn.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -12).isActive = true
         actionsBtn.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true

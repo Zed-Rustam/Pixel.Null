@@ -177,8 +177,15 @@ class Editor : UIViewController {
             var offset = isSubbarHide ? 42 : 0
             offset += isHide ? 42 : 0
             
-            UIView.animate(withDuration: 0.2, animations: {
+            UIView.animate(withDuration: 0.25, animations: {
                 self.actionInfo.transform = CGAffineTransform(translationX: 0, y: CGFloat(offset))
+            })
+        }
+        
+        control.ControlHideDelegate = {isHide in
+            UIView.animate(withDuration: 0.25, animations: {
+                self.transformSize.transform = CGAffineTransform(translationX: 0, y: isHide ? -52 : 0)
+                self.transformAngle.transform = CGAffineTransform(translationX: 0, y: isHide ? -52 : 0)
             })
         }
 

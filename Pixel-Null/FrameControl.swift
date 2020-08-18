@@ -1,6 +1,11 @@
 import UIKit
 
 class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlUpdate {
+    
+    func recheckLayersCount() {
+        layers.unpdateAddButton()
+    }
+    
     func updatePreview() {
         
     }
@@ -307,4 +312,5 @@ protocol FrameControlUpdate : class {
     func changeLayerVisible(frame : Int,layer : Int)
     func margeLayers(frame : Int,layer : Int)
     func onRenameLayerModeStart(isStart: Bool)
+    func recheckLayersCount()
 }

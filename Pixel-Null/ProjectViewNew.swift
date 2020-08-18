@@ -15,19 +15,12 @@ class ProjectViewNew : UIView {
         get{
             return _project
         }
+        
         set{
            // print("some mome \(newValue!.projectName)")
             _project = newValue
             contentImage.backgroundColor = _project!.backgroundColor
             contentImage.image = _project?.getFrame(frame: 0, size: _project!.projectSize).flip(xFlip: _project!.isFlipX, yFlip: _project!.isFlipY)
-            
-            let clr1 = self.getLayerImage()
-            let clr2 = self.blurImage(image: clr1, forRect: CGRect(x: 8, y: 8, width: self.titleBg.frame.width, height: 16))!
-            
-            let clr3 = self.blackImage(image: clr2)
-                
-            self.titleBg.backgroundColor = UIColor(patternImage: clr3)
-            titleLabel.text = self.projectName
         }
     }
     
@@ -57,98 +50,23 @@ class ProjectViewNew : UIView {
         return image
     }()
     
-    lazy private var titleBg : UIView = {
-        let bg = UIView()
-        bg.setCorners(corners: 8,needMask: false)
-        bg.translatesAutoresizingMaskIntoConstraints = false
-        bg.heightAnchor.constraint(equalToConstant: 16).isActive = true
-        
-        bg.addSubviewFullSize(view: titleLabel, paddings: (8,-8,0,0))
-        return bg
-    }()
-    
-    lazy private var titleLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        label.font = UIFont(name: "Rubik-Medium", size: 10)
-        label.textAlignment = .center
-        label.lineBreakMode = .byTruncatingMiddle
-        label.setShadow(color: UIColor.black, radius: 3, opasity: 0.2)
-        return label
-    }()
-    
     lazy private var pointer: UIPointerInteraction = {
         let point = UIPointerInteraction(delegate: self)
         
         return point
     }()
-    
-    func blurImage(image:UIImage, forRect rect: CGRect) -> UIImage? {
-        let context = CIContext(options: nil)
         
-        
-        let inputImage = CIImage(cgImage: image.cgImage!)
-
-
-        let filter = CIFilter(name: "CIGaussianBlur")
-        filter?.setValue(inputImage, forKey: kCIInputImageKey)
-        filter?.setValue((8.0), forKey: kCIInputRadiusKey)
-        let outputImage = filter?.outputImage
-
-        var cgImage:CGImage?
-
-        if let asd = outputImage {
-            cgImage = context.createCGImage(asd, from: rect)
-        }
-
-        if let cgImageA = cgImage {
-            return UIImage(cgImage: cgImageA)
-        }
-
-        return nil
-    }
-    
-    func blackImage(image : UIImage) -> UIImage {
-        UIGraphicsBeginImageContext(image.size)
-        let context = UIGraphicsGetCurrentContext()!
-        image.draw(at: .zero)
-        
-        context.setFillColor(UIColor.black.withAlphaComponent(0.1).cgColor)
-        context.fill(CGRect(origin: .zero, size: image.size))
-        let result = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext()
-        return result
-    }
-    
-    func getLayerImage() -> UIImage {
-        layoutIfNeeded()
-        UIGraphicsBeginImageContext(layer.frame.size)
-        let context = UIGraphicsGetCurrentContext()!
-        
-        bg.layer.render(in: context)
-        let result = UIGraphicsGetImageFromCurrentImageContext()!
-        
-        UIGraphicsEndImageContext()
-        
-        return result
-    }
-    
     init(){
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         addSubviewFullSize(view: bg)
-        addSubview(titleBg)
-        
-        titleBg.leftAnchor.constraint(equalTo: leftAnchor, constant: 8).isActive = true
-        titleBg.rightAnchor.constraint(equalTo: rightAnchor, constant: -8).isActive = true
-        titleBg.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8).isActive = true
-        
+
         isUserInteractionEnabled = true
         interactions.append(pointer)
 
         addInteraction(UIContextMenuInteraction(delegate: self))
         
-        setCorners(corners: 16, needMask: true, curveType: .continuous)
+        setCorners(corners: 12, needMask: true, curveType: .continuous)
     }
     
     required init?(coder: NSCoder) {

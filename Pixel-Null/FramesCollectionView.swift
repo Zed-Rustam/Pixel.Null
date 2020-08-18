@@ -30,26 +30,6 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
            text.heightAnchor.constraint(equalToConstant: 36).isActive = true
            return text
        }()
- 
-//    lazy var addButton : CircleButton = {
-//        let btn = CircleButton(icon: #imageLiteral(resourceName: "add_icon"), frame: .zero)
-//        btn.corners = 6
-//        btn.delegate = { [weak self] in
-//            self!.project!.insertFrame(at: self!.project!.FrameSelected + 1)
-//            self!.project!.addAction(action: ["ToolID" : "\(Actions.frameAdd.rawValue)", "frame" : "\(self!.project!.FrameSelected + 1)"])
-//
-//            if(self!.project!.frameCount >= 128) {
-//                self!.addButton.isEnabled = false
-//            }
-//
-//            self!.list.frameDelegate!.addFrame(at: self!.project!.FrameSelected + 1)
-//        }
-//        btn.translatesAutoresizingMaskIntoConstraints = false
-//        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
-//        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
-//
-//        return btn
-//    }()
     
     lazy private var addButton : UIButton = {
         let btn = UIButton()
@@ -63,35 +43,39 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
         btn.imageView?.tintColor = getAppColor(color: .enable)
         
         btn.addTarget(self, action: #selector(onPress), for: .touchUpInside)
-        
-        btn.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
-        btn.layer.shadowPath = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 36, height: 36), cornerRadius: 8).cgPath
-        
+                
         return btn
     }()
     
-    lazy var settingsButton : CircleButton = {
-        let btn = CircleButton(icon: #imageLiteral(resourceName: "project_settings_icon"), frame: .zero)
-        btn.corners = 6
-        btn.delegate = { [unowned self] in
-            let frameSettings = FrameSettings()
-            frameSettings.modalPresentationStyle = .popover
-            frameSettings.setInfo(project: self.project!)
-            
-            if let popover = frameSettings.popoverPresentationController {
-                popover.sourceView = self
-                popover.sourceRect = btn.frame
-                popover.delegate = self
-                popover.permittedArrowDirections = .any
-                self.parentController?.present(frameSettings, animated: true, completion: nil)
-            }
-        }
+    lazy var settingsButton : UIButton = {
+        let btn = UIButton()
+        btn.setCorners(corners: 8)
+        
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
         btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
-
+        btn.setImage(#imageLiteral(resourceName: "project_settings_icon").withRenderingMode(.alwaysTemplate), for: .normal)
+        btn.imageEdgeInsets = UIEdgeInsets.init(top: 10, left: 10, bottom: 10, right: 10)
+        btn.imageView?.tintColor = getAppColor(color: .enable)
+        btn.addTarget(self, action: #selector(onSettings), for: .touchUpInside)
+        
+        btn.backgroundColor = getAppColor(color: .background)
         return btn
     }()
+    
+    @objc func onSettings(){
+        let frameSettings = FrameSettings()
+        frameSettings.modalPresentationStyle = .popover
+        frameSettings.setInfo(project: self.project!)
+        
+        if let popover = frameSettings.popoverPresentationController {
+            popover.sourceView = self
+            popover.sourceRect = settingsButton.frame
+            popover.delegate = self
+            popover.permittedArrowDirections = .any
+            self.parentController?.present(frameSettings, animated: true, completion: nil)
+        }
+    }
     
     var dublicateButton : CircleButton!
     weak var project : ProjectWork?
@@ -100,7 +84,7 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
     @objc func onPress() {
         project!.insertFrame(at: project!.FrameSelected + 1)
         project!.addAction(action: ["ToolID" : "\(Actions.frameAdd.rawValue)", "frame" : "\(project!.FrameSelected + 1)"])
-
+        
         if(project!.frameCount >= 128) {
             addButton.isEnabled = false
         }
@@ -131,10 +115,19 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
         
         settingsButton.rightAnchor.constraint(equalTo: addButton.leftAnchor, constant: -6).isActive = true
         settingsButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
+        
+        settingsButton.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        settingsButton.layer.shadowPath = UIBezierPath(roundedRect: settingsButton.bounds, cornerRadius: 8).cgPath
     }
     
     override func tintColorDidChange() {
         list.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        
+        settingsButton.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        settingsButton.layer.shadowPath = UIBezierPath(roundedRect: settingsButton.bounds, cornerRadius: 8).cgPath
+        
+        addButton.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        addButton.layer.shadowPath = UIBezierPath(roundedRect: settingsButton.bounds, cornerRadius: 8).cgPath
     }
     
     required init?(coder: NSCoder) {

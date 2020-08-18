@@ -45,7 +45,7 @@ class GalleryLayout : UICollectionViewLayout{
             let index = IndexPath(item: item, section: 0)
 
             if(delegate?.getItemClass(indexItem: index) == "Project"){
-            let itemHeight = delegate!.getItemHeight(indexItem: index) * itemWidth
+            let itemHeight = delegate!.getItemHeight(indexItem: index) * itemWidth + 24
             let ypos = columnsHeights.min()! + spacing
             let xpos = padding + (Double(columnsHeights.firstIndex(of: columnsHeights.min()!)!) * (itemWidth)) + (Double(columnsHeights.firstIndex(of: columnsHeights.min()!)!) * spacing);
 

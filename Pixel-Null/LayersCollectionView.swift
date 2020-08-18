@@ -40,36 +40,6 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
         
         btn.addTarget(self, action: #selector(onPress), for: .touchUpInside)
         
-        btn.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
-        btn.layer.shadowPath = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 36, height: 36), cornerRadius: 8).cgPath
-        
-        return btn
-    }()
-    
-    lazy var mergeButton : CircleButton = {
-        let btn = CircleButton(icon: #imageLiteral(resourceName: "layers_merge_icon"), frame: CGRect(x: frame.width - 90, y: 0, width: 36, height: 36))
-        btn.corners = 8
-        btn.delegate = { [unowned self] in
-            if self.project!.layerCount > 1 && self.project!.LayerSelected != self.project!.layerCount - 1 {
-                self.project!.addAction(action: ["ToolID" : "\(Actions.mergeLayers.rawValue)",
-                    "frame" : "\(self.project!.FrameSelected)",
-                    "layer" : "\( self.project!.LayerSelected)",
-                    "firstLayerOpasity" : "\(self.project!.information.frames[self.project!.FrameSelected].layers[self.project!.LayerSelected].transparent)",
-                    "secondLayerOpasity" : "\(self.project!.information.frames[self.project!.FrameSelected].layers[self.project!.LayerSelected + 1].transparent)",
-                    "isFirstLayerVisible" : "\(self.project!.information.frames[self.project!.FrameSelected].layers[self.project!.LayerSelected].visible)",
-                    "isSecondLayerVisible" : "\(self.project!.information.frames[self.project!.FrameSelected].layers[self.project!.LayerSelected + 1].visible)",
-                ])
-
-                try! self.project!.getLayer(frame: self.project!.FrameSelected, layer: self.project!.LayerSelected).pngData()?.write(to: self.project!.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-first-\(self.project!.getNextActionID()).png"))
-                try! self.project!.getLayer(frame: self.project!.FrameSelected, layer: self.project!.LayerSelected + 1).pngData()?.write(to: self.project!.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-second-\(self.project!.getNextActionID()).png"))
-
-                self.project!.mergeLayers(frame: self.project!.FrameSelected, layer: self.project!.LayerSelected)
-            }
-        }
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
-
         return btn
     }()
     
@@ -84,6 +54,14 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
         }
         
         list.frameDelegate?.addLayer(frame: project!.FrameSelected, layer: project!.LayerSelected + 1)
+    }
+    
+    func unpdateAddButton(){
+        if(project!.layerCount >= 16) {
+            addButton.isEnabled = false
+        } else {
+            addButton.isEnabled = true
+        }
     }
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
@@ -136,7 +114,15 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
     override func layoutSubviews() {
         super.layoutSubviews()
         list.layout.invalidateLayout()
+        addButton.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        addButton.layer.shadowPath = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 36, height: 36), cornerRadius: 8).cgPath
     }
+    
+    override func tintColorDidChange() {
+        addButton.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        addButton.layer.shadowPath = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 36, height: 36), cornerRadius: 8).cgPath
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

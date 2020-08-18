@@ -17,6 +17,9 @@ class TransformView : UIView {
     var activeMode : TransformMode = .none
     var startPosition : CGPoint = .zero
         
+    var isFlipX: Bool = false
+    var isFlipY: Bool = false
+    
     var startInformation : (position : CGRect, angle : Int) = (.zero,0)
     var lastInformation : (position : CGRect, angle : Int) = (.zero,0)
 
@@ -149,7 +152,7 @@ class TransformView : UIView {
     }
     var isChanged : Bool {
         get{
-            return !(startInformation.position == position && startInformation.angle == angle) || isCopyMode
+            return !(startInformation.position == position && startInformation.angle == angle && !isFlipX && !isFlipY) || isCopyMode
         }
     }
     

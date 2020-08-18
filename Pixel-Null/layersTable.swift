@@ -97,6 +97,7 @@ extension LayersTable : UICollectionViewDelegate {
                     self.project?.addAction(action: ["ToolID" : "\(Actions.layerClone.rawValue)", "frame" : "\(self.project!.FrameSelected)", "layer" : "\(self.project!.LayerSelected)"])
 
                     self.frameDelegate?.cloneLayer(frame: self.project!.FrameSelected, original: indexPath.item)
+                    self.frameDelegate?.recheckLayersCount()
                 })
 
                 let rename = UIAction(title: "Rename",image : UIImage(systemName: "pencil", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, handler: {action in
@@ -127,6 +128,7 @@ extension LayersTable : UICollectionViewDelegate {
 
                         self.project!.mergeLayers(frame: self.project!.FrameSelected, layer: indexPath.item)
                         self.frameDelegate?.margeLayers(frame: self.project!.FrameSelected, layer: indexPath.item)
+                        self.frameDelegate?.recheckLayersCount()
                     }
                 })
                 
@@ -144,6 +146,7 @@ extension LayersTable : UICollectionViewDelegate {
                     try! self.project?.getLayer(frame: self.project!.FrameSelected, layer: indexPath.item).pngData()?.write(to: self.project!.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(self.project!.getNextActionID()).png"))
 
                     self.frameDelegate?.deleteLayer(frame: self.project!.FrameSelected, layer: indexPath.item)
+                    self.frameDelegate?.recheckLayersCount()
                 })
 
                 let delMenu = UIMenu(title: "Delete", image: UIImage(systemName: "trash", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, options : .destructive, children: [delete])
@@ -156,6 +159,7 @@ extension LayersTable : UICollectionViewDelegate {
                 if self.project!.layerCount != 16 {
                     menu.append(clone)
                 }
+                
                 menu.append(visible)
                 menu.append(rename)
 
