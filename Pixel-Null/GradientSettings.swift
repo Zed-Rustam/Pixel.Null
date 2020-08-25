@@ -79,7 +79,7 @@ class GradientSettings : UIViewController {
         field.delegate = stepCountInputDelegate
         field.textAlignment = .center
         field.keyboardType = .numberPad
-        field.font = UIFont(name: "Rubik-Medium", size: 20)
+        field.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         
         field.translatesAutoresizingMaskIntoConstraints = false
         field.heightAnchor.constraint(equalToConstant: 36).isActive = true
@@ -115,23 +115,23 @@ class GradientSettings : UIViewController {
         let text = UILabel()
         text.text = NSLocalizedString("Step's count", comment: "")
         text.textAlignment = .left
-        text.font = UIFont(name:  "Rubik-Medium", size: 24)
-        text.textColor = UIColor(named: "enableColor")
+        text.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        text.textColor = getAppColor(color: .enable)
         text.translatesAutoresizingMaskIntoConstraints = false
         text.heightAnchor.constraint(equalToConstant: 36).isActive = true
         return text
     }()
     
     private var colorsTitle : UILabel = {
-           let text = UILabel()
-           text.text = NSLocalizedString("Colors", comment: "")
-           text.textAlignment = .left
-           text.font = UIFont(name:  "Rubik-Medium", size: 24)
-           text.textColor = UIColor(named: "enableColor")
-           text.translatesAutoresizingMaskIntoConstraints = false
-           text.heightAnchor.constraint(equalToConstant: 36).isActive = true
-           return text
-       }()
+        let text = UILabel()
+        text.text = NSLocalizedString("Colors", comment: "")
+        text.textAlignment = .left
+        text.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        text.textColor = getAppColor(color: .enable)
+        text.translatesAutoresizingMaskIntoConstraints = false
+        text.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        return text
+    }()
 
     lazy private var stepCountStack : UIStackView = {
         let stack = UIStackView()
@@ -169,7 +169,7 @@ class GradientSettings : UIViewController {
         let title = UILabel()
         title.text = NSLocalizedString("Gradient", comment: "")
         title.textAlignment = .center
-        title.font = UIFont(name:  "Rubik-Bold", size: 32)
+        title.font = UIFont.systemFont(ofSize: 32, weight: .black)
         title.textColor = UIColor(named: "enableColor")
         
         return title
@@ -241,7 +241,7 @@ class GradientSettings : UIViewController {
     
     private var topBarBg: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(named: "backgroundColor")
+        view.backgroundColor = getAppColor(color: .background)
         view.setCorners(corners: 12)
         return view
     }()

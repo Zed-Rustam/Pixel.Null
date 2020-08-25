@@ -13,7 +13,7 @@ class ThemeSelect: UIViewController {
         let label = UILabel()
         label.text = NSLocalizedString("Theme", comment: "")
         label.textColor = getAppColor(color: .enable)
-        label.font = UIFont(name: "Rubik-Bold", size: 32)
+        label.font = UIFont.systemFont(ofSize: 32, weight: .black)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 36).isActive = true
         label.textAlignment = .left
@@ -25,7 +25,7 @@ class ThemeSelect: UIViewController {
         label.text = NSLocalizedString("Use system theme", comment: "")
         label.textColor = getAppColor(color: .enable)
         
-        label.font = UIFont(name: "Rubik-Medium", size: 20)
+        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 36).isActive = true
         label.adjustsFontSizeToFitWidth = true

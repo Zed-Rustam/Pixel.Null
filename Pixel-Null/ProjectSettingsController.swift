@@ -33,33 +33,13 @@ class ProjectSettingsController : UIViewController {
         return mainview
     }()
     
-//    lazy private var projectName : TextField = {
-//        let text = TextField()
-//        text.translatesAutoresizingMaskIntoConstraints = false
-//        text.heightAnchor.constraint(equalToConstant: 42).isActive = true
-//        text.filed.text = project!.projectName
-//        text.filed.text?.removeLast(6)
-//
-//        text.isUserInteractionEnabled = false
-//        text.setHelpText(help: "Project Name")
-//        text.filed.delegate = renameDelegate
-//
-//        let bar = UIToolbar()
-//        let cancel = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(self.cancel))
-//        bar.items = [doneBtn,cancel]
-//        bar.sizeToFit()
-//        text.filed.inputAccessoryView = bar
-//
-//        return text
-//    }()
-    
     lazy private var nameField : UITextField = {
        let text = UITextField()
         text.translatesAutoresizingMaskIntoConstraints = false
         text.heightAnchor.constraint(equalToConstant: 36).isActive = true
         text.backgroundColor = getAppColor(color: .backgroundLight)
         text.textColor = getAppColor(color: .enable)
-        text.font = UIFont(name: "Rubik-Medium", size: 20)
+        text.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         
         text.isUserInteractionEnabled = false
         text.attributedPlaceholder = NSAttributedString(string: "Project name",attributes: [NSAttributedString.Key.foregroundColor: getAppColor(color: .disable)])
@@ -91,7 +71,7 @@ class ProjectSettingsController : UIViewController {
         text.heightAnchor.constraint(equalToConstant: 36).isActive = true
         text.backgroundColor = getAppColor(color: .backgroundLight)
         text.textColor = getAppColor(color: .enable)
-        text.font = UIFont(name: "Rubik-Medium", size: 20)
+        text.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         
         text.isUserInteractionEnabled = false
         text.text = "Background"
@@ -115,7 +95,7 @@ class ProjectSettingsController : UIViewController {
 
         text.backgroundColor = getAppColor(color: .backgroundLight)
         text.textColor = getAppColor(color: .enable)
-        text.font = UIFont(name: "Rubik-Medium", size: 20)
+        text.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         
         text.isUserInteractionEnabled = false
 
@@ -202,7 +182,6 @@ class ProjectSettingsController : UIViewController {
         nameField.isUserInteractionEnabled = false
     }
         
-    
     lazy private var backgroundColor : ColorSelector = {
        let selector = ColorSelector()
         selector.color = project!.backgroundColor
@@ -227,81 +206,104 @@ class ProjectSettingsController : UIViewController {
         return selector
     }()
     
-    lazy private var editNameButton : CircleButton = {
-        let btn = CircleButton(icon: #imageLiteral(resourceName: "edit_icon"), frame: .zero,icScale: 0.5)
+    lazy private var NameButton : UIButton = {
+        let btn = UIButton()
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
         btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        btn.corners = 12
+        btn.setCorners(corners: 12)
+        btn.backgroundColor = getAppColor(color: .background)
         
-        btn.delegate = {[unowned self] in
-            self.nameField.isUserInteractionEnabled = true
-            self.nameField.becomeFirstResponder()
-        }
+        btn.setImage(#imageLiteral(resourceName: "edit_icon"), for: .normal)
+        btn.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+
+        btn.imageView?.tintColor = getAppColor(color: .enable)
+        
+        btn.addTarget(self, action: #selector(onEditName), for: .touchUpInside)
         
         return btn
     }()
     
-    lazy private var editSizeButton : CircleButton = {
-        let btn = CircleButton(icon: #imageLiteral(resourceName: "edit_icon"), frame: .zero,icScale: 0.5)
+    @objc func onEditName() {
+        nameField.isUserInteractionEnabled = true
+        nameField.becomeFirstResponder()
+    }
+    
+    lazy private var SizeButton : UIButton = {
+        let btn = UIButton()
+        
+        btn.setImage(#imageLiteral(resourceName: "edit_icon"), for: .normal)
+        btn.imageView?.tintColor = getAppColor(color: .enable)
+        btn.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
         btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        btn.corners = 12
-        btn.delegate = {[unowned self] in
-            let resize = ProjectResizeController()
-            resize.project = self.project
-            resize.delegate = {[unowned self] in
-                if $0 {
-                    (self.preview.subviews[0] as! UIImageView).image = self.project!.getFrame(frame: 0, size: self.project!.projectSize)
-                    self.editor?.resizeProject()
-                    self.sizeField.text = "\(Int(self.project!.projectSize.width))x\(Int(self.project!.projectSize.height))"
-                }
+        btn.setCorners(corners: 12)
+        btn.backgroundColor = getAppColor(color: .background)
+        btn.addTarget(self, action: #selector(onResizePress), for: .touchUpInside)
+        
+        return btn
+    }()
+    
+    @objc func onResizePress(){
+        let resize = ProjectResizeController()
+        resize.project = self.project
+        resize.delegate = {[unowned self] in
+            if $0 {
+                (self.preview.subviews[0] as! UIImageView).image = self.project!.getFrame(frame: 0, size: self.project!.projectSize)
+                self.editor?.resizeProject()
+                self.sizeField.text = "\(Int(self.project!.projectSize.width))x\(Int(self.project!.projectSize.height))"
             }
-            
-            resize.modalPresentationStyle = .formSheet
-            self.show(resize, sender: self)
         }
         
+        resize.modalPresentationStyle = .formSheet
+        self.show(resize, sender: self)
+    }
+    
+    lazy private var flipXBtn: UIButton = {
+        let btn = UIButton()
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.setImage(#imageLiteral(resourceName: "flip_horizontal_icon"), for: .normal)
+        btn.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        btn.imageView?.tintColor = getAppColor(color: .enable)
+        btn.addTarget(self, action: #selector(flipX), for: .touchUpInside)
+        btn.backgroundColor = getAppColor(color: .background)
+        btn.setCorners(corners: 12)
         return btn
     }()
     
-    lazy private var flipXButton : CircleButton = {
-        let btn = CircleButton(icon: #imageLiteral(resourceName: "flip_horizontal_icon"), frame: .zero,icScale: 0.5)
+    @objc func flipX() {
+        project?.addAction(action: ["ToolID" : "\(Actions.projectFlipX.rawValue)"])
+        project?.isFlipX.toggle()
+        (preview.subviews[0] as! UIImageView).image = project!.getFrame(frame: 0, size: project!.projectSize).flip(xFlip: project!.information.flipX, yFlip: project!.information.flipY)
+        editor?.resizeProject()
+    }
+    
+    lazy private var flipYBtn: UIButton = {
+        let btn = UIButton()
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
         btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        btn.corners = 12
-        
-        btn.delegate = {[unowned self] in
-            self.project?.addAction(action: ["ToolID" : "\(Actions.projectFlipX.rawValue)"])
-            self.project?.isFlipX.toggle()
-            
-            (self.preview.subviews[0] as! UIImageView).image = self.project!.getFrame(frame: 0, size: self.project!.projectSize).flip(xFlip: self.project!.information.flipX, yFlip: self.project!.information.flipY)
-            
-            self.editor?.resizeProject()
-        }
-        
+        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.setImage(#imageLiteral(resourceName: "flip_vertical_icon"), for: .normal)
+        btn.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+
+        btn.imageView?.tintColor = getAppColor(color: .enable)
+        btn.addTarget(self, action: #selector(flipY), for: .touchUpInside)
+        btn.backgroundColor = getAppColor(color: .background)
+        btn.setCorners(corners: 12)
         return btn
     }()
     
-    lazy private var flipYButton : CircleButton = {
-        let btn = CircleButton(icon: #imageLiteral(resourceName: "flip_vertical_icon"), frame: .zero,icScale: 0.5)
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        btn.corners = 12
+    @objc func flipY() {
+        project?.addAction(action: ["ToolID" : "\(Actions.projectFlipY.rawValue)"])
+        project?.isFlipY.toggle()
         
-        btn.delegate = {[unowned self] in
-            self.project?.addAction(action: ["ToolID" : "\(Actions.projectFlipY.rawValue)"])
-            self.project?.isFlipY.toggle()
-            
-            (self.preview.subviews[0] as! UIImageView).image = self.project!.getFrame(frame: 0, size: self.project!.projectSize).flip(xFlip: self.project!.information.flipX, yFlip: self.project!.information.flipY)
-            self.editor?.resizeProject()
-        }
-        
-        return btn
-    }()
+        (preview.subviews[0] as! UIImageView).image = project!.getFrame(frame: 0, size: project!.projectSize).flip(xFlip: project!.information.flipX, yFlip: project!.information.flipY)
+        editor?.resizeProject()
+    }
 
     override func viewDidLoad() {
         view.addSubview(preview)
@@ -309,10 +311,10 @@ class ProjectSettingsController : UIViewController {
         view.addSubview(backgroundField)
         view.addSubview(sizeField)
         view.addSubview(backgroundColor)
-        view.addSubview(editNameButton)
-        view.addSubview(editSizeButton)
-        view.addSubview(flipXButton)
-        view.addSubview(flipYButton)
+        view.addSubview(NameButton)
+        view.addSubview(SizeButton)
+        view.addSubview(flipXBtn)
+        view.addSubview(flipYBtn)
         
         view.setCorners(corners: 32)
 
@@ -323,31 +325,31 @@ class ProjectSettingsController : UIViewController {
         
         nameField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
         nameField.topAnchor.constraint(equalTo: preview.bottomAnchor, constant: 12).isActive = true
-        nameField.rightAnchor.constraint(equalTo: editNameButton.leftAnchor, constant: -12).isActive = true
+        nameField.rightAnchor.constraint(equalTo: NameButton.leftAnchor, constant: -12).isActive = true
 
         backgroundField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
         backgroundField.topAnchor.constraint(equalTo: nameField.bottomAnchor, constant: 12).isActive = true
         backgroundField.rightAnchor.constraint(equalTo: backgroundColor.leftAnchor, constant: -12).isActive = true
         
         sizeField.topAnchor.constraint(equalTo: backgroundField.bottomAnchor, constant: 12).isActive = true
-        sizeField.rightAnchor.constraint(equalTo: editSizeButton.leftAnchor, constant: -12).isActive = true
+        sizeField.rightAnchor.constraint(equalTo: SizeButton.leftAnchor, constant: -12).isActive = true
         
         backgroundColor.topAnchor.constraint(equalTo: backgroundField.topAnchor, constant: 0).isActive = true
         backgroundColor.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
         
-        editNameButton.topAnchor.constraint(equalTo: nameField.topAnchor, constant: 0).isActive = true
-        editNameButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        NameButton.topAnchor.constraint(equalTo: nameField.topAnchor, constant: 0).isActive = true
+        NameButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
         
-        editSizeButton.topAnchor.constraint(equalTo: sizeField.topAnchor, constant: 0).isActive = true
-        editSizeButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        SizeButton.topAnchor.constraint(equalTo: sizeField.topAnchor, constant: 0).isActive = true
+        SizeButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
         
-        flipYButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
-        flipYButton.topAnchor.constraint(equalTo: editSizeButton.bottomAnchor, constant: 12).isActive = true
+        flipYBtn.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        flipYBtn.topAnchor.constraint(equalTo: SizeButton.bottomAnchor, constant: 12).isActive = true
         
-        flipXButton.rightAnchor.constraint(equalTo: flipYButton.leftAnchor, constant: -12).isActive = true
-        flipXButton.topAnchor.constraint(equalTo: editSizeButton.bottomAnchor, constant: 12).isActive = true
+        flipXBtn.rightAnchor.constraint(equalTo: flipYBtn.leftAnchor, constant: -12).isActive = true
+        flipXBtn.topAnchor.constraint(equalTo: SizeButton.bottomAnchor, constant: 12).isActive = true
 
-        view.backgroundColor = UIColor(named: "backgroundColor")!
+        view.backgroundColor = getAppColor(color: .background)
         
         NotificationCenter.default.addObserver(self, selector: #selector(onShowKeyboard(notification:)), name:  UIApplication.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(onHideKeyboard(notification:)), name: UIApplication.keyboardWillHideNotification, object: nil)
@@ -357,5 +359,17 @@ class ProjectSettingsController : UIViewController {
         preview.backgroundColor = UIColor(patternImage: UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 1 / ((view.frame.width - 32) / 8.0), orientation: .down))
         preview.setShadow(color: UIColor(named: "shadowColor")!, radius: 8, opasity: 1)
         preview.layer.shadowPath = UIBezierPath(roundedRect: preview.bounds, cornerRadius: 12).cgPath
+        
+        NameButton.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        NameButton.layer.shadowPath = UIBezierPath(roundedRect: NameButton.bounds, cornerRadius: 12).cgPath
+        
+        SizeButton.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        SizeButton.layer.shadowPath = UIBezierPath(roundedRect: NameButton.bounds, cornerRadius: 12).cgPath
+        
+        flipXBtn.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        flipXBtn.layer.shadowPath = UIBezierPath(roundedRect: flipXBtn.bounds, cornerRadius: 12).cgPath
+        
+        flipYBtn.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        flipYBtn.layer.shadowPath = UIBezierPath(roundedRect: flipYBtn.bounds, cornerRadius: 12).cgPath
     }
 }

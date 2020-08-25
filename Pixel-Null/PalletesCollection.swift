@@ -14,7 +14,7 @@ class PalleteCollection : UIViewController, UICollectionViewDelegate, UICollecti
         let lbl = UILabel()
         lbl.textColor = getAppColor(color: .enable)
         lbl.text = "Palettes"
-        lbl.font = UIFont(name: "Rubik-Bold", size: 42)
+        lbl.font = UIFont.systemFont(ofSize: 42, weight: .black)
         lbl.textAlignment = .left
         lbl.translatesAutoresizingMaskIntoConstraints = false
         lbl.heightAnchor.constraint(equalToConstant: 48).isActive = true
@@ -29,7 +29,6 @@ class PalleteCollection : UIViewController, UICollectionViewDelegate, UICollecti
         col.delegate = self
         col.dataSource = self
         col.backgroundColor = .clear
-        
         
         //col.contentInsetAdjustmentBehavior = .never
         col.translatesAutoresizingMaskIntoConstraints = false
@@ -106,9 +105,6 @@ class PalleteCollection : UIViewController, UICollectionViewDelegate, UICollecti
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        
-        print("im here")
-        
         let title = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Title", for: indexPath) as! PalettesSectionTitle
         
         title.setText(text: indexPath.section == 0 ? "User's" : "System")

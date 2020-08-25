@@ -13,9 +13,9 @@ class EditorSettingsController: UIViewController {
     
     lazy private var themeTitle: UILabel = {
         let label = UILabel()
-        label.text = NSLocalizedString("Editor settings", comment: "")
+        label.text = NSLocalizedString("Editor", comment: "")
         label.textColor = getAppColor(color: .enable)
-        label.font = UIFont(name: "Rubik-Bold", size: 32)
+        label.font = UIFont.systemFont(ofSize: 32, weight: .black)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .left
         label.adjustsFontSizeToFitWidth = true
@@ -28,7 +28,7 @@ class EditorSettingsController: UIViewController {
         let label = UILabel()
         label.text = NSLocalizedString("Tools position", comment: "")
         label.textColor = getAppColor(color: .enable)
-        label.font = UIFont(name: "Rubik-Medium", size: 24)
+        label.font = UIFont.systemFont(ofSize: 24, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .left
         label.adjustsFontSizeToFitWidth = true

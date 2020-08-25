@@ -118,7 +118,7 @@ class ImportCollectionCell : UICollectionViewCell {
         let bg = UIView()
         bg.widthAnchor.constraint(equalToConstant: 72).isActive = true
         bg.backgroundColor = getAppColor(color: .disable)
-        bg.setCorners(corners: 8)
+        bg.setCorners(corners: 12,needMask: true)
         bg.addSubviewFullSize(view: fileImage)
         
         let mainview = UIView()
@@ -145,7 +145,7 @@ class ImportCollectionCell : UICollectionViewCell {
     lazy private var fileType : UILabel = {
         let label = UILabel()
         label.textColor = getAppColor(color: .enable)
-        label.font = UIFont(name: "Rubik-Bold", size: 16)
+        label.font = UIFont.systemFont(ofSize: 16,weight: .bold)
         
         label.translatesAutoresizingMaskIntoConstraints = false
         
@@ -155,7 +155,7 @@ class ImportCollectionCell : UICollectionViewCell {
     lazy private var fileName : UILabel = {
         let label = UILabel()
         label.textColor = getAppColor(color: .enable)
-        label.font = UIFont(name: "Rubik-Medium", size: 10)
+        label.font = UIFont.systemFont(ofSize: 10,weight: .bold)
         
         label.translatesAutoresizingMaskIntoConstraints = false
         
@@ -165,7 +165,7 @@ class ImportCollectionCell : UICollectionViewCell {
     lazy private var converttext : UILabel = {
         let label = UILabel()
         label.textColor = getAppColor(color: .enable)
-        label.font = UIFont(name: "Rubik-Medium", size: 10)
+        label.font = UIFont.systemFont(ofSize: 10,weight: .bold)
         label.text = "will be convert to project"
         label.translatesAutoresizingMaskIntoConstraints = false
         
@@ -175,7 +175,7 @@ class ImportCollectionCell : UICollectionViewCell {
     lazy private var errortext : UILabel = {
         let label = UILabel()
         label.textColor = getAppColor(color: .enable)
-        label.font = UIFont(name: "Rubik-Medium", size: 10)
+        label.font = UIFont.systemFont(ofSize: 10,weight: .bold)
         //label.text = "will be convert to project"
         label.translatesAutoresizingMaskIntoConstraints = false
         

@@ -19,7 +19,7 @@ class CreateDialogNew : UIViewController, UIPopoverPresentationControllerDelegat
         label.textColor = getAppColor(color: .enable)
         label.textAlignment = .left
         label.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        label.font = UIFont(name: "Rubik-Bold", size: 32)
+        label.font = UIFont.systemFont(ofSize: 32, weight: .black)
         return label
     }()
     
@@ -29,7 +29,7 @@ class CreateDialogNew : UIViewController, UIPopoverPresentationControllerDelegat
         field.heightAnchor.constraint(equalToConstant: 36).isActive = true
         field.backgroundColor = getAppColor(color: .backgroundLight)
         field.setCorners(corners: 8,curveType: .continuous)
-        field.font = UIFont(name: "Rubik-Medium", size: 20)
+        field.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         field.textAlignment = .left
         field.textColor = getAppColor(color: .enable)
         field.text = getDefaultName()
@@ -51,7 +51,7 @@ class CreateDialogNew : UIViewController, UIPopoverPresentationControllerDelegat
         field.background = nil
         field.backgroundColor = getAppColor(color: .backgroundLight)
         field.setCorners(corners: 8,curveType: .continuous)
-        field.font = UIFont(name: "Rubik-Medium", size: 20)
+        field.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         field.textAlignment = .left
         field.textColor = getAppColor(color: .enable)
         field.text = "64"
@@ -72,7 +72,7 @@ class CreateDialogNew : UIViewController, UIPopoverPresentationControllerDelegat
         let field = UITextField()
         field.translatesAutoresizingMaskIntoConstraints = false
         field.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        field.font = UIFont(name: "Rubik-Medium", size: 20)
+        field.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         field.backgroundColor = getAppColor(color: .backgroundLight)
         field.setCorners(corners: 8,curveType: .continuous)
         field.textAlignment = .left
@@ -97,7 +97,7 @@ class CreateDialogNew : UIViewController, UIPopoverPresentationControllerDelegat
         field.background = nil
         field.backgroundColor = getAppColor(color: .backgroundLight)
         field.setCorners(corners: 8,curveType: .continuous)
-        field.font = UIFont(name: "Rubik-Medium", size: 20)
+        field.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         field.textAlignment = .left
         field.textColor = getAppColor(color: .enable)
         field.attributedPlaceholder = NSAttributedString(string: "Background",attributes: [NSAttributedString.Key.foregroundColor: getAppColor(color: .disable)])
@@ -152,7 +152,7 @@ class CreateDialogNew : UIViewController, UIPopoverPresentationControllerDelegat
     
     lazy private var errorText : UILabel = {
         let lbl = UILabel()
-        lbl.font = UIFont(name: "Rubik-Medium", size: 12)
+        lbl.font = UIFont.systemFont(ofSize: 12, weight: .bold)
         lbl.textColor = getAppColor(color: .red)
         lbl.translatesAutoresizingMaskIntoConstraints = false
         
@@ -171,7 +171,7 @@ class CreateDialogNew : UIViewController, UIPopoverPresentationControllerDelegat
         btn.setTitleColor(getAppColor(color: .disable), for: .disabled)
         
         btn.backgroundColor = getAppColor(color: .enable)
-        btn.titleLabel?.font = UIFont(name: "Rubik-Bold", size: 20)
+        btn.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .black)
         
         btn.setBackgroundImage(UIImage(size: CGSize(width: 8, height: 8), bgColor: getAppColor(color: .enable)), for: .normal)
         btn.setBackgroundImage(UIImage(size: CGSize(width: 8, height: 8), bgColor: getAppColor(color: .backgroundLight)), for: .disabled)

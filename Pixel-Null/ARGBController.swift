@@ -81,7 +81,7 @@ class ARGBController: UIViewController {
         field.backgroundColor = getAppColor(color: .backgroundLight)
         field.setCorners(corners: 8)
 
-        field.font = UIFont(name: "Rubik-Medium", size: 20)
+        field.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         field.textColor = getAppColor(color: .enable)
         field.textAlignment = .center
         field.text = "255"
@@ -103,7 +103,7 @@ class ARGBController: UIViewController {
         field.backgroundColor = getAppColor(color: .backgroundLight)
         field.setCorners(corners: 8)
         
-        field.font = UIFont(name: "Rubik-Medium", size: 20)
+        field.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         field.textColor = getAppColor(color: .enable)
         field.textAlignment = .center
         field.text = "255"
@@ -126,7 +126,7 @@ class ARGBController: UIViewController {
         field.backgroundColor = getAppColor(color: .backgroundLight)
         field.setCorners(corners: 8)
 
-        field.font = UIFont(name: "Rubik-Medium", size: 20)
+        field.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         field.textColor = getAppColor(color: .enable)
         field.textAlignment = .center
         field.text = "255"
@@ -148,7 +148,7 @@ class ARGBController: UIViewController {
         field.backgroundColor = getAppColor(color: .backgroundLight)
         field.setCorners(corners: 8)
         
-        field.font = UIFont(name: "Rubik-Medium", size: 20)
+        field.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         field.textColor = getAppColor(color: .enable)
         field.textAlignment = .center
         field.text = "255"
@@ -168,7 +168,7 @@ class ARGBController: UIViewController {
         field.backgroundColor = getAppColor(color: .backgroundLight)
         
         let leftLabel = UILabel()
-        leftLabel.font = UIFont(name: "Rubik-Medium", size: 20)
+        leftLabel.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         leftLabel.textColor = getAppColor(color: .enable)
         leftLabel.textAlignment = .right
         leftLabel.text = "#"
@@ -182,7 +182,7 @@ class ARGBController: UIViewController {
         
         field.setCorners(corners: 8)
         
-        field.font = UIFont(name: "Rubik-Medium", size: 20)
+        field.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         field.textColor = getAppColor(color: .enable)
         field.textAlignment = .left
         field.text = "FFFFFFF"

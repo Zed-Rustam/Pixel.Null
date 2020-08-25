@@ -76,7 +76,7 @@ class LayersTableCell : UICollectionViewCell {
     lazy private var layerName : UITextField = {
         let label = UITextField()
         label.text = "New layer"
-        label.font = UIFont(name: "Rubik-Medium", size: 16)
+        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
         label.textColor = getAppColor(color: .disable)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 36).isActive = true

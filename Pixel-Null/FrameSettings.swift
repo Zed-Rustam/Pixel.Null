@@ -84,7 +84,7 @@ class FrameSettings : UIViewController {
         
         lbl.textAlignment = .left
         lbl.textColor = getAppColor(color: .enable)
-        lbl.font = UIFont(name: "Rubik-Bold", size: 20)
+        lbl.font = UIFont.systemFont(ofSize: 20,weight: .heavy)
         lbl.text = "Delay"
         
         return lbl
@@ -101,7 +101,7 @@ class FrameSettings : UIViewController {
         
         field.textAlignment = .center
         field.textColor = getAppColor(color: .enable)
-        field.font = UIFont(name: "Rubik-Medium", size: 20)
+        field.font = UIFont.systemFont(ofSize: 20,weight: .bold)
         field.keyboardType = .numberPad
         
         

@@ -164,7 +164,7 @@ class ToolBar : UIView {
             (toolCollection.cellForItem(at: IndexPath(item: i, section: 0)) as? ToolButton)?.getButton().isEnabled = true
             swipeView.backgroundColor = getAppColor(color: .enable)
         }
-        (toolCollection.cellForItem(at: IndexPath(item: toolCollection.tools.firstIndex(of: nowSelected)!, section: 0)) as! ToolButton).getButton().delegate()
+        (toolCollection.cellForItem(at: IndexPath(item: toolCollection.tools.firstIndex(of: nowSelected)!, section: 0)) as! ToolButton).getButton().sendActions(for: .touchUpInside)
         //toolCollection.reloadData()
     }
     
@@ -241,19 +241,19 @@ extension ToolBar : ToolBarDelegate {
     
     func wasChangedTool(newTool: Int) {
         //if newTool != nowSelected {
-            let lastCell = toolCollection.cellForItem(at: IndexPath(item: toolCollection.tools.firstIndex(of: nowSelected)!, section: 0)) as! ToolButton
-            lastCell.getButton().setIconColor(color: getAppColor(color: .enable))
-        lastCell.getButton().setbgColor(color: .clear)
+        let lastCell = toolCollection.cellForItem(at: IndexPath(item: toolCollection.tools.firstIndex(of: nowSelected)!, section: 0)) as! ToolButton
+        lastCell.getButton().imageView?.tintColor = getAppColor(color: .enable)
+        lastCell.getButton().backgroundColor = .clear
             
-            nowSelected = newTool
+        nowSelected = newTool
             
-            let nowCell = toolCollection.cellForItem(at: IndexPath(item: toolCollection.tools.firstIndex(of: nowSelected)!, section: 0)) as! ToolButton
-            nowCell.getButton().setIconColor(color: getAppColor(color: .enable))
+        let nowCell = toolCollection.cellForItem(at: IndexPath(item: toolCollection.tools.firstIndex(of: nowSelected)!, section: 0)) as! ToolButton
+        nowCell.getButton().imageView?.tintColor = getAppColor(color: .enable)
        //}
     }
     
     func clickTool(tool : Int) {
-        (toolCollection.cellForItem(at: IndexPath(item: toolCollection.tools.firstIndex(of: tool)!, section: 0)) as! ToolButton).getButton().delegate()
+        (toolCollection.cellForItem(at: IndexPath(item: toolCollection.tools.firstIndex(of: tool)!, section: 0)) as! ToolButton).getButton().sendActions(for: .touchUpInside)
     }
     
     

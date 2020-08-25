@@ -18,7 +18,7 @@ class PalleteEditor : UIViewController {
     
     lazy private var exitButton : UIButton = {
         let btn = UIButton()
-        btn.setImage(#imageLiteral(resourceName: "select_icon").withRenderingMode(.alwaysTemplate), for: .normal)
+        btn.setImage(#imageLiteral(resourceName: "yes"), for: .normal)
         btn.imageView?.tintColor = getAppColor(color: .enable)
         
         btn.imageEdgeInsets = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
@@ -41,14 +41,14 @@ class PalleteEditor : UIViewController {
         lbl.heightAnchor.constraint(equalToConstant: 24).isActive = true
         
         lbl.textColor = getAppColor(color: .red)
-        lbl.font = UIFont(name: "Rubik-Medium", size: 10)
+        lbl.font = UIFont.systemFont(ofSize: 10, weight: .bold)
         lbl.text = ""
         return lbl
     }()
     
     lazy private var palleteName : UITextField = {
         let label = UITextField()
-        label.font = UIFont(name: "Rubik-Bold", size: 20)
+        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
         label.text = pallete.palleteName
         label.setCorners(corners: 12)
         label.textColor = getAppColor(color: .enable)
@@ -89,105 +89,122 @@ class PalleteEditor : UIViewController {
         bg.backgroundColor = UIColor(named : "backgroundColor")
         mainView.addSubviewFullSize(view: bg)
         
-        bg.addSubview(addButton)
-        bg.addSubview(editButton)
-        bg.addSubview(cloneButton)
-        bg.addSubview(deleteButton)
+        bg.addSubview(addBtn)
+        bg.addSubview(editBtn)
+        bg.addSubview(cloneBtn)
+        bg.addSubview(deleteBtn)
         
-        addButton.leftAnchor.constraint(equalTo: bg.leftAnchor, constant: 6).isActive = true
-        addButton.topAnchor.constraint(equalTo: bg.topAnchor, constant: 3).isActive = true
+        addBtn.leftAnchor.constraint(equalTo: bg.leftAnchor, constant: 6).isActive = true
+        addBtn.topAnchor.constraint(equalTo: bg.topAnchor, constant: 3).isActive = true
         
-        editButton.leftAnchor.constraint(equalTo: addButton.rightAnchor, constant: 0).isActive = true
-        editButton.topAnchor.constraint(equalTo: bg.topAnchor, constant: 3).isActive = true
+        editBtn.leftAnchor.constraint(equalTo: addBtn.rightAnchor, constant: 0).isActive = true
+        editBtn.topAnchor.constraint(equalTo: bg.topAnchor, constant: 3).isActive = true
         
-        cloneButton.leftAnchor.constraint(equalTo: editButton.rightAnchor, constant: 0).isActive = true
-        cloneButton.topAnchor.constraint(equalTo: bg.topAnchor, constant: 3).isActive = true
+        cloneBtn.leftAnchor.constraint(equalTo: editBtn.rightAnchor, constant: 0).isActive = true
+        cloneBtn.topAnchor.constraint(equalTo: bg.topAnchor, constant: 3).isActive = true
         
-        deleteButton.leftAnchor.constraint(equalTo: cloneButton.rightAnchor, constant: 0).isActive = true
-        deleteButton.topAnchor.constraint(equalTo: bg.topAnchor, constant: 3).isActive = true
+        deleteBtn.leftAnchor.constraint(equalTo: cloneBtn.rightAnchor, constant: 0).isActive = true
+        deleteBtn.topAnchor.constraint(equalTo: bg.topAnchor, constant: 3).isActive = true
 
         return mainView
     }()
     
-    lazy private var cloneButton : CircleButton = {
-        let btn = CircleButton(icon: #imageLiteral(resourceName: "clone_icon"), frame: .zero)
-        btn.setShadowColor(color: .clear)
+    lazy private var cloneBtn: UIButton = {
+        let btn = UIButton()
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
         btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        
-        btn.delegate = {[unowned self] in
-            if !self.colors.moving {
-                self.colors.cloneSelectedColor()
-            }
-        }
-        
+        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.setImage(#imageLiteral(resourceName: "clone_icon"), for: .normal)
+        btn.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+
+        btn.imageView?.tintColor = getAppColor(color: .enable)
+        btn.addTarget(self, action: #selector(onClone), for: .touchUpInside)
+        btn.backgroundColor = getAppColor(color: .background)
+        btn.setCorners(corners: 12)
         return btn
     }()
     
-    lazy private var deleteButton : CircleButton = {
-        let btn = CircleButton(icon: #imageLiteral(resourceName: "trash_icon"), frame: .zero)
-        btn.setShadowColor(color: .clear)
-        btn.setIconColor(color: getAppColor(color: .red))
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        
-        btn.delegate = {[unowned self] in
-            if !self.colors.moving {
-                self.colors.deleteSelectedColor()
-            }
+    @objc func onClone() {
+        if !colors.moving {
+            colors.cloneSelectedColor()
         }
-        
+    }
+    
+    lazy private var deleteBtn: UIButton = {
+        let btn = UIButton()
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.setImage(#imageLiteral(resourceName: "trash_icon"), for: .normal)
+        btn.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+
+        btn.imageView?.tintColor = getAppColor(color: .red)
+        btn.addTarget(self, action: #selector(onDelete), for: .touchUpInside)
+        btn.backgroundColor = getAppColor(color: .background)
+        btn.setCorners(corners: 12)
         return btn
     }()
     
-    lazy private var addButton : CircleButton = {
-        let btn = CircleButton(icon: #imageLiteral(resourceName: "add_icon"), frame: .zero)
-        btn.setShadowColor(color: .clear)
+    @objc func onDelete() {
+        if !colors.moving {
+            colors.deleteSelectedColor()
+        }
+    }
+    
+    lazy private var addBtn: UIButton = {
+        let btn = UIButton()
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
         btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        
-        btn.delegate = {[unowned self] in
-            if !self.colors.moving {
-                let palleteSelector = ColorDialogController()
-                
-                palleteSelector.delegate = {[unowned self] in
-                    if !self.colors.moving {
-                        self.colors.addColor(color: $0)
-                    }
+        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.setImage(#imageLiteral(resourceName: "add_icon"), for: .normal)
+        btn.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+
+        btn.imageView?.tintColor = getAppColor(color: .enable)
+        btn.addTarget(self, action: #selector(onAdd), for: .touchUpInside)
+        btn.backgroundColor = getAppColor(color: .background)
+        btn.setCorners(corners: 12)
+        return btn
+    }()
+    
+    @objc func onAdd() {
+        if !colors.moving {
+            let palleteSelector = ColorDialogController()
+            palleteSelector.delegate = {[unowned self] in
+                if !self.colors.moving {
+                    self.colors.addColor(color: $0)
                 }
-                
-                self.show(palleteSelector, sender: self)
             }
+            show(palleteSelector, sender: self)
         }
-        
+    }
+    
+    lazy private var editBtn: UIButton = {
+        let btn = UIButton()
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.setImage(#imageLiteral(resourceName: "edit_icon"), for: .normal)
+        btn.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+
+        btn.imageView?.tintColor = getAppColor(color: .enable)
+        btn.addTarget(self, action: #selector(onEdit), for: .touchUpInside)
+        btn.backgroundColor = getAppColor(color: .background)
+        btn.setCorners(corners: 12)
         return btn
     }()
     
-    lazy private var editButton : CircleButton = {
-        let btn = CircleButton(icon: #imageLiteral(resourceName: "edit_icon"), frame: .zero)
-        btn.setShadowColor(color: .clear)
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        
-        btn.delegate = {[unowned self] in
-            if !self.colors.moving {
-                let palleteSelector = ColorDialogController()
-                palleteSelector.setStartColor(clr: self.colors.getSelectItemColor())
-                
-                palleteSelector.delegate = {[unowned self] in
-                    self.colors.changeSelectedColor(color: $0)
-                }
-                
-                self.show(palleteSelector, sender: self)
+    @objc func onEdit() {
+        if !colors.moving {
+            let palleteSelector = ColorDialogController()
+            palleteSelector.setStartColor(clr: colors.getSelectItemColor())
+            
+            palleteSelector.delegate = {[unowned self] in
+                self.colors.changeSelectedColor(color: $0)
             }
+            
+            show(palleteSelector, sender: self)
         }
-        
-        return btn
-    }()
+    }
 
     lazy private var nameDelegate : TextFieldDelegate = {
        let del = TextFieldDelegate(method: {[unowned self] in

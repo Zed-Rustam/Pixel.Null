@@ -12,6 +12,7 @@ class GalleryLayout : UICollectionViewLayout{
     var columnsCount = 0
     var padding = 12.0
     var spacing = 12.0
+    var spacingY = 0.0
     weak var delegate : GalleryDelegate? = nil
     var columnsHeights : [Double] = []
     var bottomOffset = 0.0
@@ -45,13 +46,14 @@ class GalleryLayout : UICollectionViewLayout{
             let index = IndexPath(item: item, section: 0)
 
             if(delegate?.getItemClass(indexItem: index) == "Project"){
+            
             let itemHeight = delegate!.getItemHeight(indexItem: index) * itemWidth + 24
-            let ypos = columnsHeights.min()! + spacing
+            let ypos = columnsHeights.min()! + spacingY
             let xpos = padding + (Double(columnsHeights.firstIndex(of: columnsHeights.min()!)!) * (itemWidth)) + (Double(columnsHeights.firstIndex(of: columnsHeights.min()!)!) * spacing);
 
             let frame = CGRect(x: xpos, y: ypos, width: itemWidth, height: itemHeight)
             
-            columnsHeights[columnsHeights.firstIndex(of: columnsHeights.min()!)!] += itemHeight + spacing
+            columnsHeights[columnsHeights.firstIndex(of: columnsHeights.min()!)!] += itemHeight + spacingY
             let attribute = UICollectionViewLayoutAttributes(forCellWith: index)
             attribute.frame = frame
             attributes.append(attribute)

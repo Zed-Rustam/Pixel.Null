@@ -24,7 +24,7 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
     lazy private var frameText : UILabel = {
            let text = UILabel(frame: .zero)
            text.text = NSLocalizedString("Frames", comment: "")
-           text.font = UIFont(name: "Rubik-Bold", size: 32)
+           text.font = UIFont.systemFont(ofSize: 32, weight: .black)
            text.textColor = UIColor(named: "enableColor")
            text.translatesAutoresizingMaskIntoConstraints = false
            text.heightAnchor.constraint(equalToConstant: 36).isActive = true
@@ -54,8 +54,9 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
         btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        btn.setImage(#imageLiteral(resourceName: "project_settings_icon").withRenderingMode(.alwaysTemplate), for: .normal)
-        btn.imageEdgeInsets = UIEdgeInsets.init(top: 10, left: 10, bottom: 10, right: 10)
+        btn.setImage(#imageLiteral(resourceName: "project_settings_icon"), for: .normal)
+        btn.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+
         btn.imageView?.tintColor = getAppColor(color: .enable)
         btn.addTarget(self, action: #selector(onSettings), for: .touchUpInside)
         
@@ -77,7 +78,6 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
         }
     }
     
-    var dublicateButton : CircleButton!
     weak var project : ProjectWork?
     
     

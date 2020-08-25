@@ -1,117 +1,80 @@
-//
-//  ProjectExportController.swift
-//  Pixel-Null
-//
-//  Created by Рустам Хахук on 23.05.2020.
-//  Copyright © 2020 Zed Null. All rights reserved.
-//
-
 import UIKit
 
 class ProjectExportController: UIViewController {
     weak var project: ProjectWork? = nil
     
-//    lazy private var titleBg: UIView = {
-//        let view = UIView()
-//        view.translatesAutoresizingMaskIntoConstraints = false
-//        view.backgroundColor = getAppColor(color: .background)
-//        view.layer.cornerRadius = 8
-//
-//        view.addSubviewFullSize(view: titleText, paddings: (42,-42,0,0))
-//        view.addSubview(exitBtn)
-//        view.addSubview(appendBtn)
-//
-//        exitBtn.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-//        exitBtn.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-//
-//        appendBtn.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-//        appendBtn.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-//        return view
-//    }()
-    
-    lazy private var exitBtn : CircleButton = {
-        let btn = CircleButton(icon: #imageLiteral(resourceName: "cancel_icon"), frame: .zero, icScale: 0.33)
+    lazy private var exportBtn: UIButton = {
+        let btn = UIButton()
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 42).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: 42).isActive = true
-        btn.corners = 8
-        btn.setShadowColor(color: .clear)
-        
-        btn.delegate = {[unowned self] in
-            self.dismiss(animated: true, completion: nil)
-        }
-        
-        return btn
-    }()
-    
-    lazy private var appendBtn : CircleButton = {
-        let btn = CircleButton(icon: #imageLiteral(resourceName: "share_icon"), frame: .zero, icScale: 0.6)
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
         btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        btn.corners = 12
-        btn.setShadowColor(color: .clear)
+        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
         
-        btn.delegate = {[unowned self] in
-            switch self.exportSelector.select {
-            case 0:
-                self.present(UIActivityViewController(activityItems: [self.project!.getProjectDirectory()], applicationActivities: nil), animated: true, completion: nil)
-            case 1:
-                
-                let activity = UIActivityViewController(activityItems: [self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).png")], applicationActivities: nil)
-                activity.completionWithItemsHandler = { (activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) -> Void in
-                        try? FileManager.default.removeItem(at: self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).png"))
-                    print("deleted")
-                }
-                
-                try! self.project!.getFrameWithBackground(frame: 0).scale(scaleFactor: CGFloat(self.scale)).flip(xFlip: self.project!.isFlipX, yFlip: self.project!.isFlipY).pngData()?.write(to: self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).png"))
-                
-                self.present(activity, animated: true, completion: nil)
-            case 2:
-                let activity = UIActivityViewController(activityItems: [self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).gif")], applicationActivities: nil)
-                activity.completionWithItemsHandler = { (activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) -> Void in
-                        try? FileManager.default.removeItem(at: self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).gif"))
-                    print("deleted")
-                }
-                
-                self.project!.generateGif(scale: CGFloat(self.scale))
-                self.present(activity, animated: true, completion: nil)
-
-            case 3:
-                self.project?.generateGroupOfImages(scale: CGFloat(self.scale))
-                
-                let activity = UIActivityViewController(activityItems: [self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName)")], applicationActivities: nil)
-                activity.completionWithItemsHandler = { (activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) -> Void in
-                        try? FileManager.default.removeItem(at: self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName)"))
-                        print("deleted")
-                }
-                
-                self.present(activity, animated: true, completion: nil)
-                
-            case 4:
-                let activity = UIActivityViewController(activityItems: [self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).png")], applicationActivities: nil)
-                activity.completionWithItemsHandler = { (activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) -> Void in
-                        try? FileManager.default.removeItem(at: self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).png"))
-                    print("deleted")
-                }
-                
-                try! self.project!.generateSpriteList(scale: CGFloat(self.scale)).pngData()!.write(to: self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).png"))
-                
-                self.present(activity, animated: true, completion: nil)
-                
-                
-            default:
-                break
-            }
-        }
+        btn.setImage(#imageLiteral(resourceName: "share_icon").withRenderingMode(.alwaysTemplate), for: .normal)
+        btn.imageView?.tintColor = getAppColor(color: .enable)
+        btn.imageEdgeInsets = UIEdgeInsets(top: 6, left: 6, bottom: 6, right: 6)
+        
+        btn.addTarget(self, action: #selector(onExport), for: .touchUpInside)
         
         return btn
     }()
+    
+    @objc func onExport() {
+        switch exportSelector.select {
+        case 0:
+            present(UIActivityViewController(activityItems: [project!.getProjectDirectory()], applicationActivities: nil), animated: true, completion: nil)
+        case 1:
+            
+            let activity = UIActivityViewController(activityItems: [project!.getProjectDirectory().appendingPathComponent("\(project!.userProjectName).png")], applicationActivities: nil)
+            activity.completionWithItemsHandler = { (activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) -> Void in
+                try? FileManager.default.removeItem(at: self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).png"))
+                print("deleted")
+            }
+            
+            try! project!.getFrameWithBackground(frame: 0).scale(scaleFactor: CGFloat(scale)).flip(xFlip: project!.isFlipX, yFlip: project!.isFlipY).pngData()?.write(to: project!.getProjectDirectory().appendingPathComponent("\(project!.userProjectName).png"))
+            
+            present(activity, animated: true, completion: nil)
+        case 2:
+            let activity = UIActivityViewController(activityItems: [project!.getProjectDirectory().appendingPathComponent("\(project!.userProjectName).gif")], applicationActivities: nil)
+            activity.completionWithItemsHandler = { (activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) -> Void in
+                try? FileManager.default.removeItem(at: self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).gif"))
+                print("deleted")
+            }
+            
+            project!.generateGif(scale: CGFloat(scale))
+            present(activity, animated: true, completion: nil)
+
+        case 3:
+            project?.generateGroupOfImages(scale: CGFloat(scale))
+            
+            let activity = UIActivityViewController(activityItems: [project!.getProjectDirectory().appendingPathComponent("\(project!.userProjectName)")], applicationActivities: nil)
+            activity.completionWithItemsHandler = { (activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) -> Void in
+                try? FileManager.default.removeItem(at: self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName)"))
+                    print("deleted")
+            }
+            
+            present(activity, animated: true, completion: nil)
+            
+        case 4:
+            let activity = UIActivityViewController(activityItems: [project!.getProjectDirectory().appendingPathComponent("\(project!.userProjectName).png")], applicationActivities: nil)
+            activity.completionWithItemsHandler = { (activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) -> Void in
+                    try? FileManager.default.removeItem(at: self.project!.getProjectDirectory().appendingPathComponent("\(self.project!.userProjectName).png"))
+                print("deleted")
+            }
+            
+            try! project!.generateSpriteList(scale: CGFloat(scale)).pngData()!.write(to: project!.getProjectDirectory().appendingPathComponent("\(project!.userProjectName).png"))
+            
+            present(activity, animated: true, completion: nil)
+            
+        default:
+            break
+        }
+    }
     
     lazy private var titleText: UILabel = {
         let text = UILabel()
         text.text = "Export"
-        text.font = UIFont(name: "Rubik-Bold", size: 32)
+        text.font = UIFont.systemFont(ofSize: 32, weight: .black)
+        
         text.textAlignment = .center
         text.translatesAutoresizingMaskIntoConstraints = false
         text.textColor = getAppColor(color: .enable)
@@ -125,7 +88,7 @@ class ProjectExportController: UIViewController {
         img.contentMode = .scaleAspectFill
         img.layer.magnificationFilter = .nearest
         img.translatesAutoresizingMaskIntoConstraints = false
-        img.setCorners(corners: 12)
+        img.setCorners(corners: 12,needMask: true)
                 
         if project!.projectSize.width > project!.projectSize.height {
             img.widthAnchor.constraint(equalToConstant: 96).isActive = true
@@ -154,7 +117,7 @@ class ProjectExportController: UIViewController {
         let text = UILabel()
         text.text = project?.userProjectName
         
-        text.font = UIFont(name: "Rubik-Bold", size: 20)
+        text.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         text.textAlignment = .left
         text.translatesAutoresizingMaskIntoConstraints = false
         text.textColor = getAppColor(color: .enable)
@@ -166,7 +129,7 @@ class ProjectExportController: UIViewController {
         let text = UILabel()
         text.text = "Will export like a project file"
            
-        text.font = UIFont(name: "Rubik-Medium", size: 12)
+        text.font = UIFont.systemFont(ofSize: 12, weight: .bold)
         text.textAlignment = .left
         text.adjustsFontSizeToFitWidth = true
         text.translatesAutoresizingMaskIntoConstraints = false
@@ -179,7 +142,7 @@ class ProjectExportController: UIViewController {
         let text = UILabel()
         text.text = ""
            
-        text.font = UIFont(name: "Rubik-Medium", size: 12)
+        text.font = UIFont.systemFont(ofSize: 12, weight: .bold)
         text.textAlignment = .left
         text.adjustsFontSizeToFitWidth = true
         text.translatesAutoresizingMaskIntoConstraints = false
@@ -192,7 +155,7 @@ class ProjectExportController: UIViewController {
         let text = UILabel()
         text.text = ""
            
-        text.font = UIFont(name: "Rubik-Medium", size: 12)
+        text.font = UIFont.systemFont(ofSize: 12, weight: .bold)
         text.textAlignment = .right
         text.adjustsFontSizeToFitWidth = true
         text.translatesAutoresizingMaskIntoConstraints = false
@@ -204,7 +167,7 @@ class ProjectExportController: UIViewController {
     lazy private var scaleTitle: UILabel = {
         let text = UILabel()
         text.text = "Scale"
-        text.font = UIFont(name: "Rubik-Medium", size: 16)
+        text.font = UIFont.systemFont(ofSize: 16, weight: .bold)
         text.textAlignment = .left
         text.translatesAutoresizingMaskIntoConstraints = false
         text.textColor = getAppColor(color: .enable)
@@ -319,7 +282,7 @@ class ProjectExportController: UIViewController {
         
         view.backgroundColor = getAppColor(color: .background)
         view.addSubview(titleText)
-        view.addSubview(appendBtn)
+        view.addSubview(exportBtn)
         view.addSubview(image)
         view.addSubview(projectName)
         view.addSubview(exportInfo)
@@ -337,8 +300,8 @@ class ProjectExportController: UIViewController {
         titleText.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
         
         
-        appendBtn.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
-        appendBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
+        exportBtn.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        exportBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
         
         image.centerXAnchor.constraint(equalTo: view.leftAnchor, constant: 74).isActive = true
         image.centerYAnchor.constraint(equalTo: titleText.bottomAnchor, constant: 74).isActive = true

@@ -13,7 +13,7 @@ class ActionInfo: UIView {
     
     lazy private var title: UILabel = {
         let lbl = UILabel()
-        lbl.font = UIFont(name: "Rubik-Bold", size: 12)
+        lbl.font = UIFont.systemFont(ofSize: 12, weight: .black)
         lbl.textColor = getAppColor(color: .enable)
         lbl.textAlignment = .center
 
@@ -24,7 +24,7 @@ class ActionInfo: UIView {
     
     lazy private var info: UILabel = {
         let lbl = UILabel()
-        lbl.font = UIFont(name: "Rubik-Bold", size: 10)
+        lbl.font = UIFont.systemFont(ofSize: 10, weight: .bold)
         lbl.textColor = getAppColor(color: .disable)
         lbl.textAlignment = .center
 

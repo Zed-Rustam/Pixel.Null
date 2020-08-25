@@ -22,30 +22,30 @@ class ProjectPallete: UIViewController {
         
         view.translatesAutoresizingMaskIntoConstraints = false
         
-        view.addSubview(addButton)
-        view.addSubview(editButton)
-        view.addSubview(cloneButton)
-        view.addSubview(deleteButton)
+        view.addSubview(addBtn)
+        view.addSubview(editBtn)
+        view.addSubview(cloneBtn)
+        view.addSubview(deleteBtn)
         view.addSubview(color)
-        view.addSubview(saveButton)
+        view.addSubview(saveBtn)
         
         color.topAnchor.constraint(equalTo: view.topAnchor, constant: 3).isActive = true
         color.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 3).isActive = true
         
-        saveButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 3).isActive = true
-        saveButton.leftAnchor.constraint(equalTo: color.rightAnchor, constant: 6).isActive = true
+        saveBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 3).isActive = true
+        saveBtn.leftAnchor.constraint(equalTo: color.rightAnchor, constant: 6).isActive = true
         
-        addButton.rightAnchor.constraint(equalTo: editButton.leftAnchor, constant: 0).isActive = true
-        addButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 3).isActive = true
+        addBtn.rightAnchor.constraint(equalTo: editBtn.leftAnchor, constant: 0).isActive = true
+        addBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 3).isActive = true
         
-        editButton.rightAnchor.constraint(equalTo: cloneButton.leftAnchor, constant: 0).isActive = true
-        editButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 3).isActive = true
+        editBtn.rightAnchor.constraint(equalTo: cloneBtn.leftAnchor, constant: 0).isActive = true
+        editBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 3).isActive = true
         
-        cloneButton.rightAnchor.constraint(equalTo: deleteButton.leftAnchor, constant: 0).isActive = true
-        cloneButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 3).isActive = true
+        cloneBtn.rightAnchor.constraint(equalTo: deleteBtn.leftAnchor, constant: 0).isActive = true
+        cloneBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 3).isActive = true
         
-        deleteButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -6).isActive = true
-        deleteButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 3).isActive = true
+        deleteBtn.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -6).isActive = true
+        deleteBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 3).isActive = true
 
         return view
     }()
@@ -55,7 +55,7 @@ class ProjectPallete: UIViewController {
         openPalletesBtn.translatesAutoresizingMaskIntoConstraints = false
         openPalletesBtn.widthAnchor.constraint(equalToConstant: 42).isActive = true
         openPalletesBtn.heightAnchor.constraint(equalToConstant: 42).isActive = true
-        openPalletesBtn.setImage(#imageLiteral(resourceName: "pallete_collection_item").withRenderingMode(.alwaysTemplate), for: .normal)
+        openPalletesBtn.setImage(#imageLiteral(resourceName: "Palette").withRenderingMode(.alwaysTemplate), for: .normal)
         openPalletesBtn.imageView?.tintColor = getAppColor(color: .enable)
         openPalletesBtn.addTarget(self, action: #selector(onPress), for: .touchUpInside)
         openPalletesBtn.imageEdgeInsets = UIEdgeInsets(top: 6, left: 6, bottom: 6, right: 6)
@@ -64,7 +64,7 @@ class ProjectPallete: UIViewController {
     }()
     
     lazy private var palleteName: UILabel = {
-        let label = UILabel().setTextColor(color: getAppColor(color: .enable)).setFont(font: UIFont(name: "Rubik-Bold", size: 32)!).setText(text: "Palette")
+        let label = UILabel().setTextColor(color: getAppColor(color: .enable)).setFont(font: UIFont.systemFont(ofSize: 32, weight: .black)).setText(text: "Palette")
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 42).isActive = true
         
@@ -105,108 +105,130 @@ class ProjectPallete: UIViewController {
         return clr
     }()
     
-    lazy private var cloneButton: CircleButton = {
-        let btn = CircleButton(icon: #imageLiteral(resourceName: "clone_icon"), frame: .zero)
-        btn.setShadowColor(color: .clear)
+    lazy private var cloneBtn: UIButton = {
+        let btn = UIButton()
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
         btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        
-        btn.delegate = {[unowned self] in
-            if !self.collection.moving {
-                self.collection.cloneSelectedColor()
-                self.project!.projectPallete = self.collection.palleteColors
-            }
-        }
-        
-        return btn
-    }()
-    
-    lazy private var deleteButton: CircleButton = {
-        let btn = CircleButton(icon: #imageLiteral(resourceName: "trash_icon"), frame: .zero)
-        btn.setShadowColor(color: .clear)
-        btn.setIconColor(color: UIColor(named: "redColor")!)
-        
-        btn.translatesAutoresizingMaskIntoConstraints = false
         btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        
-        btn.delegate = {[unowned self] in
-            if !self.collection.moving {
-                self.collection.deleteSelectedColor()
-                self.project!.projectPallete = self.collection.palleteColors
-            }
-        }
-        
-        return btn
-    }()
-    
-    lazy private var addButton: CircleButton = {
-        let btn = CircleButton(icon: #imageLiteral(resourceName: "add_icon"), frame: .zero)
-        btn.setShadowColor(color: .clear)
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        
-        btn.delegate = {[unowned self] in
-            if !self.collection.moving {
-                let palleteSelector = ColorDialogController()
-                palleteSelector.modalPresentationStyle = .formSheet
-                palleteSelector.delegate = {[unowned self] in
-                    self.collection.addColor(color: $0)
-                    self.project!.projectPallete = self.collection.palleteColors
-                }
-                
-                self.show(palleteSelector, sender: self)
-            }
-        }
-        
-        return btn
-    }()
-    
-    lazy private var editButton: CircleButton = {
-        let btn = CircleButton(icon: #imageLiteral(resourceName: "edit_icon"), frame: .zero)
-        btn.setShadowColor(color: .clear)
-        
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        
-        btn.delegate = {[unowned self] in
-            if !self.collection.moving {
-                let palleteSelector = ColorDialogController()
-                palleteSelector.modalPresentationStyle = .formSheet
-                palleteSelector.setStartColor(clr: self.collection.getSelectItemColor())
-                
-                palleteSelector.delegate = {[unowned self] in
-                    self.collection.changeSelectedColor(color: $0)
-                    self.project!.projectPallete = self.collection.palleteColors
-                }
-                
-                self.show(palleteSelector, sender: self)
-            }
-        }
-        
-        return btn
-    }()
+        btn.setImage(#imageLiteral(resourceName: "clone_icon"), for: .normal)
+        btn.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
 
-    lazy private var saveButton: CircleButton = {
-        let btn = CircleButton(icon: #imageLiteral(resourceName: "save_icon"), frame: .zero)
-        btn.setShadowColor(color: .clear)
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        
-        btn.delegate = {[unowned self] in
-            if !self.collection.moving {
-                self.collection.addColor(color: self.color.color)
-                self.project!.projectPallete = self.collection.palleteColors
-            }
-        }
-        
+        btn.imageView?.tintColor = getAppColor(color: .enable)
+        btn.addTarget(self, action: #selector(onClone), for: .touchUpInside)
+        btn.backgroundColor = getAppColor(color: .background)
+        btn.setCorners(corners: 12)
         return btn
     }()
     
+    @objc func onClone() {
+        if !collection.moving {
+            collection.cloneSelectedColor()
+            project!.projectPallete = collection.palleteColors
+        }
+    }
+    
+    lazy private var deleteBtn: UIButton = {
+        let btn = UIButton()
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.setImage(#imageLiteral(resourceName: "trash_icon").withRenderingMode(.alwaysTemplate), for: .normal)
+        btn.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+
+        btn.imageView?.tintColor = getAppColor(color: .red)
+        btn.addTarget(self, action: #selector(onDelete), for: .touchUpInside)
+        btn.backgroundColor = getAppColor(color: .background)
+        btn.setCorners(corners: 12)
+        return btn
+    }()
+    
+    @objc func onDelete() {
+        if !collection.moving {
+            collection.deleteSelectedColor()
+            project!.projectPallete = collection.palleteColors
+        }
+    }
+    
+    lazy private var addBtn: UIButton = {
+        let btn = UIButton()
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.setImage(#imageLiteral(resourceName: "center_icon"), for: .normal)
+        btn.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+
+        btn.imageView?.tintColor = getAppColor(color: .enable)
+        btn.addTarget(self, action: #selector(onAdd), for: .touchUpInside)
+        btn.backgroundColor = getAppColor(color: .background)
+        btn.setCorners(corners: 12)
+        return btn
+    }()
+    
+    @objc func onAdd() {
+        if !collection.moving {
+            let palleteSelector = ColorDialogController()
+            palleteSelector.modalPresentationStyle = .formSheet
+            palleteSelector.delegate = {[unowned self] in
+                self.collection.addColor(color: $0)
+                self.project!.projectPallete = self.collection.palleteColors
+            }
+            
+            show(palleteSelector, sender: self)
+        }
+    }
+    
+    lazy private var editBtn: UIButton = {
+        let btn = UIButton()
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.setImage(#imageLiteral(resourceName: "edit_icon"), for: .normal)
+        btn.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+
+        btn.imageView?.tintColor = getAppColor(color: .enable)
+        btn.addTarget(self, action: #selector(onEdit), for: .touchUpInside)
+        btn.backgroundColor = getAppColor(color: .background)
+        btn.setCorners(corners: 12)
+        return btn
+    }()
+    
+    @objc func onEdit() {
+        if !collection.moving {
+            let palleteSelector = ColorDialogController()
+            palleteSelector.modalPresentationStyle = .formSheet
+            palleteSelector.setStartColor(clr: collection.getSelectItemColor())
+            
+            palleteSelector.delegate = {[unowned self] in
+                self.collection.changeSelectedColor(color: $0)
+                self.project!.projectPallete = self.collection.palleteColors
+            }
+            
+            show(palleteSelector, sender: self)
+        }
+    }
+    
+    lazy private var saveBtn: UIButton = {
+        let btn = UIButton()
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.setImage(#imageLiteral(resourceName: "save_icon"), for: .normal)
+        btn.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+
+        btn.imageView?.tintColor = getAppColor(color: .enable)
+        btn.addTarget(self, action: #selector(onSave), for: .touchUpInside)
+        btn.backgroundColor = getAppColor(color: .background)
+        btn.setCorners(corners: 12)
+        return btn
+    }()
+    
+    @objc func onSave() {
+        if !collection.moving {
+            collection.addColor(color: color.color)
+            project!.projectPallete = collection.palleteColors
+        }
+    }
+
     @objc func onPress() {
         let selector = PeletteSelectController()
         selector.modalPresentationStyle = .formSheet

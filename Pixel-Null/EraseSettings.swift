@@ -18,7 +18,7 @@ class EraseSettings : UIViewController {
         field.delegate = eraseSizeInputDelegate
         field.textAlignment = .center
         field.keyboardType = .numberPad
-        field.font = UIFont(name: "Rubik-Medium", size: 20)
+        field.font = UIFont.systemFont(ofSize: 20, weight: .bold)
 
         field.attributedPlaceholder = NSAttributedString(string: "1",attributes: [NSAttributedString.Key.foregroundColor: getAppColor(color: .disable)])
 
@@ -78,8 +78,8 @@ class EraseSettings : UIViewController {
         let text = UILabel()
         text.text = NSLocalizedString("Width", comment: "")
         text.textAlignment = .left
-        text.font = UIFont(name:  "Rubik-Medium", size: 24)
-        text.textColor = UIColor(named: "enableColor")
+        text.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        text.textColor = getAppColor(color: .enable)
         text.translatesAutoresizingMaskIntoConstraints = false
         text.heightAnchor.constraint(equalToConstant: 36).isActive = true
         return text
@@ -104,7 +104,7 @@ class EraseSettings : UIViewController {
            let title = UILabel()
            title.text = NSLocalizedString("Eraser", comment: "")
            title.textAlignment = .center
-           title.font = UIFont(name:  "Rubik-Bold", size: 32)
+           title.font = UIFont.systemFont(ofSize: 32, weight: .black)
            title.textColor = UIColor(named: "enableColor")
            
            return title

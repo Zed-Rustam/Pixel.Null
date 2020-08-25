@@ -15,7 +15,7 @@ class PaletteSelectController: UIViewController {
     lazy private var paletteTitle: UILabel = {
         let lbl = UILabel()
         lbl.text = "Default palette"
-        lbl.font = UIFont(name: "Rubik-Bold", size: 24)
+        lbl.font = UIFont.systemFont(ofSize: 24, weight: .black)
         lbl.textAlignment = .left
         lbl.textColor = getAppColor(color: .enable)
         lbl.translatesAutoresizingMaskIntoConstraints = false
@@ -25,7 +25,7 @@ class PaletteSelectController: UIViewController {
     
     lazy private var selectPalette: UIButton = {
         let btn = UIButton()
-        btn.setImage(#imageLiteral(resourceName: "pallete_collection_item").withRenderingMode(.alwaysTemplate), for: .normal)
+        btn.setImage(#imageLiteral(resourceName: "Palette").withRenderingMode(.alwaysTemplate), for: .normal)
         btn.imageView?.tintColor = getAppColor(color: .enable)
         
         btn.imageEdgeInsets = UIEdgeInsets(top: 6, left: 6, bottom: 6, right: 6)

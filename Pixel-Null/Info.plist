@@ -64,9 +64,10 @@
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Application needs permission to save project's image</string>
+	<string>Application needs permission to save project&apos;s image</string>
 	<key>UIAppFonts</key>
 	<array>
+		<string>SF-Pro-Display-Black.otf</string>
 		<string>Rubik-Medium.ttf</string>
 		<string>Rubik-Regular.ttf</string>
 		<string>Rubik-Bold.ttf</string>

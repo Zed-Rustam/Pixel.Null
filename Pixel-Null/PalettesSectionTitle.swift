@@ -13,7 +13,7 @@ class PalettesSectionTitle: UICollectionReusableView {
         let lbl = UILabel()
         lbl.translatesAutoresizingMaskIntoConstraints = false
         lbl.textColor = getAppColor(color: .enable)
-        lbl.font = UIFont(name: "Rubik-Bold", size: 24)
+        lbl.font = UIFont.systemFont(ofSize: 24, weight: .heavy)
         lbl.textAlignment = .left
         return lbl
     }()

@@ -42,7 +42,7 @@ class Editor : UIViewController {
         title.translatesAutoresizingMaskIntoConstraints = false
         title.textColor = getAppColor(color: .enable)
         title.text = "1024x1024"
-        title.font = UIFont(name: "Rubik-Bold", size: 16)
+        title.font = UIFont.systemFont(ofSize: 16, weight: .bold)
         title.textAlignment = .center
         
         self.canvas.transformView.resizeDelegate = {size in
@@ -61,7 +61,7 @@ class Editor : UIViewController {
         mainView.translatesAutoresizingMaskIntoConstraints = false
         
         let bg = UIView()
-        bg.backgroundColor = UIColor(named: "backgroundColor")
+        bg.backgroundColor = getAppColor(color: .background)
         bg.setCorners(corners: 8)
         bg.translatesAutoresizingMaskIntoConstraints = false
         
@@ -71,7 +71,7 @@ class Editor : UIViewController {
         title.translatesAutoresizingMaskIntoConstraints = false
         title.textColor = UIColor(named: "enableColor")
         title.text = "0°"
-        title.font = UIFont(name: "Rubik-Bold", size: 16)
+        title.font = UIFont.systemFont(ofSize: 16, weight: .bold)
         title.textAlignment = .center
         
         self.canvas.transformView.rotateDelegate = {angle in

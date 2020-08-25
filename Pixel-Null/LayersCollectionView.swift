@@ -18,7 +18,7 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
     lazy private var layerText : UILabel = {
         let text = UILabel(frame: .zero)
         text.text = NSLocalizedString("Layers", comment: "")
-        text.font = UIFont(name: "Rubik-Bold", size: 32)
+        text.font = UIFont.systemFont(ofSize: 32, weight: .black)
         text.textColor = UIColor(named: "enableColor")
         text.translatesAutoresizingMaskIntoConstraints = false
         text.heightAnchor.constraint(equalToConstant: 36).isActive = true

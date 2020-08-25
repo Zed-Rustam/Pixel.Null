@@ -34,30 +34,30 @@ class ProjectImportController: UIViewController {
     lazy private var titleLabel : UILabel = {
         let label = UILabel()
         label.text = NSLocalizedString("Import files", comment: "")
-        label.font = UIFont(name: "Rubik-Bold", size: 24)
+        label.font = UIFont.systemFont(ofSize: 24,weight: .black)
         label.textColor = getAppColor(color: .enable)
         label.textAlignment = .center
         
         return label
     }()
     
-    lazy private var importBtn : CircleButton = {
-        let btn = CircleButton(icon: #imageLiteral(resourceName: "import_icon"), frame: .zero,icScale: 0.33)
+    lazy private var importBtn : UIButton = {
+        let btn = UIButton()
+        btn.setImage(#imageLiteral(resourceName: "import_icon"), for: .normal)
+        btn.imageView?.tintColor = getAppColor(color: .enable)
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.widthAnchor.constraint(equalToConstant: 42).isActive = true
         btn.heightAnchor.constraint(equalToConstant: 42).isActive = true
-        btn.setShadowColor(color: .clear)
-        
-        btn.delegate = {[unowned self] in
-            self.importFiles()
-            
-            self.gallery?.gallery.reloadData()
-            
-            self.dismiss(animated: true, completion: nil)
-        }
-        
+        btn.imageEdgeInsets = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
+        btn.addTarget(self, action: #selector(onImport), for: .touchUpInside)
         return btn
     }()
+    
+    @objc func onImport() {
+        importFiles()
+        gallery?.gallery.reloadData()
+        dismiss(animated: true, completion: nil)
+    }
     
     lazy private var collection: ImportCollectionView = {
         let collect = ImportCollectionView(files: urls)

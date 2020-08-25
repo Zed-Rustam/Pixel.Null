@@ -27,7 +27,7 @@ class AboutDeveloperController : UIViewController {
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 24).isActive = true
-        label.font = UIFont(name: "Rubik-Bold", size: 24)
+        label.font = UIFont.systemFont(ofSize: 24, weight: .black)
         label.adjustsFontSizeToFitWidth = true
         
         return label
@@ -40,7 +40,7 @@ class AboutDeveloperController : UIViewController {
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 24).isActive = true
-        label.font = UIFont(name: "Rubik-Medium", size: 16)
+        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
         
         return label
     }()
@@ -52,7 +52,7 @@ class AboutDeveloperController : UIViewController {
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 24).isActive = true
-        label.font = UIFont(name: "Rubik-Bold", size: 24)
+        label.font = UIFont.systemFont(ofSize: 24, weight: .black)
         
         return label
     }()
@@ -64,7 +64,7 @@ class AboutDeveloperController : UIViewController {
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 24).isActive = true
-        label.font = UIFont(name: "Rubik-Medium", size: 16)
+        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
         
         return label
     }()
@@ -76,7 +76,7 @@ class AboutDeveloperController : UIViewController {
         label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 24).isActive = true
-        label.font = UIFont(name: "Rubik-Medium", size: 16)
+        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
         
         return label
     }()
@@ -88,7 +88,7 @@ class AboutDeveloperController : UIViewController {
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 24).isActive = true
-        label.font = UIFont(name: "Rubik-Medium", size: 16)
+        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
         
         return label
     }()
@@ -100,7 +100,7 @@ class AboutDeveloperController : UIViewController {
         label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 24).isActive = true
-        label.font = UIFont(name: "Rubik-Medium", size: 16)
+        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
         
         return label
     }()

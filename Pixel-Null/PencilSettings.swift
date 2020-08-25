@@ -31,7 +31,7 @@ class PencilSettings : UIViewController {
         field.delegate = penSizeInputDelegate
         field.textAlignment = .center
         field.keyboardType = .numberPad
-        field.font = UIFont(name: "Rubik-Medium", size: 20)
+        field.font = UIFont.systemFont(ofSize: 20, weight: .bold)
 
         field.attributedPlaceholder = NSAttributedString(string: "1",attributes: [NSAttributedString.Key.foregroundColor: getAppColor(color: .disable)])
 
@@ -68,7 +68,7 @@ class PencilSettings : UIViewController {
         let text = UILabel()
         text.text = NSLocalizedString("Width", comment: "")
         text.textAlignment = .left
-        text.font = UIFont(name:  "Rubik-Medium", size: 24)
+        text.font = UIFont.systemFont(ofSize: 24, weight: .bold)
         text.textColor = UIColor(named: "enableColor")
         text.translatesAutoresizingMaskIntoConstraints = false
         text.heightAnchor.constraint(equalToConstant: 36).isActive = true
@@ -79,8 +79,8 @@ class PencilSettings : UIViewController {
         let text = UILabel()
         text.text = "Pixel Perfect"
         text.textAlignment = .left
-        text.font = UIFont(name:  "Rubik-Medium", size: 24)
-        text.textColor = UIColor(named: "enableColor")
+        text.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        text.textColor = getAppColor(color: .enable)
         text.translatesAutoresizingMaskIntoConstraints = false
         text.heightAnchor.constraint(equalToConstant: 36).isActive = true
         return text
@@ -140,8 +140,8 @@ class PencilSettings : UIViewController {
         let title = UILabel()
         title.text = NSLocalizedString("Pencil", comment: "")
         title.textAlignment = .center
-        title.font = UIFont(name:  "Rubik-Bold", size: 32)
-        title.textColor = UIColor(named: "enableColor")
+        title.font = UIFont.systemFont(ofSize: 32, weight: .black)
+        title.textColor = getAppColor(color: .enable)
         title.translatesAutoresizingMaskIntoConstraints = false
         title.heightAnchor.constraint(equalToConstant: 36).isActive = true
         
@@ -170,9 +170,6 @@ class PencilSettings : UIViewController {
         view.addSubview(penTitle)
         
         view.setCorners(corners: 32)
-        //topBarBg.addSubview(exitBtn)
-        //topBarBg.addSubview(appendBtn)
-        //bgView.addSubview(topBarBg)
         
         scrollView.addSubview(colorsView)
         view.backgroundColor = UIColor(named: "backgroundColor")
@@ -189,27 +186,11 @@ class PencilSettings : UIViewController {
         bgView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -12).isActive = true
         bgView.heightAnchor.constraint(equalToConstant: 48).isActive = true
         
-        //topBarBg.translatesAutoresizingMaskIntoConstraints = false
-        //topBarBg.leftAnchor.constraint(equalTo: bgView.leftAnchor, constant: 0).isActive = true
-        //topBarBg.rightAnchor.constraint(equalTo: bgView.rightAnchor, constant: 0).isActive = true
-        //topBarBg.heightAnchor.constraint(equalToConstant: 48).isActive = true
-
 
         penTitle.translatesAutoresizingMaskIntoConstraints = false
         penTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
         penTitle.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
-//        exitBtn.translatesAutoresizingMaskIntoConstraints = false
-//        exitBtn.leftAnchor.constraint(equalTo: topBarBg.leftAnchor, constant: 6).isActive = true
-//        exitBtn.topAnchor.constraint(equalTo: topBarBg.topAnchor, constant: 6).isActive = true
-//        exitBtn.heightAnchor.constraint(equalToConstant: 36).isActive = true
-//        exitBtn.widthAnchor.constraint(equalToConstant: 36).isActive = true
-//
-//        appendBtn.translatesAutoresizingMaskIntoConstraints = false
-//        appendBtn.rightAnchor.constraint(equalTo: topBarBg.rightAnchor, constant: -6).isActive = true
-//        appendBtn.topAnchor.constraint(equalTo: topBarBg.topAnchor, constant: 6).isActive = true
-//        appendBtn.heightAnchor.constraint(equalToConstant: 36).isActive = true
-//        appendBtn.widthAnchor.constraint(equalToConstant: 36).isActive = true
-//
+
         colorsView.leftAnchor.constraint(equalTo: scrollView.leftAnchor, constant: 24).isActive = true
         colorsView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -48).isActive = true
         colorsView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 0).isActive = true

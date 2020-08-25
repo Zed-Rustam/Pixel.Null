@@ -14,7 +14,7 @@ class GalleryCell : UICollectionViewCell {
     lazy private var titleLabel: UILabel = {
         let label = UILabel()
         label.textColor = getAppColor(color: .enable)
-        label.font = UIFont(name: "Rubik-Bold", size: 10)
+        label.font = UIFont.systemFont(ofSize: 10, weight: .bold)
         label.textAlignment = .center
         label.lineBreakMode = .byTruncatingMiddle
         
@@ -78,7 +78,7 @@ class GalleryTitleCell : UICollectionViewCell{
     func setTitle(title t : String){
         title.text = t
         title.textColor = getAppColor(color: .enable)
-        title.font = UIFont(name: "Rubik-Bold", size: 42)
+        title.font = UIFont.systemFont(ofSize: 42, weight: .black)
         title.frame = contentView.bounds
     }
 }

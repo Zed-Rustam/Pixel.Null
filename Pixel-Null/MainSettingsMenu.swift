@@ -15,7 +15,8 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Table")!
         cell.textLabel!.textColor = getAppColor(color: .enable)
-        cell.textLabel!.font = UIFont(name:  "Rubik-Regular", size: 16)
+        cell.textLabel!.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        
         cell.backgroundColor = getAppColor(color: .disable).withAlphaComponent(0.25)
         cell.tintColor = getAppColor(color: .enable)
         cell.selectedBackgroundView = {
@@ -134,11 +135,11 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 56).isActive = true
         
-        label.text = "Pixel.Null"
+        label.text = "nanoArt"
         
         label.textColor = getAppColor(color: .enable)
         label.textAlignment = .center
-        label.font = UIFont(name:  "Rubik-Bold", size: 36)
+        label.font = UIFont.systemFont(ofSize: 36, weight: .black)
         
         return label
     }()
@@ -185,11 +186,6 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
         table.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
         table.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
         table.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        print("yeas")
-        //self.navigationController?.interactivePopGestureRecognizer?.delegate = self
     }
     
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {

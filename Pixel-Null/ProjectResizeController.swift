@@ -26,7 +26,7 @@ class ProjectResizeController : UIViewController {
         text.translatesAutoresizingMaskIntoConstraints = false
         text.heightAnchor.constraint(equalToConstant: 36).isActive = true
         text.textColor = UIColor(named: "enableColor")
-        text.font = UIFont(name: "Rubik-Bold", size: 32)
+        text.font = UIFont.systemFont(ofSize: 32, weight: .black)
         text.text = NSLocalizedString("Resize", comment: "")
         text.adjustsFontSizeToFitWidth = true
         text.textAlignment = .center
@@ -59,7 +59,7 @@ class ProjectResizeController : UIViewController {
         btn.setTitleColor(getAppColor(color: .background), for: .normal)
         btn.setTitleColor(getAppColor(color: .disable), for: .disabled)
 
-        btn.titleLabel?.font = UIFont(name: "Rubik-Bold", size: 20)
+        btn.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .black)
         
         btn.addTarget(self, action: #selector(onSave), for: .touchUpInside)
 
@@ -78,7 +78,7 @@ class ProjectResizeController : UIViewController {
         field.setCorners(corners: 8)
         field.delegate = sizedel
         field.keyboardType = .numberPad
-        field.font = UIFont(name: "Rubik-Medium", size: 20)
+        field.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         
         field.text = "\(Int(project!.projectSize.width))"
         
@@ -102,7 +102,7 @@ class ProjectResizeController : UIViewController {
         field.setCorners(corners: 8)
         field.delegate = sizedel
         field.keyboardType = .numberPad
-        field.font = UIFont(name: "Rubik-Medium", size: 20)
+        field.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         
         field.text = "\(Int(project!.projectSize.height))"
         
@@ -121,8 +121,8 @@ class ProjectResizeController : UIViewController {
     
     lazy private var AlignmentTitle : UILabel = {
         let text = UILabel()
-        text.textColor = UIColor(named: "enableColor")
-        text.font = UIFont(name: "Rubik-Medium", size: 20)
+        text.textColor = getAppColor(color: .enable)
+        text.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         text.text = NSLocalizedString("Alignment", comment: "")
         text.adjustsFontSizeToFitWidth = true
         //text.numberOfLines = 1
@@ -154,8 +154,8 @@ class ProjectResizeController : UIViewController {
     
     lazy private var WidthTitle : UILabel = {
         let text = UILabel()
-        text.textColor = UIColor(named: "enableColor")
-        text.font = UIFont(name: "Rubik-Medium", size: 20)
+        text.textColor = getAppColor(color: .enable)
+        text.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         text.text = NSLocalizedString("Width", comment: "")
         text.translatesAutoresizingMaskIntoConstraints = false
         
@@ -164,8 +164,8 @@ class ProjectResizeController : UIViewController {
     
     lazy private var HeightTitle : UILabel = {
         let text = UILabel()
-        text.textColor = UIColor(named: "enableColor")
-        text.font = UIFont(name: "Rubik-Medium", size: 20)
+        text.textColor = getAppColor(color: .enable)
+        text.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         text.text = NSLocalizedString("Height", comment: "")
         text.translatesAutoresizingMaskIntoConstraints = false
         
@@ -175,7 +175,7 @@ class ProjectResizeController : UIViewController {
     lazy private var ScaleContentTitle : UILabel = {
         let text = UILabel()
         text.textColor = UIColor(named: "enableColor")
-        text.font = UIFont(name: "Rubik-Medium", size: 20)
+        text.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         text.text = NSLocalizedString("Scale content", comment: "")
         text.adjustsFontSizeToFitWidth = true
 
