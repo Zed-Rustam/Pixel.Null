@@ -234,7 +234,8 @@ class ProjectPallete: UIViewController {
         selector.modalPresentationStyle = .formSheet
         selector.selectDelegate = {[unowned self] palette,name in
             self.collection.palleteColors = palette.colors
-            self.collection.reloadData()
+            self.collection.removeSelection()
+            self.collection.setSelect(index: 0)
             self.project!.projectPallete = self.collection.palleteColors
         }
         self.show(selector, sender: nil)

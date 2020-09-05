@@ -167,6 +167,7 @@ class ProjectWork{
             
             try String(data: data, encoding: .utf8)!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("main.txt"), atomically: true, encoding: .utf8)
             
+            savePreview(frame: 0)
         } catch {
             print(error.localizedDescription)
         }

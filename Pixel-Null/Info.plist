@@ -38,6 +38,12 @@
 				<string>pnart</string>
 			</dict>
 		</dict>
+		<dict>
+			<key>CFBundleIdentifier</key>
+			<string></string>
+			<key>LSHandlerRank</key>
+			<string>Default</string>
+		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
@@ -65,12 +71,9 @@
 	<true/>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Application needs permission to save project&apos;s image</string>
-	<key>UIAppFonts</key>
+	<key>NSUserActivityTypes</key>
 	<array>
-		<string>SF-Pro-Display-Black.otf</string>
-		<string>Rubik-Medium.ttf</string>
-		<string>Rubik-Regular.ttf</string>
-		<string>Rubik-Bold.ttf</string>
+		<string>ConfigurationIntent</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
@@ -134,7 +137,7 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
-				<string>public.directory</string>
+				<string>com.apple.package</string>
 			</array>
 			<key>UTTypeDescription</key>
 			<string>Pixel.Null Project file</string>
@@ -148,19 +151,13 @@
 				<string>pnart</string>
 			</dict>
 		</dict>
-		<dict>
-			<key>UTTypeDescription</key>
-			<string>gif</string>
-			<key>UTTypeIconFiles</key>
-			<array/>
-		</dict>
 	</array>
 	<key>UTImportedTypeDeclarations</key>
 	<array>
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
-				<string>public.directory</string>
+				<string>com.apple.package</string>
 			</array>
 			<key>UTTypeDescription</key>
 			<string>Pixel.Null Project file</string>

@@ -77,6 +77,12 @@ class PaletteCollectionModern : UICollectionView {
         reloadData()
     }
     
+    func setSelect(index: Int) {
+        selectedColor = index
+        self.selectItem(at: IndexPath(item: index, section: 0), animated: false, scrollPosition: .left)
+        //reloadItems(at: [IndexPath(item: index, section: 0)])
+    }
+    
     @objc func onLongPress(sender : UILongPressGestureRecognizer) {
         switch sender.state {
         case .began:

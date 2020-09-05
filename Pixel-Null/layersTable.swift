@@ -34,7 +34,8 @@ class LayersTable : UICollectionView {
         
         backgroundColor = .clear
         
-        self.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        showsHorizontalScrollIndicator = true
+        //self.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
         self.contentInset = UIEdgeInsets(top: 24, left: 0, bottom: 24, right: 0)
         
         NotificationCenter.default.addObserver(
@@ -56,7 +57,7 @@ class LayersTable : UICollectionView {
     
     override func tintColorDidChange() {
         super.tintColorDidChange()
-        self.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        //self.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
     }
     
     required init?(coder: NSCoder) {
@@ -101,6 +102,10 @@ extension LayersTable : UICollectionViewDelegate {
                 })
 
                 let rename = UIAction(title: "Rename",image : UIImage(systemName: "pencil", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, handler: {action in
+                    
+                    if self.frameDelegate!.isLayerSettings() {
+                        self.frameDelegate?.setLayerSettings(isMode: false)
+                    }
                     
                     self.frameDelegate?.onRenameLayerModeStart(isStart: true)
                     self.renamingLayer = indexPath.item

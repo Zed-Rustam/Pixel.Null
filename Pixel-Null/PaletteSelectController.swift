@@ -76,6 +76,7 @@ class PaletteSelectController: UIViewController {
         
         paletteSel.selectDelegate = {[unowned self] in
             colorPalette.palleteColors = $0.colors
+            colorPalette.removeSelection()
             paletteTitle.text = $1
         }
         

@@ -13,17 +13,24 @@ class SelectPaletteCollection : UICollectionView {
     
     private var palettes : [String] = []
     private var defaultPalettes : [String] = []
+        
+    lazy private var mainTitle: UILabel = {
+        let lbl = UILabel()
+        lbl.textColor = getAppColor(color: .enable)
+        lbl.text = "Palettes"
+        lbl.font = UIFont.systemFont(ofSize: 42, weight: .black)
+        lbl.textAlignment = .left
+        lbl.translatesAutoresizingMaskIntoConstraints = false
+        lbl.heightAnchor.constraint(equalToConstant: 48).isActive = true
+        return lbl
+    }()
     
-    private var layout = UICollectionViewFlowLayout()
-    
-    init() {
+    init(layout: UICollectionViewFlowLayout) {
         super.init(frame: .zero, collectionViewLayout: layout)
-        register(SelectPaletteCell.self, forCellWithReuseIdentifier: "palette")
         
-        register(palettesTitle.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "header")
-        
-        layout.headerReferenceSize = CGSize(width: self.frame.size.width, height: 64)
-        
+        register(PaletteGroup.self, forCellWithReuseIdentifier: "Palette")
+        register(PalettesSectionTitle.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Title")
+                
         delegate = self
         dataSource = self
         backgroundColor = .clear
@@ -41,6 +48,15 @@ class SelectPaletteCollection : UICollectionView {
         } catch {}
         
         defaultPalettes.append("Default pallete")
+        
+        contentInset = UIEdgeInsets(top: 72, left: 12, bottom: 0, right: 12)
+
+        addSubview(mainTitle)
+        
+        mainTitle.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
+        mainTitle.leftAnchor.constraint(equalTo: leftAnchor, constant: 0).isActive = true
+        mainTitle.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
+        mainTitle.transform = CGAffineTransform(translationX: 0, y: -36)
     }
     
     required init?(coder: NSCoder) {
@@ -63,17 +79,17 @@ extension SelectPaletteCollection : UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch indexPath.section {
         case 0:
-            let cell = dequeueReusableCell(withReuseIdentifier: "palette", for: indexPath) as! SelectPaletteCell
-            cell.contentView.frame.size = layout.layoutAttributesForItem(at: indexPath)!.frame.size
-            cell.setImage(pallete: PalleteWorker(name: defaultPalettes[indexPath.row], colors: try! JSONDecoder().decode(Pallete.self, from: NSDataAsset(name: defaultPalettes[indexPath.row])!.data).colors, isSave: false))
-            
+            let cell = dequeueReusableCell(withReuseIdentifier: "Palette", for: indexPath) as! PaletteGroup
+            cell.setPalette(newPal: PalleteWorker(name: defaultPalettes[indexPath.row], colors: try! JSONDecoder().decode(Pallete.self, from: NSDataAsset(name: defaultPalettes[indexPath.row])!.data).colors, isSave: false))
+            cell.contentView.isUserInteractionEnabled = false
+
             return cell
             
         default:
-            let cell = dequeueReusableCell(withReuseIdentifier: "palette", for: indexPath) as! SelectPaletteCell
-            cell.contentView.frame.size = layout.layoutAttributesForItem(at: indexPath)!.frame.size
-            cell.setImage(pallete: PalleteWorker(fileName: palettes[indexPath.item]))
-            
+            let cell = dequeueReusableCell(withReuseIdentifier: "Palette", for: indexPath) as! PaletteGroup
+            cell.setPalette(newPal: PalleteWorker(fileName: palettes[indexPath.item]))
+            cell.contentView.isUserInteractionEnabled = false
+
             return cell
         }
     }
@@ -81,12 +97,12 @@ extension SelectPaletteCollection : UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         
         if (kind == UICollectionView.elementKindSectionHeader) {
-            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "header", for: indexPath) as! palettesTitle
+            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Title", for: indexPath) as! PalettesSectionTitle
             switch indexPath.section {
             case 0:
-                headerView.title.text = "App's Palettes"
+                headerView.setText(text: "System")
             default:
-                headerView.title.text = "User's Palettes"
+                headerView.setText(text: "User's")
             }
             
         return headerView
@@ -121,11 +137,6 @@ extension SelectPaletteCollection : UICollectionViewDelegate {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 2
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        print("set size")
-        return CGSize(width: self.frame.size.width, height: 64)
     }
 }
 

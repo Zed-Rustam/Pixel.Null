@@ -87,11 +87,16 @@ class FastActionBar : UIView {
         bgView.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
         bgView.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
         bgView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
-        //setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
+        
+        setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
+        layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: 16).cgPath
+        
     }
     
     override func tintColorDidChange() {
-        //setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
+        setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
+        layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: 16).cgPath
+
     }
     
     required init?(coder: NSCoder) {

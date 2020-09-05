@@ -244,12 +244,12 @@ class FramePreviewCell : UICollectionViewCell {
         view.heightAnchor.constraint(equalToConstant: 64).isActive = true
         view.setCorners(corners: 8)
         
-        view.backgroundColor = getAppColor(color: .background)
+        view.backgroundColor = getAppColor(color: .content)
         
         view.addSubview(bgForShadow)
         bgForShadow.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
         bgForShadow.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
-        
+
         view.addSubview(linesView)
         
         linesView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -8).isActive = true

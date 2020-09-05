@@ -19,7 +19,17 @@ class ThumbnailProvider: QLThumbnailProvider {
 
         if request.fileURL.lastPathComponent.dropFirst(request.fileURL.lastPathComponent.count - 5) == "pnart" {
             
+            //let img = UIImage(contentsOfFile: request.fileURL.appendingPathComponent("preview-icon.png").path)!
+            
+            //let k = img.size.width / img.size.height
+                
             handler(QLThumbnailReply(imageFileURL: request.fileURL.appendingPathComponent("preview-icon.png")), nil)
+//            handler(QLThumbnailReply(contextSize: CGSize(width: request.maximumSize.width, height: request.maximumSize.height * k), currentContextDrawing:  { () -> Bool in
+//
+//                UIGraphicsGetCurrentContext()!.setAllowsAntialiasing(false)
+//                img.draw(in: CGRect(origin: .zero, size: CGSize(width: request.maximumSize.width, height: request.maximumSize.height * k)))
+//                return true
+//            }), nil)
             
         } else if request.fileURL.lastPathComponent.dropFirst(request.fileURL.lastPathComponent.count - 9) == "pnpalette" {
             let pallete = PalleteWorker(fileUrl: request.fileURL)

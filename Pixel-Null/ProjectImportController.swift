@@ -11,32 +11,16 @@ import UIKit
 class ProjectImportController: UIViewController {
     private var urls : [URL] = []
     weak var gallery : GalleryControl? = nil
-    
-    lazy private var titleBg : UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = getAppColor(color: .background)
-        view.layer.cornerRadius = 12
-        view.layer.masksToBounds = true
-        
-        view.addSubviewFullSize(view: titleLabel)
-        view.addSubview(importBtn)
-        
-        importBtn.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
-        importBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
+    weak var palettes : PalleteCollection? = nil
 
-        let mainview = UIView()
-        mainview.translatesAutoresizingMaskIntoConstraints = false
-        mainview.addSubviewFullSize(view: view)
-        return mainview
-    }()
-    
     lazy private var titleLabel : UILabel = {
         let label = UILabel()
         label.text = NSLocalizedString("Import files", comment: "")
         label.font = UIFont.systemFont(ofSize: 24,weight: .black)
         label.textColor = getAppColor(color: .enable)
         label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.heightAnchor.constraint(equalToConstant: 36).isActive = true
         
         return label
     }()
@@ -46,9 +30,9 @@ class ProjectImportController: UIViewController {
         btn.setImage(#imageLiteral(resourceName: "import_icon"), for: .normal)
         btn.imageView?.tintColor = getAppColor(color: .enable)
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 42).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: 42).isActive = true
-        btn.imageEdgeInsets = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
+        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         btn.addTarget(self, action: #selector(onImport), for: .touchUpInside)
         return btn
     }()
@@ -56,6 +40,7 @@ class ProjectImportController: UIViewController {
     @objc func onImport() {
         importFiles()
         gallery?.gallery.reloadData()
+        palettes?.collection.reloadData()
         dismiss(animated: true, completion: nil)
     }
     
@@ -77,27 +62,27 @@ class ProjectImportController: UIViewController {
     
     override func viewDidLoad() {
         view.backgroundColor = getAppColor(color: .background)
+        view.setCorners(corners: 32)
         
-        view.addSubview(titleBg)
+        view.addSubview(titleLabel)
+        view.addSubview(importBtn)
         view.addSubview(collection)
 
-        titleBg.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
-        titleBg.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
-        titleBg.topAnchor.constraint(equalTo: view.topAnchor, constant: 12).isActive = true
-        titleBg.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        titleLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
+        titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
         
+        importBtn.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        importBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
+
         collection.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
         collection.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
-        collection.topAnchor.constraint(equalTo: titleBg.bottomAnchor, constant: 12).isActive = true
+        collection.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 12).isActive = true
         collection.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
-    }
-    
-    override func viewDidLayoutSubviews() {
-        titleBg.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
     }
     
     func importFiles() {
         for i in urls {
+            print(urls)
             if i.lastPathComponent.hasSuffix(".png") || i.lastPathComponent.hasSuffix(".jpg") || i.lastPathComponent.hasSuffix(".PNG") || i.lastPathComponent.hasSuffix(".JPG") {
                 var name = i.lastPathComponent
                 name.removeLast(4)
@@ -117,7 +102,25 @@ class ProjectImportController: UIViewController {
                     i.stopAccessingSecurityScopedResource()
                 }
             } else if i.lastPathComponent.hasSuffix(".pnart") {
+                var name = i.lastPathComponent
+                name.removeLast(6)
+                let f = FileManager.default
                 
+                if i.startAccessingSecurityScopedResource() {
+                    try! f.copyItem(at: i, to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(i.lastPathComponent))
+
+                    i.stopAccessingSecurityScopedResource()
+                }
+                
+                self.gallery?.projectAdded(name: i.lastPathComponent)
+                
+            } else if i.lastPathComponent.hasSuffix(".pnpalette") {
+                print("yes")
+                var name = i.lastPathComponent
+                name.removeLast(10)
+                
+                let pal = PalleteWorker(name: name, colors: PalleteWorker(fileUrl: i).colors,isSave: true)
+                self.palettes?.palleteAdded(newPallete: pal)
             }
         }
     }

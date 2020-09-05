@@ -20,6 +20,7 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
     }()
     
     weak var parentController : UIViewController? = nil
+    private var isSettingsMode: Bool = false
     
     lazy private var frameText : UILabel = {
            let text = UILabel(frame: .zero)
@@ -65,17 +66,11 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
     }()
     
     @objc func onSettings(){
-        let frameSettings = FrameSettings()
-        frameSettings.modalPresentationStyle = .popover
-        frameSettings.setInfo(project: self.project!)
+        isSettingsMode.toggle()
         
-        if let popover = frameSettings.popoverPresentationController {
-            popover.sourceView = self
-            popover.sourceRect = settingsButton.frame
-            popover.delegate = self
-            popover.permittedArrowDirections = .any
-            self.parentController?.present(frameSettings, animated: true, completion: nil)
-        }
+        settingsButton.imageView?.tintColor = isSettingsMode ? getAppColor(color: .select) : getAppColor(color: .enable)
+
+        list.frameDelegate?.changeFrameSettingsMode(isMode: isSettingsMode)
     }
     
     weak var project : ProjectWork?
@@ -121,7 +116,7 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
     }
     
     override func tintColorDidChange() {
-        list.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        //list.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
         
         settingsButton.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
         settingsButton.layer.shadowPath = UIBezierPath(roundedRect: settingsButton.bounds, cornerRadius: 8).cgPath

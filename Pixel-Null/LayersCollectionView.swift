@@ -9,6 +9,9 @@
 import UIKit
 
 class LayersCollectionView : UIView, UITextFieldDelegate {
+    
+    var isSettingsMode: Bool = false
+    
     lazy var list : LayersTable = {
         let ls = LayersTable(project: project!,delegateFrame: nil)
         ls.translatesAutoresizingMaskIntoConstraints = false
@@ -43,6 +46,32 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
         return btn
     }()
     
+    lazy private var settingsButton : UIButton = {
+        let btn = UIButton()
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.backgroundColor = getAppColor(color: .background)
+        btn.setCorners(corners: 8,needMask: false)
+        
+        btn.setImage(#imageLiteral(resourceName: "project_settings_icon"), for: .normal)
+        btn.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        
+        btn.imageView?.tintColor = getAppColor(color: .enable)
+        
+        btn.addTarget(self, action: #selector(onSettings), for: .touchUpInside)
+        
+        return btn
+    }()
+    
+    func setIsSettings(ismode: Bool) {
+        isSettingsMode = ismode
+        
+        settingsButton.imageView?.tintColor = isSettingsMode ? getAppColor(color: .select) : getAppColor(color: .enable)
+        
+        list.frameDelegate?.changeLayerSettingsMode(isMode: isSettingsMode)
+    }
+    
     @objc func onPress() {
         project!.addLayer(frame : project!.FrameSelected, layerPlace: project!.LayerSelected + 1)
         
@@ -54,6 +83,16 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
         }
         
         list.frameDelegate?.addLayer(frame: project!.FrameSelected, layer: project!.LayerSelected + 1)
+    }
+    
+    @objc func onSettings() {
+        isSettingsMode.toggle()
+        
+        settingsButton.imageView?.tintColor = isSettingsMode ? getAppColor(color: .select) : getAppColor(color: .enable)
+        //addButton.isEnabled = !isSettingsMode
+        
+        list.frameDelegate?.changeLayerSettingsMode(isMode: isSettingsMode)
+        //list.delegate.
     }
     
     func unpdateAddButton(){
@@ -96,6 +135,7 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
         self.addSubview(layerText)
         self.addSubview(list)
         self.addSubview(addButton)
+        self.addSubview(settingsButton)
 
         layerText.leftAnchor.constraint(equalTo: leftAnchor, constant: 24).isActive = true
         layerText.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
@@ -108,6 +148,9 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
         addButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -24).isActive = true
         addButton.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
 
+        settingsButton.rightAnchor.constraint(equalTo: addButton.leftAnchor, constant: -6).isActive = true
+        settingsButton.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
+        
         checkFrame()
     }
     
@@ -116,6 +159,9 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
         list.layout.invalidateLayout()
         addButton.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
         addButton.layer.shadowPath = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 36, height: 36), cornerRadius: 8).cgPath
+        
+        settingsButton.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        settingsButton.layer.shadowPath = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 36, height: 36), cornerRadius: 8).cgPath
     }
     
     override func tintColorDidChange() {

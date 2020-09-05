@@ -968,7 +968,6 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
             penTool.action(location: location, gestureState: sender.state)
         case 1:
             eraserTool.action(location: location, gestureState: sender.state)
-            
         case 3:
             gradientTool.action(location: location, gestureState: sender.state)
                     

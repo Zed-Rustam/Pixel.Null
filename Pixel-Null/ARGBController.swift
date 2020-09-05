@@ -314,6 +314,10 @@ extension ARGBController: UITextFieldDelegate {
             }
             
             self.hexInput.text = UIColor.toHex(color: self.getResultColor().withAlphaComponent(self.alphaSlider.position), withHeshTag: false)
+            
+            let newclr = UIColor(hex: "#\(self.hexInput.text!)")!
+            delegate?.changeColor(newColor: newclr, sender: self)
+            setColor(color: newclr)
         }
     }
 }

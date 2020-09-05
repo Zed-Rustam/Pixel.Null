@@ -15,6 +15,7 @@ func getAppColor(color : Theme) -> UIColor{
 enum Theme : String {
     case background = "backgroundColor"
     case backgroundLight = "backgroundLightColor"
+    case content = "ContentColor"
     case enable = "enableColor"
     case disable = "disableColor"
     

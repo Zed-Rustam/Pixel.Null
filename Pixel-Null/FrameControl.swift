@@ -1,6 +1,57 @@
 import UIKit
 
 class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlUpdate {
+    func setLayerSettings(isMode: Bool) {
+        layers.setIsSettings(ismode: isMode)
+    }
+    
+    
+    func isLayerSettings() -> Bool {
+        return layers.isSettingsMode
+    }
+    
+    func changeLayerSettingsMode(isMode: Bool) {
+        layerSettings.updateInfo()
+        
+        if isMode {
+            self.layers.list.contentInset.bottom += 108
+            //layerSettings.setInfo(project: project)
+            UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut, animations: {
+                self.frames.alpha = 0
+                self.frames.transform = CGAffineTransform(translationX: 0, y: 108)
+                self.layerSettings.view.transform = CGAffineTransform(translationX: 0, y: 226)
+                self.layers.transform = CGAffineTransform(translationX: 0, y: 108)
+            })
+        } else {
+            self.layers.list.contentInset.bottom -= 108
+
+            UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut, animations: {
+                self.frames.alpha = 1
+                self.frames.transform = CGAffineTransform(translationX: 0, y: 0)
+                self.layerSettings.view.transform = CGAffineTransform(translationX: 0, y: 0)
+                self.layers.transform = CGAffineTransform(translationX: 0, y: 0)
+            })
+        }
+    }
+    
+    func changeFrameSettingsMode(isMode: Bool) {
+        if isMode {
+            frameSettings.setInfo(project: project)
+            UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut, animations: {
+                self.layers.alpha = 0
+                self.frames.transform = CGAffineTransform(translationX: 0, y: 226)
+                self.frameSettings.view.transform = CGAffineTransform(translationX: 0, y: 226)
+                self.layers.transform = CGAffineTransform(translationX: 0, y: 226)
+            })
+        } else {
+            UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut, animations: {
+                self.layers.alpha = 1
+                self.frames.transform = CGAffineTransform(translationX: 0, y: 0)
+                self.frameSettings.view.transform = CGAffineTransform(translationX: 0, y: 0)
+                self.layers.transform = CGAffineTransform(translationX: 0, y: 0)
+            })
+        }
+    }
     
     func recheckLayersCount() {
         layers.unpdateAddButton()
@@ -22,7 +73,6 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
         return .lightContent
     }
     
-    
     func addFrame(at: Int) {
          UIView.animate(withDuration: 0.2, animations: {
             self.frames.list.performBatchUpdates({
@@ -31,6 +81,12 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
          })
         
         delegate?.addFrame(frame: at)
+    }
+    
+    func setProject(proj: ProjectWork) {
+        project = proj
+        frameSettings.project = proj
+        layerSettings.project = proj
     }
     
     func changeFrame(from: Int, to: Int) {
@@ -44,6 +100,8 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
          
         delegate?.updateFrameSelect(lastFrame: from, newFrame: to)
         delegate?.updateCanvas()
+        
+        frameSettings.setInfo(project: project)
      }
     
     func deleteFrame(frame: Int) {
@@ -67,6 +125,7 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
             delegate?.updateFrame(frame: project.FrameSelected)
             delegate?.updateCanvas()
         }
+        frameSettings.setInfo(project: project)
     }
     
     func cloneFrame(original: Int) {
@@ -119,6 +178,8 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
         project.LayerSelected = newLayer
         delegate?.updateLayerSelect(lastLayer: lastSelect, newLayer: newLayer)
         delegate?.updateCanvas()
+        
+        layerSettings.updateInfo()
 
     }
     
@@ -140,11 +201,14 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
         UIView.animate(withDuration: 0, animations: {
             self.layers.list.performBatchUpdates({
                 self.layers.list.reloadItems(at: [IndexPath(item: target, section: 0)])
-
             }, completion: {isEnd in
                 self.layers.list.selectItem(at: IndexPath(item: self.project!.LayerSelected, section: 0), animated: true, scrollPosition: .left)
             })
         })
+                
+        delegate?.updateLayer(layer: target)
+        delegate?.updateFrame(frame: project.FrameSelected)
+        delegate?.updateCanvas()
     }
     
     func updateFrameSettings(target: Int) {
@@ -186,6 +250,8 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
             delegate?.updateFrame(frame: frame)
             delegate?.updateCanvas()
         }
+        
+        layerSettings.updateInfo()
     }
 
     func cloneLayer(frame : Int, original: Int) {
@@ -240,6 +306,8 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
         delegate?.deleteLayer(layer: layer + 1)
         delegate?.updateLayer(layer: layer)
         delegate?.updateCanvas()
+        
+        layerSettings.updateInfo()
     }
         
     lazy private var frames : FramesCollectionView = {
@@ -257,6 +325,20 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
         return lays
     }()
     
+    lazy private var frameSettings: FrameSettings = {
+        let settings = FrameSettings()
+        
+        settings.view.translatesAutoresizingMaskIntoConstraints = false
+        return settings
+    }()
+    
+    lazy private var layerSettings: LayerSettings = {
+        let settings = LayerSettings()
+        
+        settings.view.translatesAutoresizingMaskIntoConstraints = false
+        return settings
+    }()
+    
     var delegate : FrameControlDelegate? = nil
     
     weak var project : ProjectWork!
@@ -268,6 +350,22 @@ class FrameControl : UIViewController, UIGestureRecognizerDelegate,FrameControlU
         
         view.addSubview(frames)
         view.addSubview(layers)
+        
+        view.addSubview(frameSettings.view)
+
+        frameSettings.view.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
+        frameSettings.view.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
+        frameSettings.view.topAnchor.constraint(equalTo: view.topAnchor, constant: -226).isActive = true
+        frameSettings.view.heightAnchor.constraint(equalToConstant: 226).isActive = true
+        
+        view.addSubview(layerSettings.view)
+
+        layerSettings.view.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
+        layerSettings.view.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
+        layerSettings.view.topAnchor.constraint(equalTo: view.topAnchor, constant: -226).isActive = true
+        layerSettings.view.heightAnchor.constraint(equalToConstant: 226).isActive = true
+        
+        layerSettings.delegate = self
         
         frames.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
         frames.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
@@ -313,4 +411,8 @@ protocol FrameControlUpdate : class {
     func margeLayers(frame : Int,layer : Int)
     func onRenameLayerModeStart(isStart: Bool)
     func recheckLayersCount()
+    func changeFrameSettingsMode(isMode: Bool)
+    func changeLayerSettingsMode(isMode: Bool)
+    func isLayerSettings() -> Bool
+    func setLayerSettings(isMode: Bool)
 }

@@ -175,7 +175,8 @@ class ToolBar : UIView {
         toolCollection.layoutIfNeeded()
         UIView.animate(withDuration: 0.0, animations: {
             self.hideItems()
-        })    }
+        })
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -185,10 +186,8 @@ class ToolBar : UIView {
         
         subBar.leftAnchor.constraint(equalTo: leftAnchor, constant: 0).isActive = true
         subBar.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
-        subBar.topAnchor.constraint(equalTo: bg.topAnchor, constant: 0).isActive = true
-        
-        subBar.updateButtons(btns: [])
-        
+        subBar.topAnchor.constraint(equalTo: topAnchor, constant: 96).isActive = true
+                
         bg.leftAnchor.constraint(equalTo: leftAnchor, constant: 0).isActive = true
         bg.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
         bg.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
@@ -199,9 +198,13 @@ class ToolBar : UIView {
         addGestureRecognizer(swipeUpGesture)
         addGestureRecognizer(swipeDownGesture)
         
+        subBar.updateButtons(btns: [])
+        subBar.frame.origin.y += 96
+        
         bg.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
         bg.layer.shadowPath = UIBezierPath(roundedRect: bg.bounds, cornerRadius: 16).cgPath
     }
+    
     override func tintColorDidChange() {
         bg.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
         bg.layer.shadowPath = UIBezierPath(roundedRect: bg.bounds, cornerRadius: 16).cgPath

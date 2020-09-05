@@ -205,6 +205,11 @@ class Editor : UIViewController {
         toolBar.wasChangedTool(newTool: 0)
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        //toolBar.clickTool(tool: 0)
+        //toolBar.updateButtons(btns: [])
+    }
+    
     override func viewWillLayoutSubviews() {
         toolBar.reLayout()
         transformSize.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
@@ -293,7 +298,7 @@ extension Editor : FrameControlDelegate{
         project.savePreview(frame: project.FrameSelected)
 
         let frameControl = FrameControl()
-        frameControl.project = project
+        frameControl.setProject(proj: project)
         frameControl.delegate = self
 
         frameControl.modalPresentationStyle = .formSheet

@@ -17,7 +17,7 @@ class LayersTableCell : UICollectionViewCell {
     lazy private var background : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = getAppColor(color: .background)
+        view.backgroundColor = getAppColor(color: .content)
         
         view.addSubview(previewBackground)
         previewBackground.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
@@ -77,7 +77,7 @@ class LayersTableCell : UICollectionViewCell {
         let label = UITextField()
         label.text = "New layer"
         label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-        label.textColor = getAppColor(color: .disable)
+        label.textColor = getAppColor(color: .enable)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 36).isActive = true
         
@@ -98,6 +98,16 @@ class LayersTableCell : UICollectionViewCell {
         return label
     }()
     
+    lazy private var settingsButton: UIButton = {
+        let btn = UIButton()
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+
+        btn.addTarget(self, action: #selector(onSettings), for: .touchUpInside)
+        return btn
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -106,6 +116,8 @@ class LayersTableCell : UICollectionViewCell {
         contentView.layoutIfNeeded()
         contentView.isUserInteractionEnabled = true
         background.isUserInteractionEnabled = true
+        
+        //self.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
     }
     
     func StartRename() {
@@ -123,8 +135,12 @@ class LayersTableCell : UICollectionViewCell {
         layerName.isEnabled = false
     }
     
+    @objc func onSettings() {
+        
+    }
+    
     func setSelected(isSelect : Bool, anim : Bool) {
-        layerName.textColor = isSelect ? getAppColor(color: .select) : getAppColor(color: .disable)
+        layerName.textColor = isSelect ? getAppColor(color: .select) : getAppColor(color: .enable)
         
     }
     

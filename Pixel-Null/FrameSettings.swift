@@ -14,8 +14,8 @@ class FrameSettings : UIViewController {
     lazy private var framePreview: UIImageView = {
         let img = UIImageView()
         img.translatesAutoresizingMaskIntoConstraints = false
-        img.widthAnchor.constraint(equalToConstant: 196).isActive = true
-        img.heightAnchor.constraint(equalToConstant: 196).isActive = true
+        img.widthAnchor.constraint(equalToConstant: 128).isActive = true
+        img.heightAnchor.constraint(equalToConstant: 128).isActive = true
         
         img.backgroundColor = getAppColor(color: .disable)
         img.layer.magnificationFilter = .nearest
@@ -25,21 +25,31 @@ class FrameSettings : UIViewController {
         return img
     }()
     
-    lazy private var bg: UIView = {
-        let view = UIView()
+    lazy private var bg: UIImageView = {
+        let view = UIImageView(image: #imageLiteral(resourceName: "background"))
         view.setCorners(corners: 12,needMask: true)
-        
-        view.backgroundColor = UIColor(patternImage: UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 8 / 196, orientation: .down))
-        
+                
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.widthAnchor.constraint(equalToConstant: 196).isActive = true
-        view.heightAnchor.constraint(equalToConstant: 196).isActive = true
+        view.widthAnchor.constraint(equalToConstant: 128).isActive = true
+        view.heightAnchor.constraint(equalToConstant: 128).isActive = true
         view.layer.magnificationFilter = .nearest
         
         view.addSubview(framePreview)
         framePreview.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         framePreview.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
 
+        return view
+    }()
+    
+    lazy private var divider: UIView = {
+        let view = UIView()
+        view.setCorners(corners: 1,needMask: true)
+        
+        view.backgroundColor = getAppColor(color: .backgroundLight)
+        
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.heightAnchor.constraint(equalToConstant: 2).isActive = true
+        
         return view
     }()
     
@@ -84,7 +94,7 @@ class FrameSettings : UIViewController {
         
         lbl.textAlignment = .left
         lbl.textColor = getAppColor(color: .enable)
-        lbl.font = UIFont.systemFont(ofSize: 20,weight: .heavy)
+        lbl.font = UIFont.systemFont(ofSize: 24,weight: .bold)
         lbl.text = "Delay"
         
         return lbl
@@ -140,25 +150,30 @@ class FrameSettings : UIViewController {
     
     override func viewDidLoad() {
         preferredContentSize = CGSize(width: 220, height: 268)
-        view.backgroundColor = getAppColor(color: .background)
+        //view.backgroundColor = getAppColor(color: .background)
 
         view.addSubview(bg)
         view.addSubview(actionsBtn)
         view.addSubview(delayField)
         view.addSubview(delayLabel)
+        view.addSubview(divider)
+
+        bg.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
+        bg.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
         
-        bg.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
-        bg.bottomAnchor.constraint(equalTo: actionsBtn.topAnchor, constant: -12).isActive = true
-        
-        actionsBtn.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -12).isActive = true
-        actionsBtn.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
+        actionsBtn.topAnchor.constraint(equalTo: bg.bottomAnchor, constant: 12).isActive = true
+        actionsBtn.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
         
         delayField.rightAnchor.constraint(equalTo: actionsBtn.leftAnchor, constant: -12).isActive = true
-        delayField.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -12).isActive = true
+        delayField.topAnchor.constraint(equalTo: bg.bottomAnchor, constant: 12).isActive = true
         
-        delayLabel.bottomAnchor.constraint(equalTo: delayField.bottomAnchor).isActive = true
-        delayLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
-        delayLabel.rightAnchor.constraint(equalTo: delayField.leftAnchor, constant: -12).isActive = true
+        delayLabel.topAnchor.constraint(equalTo: bg.bottomAnchor,constant: 12).isActive = true
+        delayLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
+        delayLabel.rightAnchor.constraint(equalTo: delayField.leftAnchor, constant: -24).isActive = true
+        
+        divider.topAnchor.constraint(equalTo: delayLabel.bottomAnchor, constant: 24).isActive = true
+        divider.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 36).isActive = true
+        divider.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -36).isActive = true
     }
     
     

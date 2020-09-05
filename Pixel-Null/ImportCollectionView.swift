@@ -11,6 +11,8 @@ import UIKit
 class ImportCollectionView : UICollectionView {
     private var urls : [URL] = []
     
+    private var newNames: [String] = []
+    
     private var layout : UICollectionViewFlowLayout = {
         let l = UICollectionViewFlowLayout()
         l.scrollDirection = .vertical
@@ -24,7 +26,7 @@ class ImportCollectionView : UICollectionView {
         urls = files
         
         register(ImportCollectionCell.self, forCellWithReuseIdentifier: "file")
-        delegate = self
+        //delegate = self
         dataSource = self
         
         backgroundColor = .clear
@@ -47,26 +49,78 @@ extension ImportCollectionView : UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = dequeueReusableCell(withReuseIdentifier: "file", for: indexPath) as! ImportCollectionCell
+        cell.delegate = self
         cell.setUrl(url: urls[indexPath.item])
         
         return cell
     }
 }
 
-extension ImportCollectionView : UICollectionViewDelegate {
+
+extension ImportCollectionView: ImportDelegate {
+    func setFileName(name: String) {
+        newNames.append(name)
+    }
     
+    func isNameExist(name: String) -> Bool {
+        let f = FileManager()
+        var projects: [String] = []
+        do {
+            let projs = try f.contentsOfDirectory(at: GalleryControl.getDocumentsDirectory(), includingPropertiesForKeys: nil)
+            
+            for i in 0..<projs.count  {
+                var name = projs[i].lastPathComponent
+                
+                if name.hasSuffix(".pnart") {
+                    name.removeLast(6)
+                    projects.append(name)
+                }
+            }
+            
+        } catch {}
+        
+        return projects.contains(name) || newNames.contains(name)
+    }
 }
 
 class ImportCollectionCell : UICollectionViewCell {
+    
+    var delegate: ImportDelegate? = nil
+    
+    func makeImage(pallete: PalleteWorker) -> UIImage{
+        let renderer = UIGraphicsImageRenderer(size: CGSize(width: 16, height: 16))
+        
+        let img = renderer.image{context in
+            for i in 0..<pallete.colors.count {
+                UIColor(hex : pallete.colors[i])!.setFill()
+                context.fill(CGRect(x: i % 16, y: i / 16, width: 1, height: 1))
+            }
+        }
+        
+        return img
+    }
+    
     func setUrl(url : URL) {
         fileName.text = url.lastPathComponent
         
         if url.lastPathComponent.hasSuffix(".pnart") {
             fileType.textColor = getAppColor(color: .enable)
             fileType.text = "Project"
-            converttext.text = ""
+            var name = url.lastPathComponent
+            name.removeLast(6)
             
-            print("open project \(url)")
+            if delegate!.isNameExist(name: name) {
+                var index: Int = 1
+                while(delegate!.isNameExist(name: "\(name)(\(index))")) {
+                    index += 1
+                }
+                converttext.text = "will be renamed to \(name)(\(index))"
+                delegate!.setFileName(name: "\(name)(\(index))")
+            } else {
+                converttext.text = ""
+                delegate!.setFileName(name: name)
+            }
+            
             if url.startAccessingSecurityScopedResource() {
                 fileImage.image = UIImage(data: try! Data(contentsOf: url.appendingPathComponent("preview-icon.png")))
                 url.stopAccessingSecurityScopedResource()
@@ -74,6 +128,10 @@ class ImportCollectionCell : UICollectionViewCell {
         } else if url.lastPathComponent.hasSuffix(".pnpalette") {
             fileType.textColor = getAppColor(color: .enable)
             fileType.text = "Palette"
+            converttext.text = ""
+            
+            fileImage.image = makeImage(pallete: PalleteWorker(fileUrl: url))
+
         } else if url.lastPathComponent.hasSuffix(".gif") {
             fileType.textColor = getAppColor(color: .enable)
             fileType.text = "Gif"
@@ -182,8 +240,6 @@ class ImportCollectionCell : UICollectionViewCell {
         return label
     }()
     
-    
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -192,8 +248,7 @@ class ImportCollectionCell : UICollectionViewCell {
         contentView.addSubview(fileName)
         contentView.addSubview(converttext)
         contentView.addSubview(errortext)
-
-
+        
         imageBg.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 0).isActive = true
         imageBg.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0).isActive = true
         
@@ -227,4 +282,10 @@ class ImportCollectionCell : UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
+
+
+protocol ImportDelegate: class {
+    func isNameExist(name: String) -> Bool
+    func setFileName(name: String)
 }

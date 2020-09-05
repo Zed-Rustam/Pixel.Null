@@ -21,7 +21,7 @@ class PalleteCollection : UIViewController, UICollectionViewDelegate, UICollecti
         return lbl
     }()
     
-    lazy private var collection : UICollectionView = {
+    lazy var collection : UICollectionView = {
         let col = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
         col.register(PaletteGroup.self, forCellWithReuseIdentifier: "Pallete")
         col.register(PalettesSectionTitle.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Title")
@@ -63,16 +63,28 @@ class PalleteCollection : UIViewController, UICollectionViewDelegate, UICollecti
         btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
         btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
         
-        btn.addTarget(self, action: #selector(onAdd), for: .touchUpInside)
+        btn.showsMenuAsPrimaryAction = true
+        btn.menu = UIMenu(title: "", image: nil, children: [
+            UIAction(title: "New palette", image: UIImage(systemName: "doc"),handler: {_ in
+                let create = PalleteCreateController()
+                create.isModalInPresentation = true
+                create.delegate = self
+                self.show(create, sender: self)
+            }),
+            UIAction(title: "Import palette", image: UIImage(systemName: "arrow.down.doc"), handler: {_ in
+                let dialog = UIDocumentBrowserViewController(forOpeningFilesWithContentTypes: ["com.zed.null.palette"])
+                
+                dialog.modalPresentationStyle = .pageSheet
+                dialog.delegate = self
+                dialog.allowsDocumentCreation = false
+                dialog.allowsPickingMultipleItems = true
+                
+                self.show(dialog, sender: self)
+            })
+        ])
+        
         return btn
     }()
-    
-    @objc func onAdd(){
-        let create = PalleteCreateController()
-        create.isModalInPresentation = true
-        create.delegate = self
-        show(create, sender: self)
-    }
  
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section {
@@ -256,6 +268,19 @@ class PalleteCell : UICollectionViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+
+extension PalleteCollection : UIDocumentBrowserViewControllerDelegate {
+    func documentBrowser(_ controller: UIDocumentBrowserViewController, didPickDocumentsAt documentURLs: [URL]) {
+        controller.dismiss(animated: true, completion: {
+            let importMenu = ProjectImportController(filesUrl: documentURLs)
+            importMenu.palettes = self
+            
+            self.show(importMenu, sender: nil)
+        })
+        print(documentURLs)
     }
 }
 
