@@ -135,6 +135,7 @@ class ToolButton : UICollectionViewCell {
                     editor.finishTransform()
                 self!.project.save()
                 self!.project.savePreview(frame: self!.project.FrameSelected)
+                self!.project.saveWidgetPreview()
                 editor.gallery?.updateProjectView(proj: self!.project)
                 editor.dismiss(animated: true, completion: nil)
             }

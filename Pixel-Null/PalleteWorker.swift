@@ -100,16 +100,18 @@ class PalleteWorker {
     init(fileUrl : URL){
         pallete = try! JSONDecoder().decode(Pallete.self, from: try! Data(contentsOf: fileUrl))
         name = fileUrl.lastPathComponent
+        name.removeLast(10)
     }
     
     static func getDocumentsDirectory() -> URL {
         let paths = URL(string: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])!
-        return paths.appendingPathComponent("Palletes")
+        
+        return paths.appendingPathComponent("Palettes")
     }
     
     static func getDocumentsDirectoryWithFile() -> URL {
         let paths = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])
-        return paths.appendingPathComponent("Palletes")
+        return paths.appendingPathComponent("Palettes")
     }
     
     static func clone(original : String, clone : String){

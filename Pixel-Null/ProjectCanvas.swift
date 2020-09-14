@@ -1042,21 +1042,27 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
                     selectionLayer = selection.finishSelection()
                 }
                 
-                selectionImage.image = selectionLayer
-                let isselect = selection.mode == .add ? true : !selection.isSelectEmpty(select: selectionLayer)
-                
-                
-                project.addAction(action :["ToolID" : "\(Actions.selectionChange.rawValue)", "wasSelected" : "\(isSelected)", "nowSelected" : "\(isselect)"])
-                isSelected = true
-                
-                try! selection.lastSelection?.flip(xFlip: project.isFlipX, yFlip: project.isFlipY).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
-                
-                try! selectionLayer.flip(xFlip: project.isFlipX, yFlip: project.isFlipY).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID()).png"))
-                
-                try! selectionLayer.flip(xFlip: project.isFlipX, yFlip: project.isFlipY).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("selection.png"))
-                
-                barDelegate?.UnDoReDoAction()
-                isSelected = isselect
+                if selection.isOnCanvas(projectSize: project.projectSize) {
+                    print("YES")
+                    
+                    selectionImage.image = selectionLayer
+                    let isselect = selection.mode == .add ? true : !selection.isSelectEmpty(select: selectionLayer)
+                    
+                    
+                    project.addAction(action :["ToolID" : "\(Actions.selectionChange.rawValue)", "wasSelected" : "\(isSelected)", "nowSelected" : "\(isselect)"])
+                    isSelected = true
+                    
+                    try! selection.lastSelection?.flip(xFlip: project.isFlipX, yFlip: project.isFlipY).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
+                    
+                    try! selectionLayer.flip(xFlip: project.isFlipX, yFlip: project.isFlipY).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID()).png"))
+                    
+                    try! selectionLayer.flip(xFlip: project.isFlipX, yFlip: project.isFlipY).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("selection.png"))
+                    
+                    barDelegate?.UnDoReDoAction()
+                    isSelected = isselect
+                } else {
+                    print("NO")
+                }
 
             case .cancelled:
                 selectionLayer = project.loadSelection().flip(xFlip: project.isFlipX, yFlip: project.isFlipY)

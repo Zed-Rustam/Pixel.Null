@@ -275,7 +275,7 @@ class PalleteCell : UICollectionViewCell {
 extension PalleteCollection : UIDocumentBrowserViewControllerDelegate {
     func documentBrowser(_ controller: UIDocumentBrowserViewController, didPickDocumentsAt documentURLs: [URL]) {
         controller.dismiss(animated: true, completion: {
-            let importMenu = ProjectImportController(filesUrl: documentURLs)
+            let importMenu = ImportController(filesUrl: documentURLs)
             importMenu.palettes = self
             
             self.show(importMenu, sender: nil)

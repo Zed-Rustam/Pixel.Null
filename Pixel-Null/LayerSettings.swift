@@ -106,7 +106,7 @@ class LayerSettings: UIViewController {
         project!.setLayerOpasity(frame: project!.FrameSelected, layer: project!.LayerSelected, newOpasity: newAlpha)
         delegate?.updateLayerSettings(target: project!.LayerSelected)
 
-        delayField.attributedPlaceholder = NSAttributedString(string: "\(project!.information.frames[project!.FrameSelected].delay)", attributes: [NSAttributedString.Key.foregroundColor : getAppColor(color: .disable)])
+        delayField.attributedPlaceholder = NSAttributedString(string: "\(newAlpha)", attributes: [NSAttributedString.Key.foregroundColor : getAppColor(color: .disable)])
         delayField.text = "\(newAlpha)"
 
         preview.image = preview.image?.withAlpha(CGFloat(newAlpha) / 100.0)

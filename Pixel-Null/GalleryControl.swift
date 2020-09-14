@@ -117,9 +117,16 @@ class GalleryControl : UIViewController{
         let documentsDirectory = paths[0]
         let docURL = URL(string: documentsDirectory)!
         let dataPath = docURL.appendingPathComponent("Projects")
+        
         if !FileManager.default.fileExists(atPath: dataPath.absoluteString) {
             do {
                 try FileManager.default.createDirectory(atPath: dataPath.absoluteString, withIntermediateDirectories: true, attributes: nil)
+            } catch {}
+        }
+        
+        if !FileManager.default.fileExists(atPath: docURL.appendingPathComponent("Palettes").absoluteString) {
+            do {
+                try FileManager.default.createDirectory(atPath: docURL.appendingPathComponent("Palettes").absoluteString, withIntermediateDirectories: true, attributes: nil)
             } catch {}
         }
     }
@@ -141,7 +148,7 @@ class GalleryControl : UIViewController{
                 
         createProject()
         
-        print(GalleryControl.getDocumentsDirectory())
+        //print(GalleryControl.getDocumentsDirectory())
         
         let f = FileManager()
         do {
@@ -317,8 +324,9 @@ extension GalleryControl : UICollectionViewDelegate {
 extension GalleryControl : UIDocumentBrowserViewControllerDelegate {
     func documentBrowser(_ controller: UIDocumentBrowserViewController, didPickDocumentsAt documentURLs: [URL]) {
         controller.dismiss(animated: true, completion: {
-            let importMenu = ProjectImportController(filesUrl: documentURLs)
+            let importMenu = ImportController(filesUrl: documentURLs)
             importMenu.gallery = self
+            
             self.show(importMenu, sender: nil)
         })
         print(documentURLs)

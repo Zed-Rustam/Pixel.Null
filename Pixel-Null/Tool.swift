@@ -8,13 +8,6 @@
 
 import UIKit
 
-struct pixelData : Equatable {
-    var a : UInt8
-    var r : UInt8
-    var g : UInt8
-    var b : UInt8
-}
-
 class Tool {
     
 }
@@ -37,7 +30,6 @@ class Selection : Tool {
     var mode : selectMode = .add
         
     var points : [CGPoint] = []
-
     
     var colorForChange : UIColor = .clear
     
@@ -198,6 +190,47 @@ class Selection : Tool {
         points.append(startPoint)
     }
     
+    func isOnCanvas(projectSize: CGSize) -> Bool {
+        var checkPath: UIBezierPath = UIBezierPath()
+        
+        switch type {
+        case .rectangle:
+            return CGRect(origin: .zero, size: projectSize).intersects(CGRect(x: min(points[0].x,points[points.count - 1].x), y: min(points[0].y,points[points.count - 1].y), width: abs(points[points.count - 1].x - points[0].x), height: abs(points[points.count - 1].y - points[0].y)))
+        case .ellipse:
+            checkPath = UIBezierPath(ovalIn: CGRect(x: min(points[0].x,points[points.count - 1].x), y: min(points[0].y,points[points.count - 1].y), width: abs(points[points.count - 1].x - points[0].x), height: abs(points[points.count - 1].y - points[0].y)))
+            checkPath.fill()
+            
+            for x in 0..<Int(projectSize.width) {
+                for y in 0..<Int(projectSize.height) {
+                    if checkPath.contains(CGPoint(x: x, y: y)) {
+                        return true
+                    }
+                }
+            }
+            
+            return false
+            
+        case .draw:
+            checkPath.move(to: points[0])
+            for i in points {
+                checkPath.addLine(to: i)
+            }
+            checkPath.fill()
+            
+            for x in 0..<Int(projectSize.width) {
+                for y in 0..<Int(projectSize.height) {
+                    if checkPath.contains(CGPoint(x: x, y: y)) {
+                        return true
+                    }
+                }
+            }
+            return false
+            
+        default:
+            return false
+        }
+    }
+    
     func drawOn(image : UIImage,point : CGPoint, symmetry : CGPoint) -> UIImage{
         points.append(CGPoint(x: CGFloat(Double(Int(point.x)) + 0.5), y: CGFloat(Int(point.y)) + 0.5))
         
@@ -309,7 +342,9 @@ class Fill : Tool {
             return
         }
         
-        setPixelData(imgSize: imageSize, point: pos, color: color.getPixelData())
+        //DispatchQueue.main.async {
+            self.setPixelData(imgSize: imageSize, point: pos, color: self.color.getPixelData())
+        //}
 
         if getPixelData(imgSize: imageSize, point: pos.offset(x: 0, y: -1)) == colorForChange.getPixelData() {
             points.append(pos.offset(x: 0, y: -1))
@@ -336,8 +371,9 @@ class Fill : Tool {
             }
             
             pos = pos.offset(x: -1, y: 0)
-            setPixelData(imgSize: imageSize, point: pos, color: color.getPixelData())
-            
+            //DispatchQueue.main.async {
+                self.setPixelData(imgSize: imageSize, point: pos, color: self.color.getPixelData())
+            //}
         }
         
         pos = from
@@ -360,7 +396,9 @@ class Fill : Tool {
             }
             
             pos = pos.offset(x: 1, y: 0)
-            setPixelData(imgSize: imageSize, point: pos, color: color.getPixelData())
+            //DispatchQueue.main.async {
+                self.setPixelData(imgSize: imageSize, point: pos, color: self.color.getPixelData())
+            //}
         }
     }
     
@@ -389,9 +427,30 @@ class Fill : Tool {
         if getPixelData(imgSize: image.size, point: point) != color.getPixelData() {
             points.append(point)
             
+            //let queue = DispatchQueue.init(label: "fill", qos: .userInteractive, attributes: .concurrent)
+            let group = DispatchGroup()
+            
+            let now = DispatchTime.now().uptimeNanoseconds
+            
             while points.count > 0 {
-                fillH(from: points.remove(at: 0), imageSize: image.size)
+                let count = points.count
+               // print(count)
+                for _ in 0..<count {
+                   // group.enter()
+                    
+                    let num = self.points.remove(at: 0)
+                    
+                   // queue.async(flags: .barrier) {
+                        self.fillH(from: num, imageSize: image.size)
+                    //    group.leave()
+                    //}
+                }
+                
+                group.wait()
             }
+            
+            print("fill is for \((DispatchTime.now().uptimeNanoseconds - now) / 1000000)ms")
+            
             let resImg = imageFromARGB32Bitmap(pixels: resultData, width: UInt(image.size.width), height: UInt(image.size.height)).withTintColor(color)
             
             UIGraphicsBeginImageContext(image.size)
@@ -410,7 +469,6 @@ class Fill : Tool {
             UIGraphicsEndImageContext()
             return returnImage
         } else {
-            print("dont")
             return image
         }
     }

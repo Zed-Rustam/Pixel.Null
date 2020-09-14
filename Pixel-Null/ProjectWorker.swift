@@ -11,7 +11,12 @@ import MobileCoreServices
 import UIKit
 import Compression
 
+let shareGroup = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.projects")!.appendingPathComponent("projects")
+
+let shareGroupWithFile = URL(fileURLWithPath: FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.projects")!.appendingPathComponent("projects").path)
+
 class ProjectWork{
+        
     private var name : String
     private var projectInfo : ProjectInfo!
     private var selectedLayer : Int
@@ -120,6 +125,12 @@ class ProjectWork{
     }
     
     private func rename(newname : String){
+        
+        var realName = newname
+        
+        realName.removeLast(6)
+        
+        try? FileManager.default.moveItem(at: shareGroup.appendingPathComponent("\(userProjectName)"), to: shareGroup.appendingPathComponent("\(realName)"))
         do{
             try FileManager.default.moveItem(at: getProjectDirectory(), to: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("Projects").appendingPathComponent(newname))
        } catch{
@@ -134,6 +145,10 @@ class ProjectWork{
         set{
             projectInfo.pallete.colors = newValue
         }
+    }
+    
+    func saveInWIdgetsDirectory() {
+        
     }
     
     init(ProjectName projName : String, ProjectSize projSize : CGSize, bgColor : UIColor){
@@ -163,11 +178,16 @@ class ProjectWork{
             
             try UIImage(size: img.size)!.pngData()!.write(to: getProjectDirectory().appendingPathComponent("copy.png"))
 
+            //try UIImage(size: img.size)!.pngData()!.write(to: shareGroup.appendingPathComponent("\(userProjectName).png"))
+            
             let data = try JSONEncoder().encode(projectInfo)
             
             try String(data: data, encoding: .utf8)!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("main.txt"), atomically: true, encoding: .utf8)
             
+
+            
             savePreview(frame: 0)
+            saveWidgetPreview()
         } catch {
             print(error.localizedDescription)
         }
@@ -220,6 +240,8 @@ class ProjectWork{
             
             try UIImage(size: resultImage.size)!.pngData()!.write(to: getProjectDirectory().appendingPathComponent("copy.png"))
 
+            //try UIImage(size: resultImage.size)!.pngData()!.write(to: shareGroup.appendingPathComponent("\(userProjectName).png"))
+
             let data = try JSONEncoder().encode(projectInfo)
             
             try String(data: data, encoding: .utf8)!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("main.txt"), atomically: true, encoding: .utf8)
@@ -228,6 +250,56 @@ class ProjectWork{
             print(error.localizedDescription)
         }
         
+        savePreview(frame: 0)
+        saveWidgetPreview()
+    }
+    
+    init(projectName: String, gif: Data) {
+        name = projectName
+        selectedLayer = 0
+        selectedFrame = 0
+        
+        let gif = UIGif(gif: gif)
+        
+        var frames: [ProjectFrame] = []
+        
+        for i in 0..<gif.framesCount {
+            frames.append(ProjectFrame(frameID: i, delay: gif[i].delay, layers: [ProjectLayer(layerID: 0, visible: true, locked: false, transparent: 1.0, name: "New Layer 1")]))
+        }
+        
+        projectInfo = ProjectInfo(version: 0, width: Int(gif[0].image.size.width), height: Int(gif[0].image.size.height), bgColor: "#00000000", frames: frames, actionList: ActionList(actions: [], lastActiveAction: -1, maxCount: 64), pallete: try! JSONDecoder().decode(Pallete.self, from: NSDataAsset(name: "Default pallete")!.data), flipX: false, flipY: false, rotate: 0)
+        
+        let folder = ProjectWork.getDocumentsDirectory().appendingPathComponent(name)
+
+        do {
+            try FileManager.default.createDirectory(atPath: folder.path, withIntermediateDirectories: true, attributes: nil)
+            try FileManager.default.createDirectory(atPath: folder.appendingPathComponent("frames").path, withIntermediateDirectories: true, attributes: nil)
+            try FileManager.default.createDirectory(atPath: folder.appendingPathComponent("actions").path, withIntermediateDirectories: true, attributes: nil)
+
+            for i in 0..<frames.count {
+                let img = gif[i].image
+                
+                try FileManager.default.createDirectory(atPath: folder.appendingPathComponent("frames").appendingPathComponent("frame-\(i)").path, withIntermediateDirectories: true, attributes: nil)
+                
+                try img.pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frames").appendingPathComponent("frame-\(i)").appendingPathComponent("layer-0.png"))
+                try img.pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frames").appendingPathComponent("frame-\(i)").appendingPathComponent("preview.png"))
+                
+                try! scalePreview(preview: img, size: generateIconSize()).pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frames").appendingPathComponent("frame-\(i)").appendingPathComponent("preview-icon.png"))
+            }
+            
+            try UIImage(size: gif[0].image.size)!.pngData()!.write(to: getProjectDirectory().appendingPathComponent("selection.png"))
+            
+            try UIImage(size: gif[0].image.size)!.pngData()!.write(to: getProjectDirectory().appendingPathComponent("copy.png"))
+
+            let data = try JSONEncoder().encode(projectInfo)
+            
+            try String(data: data, encoding: .utf8)!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("main.txt"), atomically: true, encoding: .utf8)
+        } catch {
+            print(error.localizedDescription)
+        }
+        
+        savePreview(frame: 0)
+        saveWidgetPreview()
     }
     
     func getProjectDirectory() -> URL {
@@ -239,6 +311,9 @@ class ProjectWork{
         do {
             let data = try JSONEncoder().encode(projectInfo)
             try String(data: data, encoding: .utf8)!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("main.txt"), atomically: true, encoding: .utf8)
+            
+            savePreview(frame: 0)
+            
         } catch {
             print(error.localizedDescription)
         }
@@ -403,7 +478,7 @@ class ProjectWork{
            
            projectInfo.frames.append(ProjectFrame(frameID: frameID, delay: 100, layers: [ProjectLayer(layerID: 0, visible: true, locked: false, transparent: 1.0)]))
        }
-
+    
     func insertFrame(at : Int){
            let frame = UIImage(size: projectSize)!
            var frameID : Int = 0
@@ -427,8 +502,7 @@ class ProjectWork{
                
            } catch{}
            
-        projectInfo.frames.insert(ProjectFrame(frameID: frameID, delay: 100, layers: [ProjectLayer(layerID: 0, visible: true, locked: false, transparent: 1.0)]), at: at)
-        
+        projectInfo.frames.insert(ProjectFrame(frameID: frameID, delay: 100, layers: [ProjectLayer(layerID: 0, visible: true, locked: false, transparent: 1.0, name: "New layer")]), at: at)
     }
 
     func replaceFrame(from : Int, to : Int){
@@ -507,15 +581,26 @@ class ProjectWork{
         savePreview(frame: frame)
         
         try! FileManager.default.copyItem(at: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[frame].frameID)"), to: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(frameID)"))
-
+        
         var newFrame : ProjectFrame = projectInfo.frames[frame]
         newFrame.frameID = frameID
         projectInfo.frames.insert(newFrame, at: frame + 1)
     }
     
+    func saveWidgetPreview() {
+        print("preview for widgets is in \(userProjectName)")
+        try! FileManager.default.createDirectory(atPath: shareGroup.appendingPathComponent(userProjectName).path, withIntermediateDirectories: true, attributes: nil)
+        
+        try! getFrameWithBackground(frame: 0).pngData()!.write(to: URL(fileURLWithPath: shareGroup.path).appendingPathComponent("\(userProjectName)").appendingPathComponent("preview.png"))
+        
+        let colors = try! JSONSerialization.data(withJSONObject: self.colors(image: getFrameWithBackground(frame: 0)), options: .sortedKeys)
+        
+        try! colors.write(to: URL(fileURLWithPath: shareGroup.appendingPathComponent("\(userProjectName)").appendingPathComponent("colors.json").path))
+    }
+    
     func savePreview(frame : Int){
         try! getFrameFromLayers(frame: frame, size: projectSize).pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[frame].frameID)").appendingPathComponent("preview.png"))
-        
+                
         if projectInfo.frames[frame].frameID == 0 {
             try! scalePreview(preview: getFrameFromLayers(frame: frame, size: projectSize) , size: generateIconSize()).flip(xFlip: isFlipX, yFlip: isFlipY).pngData()!.write(to: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(name).appendingPathComponent("preview-icon.png"))
         }
@@ -593,9 +678,107 @@ class ProjectWork{
     }
     
     static func deleteFile(fileName : String){
+        var normName = fileName
+        normName.removeLast(6)
+        
         do{
             try FileManager.default.removeItem(atPath: ProjectWork.getDocumentsDirectory().appendingPathComponent(fileName).path)
+            try FileManager.default.removeItem(atPath: shareGroup.appendingPathComponent("\(normName)").path)
         }catch{}
+    }
+    
+    func colors(image: UIImage) -> [String] {
+        //var colors : [(color: UIColor, count: Int)] = []
+        var colors : [UIColor : Int] = [:]
+
+        //print(image.size.width)
+        let threadsCount: CGFloat = 4
+        let group = DispatchGroup()
+
+        var threadColors: [[UIColor : Int]] = Array(repeating: [:], count: Int(threadsCount))
+        
+        var startTime = DispatchTime.now().uptimeNanoseconds
+        
+        let colorsArray = image.getPixelsDefaultArray()
+        
+        print("set colors for \((DispatchTime.now().uptimeNanoseconds - startTime) / 1000000)ms")
+        startTime = DispatchTime.now().uptimeNanoseconds
+        
+        let queue = DispatchQueue(label: "colors", qos: .userInteractive, attributes: .concurrent)
+        
+        for i in 0..<Int(threadsCount) {
+            group.enter()
+            
+            queue.async {
+                var subColors : [UIColor] = []
+                
+                for x in Int(image.size.width / threadsCount * CGFloat(i))..<Int(Int(image.size.width / threadsCount * CGFloat(i)) + Int(image.size.width / threadsCount)) {
+                    for y in 0..<Int(image.size.height) {
+                        let offset =  y*colorsArray.rowBytes + x*colorsArray.pixelBytes
+                        
+                        if colorsArray.layout.count == 4 {
+                            switch colorsArray.layout {
+                            case .bgra:
+                                subColors.append(UIColor(red:colorsArray.colors[offset + 2], green:colorsArray.colors[offset + 1], blue: colorsArray.colors[offset], alpha: colorsArray.colors[offset + 3]))
+                                
+                            case .abgr:
+                                subColors.append(UIColor(red:colorsArray.colors[offset + 3], green:colorsArray.colors[offset + 2], blue: colorsArray.colors[offset + 1], alpha: colorsArray.colors[offset]))
+
+                            case .argb:
+                                subColors.append(UIColor(red:colorsArray.colors[offset + 1], green:colorsArray.colors[offset + 2], blue: colorsArray.colors[offset + 3], alpha: colorsArray.colors[offset]))
+
+                            case .rgba:
+                                subColors.append(UIColor(red:colorsArray.colors[offset], green:colorsArray.colors[offset + 1], blue: colorsArray.colors[offset + 2], alpha: colorsArray.colors[offset + 3]))
+                            default:
+                                subColors.append(.clear)
+                            }
+                            
+                        } else if colorsArray.layout.count == 3 {
+                            switch colorsArray.layout {
+                            case .bgr:
+                                subColors.append(UIColor(red:colorsArray.colors[offset + 2], green:colorsArray.colors[offset + 1], blue: colorsArray.colors[offset], alpha: 255))
+
+                            case .rgb:
+                                subColors.append(UIColor(red:colorsArray.colors[offset], green:colorsArray.colors[offset + 1], blue: colorsArray.colors[offset + 2], alpha: 255))
+                            default:
+                                subColors.append(.clear)
+                            }
+                        }
+                    }
+                }
+                
+                threadColors[i] = subColors.reduce(into: [:]){ $0[$1, default: 0] += 1 }
+                group.leave()
+            }
+        }
+        
+        group.wait()
+        print("find colors for \((DispatchTime.now().uptimeNanoseconds - startTime) / 1000000)ms")
+        startTime = DispatchTime.now().uptimeNanoseconds
+
+        for i in threadColors {
+            i.forEach({val in
+                if colors[val.key] != nil {
+                    colors[val.key]! += val.value
+                } else {
+                    colors[val.key] = val.value
+                }
+            })
+        }
+        
+        let sotredColors = colors.sorted(by: {clr1, clr2 in
+            clr1.value > clr2.value
+        })
+        
+        var onlyColors: [String] = []
+        
+        print("final result for \((DispatchTime.now().uptimeNanoseconds - startTime) / 1000000)ms")
+
+        for i in 0..<min(16, sotredColors.count) {
+            onlyColors.append(UIColor.toHex(color: sotredColors[i].key, withHeshTag: true))
+        }
+        
+        return onlyColors
     }
     
     func unDo(delegate : FrameControlDelegate){
@@ -1560,25 +1743,15 @@ class ProjectWork{
     }
     
     func generateGif(scale : CGFloat) {
-        let fileProperties: CFDictionary = [kCGImagePropertyGIFDictionary as String: [kCGImagePropertyGIFLoopCount as String: 0]]  as CFDictionary
-        let resData : CFMutableData = CFDataCreateMutable(nil, .zero)
-
-        if let destination = CGImageDestinationCreateWithURL(getProjectDirectory().appendingPathComponent("\(userProjectName).gif") as CFURL, kUTTypeGIF, projectInfo.frames.count, nil) {
-            CGImageDestinationSetProperties(destination, fileProperties)
-            for image in 0..<projectInfo.frames.count {
-                let frameImg = getFrameWithBackground(frame: image).scale(scaleFactor: scale).flip(xFlip: isFlipX, yFlip: isFlipY).cgImage!
-                
-                let frameProperties: CFDictionary = [kCGImagePropertyGIFDictionary as String: [(kCGImagePropertyGIFDelayTime as String): CGFloat(projectInfo.frames[image].delay) / 1000.0, kCGImagePropertyHasAlpha : true, kCGImagePropertyGIFImageColorMap : false]] as CFDictionary
-            
-                CGImageDestinationAddImage(destination, frameImg, frameProperties)
-            }
-            
-            if !CGImageDestinationFinalize(destination) {
-               print("Failed to finalize the image destination")
-            }
+        var frames: [UIImage] = []
+        var delays: [Int] = []
+        
+        for i in 0..<projectInfo.frames.count {
+            frames.append(getFrameWithBackground(frame: i).scale(scaleFactor: scale).flip(xFlip: isFlipX, yFlip: isFlipY))
+            delays.append(projectInfo.frames[i].delay)
         }
         
-        CGImageSourceCreateWithData(resData, nil)
+        UIGif(frames: frames, delays: delays).saveGif(to: getProjectDirectory().appendingPathComponent("\(userProjectName).gif"))
     }
         
     func generateGroupOfImages(scale : CGFloat) {
