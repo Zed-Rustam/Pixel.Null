@@ -9,16 +9,6 @@
 import UIKit
 
 class ThemeSelect: UIViewController {
-    lazy private var themeTitle : UILabel = {
-        let label = UILabel()
-        label.text = NSLocalizedString("Theme", comment: "")
-        label.textColor = getAppColor(color: .enable)
-        label.font = UIFont.systemFont(ofSize: 32, weight: .black)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        label.textAlignment = .left
-        return label
-    }()
     
     lazy private var useSystemTheme : UILabel = {
         let label = UILabel()
@@ -158,23 +148,20 @@ class ThemeSelect: UIViewController {
 
         view.backgroundColor = getAppColor(color: .background)
         
-        view.addSubview(themeTitle)
+        navigationController?.setNavigationBarHidden(false, animated: true)
+        navigationItem.title = "Theme"
+        navigationItem.largeTitleDisplayMode = .always
+        
         view.addSubview(useSystemTheme)
         view.addSubview(toggle)
         view.addSubview(bgThemeSelect)
         view.isUserInteractionEnabled = true
         
-        themeTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
-        themeTitle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
-        themeTitle.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24).isActive = true
-        
         useSystemTheme.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
         useSystemTheme.rightAnchor.constraint(equalTo: toggle.leftAnchor, constant: -12).isActive = true
-        //useSystemTheme.topAnchor.constraint(equalTo: themeTitle.bottomAnchor, constant: 12).isActive = true
         useSystemTheme.centerYAnchor.constraint(equalTo: toggle.centerYAnchor, constant: 0).isActive = true
         
-        
-        toggle.topAnchor.constraint(equalTo: themeTitle.bottomAnchor, constant: 15).isActive = true
+        toggle.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 15).isActive = true
         toggle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
         
         bgThemeSelect.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
@@ -191,11 +178,7 @@ class ThemeSelect: UIViewController {
             toggle.isCheck = true
             bgThemeSelect.alpha = 0
         }
-        
-        self.themeTitle.alpha = 0
-        self.useSystemTheme.alpha = 0
-        self.toggle.alpha = 0
-        
+                
         self.selectTheme(theme: self.traitCollection.userInterfaceStyle.rawValue)
         view.addGestureRecognizer(tapgesture)
     }
@@ -217,43 +200,8 @@ class ThemeSelect: UIViewController {
         print(self.traitCollection.userInterfaceStyle.rawValue)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        self.themeTitle.transform = CGAffineTransform(translationX: 0, y: 50)
-        self.themeTitle.alpha = 0
-        
-        UIView.animate(withDuration: 1, delay: 0.15, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
-            self.themeTitle.transform = CGAffineTransform(translationX: 0, y: 0)
-        }, completion: nil)
-        UIView.animate(withDuration: 0.25, delay: 0.15, animations: {
-            self.themeTitle.alpha = 1
-        })
-        
-        self.useSystemTheme.transform = CGAffineTransform(translationX: 0, y: 50)
-        self.useSystemTheme.alpha = 0
-        
-        self.toggle.transform = CGAffineTransform(translationX: 0, y: 50)
-        self.toggle.alpha = 0
-        
-        UIView.animate(withDuration: 1, delay: 0.3, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
-            self.useSystemTheme.transform = CGAffineTransform(translationX: 0, y: 0)
-            self.toggle.transform = CGAffineTransform(translationX: 0, y: 0)
-        }, completion: nil)
-         UIView.animate(withDuration: 0.25, delay: 0.3, animations: {
-            self.useSystemTheme.alpha = 1
-            self.toggle.alpha = 1
-        })
-        
-        if self.bgThemeSelect.alpha == 1 {
-            self.bgThemeSelect.transform = CGAffineTransform(translationX: 0, y: 50)
-            self.bgThemeSelect.alpha = 0
-
-            UIView.animate(withDuration: 1, delay: 0.45, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
-                self.bgThemeSelect.transform = CGAffineTransform(translationX: 0, y: 0)
-            }, completion: nil)
-             UIView.animate(withDuration: 0.25, delay: 0.45, animations: {
-                self.bgThemeSelect.alpha = 1
-            })
-        }
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationController?.setNavigationBarHidden(true, animated: true)
         
     }
 }

@@ -19,11 +19,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let winscene = (scene as? UIWindowScene) else { return }
         
-        let gallery = GalleryControl()
-        let pallete = PalleteCollection()
+        let gallery = GalleryNavigation()
+        let pallete = PaletteNavigation()
         let settings = SettingsController()
         //let training = TrainingController()
         
+        gallery.parentController = maincontroller
+
         maincontroller.setControllers(menus:
                                     gallery,
                                     pallete,

@@ -174,7 +174,8 @@ class PalleteEditor : UIViewController {
                     self.colors.addColor(color: $0)
                 }
             }
-            show(palleteSelector, sender: self)
+            
+            present(palleteSelector, animated: true, completion: nil)
         }
     }
     
@@ -201,8 +202,7 @@ class PalleteEditor : UIViewController {
             palleteSelector.delegate = {[unowned self] in
                 self.colors.changeSelectedColor(color: $0)
             }
-            
-            show(palleteSelector, sender: self)
+            present(palleteSelector, animated: true, completion: nil)
         }
     }
 

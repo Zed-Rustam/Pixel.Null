@@ -25,17 +25,11 @@ class ImportController: UIViewController {
         return lbl
     }()
 
-    lazy private var importBtn: UIButton = {
-        let btn = UIButton()
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 42).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: 42).isActive = true
-
-        btn.setImage(#imageLiteral(resourceName: "import_icon"), for: .normal)
-        btn.imageView?.tintColor = getAppColor(color: .enable)
-        btn.contentEdgeInsets = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
+    lazy private var importBtn: UIBarButtonItem = {
+        let btn = UIBarButtonItem(image: UIImage(systemName: "square.and.arrow.down",withConfiguration: UIImage.SymbolConfiguration.init(weight: .bold)), style: .done, target: self, action: #selector(onImport))
         
-        btn.addTarget(self, action: #selector(onImport), for: .touchUpInside)
+        btn.tintColor = getAppColor(color: .enable)
+        
         return btn
     }()
     
@@ -96,10 +90,12 @@ class ImportController: UIViewController {
         
     @objc func onImport() {
         for i in 0..<importedFiles.count {
-            importFile(index: i)
+            if importedFiles[i].error == "" {
+                importFile(index: i)
+            }
         }
         
-        dismiss(animated: true, completion: nil)
+        parent!.dismiss(animated: true, completion: nil)
     }
     
     private func renameFiles() {
@@ -113,7 +109,9 @@ class ImportController: UIViewController {
         for i in 0..<importedFiles.count {
             let img = getFilePreview(file: importedFiles[i].url)!
             
-            if getFileType(file: importedFiles[i].url) == "Unknown" {
+            if isInApp(index: i) {
+                importedFiles[i].error = "this file is in app"
+            } else if getFileType(file: importedFiles[i].url) == "Unknown" {
                 importedFiles[i].error = "unknown file format"
             } else if img.size.width > 512 || img.size.height > 512 {
                 importedFiles[i].error = "file is very big (max 512x512)"
@@ -269,24 +267,43 @@ class ImportController: UIViewController {
         }
     }
     
-    private func setupViews() {
-        view.addSubview(importTitle)
-        view.setCorners(corners: 32)
+    private func isInApp(index: Int) -> Bool{
+        if getFileType(file: importedFiles[index].url) == "Project" {
+            var components = importedFiles[index].url.pathComponents
+            
+            components.remove(at: 1)
+            components.removeLast()
+            
+            print(components)
+            print(GalleryControl.getDocumentsDirectory().pathComponents)
+            
+            return components == GalleryControl.getDocumentsDirectory().pathComponents
+            
+        } else if getFileType(file: importedFiles[index].url) == "Palette" {
+            var components = importedFiles[index].url.pathComponents
+            
+            components.remove(at: 1)
+            components.removeLast()
+                        
+            return components == PalleteWorker.getDocumentsDirectory().pathComponents
+        }
         
-        importTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
-        importTitle.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
+        return false
+    }
+    
+    private func setupViews() {
+        view.setCorners(corners: 24)
+        
+        navigationItem.title = "Import"
+        navigationItem.setRightBarButton(importBtn, animated: true)
         
         view.addSubview(filesTable)
         
         filesTable.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         filesTable.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         filesTable.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        filesTable.topAnchor.constraint(equalTo: importTitle.bottomAnchor,constant: 12).isActive = true
+        filesTable.topAnchor.constraint(equalTo: view.topAnchor,constant: 12).isActive = true
         
-        view.addSubview(importBtn)
-        
-        importBtn.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
-        importBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
     }
     
     override func viewDidLoad() {
@@ -309,7 +326,6 @@ class ImportController: UIViewController {
     }
 }
 
-
 extension ImportController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return importedFiles.count
@@ -324,7 +340,35 @@ extension ImportController: UITableViewDataSource {
     }
 }
 
-
+class ImportNavigation: UINavigationController {
+    
+    let controller: ImportController
+    
+    init(files: [URL]) {
+        controller = ImportController(filesUrl: files)
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        navigationBar.prefersLargeTitles = true
+        navigationBar.isTranslucent = true
+        
+        navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 42, weight: .heavy)]
+        
+        let option = UINavigationBarAppearance()
+        option.backgroundEffect = UIBlurEffect(style: .systemChromeMaterial)
+        option.largeTitleTextAttributes = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 42, weight: .heavy)]
+        navigationBar.standardAppearance = option
+        
+        view.setCorners(corners: 24,needMask: true)
+        pushViewController(controller, animated: true)
+        
+    }
+}
 struct ProjectFile {
     var url: URL
     var name: String? = nil

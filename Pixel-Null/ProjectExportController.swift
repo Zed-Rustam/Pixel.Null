@@ -299,7 +299,6 @@ class ProjectExportController: UIViewController {
         titleText.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
         titleText.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
         
-        
         exportBtn.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
         exportBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
         

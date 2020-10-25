@@ -11,6 +11,7 @@ import UIKit
 class PaletteSelectController: UIViewController {
     
     weak var delegate: ColorDelegate? = nil
+    weak var parentController: UIViewController? = nil
     
     lazy private var paletteTitle: UILabel = {
         let lbl = UILabel()
@@ -71,16 +72,16 @@ class PaletteSelectController: UIViewController {
     }
     
     @objc func onPress() {
-        let paletteSel = PeletteSelectController()
+        let paletteSel = PaletteSelectorNavigation()
         paletteSel.modalPresentationStyle = .formSheet
         
-        paletteSel.selectDelegate = {[unowned self] in
+        paletteSel.selection.selectDelegate = {[unowned self] in
             colorPalette.palleteColors = $0.colors
             colorPalette.removeSelection()
             paletteTitle.text = $1
         }
         
-        self.show(paletteSel, sender: nil)
+        parentController?.present(paletteSel, animated: true, completion: nil)
     }
 }
 

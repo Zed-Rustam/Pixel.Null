@@ -68,18 +68,22 @@ class EditorSettingsController: UIViewController {
         return col
     }()
     
+    @objc func onBackPress() {
+        navigationController?.popViewController(animated: true)
+        navigationController?.navigationBar.isHidden = true
+    }
+    
     override func viewDidLoad() {
         view.backgroundColor = getAppColor(color: .background)
         
-        view.addSubview(themeTitle)
+        navigationController?.setNavigationBarHidden(false, animated: true)
+        navigationItem.title = "Editor"
+        navigationItem.largeTitleDisplayMode = .always
+        
         view.addSubview(toolsPosition)
         view.addSubview(toolBarBg)
 
-        themeTitle.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24).isActive = true
-        themeTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
-        themeTitle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
-        
-        toolsPosition.topAnchor.constraint(equalTo: themeTitle.bottomAnchor, constant: 24).isActive = true
+        toolsPosition.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24).isActive = true
         toolsPosition.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
         toolsPosition.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
         
@@ -88,19 +92,9 @@ class EditorSettingsController: UIViewController {
         toolBarBg.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
         toolBarBg.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 16).isActive = true
         
-        
-        //self.navigationController?.interactivePopGestureRecognizer
         collection.navigate = self.navigationController
-        
-        //collection.moveGesture.canBePrevented(by: self.navigationController!.interactivePopGestureRecognizer!)
-        //self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
-        //self.navigationController?.interactivePopGestureRecognizer?.canBePrevented(by: collection.moveGesture)
-        //self.navigationController?.interactivePopGestureRecognizer?.cancelsTouchesInView = true
-
-        //lastDelegate = self.navigationController?.interactivePopGestureRecognizer?.delegate
-        
-        //self.navigationController?.interactivePopGestureRecognizer?.delegate = collection
     }
+    
     override func viewDidLayoutSubviews() {
         toolBarBg.layoutIfNeeded()
         toolBarBg.setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
@@ -108,37 +102,13 @@ class EditorSettingsController: UIViewController {
     }
     
     override func viewDidDisappear(_ animated: Bool) {
+
         self.navigationController?.interactivePopGestureRecognizer?.reset()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        self.themeTitle.transform = CGAffineTransform(translationX: 0, y: 50)
-        self.themeTitle.alpha = 0
-        UIView.animate(withDuration: 1, delay: 0.1, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
-            self.themeTitle.transform = CGAffineTransform(translationX: 0, y: 0)
-        }, completion: nil)
-        UIView.animate(withDuration: 0.25, delay: 0.1, animations: {
-            self.themeTitle.alpha = 1
-        })
+    override func viewWillDisappear(_ animated: Bool) {
+        print("test")
+        navigationController?.setNavigationBarHidden(true, animated: true)
 
-        self.toolsPosition.transform = CGAffineTransform(translationX: 0, y: 50)
-        self.toolsPosition.alpha = 0
-
-        UIView.animate(withDuration: 1, delay: 0.3, usingSpringWithDamping: 0.5, initialSpringVelocity: 0,    options: .curveEaseInOut, animations: {
-            self.toolsPosition.transform = CGAffineTransform(translationX: 0, y: 0)
-        }, completion: nil)
-        UIView.animate(withDuration: 0.25, delay: 0.3, animations: {
-            self.toolsPosition.alpha = 1
-        })
-
-        self.toolBarBg.transform = CGAffineTransform(translationX: 0, y: 50)
-        self.toolBarBg.alpha = 0
-
-        UIView.animate(withDuration: 1, delay: 0.5, usingSpringWithDamping: 0.5, initialSpringVelocity: 0,    options: .curveEaseInOut, animations: {
-            self.toolBarBg.transform = CGAffineTransform(translationX: 0, y: 0)
-        }, completion: nil)
-        UIView.animate(withDuration: 0.25, delay: 0.5, animations: {
-            self.toolBarBg.alpha = 1
-        })
     }
 }

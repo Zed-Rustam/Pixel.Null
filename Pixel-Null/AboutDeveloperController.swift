@@ -108,6 +108,10 @@ class AboutDeveloperController : UIViewController {
     override func viewDidLoad() {
         view.backgroundColor = getAppColor(color: .background)
         
+        navigationController?.setNavigationBarHidden(false, animated: true)
+        navigationItem.title = "Developer"
+        navigationItem.largeTitleDisplayMode = .always
+        
         view.addSubview(devIcon)
         view.addSubview(devName)
         view.addSubview(devInfo)
@@ -147,76 +151,8 @@ class AboutDeveloperController : UIViewController {
         devTelegramInfo.topAnchor.constraint(equalTo: devEmail.bottomAnchor, constant: 0).isActive = true
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        self.devIcon.transform = CGAffineTransform(translationX: 0, y: 50)
-        self.devIcon.alpha = 0
-        
-        UIView.animate(withDuration: 1, delay: 0.1, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
-            self.devIcon.transform = CGAffineTransform(translationX: 0, y: 0)
-        }, completion: nil)
-        UIView.animate(withDuration: 0.25, delay: 0.1, animations: {
-            self.devIcon.alpha = 1
-        })
-        
-        self.devName.transform = CGAffineTransform(translationX: 0, y: 50)
-        self.devName.alpha = 0
-        
-        UIView.animate(withDuration: 1, delay: 0.1, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
-            self.devName.transform = CGAffineTransform(translationX: 0, y: 0)
-        }, completion: nil)
-        UIView.animate(withDuration: 0.25, delay: 0.1, animations: {
-            self.devName.alpha = 1
-        })
-        
-        self.devInfo.transform = CGAffineTransform(translationX: 0, y: 50)
-        self.devInfo.alpha = 0
-        
-        UIView.animate(withDuration: 1, delay: 0.2, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
-            self.devInfo.transform = CGAffineTransform(translationX: 0, y: 0)
-        }, completion: nil)
-        UIView.animate(withDuration: 0.25, delay: 0.2, animations: {
-            self.devInfo.alpha = 1
-        })
-        
-        self.devContacts.transform = CGAffineTransform(translationX: 0, y: 50)
-        self.devContacts.alpha = 0
-        
-        UIView.animate(withDuration: 1, delay: 0.3, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
-            self.devContacts.transform = CGAffineTransform(translationX: 0, y: 0)
-        }, completion: nil)
-        UIView.animate(withDuration: 0.25, delay: 0.3, animations: {
-            self.devContacts.alpha = 1
-        })
-        
-        self.devEmailInfo.transform = CGAffineTransform(translationX: 0, y: 50)
-        self.devEmailInfo.alpha = 0
-        
-        self.devEmail.transform = CGAffineTransform(translationX: 0, y: 50)
-        self.devEmail.alpha = 0
-        
-        UIView.animate(withDuration: 1, delay: 0.4, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
-            self.devEmailInfo.transform = CGAffineTransform(translationX: 0, y: 0)
-            self.devEmail.transform = CGAffineTransform(translationX: 0, y: 0)
-        }, completion: nil)
-        UIView.animate(withDuration: 0.25, delay: 0.4, animations: {
-            self.devEmailInfo.alpha = 1
-            self.devEmail.alpha = 1
-        })
-        
-        self.devTelegramInfo.transform = CGAffineTransform(translationX: 0, y: 50)
-        self.devTelegramInfo.alpha = 0
-        self.devTelegram.transform = CGAffineTransform(translationX: 0, y: 50)
-        self.devTelegram.alpha = 0
-        
-        UIView.animate(withDuration: 1, delay: 0.5, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
-            self.devTelegramInfo.transform = CGAffineTransform(translationX: 0, y: 0)
-            self.devTelegram.transform = CGAffineTransform(translationX: 0, y: 0)
-        }, completion: nil)
-        UIView.animate(withDuration: 0.25, delay: 0.5, animations: {
-            self.devTelegramInfo.alpha = 1
-            self.devTelegram.alpha = 1
-        })
-        
-        
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationController?.setNavigationBarHidden(true, animated: true)
     }
+
 }

@@ -40,6 +40,8 @@ class MainViewController: UIViewController {
         self.view.backgroundColor = getAppColor(color: .background)
         
         self.view.addSubview(controllers[0].view)
+        
+        
         self.view.addSubview(controllers[1].view)
         self.view.addSubview(controllers[2].view)
         //self.view.addSubview(controllers[3].view)

@@ -8,10 +8,13 @@
 
 import UIKit
 class Editor : UIViewController {
+    
+    //таймер для отображения анимации
     private var timer = CADisplayLink(target: self, selector: #selector(setFrame(_:)))
     private var project : ProjectWork!
     var canvas : ProjectCanvas!
     var control : ProjectControl!
+    
     private var animationTime : Int = 0
     private var nowFrameIndex : Int = 0
     
@@ -134,8 +137,6 @@ class Editor : UIViewController {
         
          NotificationCenter.default.addObserver(self, selector: #selector(appMovedToForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(rotate), name: UIDevice.orientationDidChangeNotification, object: nil)
-
         view.addSubview(toolBar)
         view.addSubview(transformSize)
         view.addSubview(transformAngle)
@@ -172,6 +173,7 @@ class Editor : UIViewController {
         
         actionInfo.transform = CGAffineTransform(translationX: 0, y: 42)
         actionInfo.alpha = 0
+        actionInfo.isHidden = true
         
         toolBar.toolbarChangesDelegate = {isSubbarHide, isHide in
             var offset = isSubbarHide ? 42 : 0
@@ -195,11 +197,7 @@ class Editor : UIViewController {
         NotificationCenter.default.removeObserver(self, name: UIApplication.willResignActiveNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
     }
-    
-    @objc func rotate() {
 
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         toolBar.layoutIfNeeded()
         toolBar.wasChangedTool(newTool: 0)
@@ -240,8 +238,6 @@ class Editor : UIViewController {
     }
     
     @objc func appMovedToForeground() {
-        print("ender!")
-        
         let anim = CABasicAnimation(keyPath: #keyPath(CALayer.opacity))
 
         anim.duration = 1

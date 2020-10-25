@@ -27,7 +27,9 @@ class PeletteSelectController : UIViewController {
     }()
     
     override func viewDidLoad() {
-        view.setCorners(corners: 32)
+        
+        navigationItem.title = "Palettes"
+        
         view.backgroundColor = getAppColor(color: .background)
         
         layout = UICollectionViewFlowLayout()

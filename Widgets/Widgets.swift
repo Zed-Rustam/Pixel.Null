@@ -280,8 +280,8 @@ struct Widgets: Widget {
             WidgetsEntryView(entry: entry)
         }
         .supportedFamilies([.systemSmall])
-        .configurationDisplayName("nanoArt Widget")
-        .description("preview your projects")
+        .configurationDisplayName("Project's preview")
+        .description("Admire your projects right on your home screen")
     }
 }
 

@@ -95,6 +95,8 @@ class ColorDialogController: UIViewController {
     lazy private var colorsView: UIView = {
         let view = UIView()
         
+        (controllers[2] as! PaletteSelectController).parentController = self
+        
         view.translatesAutoresizingMaskIntoConstraints = false
         view.widthAnchor.constraint(equalToConstant: 42).isActive = true
         view.heightAnchor.constraint(equalToConstant: 42).isActive = true

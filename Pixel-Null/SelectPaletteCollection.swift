@@ -49,14 +49,14 @@ class SelectPaletteCollection : UICollectionView {
         
         defaultPalettes.append("Default pallete")
         
-        contentInset = UIEdgeInsets(top: 72, left: 12, bottom: 0, right: 12)
+        contentInset = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
 
-        addSubview(mainTitle)
-        
-        mainTitle.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
-        mainTitle.leftAnchor.constraint(equalTo: leftAnchor, constant: 0).isActive = true
-        mainTitle.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
-        mainTitle.transform = CGAffineTransform(translationX: 0, y: -36)
+//        addSubview(mainTitle)
+//
+//        mainTitle.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
+//        mainTitle.leftAnchor.constraint(equalTo: leftAnchor, constant: 0).isActive = true
+//        mainTitle.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
+//        mainTitle.transform = CGAffineTransform(translationX: 0, y: -36)
     }
     
     required init?(coder: NSCoder) {

@@ -23,7 +23,6 @@
 		9523F2C82437C4B700725214 /* EraseSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9523F2C72437C4B700725214 /* EraseSettings.swift */; };
 		9523F2EE2439E17D00725214 /* GradientSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9523F2ED2439E17D00725214 /* GradientSettings.swift */; };
 		9537B1A1243C6C880083BE27 /* GridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9537B1A0243C6C880083BE27 /* GridView.swift */; };
-		9537B1A6243E48C80083BE27 /* EditorLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9537B1A5243E48C80083BE27 /* EditorLayer.swift */; };
 		9537B1AB24425D920083BE27 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9537B1AA24425D920083BE27 /* SettingsController.swift */; };
 		95390EE525057285003B4F99 /* ImagePixelColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95144C4E245C53990070DDF2 /* ImagePixelColor.swift */; };
 		9540F1BC2431A2C5008D1657 /* NavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9540F1BB2431A2C5008D1657 /* NavigationView.swift */; };
@@ -106,6 +105,7 @@
 		95AA119C2444C1500048CB96 /* SwiftUIFun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95AA119B2444C1500048CB96 /* SwiftUIFun.swift */; };
 		95AB4B262483B7EC005317F2 /* PencilTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95AB4B252483B7EC005317F2 /* PencilTool.swift */; };
 		95AB4B282483B97B005317F2 /* EraserTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95AB4B272483B97B005317F2 /* EraserTool.swift */; };
+		95AEDD62251F498D00ABF479 /* PaletteSelectorNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95AEDD61251F498D00ABF479 /* PaletteSelectorNavigation.swift */; };
 		95AEFF2F2483D8B200FCAD32 /* ShapeTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95AEFF2E2483D8B200FCAD32 /* ShapeTool.swift */; };
 		95AF0B78250D701800528E1E /* ImportController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95AF0B77250D701800528E1E /* ImportController.swift */; };
 		95BC6D2E24F6F2C500042F2B /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95611D2C24DB145300EEDAD2 /* WidgetKit.framework */; };
@@ -125,6 +125,8 @@
 		95C850232468620900366EA2 /* EditorSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C850222468620900366EA2 /* EditorSettingsController.swift */; };
 		95D87F6C250D7DE400655B84 /* FileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95D87F6B250D7DE400655B84 /* FileCell.swift */; };
 		95D87F6E250E378900655B84 /* UIGif.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95D87F6D250E378900655B84 /* UIGif.swift */; };
+		95D87F8325141A5600655B84 /* GalleryNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95D87F8225141A5600655B84 /* GalleryNavigation.swift */; };
+		95D87F852514D9E600655B84 /* PaletteNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95D87F842514D9E600655B84 /* PaletteNavigation.swift */; };
 		95DC554E23EC9D2A0011FA2A /* ColorSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95DC554D23EC9D2A0011FA2A /* ColorSelector.swift */; };
 		95DC555023EDF8280011FA2A /* CIrcleColorSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95DC554F23EDF8280011FA2A /* CIrcleColorSlider.swift */; };
 		95DFED5D24EC1DCA00C6009A /* PaletteGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95DFED5C24EC1DCA00C6009A /* PaletteGroup.swift */; };
@@ -188,7 +190,6 @@
 		9523F2C72437C4B700725214 /* EraseSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EraseSettings.swift; sourceTree = "<group>"; };
 		9523F2ED2439E17D00725214 /* GradientSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientSettings.swift; sourceTree = "<group>"; };
 		9537B1A0243C6C880083BE27 /* GridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridView.swift; sourceTree = "<group>"; };
-		9537B1A5243E48C80083BE27 /* EditorLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorLayer.swift; sourceTree = "<group>"; };
 		9537B1AA24425D920083BE27 /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		9540F1BB2431A2C5008D1657 /* NavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationView.swift; sourceTree = "<group>"; };
 		9540F1BD243330D1008D1657 /* SliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderView.swift; sourceTree = "<group>"; };
@@ -270,6 +271,7 @@
 		95AA119B2444C1500048CB96 /* SwiftUIFun.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIFun.swift; sourceTree = "<group>"; };
 		95AB4B252483B7EC005317F2 /* PencilTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PencilTool.swift; sourceTree = "<group>"; };
 		95AB4B272483B97B005317F2 /* EraserTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EraserTool.swift; sourceTree = "<group>"; };
+		95AEDD61251F498D00ABF479 /* PaletteSelectorNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaletteSelectorNavigation.swift; sourceTree = "<group>"; };
 		95AEFF2E2483D8B200FCAD32 /* ShapeTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShapeTool.swift; sourceTree = "<group>"; };
 		95AF0B77250D701800528E1E /* ImportController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportController.swift; sourceTree = "<group>"; };
 		95BC6D2D24F6F2C500042F2B /* WidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -285,6 +287,8 @@
 		95C850222468620900366EA2 /* EditorSettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorSettingsController.swift; sourceTree = "<group>"; };
 		95D87F6B250D7DE400655B84 /* FileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileCell.swift; sourceTree = "<group>"; };
 		95D87F6D250E378900655B84 /* UIGif.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIGif.swift; sourceTree = "<group>"; };
+		95D87F8225141A5600655B84 /* GalleryNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryNavigation.swift; sourceTree = "<group>"; };
+		95D87F842514D9E600655B84 /* PaletteNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaletteNavigation.swift; sourceTree = "<group>"; };
 		95DC554D23EC9D2A0011FA2A /* ColorSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorSelector.swift; sourceTree = "<group>"; };
 		95DC554F23EDF8280011FA2A /* CIrcleColorSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIrcleColorSlider.swift; sourceTree = "<group>"; };
 		95DFED5C24EC1DCA00C6009A /* PaletteGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaletteGroup.swift; sourceTree = "<group>"; };
@@ -499,7 +503,6 @@
 				9570657724164D3B0044FC39 /* FramePreviews */,
 				9570657624164D2F0044FC39 /* LayerPreviews */,
 				955145D624055D1000524FF9 /* Editor.swift */,
-				9537B1A5243E48C80083BE27 /* EditorLayer.swift */,
 				955145D42405589100524FF9 /* ProjectCanvas.swift */,
 				957D040D2408283400E58210 /* FramePreview.swift */,
 				957D04132408510800E58210 /* ProjectControl.swift */,
@@ -565,6 +568,7 @@
 				95560A1623C4302900581482 /* GalleryCells.swift */,
 				95560A1923C5442800581482 /* GalleryLayout.swift */,
 				95A52B57247904A800DB1567 /* ProjectExportController.swift */,
+				95D87F8225141A5600655B84 /* GalleryNavigation.swift */,
 			);
 			name = Gallery;
 			sourceTree = "<group>";
@@ -642,10 +646,12 @@
 				959BCFB9241FECA500B27CFB /* PalleteEditor */,
 				959BCFBE241FEFA300B27CFB /* PalleteWorker.swift */,
 				954C32772453A71000E520A4 /* PalleteCollectionLayout.swift */,
+				95AEDD61251F498D00ABF479 /* PaletteSelectorNavigation.swift */,
 				959CB7E0246F59300096EF38 /* PalleteSelectController.swift */,
 				95537EFE2470048E0074C821 /* SelectPaletteCollection.swift */,
 				95513ABA24709D59007E3E9E /* ColorsPallete.swift */,
 				9560723924940659009D8DCC /* PaletteCollectionModern.swift */,
+				95D87F842514D9E600655B84 /* PaletteNavigation.swift */,
 			);
 			name = "Colors Pallete";
 			sourceTree = "<group>";
@@ -859,6 +865,7 @@
 				95DFED5D24EC1DCA00C6009A /* PaletteGroup.swift in Sources */,
 				95DFED5F24EC295100C6009A /* PalettesSectionTitle.swift in Sources */,
 				954DAE4B245E161200CB40B1 /* AlignmentSelector.swift in Sources */,
+				95AEDD62251F498D00ABF479 /* PaletteSelectorNavigation.swift in Sources */,
 				95816A4D244B4470007C7A69 /* SymmetryController.swift in Sources */,
 				95E2A0312455197400B02742 /* FillController.swift in Sources */,
 				95DC554E23EC9D2A0011FA2A /* ColorSelector.swift in Sources */,
@@ -882,6 +889,7 @@
 				9523F2EE2439E17D00725214 /* GradientSettings.swift in Sources */,
 				954FFE99246B66F700A4EC71 /* ThumbnailProvider.swift in Sources */,
 				95A626AF24446099007E75F3 /* PencilController.swift in Sources */,
+				95D87F852514D9E600655B84 /* PaletteNavigation.swift in Sources */,
 				95C0EDD42448B1450012D60D /* SummetryView.swift in Sources */,
 				954BB2DE240D72B50008B9D5 /* Tool.swift in Sources */,
 				95513ABD2471E968007E3E9E /* ProjectViewNew.swift in Sources */,
@@ -922,12 +930,12 @@
 				95E3D4AA24524AB90057A830 /* ProjectPallete.swift in Sources */,
 				95850C742498E531003F6153 /* layersTable.swift in Sources */,
 				95C7278823EB583D00ED1A28 /* ColorStyle.swift in Sources */,
+				95D87F8325141A5600655B84 /* GalleryNavigation.swift in Sources */,
 				959BCFB8241EC64100B27CFB /* PalleteFull.swift in Sources */,
 				95E2A03324551CA500B02742 /* SelectionController.swift in Sources */,
 				95023E4124252AF40098187E /* PalleteCreateController.swift in Sources */,
 				9520F94224DD9F4A00BDCBD5 /* HSLCircle.swift in Sources */,
 				95A799652443B59800F7BBE2 /* MainSettingsMenu.swift in Sources */,
-				9537B1A6243E48C80083BE27 /* EditorLayer.swift in Sources */,
 				9537B1AB24425D920083BE27 /* SettingsController.swift in Sources */,
 				95782CDE23CB928200C2772F /* TextFIeld.swift in Sources */,
 				95DC555023EDF8280011FA2A /* CIrcleColorSlider.swift in Sources */,

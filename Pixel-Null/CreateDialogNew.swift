@@ -142,9 +142,8 @@ class CreateDialogNew : UIViewController, UIPopoverPresentationControllerDelegat
                 break
             }
             
-            self.show(colorSelectorMenu, sender: nil)
+            self.present(colorSelectorMenu, animated: true, completion: nil)
         }
-        
         
         clr.isUserInteractionEnabled = true
         return clr
@@ -196,6 +195,9 @@ class CreateDialogNew : UIViewController, UIPopoverPresentationControllerDelegat
     }
     
     override func viewDidLoad() {
+        
+        navigationItem.title = "New Project"
+        
         view.backgroundColor = getAppColor(color: .background)
         view.setCorners(corners: 32)
         

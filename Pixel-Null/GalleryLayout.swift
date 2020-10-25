@@ -37,8 +37,9 @@ class GalleryLayout : UICollectionViewLayout{
     override func prepare() {
         attributes.removeAll()
         columnsHeights.removeAll()
+        
         for _ in 0..<columnsCount {
-            columnsHeights.append(Double(padding) + Double(UIApplication.shared.windows[0].safeAreaInsets.top))
+            columnsHeights.append(Double(padding))
         }
         
         let itemWidth : Double = (contentWidth - padding * 2.0 - spacing * (Double(columnsCount) - 1.0)) / Double(columnsCount)

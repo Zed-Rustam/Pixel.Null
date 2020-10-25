@@ -10,23 +10,16 @@ import UIKit
 import MobileCoreServices
 import CoreGraphics
 
-class GalleryControl : UIViewController{
+class GalleryControl : UIViewController {
         
+    weak var parentController: UIViewController? = nil
     var projects : [Any] = []
     
-    lazy private var createButtonNew : UIButton = {
-        let btn = UIButton()
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
+    lazy private var createButtonNew : UIBarButtonItem = {
+        let btn = UIBarButtonItem(image: UIImage(systemName: "plus", withConfiguration: UIImage.SymbolConfiguration.init(weight: .semibold)), style: .done, target: self, action: nil)
         
-        btn.backgroundColor = getAppColor(color: .background)
-        btn.setCorners(corners: 12, needMask: false, curveType: .continuous)
-        btn.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
-        btn.layer.shadowPath = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 36, height: 36), cornerRadius: 12).cgPath
-        
-        btn.setImage(UIImage(systemName: "plus", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))!, for: .normal)
         btn.tintColor = getAppColor(color: .enable)
+        btn.imageInsets = UIEdgeInsets(top: 6, left: 6, bottom: 6, right: 6)
         
         btn.menu = {
             let createAction = UIAction(title: "New Project", image: UIImage(systemName: "doc")) {_ in
@@ -43,7 +36,7 @@ class GalleryControl : UIViewController{
                     create.modalPresentationStyle = .popover
 
                     if let popover = create.popoverPresentationController {
-                        popover.sourceView = self.createButtonNew
+                        //popover.sourceView = self.createButtonNew
                         popover.delegate = self
                         popover.permittedArrowDirections = .any
                     }
@@ -52,35 +45,33 @@ class GalleryControl : UIViewController{
                     break
                 }
                 
-                self.show(create, sender: nil)
+                self.present(create, animated: true, completion: nil)
+                //self.present(create, sender: nil)
             }
         
             
             let importAction = UIAction(title: "Import Project", image: UIImage(systemName: "arrow.down.doc")) {_ in
-                let dialog = UIDocumentBrowserViewController(forOpeningFilesWithContentTypes: ["com.zed.null.project",String(kUTTypePNG),String(kUTTypeJPEG),String(kUTTypeGIF)])
+                let dialog = UIDocumentBrowserViewController(forOpening: [.init(importedAs: "com.zed.null.project"),.init(importedAs: String(kUTTypePNG)),.init(importedAs: String(kUTTypeJPEG)),.init(importedAs: String(kUTTypeGIF))])
                 
                 dialog.modalPresentationStyle = .pageSheet
                 dialog.delegate = self
                 dialog.allowsDocumentCreation = false
                 dialog.allowsPickingMultipleItems = true
                 
-                self.show(dialog, sender: self)
+                self.present(dialog, animated: true, completion: nil)
             }
             
             
             let menu = UIMenu(title: "", image: nil, identifier: .none, options: .displayInline, children: [createAction,importAction])
             return menu
         }()
-        
-        btn.showsMenuAsPrimaryAction = true
-        
+                
         return btn
     }()
     
     lazy var gallery : UICollectionView =  {
         
         let layout = GalleryLayout()
-               layout.bottomOffset = 72 + Double(UIApplication.shared.windows[0].safeAreaInsets.bottom / 2) + 4
                switch UIDevice.current.userInterfaceIdiom {
                case .phone:
                    layout.setData(columnsCount: 3, delegate: self)
@@ -99,7 +90,9 @@ class GalleryControl : UIViewController{
         collection.delegate = self
         collection.dataSource = self
         collection.backgroundColor = .clear
-        collection.contentInsetAdjustmentBehavior = .never
+        //collection.contentInsetAdjustmentBehavior = .never
+        
+        //collection.contentInset.top = (parent as! UINavigationController).navigationBar.frame.height
         return collection
     }()
     
@@ -138,18 +131,18 @@ class GalleryControl : UIViewController{
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         gallery.reloadData()
-        //gallery.setShadow(color: getAppColor(color: .shadow), radius: 32, opasity: 1)
-        createButtonNew.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
-        createButtonNew.layer.shadowPath = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 36, height: 36), cornerRadius: 12).cgPath
-
     }
     
     override func viewDidLoad() {
                 
         createProject()
         
-        //print(GalleryControl.getDocumentsDirectory())
-        
+                
+        navigationItem.title = "Gallery"
+        navigationItem.largeTitleDisplayMode = .always
+                
+        navigationItem.rightBarButtonItem = createButtonNew
+                
         let f = FileManager()
         do {
             let projs = try f.contentsOfDirectory(at: GalleryControl.getDocumentsDirectory(), includingPropertiesForKeys: nil)
@@ -162,24 +155,15 @@ class GalleryControl : UIViewController{
             }
             
         } catch {}
-                
-        projects.insert(NSLocalizedString("Gallery", comment: ""), at: 0)
-    
         
         self.view.addSubview(gallery)
-        
-        view.addSubview(createButtonNew)
 
-        createButtonNew.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
-        createButtonNew.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
-        
         gallery.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 0).isActive = true
         gallery.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: 0).isActive = true
         gallery.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
         gallery.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
         
         self.view.backgroundColor = getAppColor(color: .background)
-        //gallery.setShadow(color: getAppColor(color: .shadow), radius: 32, opasity: 1)
     }
 }
 
@@ -223,7 +207,8 @@ extension GalleryControl : ProjectActions {
         let exp = ProjectExportController()
         exp.modalPresentationStyle = .formSheet
         exp.project = proj
-        show(exp, sender: self)
+        
+        present(exp, animated: true, completion: nil)
     }
     
     func projectOpen(proj: ProjectWork) {
@@ -232,7 +217,8 @@ extension GalleryControl : ProjectActions {
         ed.gallery = self
         ed.modalPresentationStyle = .currentContext
         ed.modalTransitionStyle = .coverVertical
-        show(ed, sender: self)
+        
+        parentController?.present(ed, animated: true, completion: nil)
     }
     
     func projectDublicate(view: ProjectViewNew) {
@@ -324,12 +310,11 @@ extension GalleryControl : UICollectionViewDelegate {
 extension GalleryControl : UIDocumentBrowserViewControllerDelegate {
     func documentBrowser(_ controller: UIDocumentBrowserViewController, didPickDocumentsAt documentURLs: [URL]) {
         controller.dismiss(animated: true, completion: {
-            let importMenu = ImportController(filesUrl: documentURLs)
-            importMenu.gallery = self
+            let importMenu = ImportNavigation(files: documentURLs)
+            importMenu.controller.gallery = self
             
-            self.show(importMenu, sender: nil)
+            self.present(importMenu, animated: true, completion: nil)
         })
-        print(documentURLs)
     }
 }
 

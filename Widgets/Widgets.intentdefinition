@@ -9,7 +9,7 @@
 	<key>INIntentDefinitionNamespace</key>
 	<string>88xZPY</string>
 	<key>INIntentDefinitionSystemVersion</key>
-	<string>20A5354i</string>
+	<string>20A5364e</string>
 	<key>INIntentDefinitionToolsBuildVersion</key>
 	<string>12A8189h</string>
 	<key>INIntentDefinitionToolsVersion</key>
@@ -19,12 +19,16 @@
 		<dict>
 			<key>INIntentCategory</key>
 			<string>information</string>
+			<key>INIntentDescription</key>
+			<string>select projects that will be show</string>
 			<key>INIntentDescriptionID</key>
 			<string>tVvJ9c</string>
 			<key>INIntentEligibleForWidgets</key>
 			<true/>
 			<key>INIntentIneligibleForSuggestions</key>
 			<true/>
+			<key>INIntentLastParameterTag</key>
+			<integer>15</integer>
 			<key>INIntentName</key>
 			<string>Configuration</string>
 			<key>INIntentResponse</key>
@@ -42,15 +46,17 @@
 						<string>failure</string>
 					</dict>
 				</array>
+				<key>INIntentResponseLastParameterTag</key>
+				<integer>1</integer>
 			</dict>
 			<key>INIntentTitle</key>
-			<string>Configuration</string>
+			<string>projects</string>
 			<key>INIntentTitleID</key>
 			<string>gpCwrM</string>
 			<key>INIntentType</key>
 			<string>Custom</string>
 			<key>INIntentVerb</key>
-			<string>View</string>
+			<string>Open</string>
 		</dict>
 	</array>
 	<key>INTypes</key>

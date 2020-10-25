@@ -1167,8 +1167,8 @@ class ProjectWork{
             case .allFramesDelayChenge:
                 changeDelayForAllFrames(delays: stringToArray(str: projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["oldDelays"]!))
                 
-            default:
-                break
+//            default:
+//                break
             }
             
             delegate.updateCanvas()
@@ -1554,8 +1554,8 @@ class ProjectWork{
                 
             case .allFramesDelayChenge:
                 changeDelayForAllFrames(delay: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["newDelay"]!)!)
-            default:
-                break
+//            default:
+//                break
             }
             
             delegate.updateCanvas()

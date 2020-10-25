@@ -30,56 +30,38 @@ class PalleteCollection : UIViewController, UICollectionViewDelegate, UICollecti
         col.dataSource = self
         col.backgroundColor = .clear
         
-        //col.contentInsetAdjustmentBehavior = .never
         col.translatesAutoresizingMaskIntoConstraints = false
         col.isUserInteractionEnabled = true
         
-        col.contentInset = UIEdgeInsets(top: 48, left: 12, bottom: 0, right: 12)
-
-        col.addSubview(mainTitle)
-        
-        mainTitle.topAnchor.constraint(equalTo: col.topAnchor, constant: 0).isActive = true
-        mainTitle.leftAnchor.constraint(equalTo: col.leftAnchor, constant: 0).isActive = true
-        mainTitle.rightAnchor.constraint(equalTo: col.rightAnchor, constant: 0).isActive = true
-        mainTitle.transform = CGAffineTransform(translationX: 0, y: -36)
-
+        col.contentInset = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
         
         return col
     }()
     private var palletes : [PalleteWorker] = []
     private var layout: UICollectionViewFlowLayout!
     
-    lazy private var addButton: UIButton = {
-        let btn = UIButton()
-        btn.setImage(UIImage(systemName: "plus", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold))?.withRenderingMode(.alwaysTemplate), for: .normal)
+    lazy private var addButton: UIBarButtonItem = {
+        let btn = UIBarButtonItem(image: UIImage(systemName: "plus", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), style: .plain, target: self, action: nil)
         
-        btn.imageView?.tintColor = getAppColor(color: .enable)
+        btn.tintColor = getAppColor(color: .enable)
         
-        btn.backgroundColor = getAppColor(color: .background)
-        
-        btn.setCorners(corners: 12)
-        
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        
-        btn.showsMenuAsPrimaryAction = true
         btn.menu = UIMenu(title: "", image: nil, children: [
             UIAction(title: "New palette", image: UIImage(systemName: "doc"),handler: {_ in
                 let create = PalleteCreateController()
                 create.isModalInPresentation = true
                 create.delegate = self
-                self.show(create, sender: self)
+                self.present(create, animated: true, completion: nil)
             }),
             UIAction(title: "Import palette", image: UIImage(systemName: "arrow.down.doc"), handler: {_ in
-                let dialog = UIDocumentBrowserViewController(forOpeningFilesWithContentTypes: ["com.zed.null.palette"])
+                let dialog = UIDocumentBrowserViewController(forOpening: [.init(importedAs: "com.zed.null.palette")])
+                
                 
                 dialog.modalPresentationStyle = .pageSheet
                 dialog.delegate = self
                 dialog.allowsDocumentCreation = false
                 dialog.allowsPickingMultipleItems = true
                 
-                self.show(dialog, sender: self)
+                self.present(dialog, animated: true, completion: nil)
             })
         ])
         
@@ -131,6 +113,11 @@ class PalleteCollection : UIViewController, UICollectionViewDelegate, UICollecti
     }
     
     override func viewDidLoad() {
+        
+        navigationItem.title = "Palettes"
+        navigationItem.largeTitleDisplayMode = .always
+        navigationItem.rightBarButtonItem = addButton
+        
         let f = FileManager()
         do {
             let projs = try f.contentsOfDirectory(at: PalleteWorker.getDocumentsDirectory(), includingPropertiesForKeys: nil)
@@ -154,27 +141,16 @@ class PalleteCollection : UIViewController, UICollectionViewDelegate, UICollecti
         view.backgroundColor = UIColor(named: "backgroundColor")
         
         view.addSubview(collection)
-        view.addSubview(addButton)
         
         collection.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 0).isActive = true
         collection.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: 0).isActive = true
         collection.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
         collection.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
-
-        addButton.widthAnchor.constraint(equalToConstant: 42).isActive = true
-        addButton.heightAnchor.constraint(equalToConstant: 42).isActive = true
-        addButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
-        addButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         collection.layoutSubviews()
         collection.reloadData()
-    }
-    
-    override func viewDidLayoutSubviews() {
-        addButton.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
-        addButton.layer.shadowPath = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 36, height: 36), cornerRadius: 12).cgPath
     }
 }
 
@@ -186,9 +162,9 @@ extension PalleteCollection : PalleteGalleryDelegate {
             editor.delegate = {[unowned self] in
                 self.collection.reloadData()
             }
-           
-           show(editor, sender: self)
-       }
+        
+            present(editor, animated: true, completion: nil)
+        }
           
        func clonePallete(pallete : PalleteWorker) {
             var index : Int = 1
@@ -243,7 +219,7 @@ extension PalleteCollection : PalleteGalleryDelegate {
         collection.reloadData()
     }
     func palleteShare(pallete : PalleteWorker){
-        show(UIActivityViewController(activityItems: [pallete.getURL()], applicationActivities: nil), sender: self)
+        present(UIActivityViewController(activityItems: [pallete.getURL()], applicationActivities: nil), animated: true, completion: nil)
     }
 }
 
@@ -278,7 +254,7 @@ extension PalleteCollection : UIDocumentBrowserViewControllerDelegate {
             let importMenu = ImportController(filesUrl: documentURLs)
             importMenu.palettes = self
             
-            self.show(importMenu, sender: nil)
+            self.present(importMenu, animated: true, completion: nil)
         })
         print(documentURLs)
     }

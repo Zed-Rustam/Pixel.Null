@@ -11,10 +11,14 @@ import UIKit
 class SettingsController : UINavigationController {
     
     override func viewDidLoad() {
-        navigationBar.isHidden = true
+        
+        navigationBar.prefersLargeTitles = true
+        setNavigationBarHidden(true, animated: true)
+
         view.backgroundColor = getAppColor(color: .background)
         let main = MainSettingsMenu()
         main.navigation = self
         pushViewController(main, animated: true)
     }
+    
 }

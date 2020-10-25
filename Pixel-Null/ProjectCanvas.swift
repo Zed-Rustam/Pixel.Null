@@ -55,10 +55,12 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
         }
     }
 
+    //при начале рисования мы скрываем выбранный слой
     func startDrawing() {
         targetImage.isHidden = true
     }
     
+    //при завершении рисования переводим изображение с экшан слоя на таргет
     func endDrawing() {
         targetLayer = actionLayer
         targetImage.isHidden = false
@@ -72,6 +74,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
         barDelegate?.UnDoReDoAction()
     }
     
+    //при отмене действия показываем выбранный слой и очищаем эклн слой
     func actionCancel() {
         targetImage.isHidden = false
         actionLayer = UIImage(size: project.projectSize)!
@@ -79,16 +82,25 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
     }
     //
     
+    //все слои позади выбранного
     private var bgLayers : UIImage?
+    
+    //выбранный слой
     private var targetLayer : UIImage!
+    
+    //все слои перед выбранным
     private var fgLayers : UIImage?
+    
+    //слой действия
     private var ActionLayer : UIImage!
+    
     private var framesLayer : UIImage?
 
     var selectionLayer : UIImage!
     
     private var isAnimation : Bool = false
     
+    //вьюшки для отображения изображений
     private var bg : UIImageView!
     private var framesImage : UIImageView!
     private var bgImage : UIImageView!
@@ -97,6 +109,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
     private var actionImage : UIImageView!
     var selectionImage : UIImageView!
 
+    
     private var grid : GridView!
     private var symmetryView : SymmetryView!
     var transformView : TransformView!
@@ -232,7 +245,6 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
         bg.contentMode = .scaleAspectFit
         bg.frame = CGRect(x: 0, y: 0, width: project.projectSize.width, height: project.projectSize.height)
         offset = bg.frame.origin
-//        bg.backgroundColor = UIColor(patternImage: UIImage(cgImage: ProjectStyle.bgImage!.cgImage!, scale: 0.1, orientation: .down))
         
         bgImage = UIImageView(frame: CGRect(x: 0, y: 0, width: project.projectSize.width, height: project.projectSize.height))
         bgImage.image = bgLayers
@@ -275,7 +287,6 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
         
         
         transformView = TransformView(frame: self.bounds,canvas: self)
-        //grid.project = project
         
         scaleRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(onScale(sender:)))
         actionRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(onAction2(sender:)))
@@ -290,8 +301,6 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
         
         actionRecognizer.minimumPressDuration = 0
         actionRecognizer.delaysTouchesBegan = false
-        //actionRecognizer.maximumNumberOfTouches = 1
-        
         
         addGestureRecognizer(scaleRecognizer)
         addGestureRecognizer(moveRecognizer)
@@ -305,12 +314,8 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
         transformGest.minimumPressDuration = 0
         addGestureRecognizer(transformGest)
         transformGest.isEnabled = false
-        //move.setImage(image: targetLayer, startpos: .zero, selection: nil)
         transformView.alpha = 0
         
-        
-        //addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(symmetry.touch(sender:))))
-
         self.addSubview(bg)
   
         bg.addSubview(framesImage)
@@ -326,7 +331,10 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
 
         bg.transform = CGAffineTransform(scaleX: scale, y: scale)
         (grid.layer as! GridLayer).gridScale = scale
-        (grid.layer as! GridLayer).startPos = CGPoint(x: 0, y: (frame.height - project.projectSize.height * scale) / 2)
+//        (grid.layer as! GridLayer).startPos = CGPoint(x: 0, y: (frame.height - project.projectSize.height * scale) / 2)
+        (grid.layer as! GridLayer).startPos = CGPoint.zero
+
+        
         bg.frame.origin = CGPoint(x: 0, y: (frame.height - project.projectSize.height * scale) / 2)
         offset = bg.frame.origin
         symmetryView.offset = offset
@@ -674,60 +682,53 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
                 isScaling = true
                 let lastScale = scale
                 scale *= sender.scale
+                
                 actionRecognizer.isEnabled = false
                 transformGest.isEnabled = false
                 
-                let xk = sender.scale * bg.frame.width -  bg.frame.width
-                let posx = (sender.location(in: self).x - bg.frame.origin.x) / bg.frame.width
-                
-                let yk = sender.scale *  bg.frame.height -  bg.frame.height
-                let posy = (sender.location(in: self).y - bg.frame.origin.y) /  bg.frame.height
-
-                
-                print("scale : \(scale) and size : \(bg.frame.width) last")
-
                 if scale < 0.1 {
                     scale = 0.1
                 } else if scale > 200 {
                     scale = 200
-                } else {
-                    offset.x -= posx * xk
-                    offset.y -= posy * yk
                 }
                 
-                UIView.animate(withDuration: animationDelta,delay: 0,options: .curveLinear, animations: {
-                    self.bg.transform = CGAffineTransform(scaleX: lastScale, y: lastScale).scaledBy(x: sender.scale, y: sender.scale)
-                    self.bg.layer.frame.origin = self.offset
+                let xk = (scale / lastScale - 1) * bg.frame.width
+                let posx = (sender.location(in: self).x - bg.frame.origin.x) / bg.frame.width
+                
+                let yk = (scale / lastScale - 1) *  bg.frame.height
+                let posy = (sender.location(in: self).y - bg.frame.origin.y) /  bg.frame.height
+
+                offset.x -= posx * xk
+                offset.y -= posy * yk
+                
+                UIView.animate(withDuration: animationDelta,delay: 0,options: .curveEaseInOut, animations: {
+                    self.bg.transform = CGAffineTransform(scaleX: self.scale, y: self.scale)
+                    self.bg.frame.origin = self.offset
                 })
                 
-                print("scale : \(scale) and size : \(bg.frame.width) now")
 
                 
                 let anim = CABasicAnimation(keyPath: "startPos")
                 anim.isAdditive = true
+                anim.timingFunction = .init(name: .easeInEaseOut)
                 anim.fromValue = (grid.layer as! GridLayer).startPos.offset(x: -offset.x, y: -offset.y)
                 anim.toValue = CGPoint.zero
                 anim.duration = animationDelta
                 
-                CATransaction.begin()
-                CATransaction.setDisableActions(true)
-                (grid.layer as! GridLayer).startPos = offset
-                CATransaction.commit()
-                
-                (grid.layer as! GridLayer).add(anim, forKey: nil)
-                
-                
                 let anim2 = CABasicAnimation(keyPath: "gridScale")
                 anim2.isAdditive = true
-                anim2.fromValue = (grid.layer as! GridLayer).gridScale - self.scale
-                anim2.toValue = 0
+                anim.timingFunction = .init(name: .easeInEaseOut)
+                anim2.fromValue = (grid.layer as! GridLayer).gridScale - scale
+                anim2.toValue = 0.0
                 anim2.duration = animationDelta
                 
                 CATransaction.begin()
                 CATransaction.setDisableActions(true)
                 (grid.layer as! GridLayer).gridScale = self.scale
+                (grid.layer as! GridLayer).startPos = offset
                 CATransaction.commit()
                 
+                (grid.layer as! GridLayer).add(anim, forKey: nil)
                 (grid.layer as! GridLayer).add(anim2, forKey: nil)
                 
                 symmetryView.offset = offset
@@ -850,10 +851,9 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
                                 
                 sender.setTranslation(.zero, in: self)
                 
-                UIView.animate(withDuration: animationDelta,delay: 0,options: .curveLinear, animations: {
+                UIView.animate(withDuration: animationDelta,delay: 0,options: .curveEaseInOut, animations: {
                     self.bg.transform = CGAffineTransform(scaleX: self.scale, y: self.scale)
-                    self.bg.layer.frame.origin = self.offset
-                        
+                    self.bg.frame.origin = self.offset
                 })
                 
                 let anim = CABasicAnimation(keyPath: "startPos")
@@ -867,22 +867,8 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
                 CATransaction.setDisableActions(true)
                 (grid.layer as! GridLayer).startPos = offset
                 CATransaction.commit()
-                
+
                 (grid.layer as! GridLayer).add(anim, forKey: nil)
-                
-                
-                let anim2 = CABasicAnimation(keyPath: "gridScale")
-                anim2.isAdditive = true
-                anim2.fromValue = (grid.layer as! GridLayer).gridScale - self.scale
-                anim2.toValue = 0
-                anim2.duration = animationDelta
-                
-                CATransaction.begin()
-                CATransaction.setDisableActions(true)
-                (grid.layer as! GridLayer).gridScale = self.scale
-                CATransaction.commit()
-                
-                (grid.layer as! GridLayer).add(anim2, forKey: nil)
                 
                 symmetryView.offset = offset
                 symmetryView.setNeedsDisplay()
