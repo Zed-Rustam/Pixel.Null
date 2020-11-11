@@ -16,7 +16,7 @@ class PaletteSelectController: UIViewController {
     lazy private var paletteTitle: UILabel = {
         let lbl = UILabel()
         lbl.text = "Default palette"
-        lbl.font = UIFont.systemFont(ofSize: 24, weight: .black)
+        lbl.font = UIFont(name: UIFont.appBlack, size: 24)
         lbl.textAlignment = .left
         lbl.textColor = getAppColor(color: .enable)
         lbl.translatesAutoresizingMaskIntoConstraints = false
@@ -56,12 +56,12 @@ class PaletteSelectController: UIViewController {
     override func viewDidLoad() {
         view.addSubview(paletteTitle)
         view.addSubview(selectPalette)
-
-        paletteTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
+        
+        paletteTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
         paletteTitle.rightAnchor.constraint(equalTo: selectPalette.leftAnchor, constant: -24).isActive = true
         paletteTitle.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
         
-        selectPalette.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        selectPalette.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
         selectPalette.topAnchor.constraint(equalTo: paletteTitle.topAnchor).isActive = true
         
         view.addSubview(colorPalette)
@@ -73,7 +73,7 @@ class PaletteSelectController: UIViewController {
     
     @objc func onPress() {
         let paletteSel = PaletteSelectorNavigation()
-        paletteSel.modalPresentationStyle = .formSheet
+        paletteSel.isModalInPresentation = true
         
         paletteSel.selection.selectDelegate = {[unowned self] in
             colorPalette.palleteColors = $0.colors
@@ -81,13 +81,34 @@ class PaletteSelectController: UIViewController {
             paletteTitle.text = $1
         }
         
+        switch UIDevice.current.userInterfaceIdiom {
+            //если айфон, то просто показываем контроллер
+        case .phone:
+            paletteSel.modalPresentationStyle = .pageSheet
+            //если айпад то немного химичим
+        case .pad:
+            paletteSel.modalPresentationStyle = .currentContext
+
+        default:
+            break
+        }
+        
         parentController?.present(paletteSel, animated: true, completion: nil)
+
+        
+    }
+    
+    override func viewDidLayoutSubviews() {
+        colorPalette.collectionViewLayout.invalidateLayout()
     }
 }
 
 extension PaletteSelectController: ColorSelectorDelegate {
     func setColor(color: UIColor) {
-        print("change")
         colorPalette.removeSelection()
     }
+}
+
+extension PaletteSelectController: UIPopoverPresentationControllerDelegate {
+    
 }

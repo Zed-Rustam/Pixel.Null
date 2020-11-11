@@ -73,12 +73,11 @@ class ProjectExportController: UIViewController {
     lazy private var titleText: UILabel = {
         let text = UILabel()
         text.text = "Export"
-        text.font = UIFont.systemFont(ofSize: 32, weight: .black)
+        text.font = UIFont(name: UIFont.appBlack, size: 42)
         
         text.textAlignment = .center
         text.translatesAutoresizingMaskIntoConstraints = false
         text.textColor = getAppColor(color: .enable)
-        text.heightAnchor.constraint(equalToConstant: 36).isActive = true
         return text
     }()
     
@@ -277,18 +276,25 @@ class ProjectExportController: UIViewController {
         }
     }
     
+    lazy private var exportButton: UIBarButtonItem = {
+        let btn = UIBarButtonItem(image: UIImage(systemName: "square.and.arrow.up",withConfiguration: UIImage.SymbolConfiguration.init(weight: .bold)), style: .done, target: self, action: #selector(onExport))
+        
+        return btn
+    }()
+    
     override func viewDidLoad() {
-        view.setCorners(corners: 32)
+        view.setCorners(corners: 24)
         
         view.backgroundColor = getAppColor(color: .background)
-        view.addSubview(titleText)
-        view.addSubview(exportBtn)
         view.addSubview(image)
         view.addSubview(projectName)
         view.addSubview(exportInfo)
         view.addSubview(sizeInfo)
         view.addSubview(filesSizeInfo)
 
+        navigationItem.title = "Share"
+        navigationItem.largeTitleDisplayMode = .always
+        navigationItem.rightBarButtonItem = exportButton
 
         view.addSubview(scaleTitle)
         view.addSubview(scaleSelector)
@@ -296,43 +302,58 @@ class ProjectExportController: UIViewController {
         view.addSubview(exportTitle)
         view.addSubview(exportSelector)
         
-        titleText.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
-        titleText.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
-        
-        exportBtn.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
-        exportBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
-        
-        image.centerXAnchor.constraint(equalTo: view.leftAnchor, constant: 74).isActive = true
-        image.centerYAnchor.constraint(equalTo: titleText.bottomAnchor, constant: 74).isActive = true
+        image.centerXAnchor.constraint(equalTo: view.leftAnchor, constant: 66).isActive = true
+        image.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 74).isActive = true
         
         projectName.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 132).isActive = true
-        projectName.topAnchor.constraint(equalTo: titleText.bottomAnchor, constant: 24).isActive = true
-        projectName.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
+        projectName.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24).isActive = true
+        projectName.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
         
         exportInfo.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 132).isActive = true
         exportInfo.topAnchor.constraint(equalTo: projectName.bottomAnchor, constant: 4).isActive = true
-        exportInfo.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        exportInfo.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
         
         sizeInfo.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 132).isActive = true
         sizeInfo.topAnchor.constraint(equalTo: exportInfo.bottomAnchor, constant: 4).isActive = true
-        sizeInfo.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        sizeInfo.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
         
         filesSizeInfo.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 132).isActive = true
         filesSizeInfo.topAnchor.constraint(equalTo: exportInfo.bottomAnchor, constant: 4).isActive = true
-        filesSizeInfo.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        filesSizeInfo.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
         
-        exportTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
-        exportTitle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
-        exportTitle.topAnchor.constraint(equalTo: titleText.bottomAnchor, constant: 132).isActive = true
+        exportTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
+        exportTitle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
+        exportTitle.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 24).isActive = true
 
-        exportSelector.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
+        exportSelector.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
         exportSelector.topAnchor.constraint(equalTo: exportTitle.bottomAnchor, constant: 6).isActive = true
         
-        scaleTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
-        scaleTitle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        scaleTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
+        scaleTitle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
         scaleTitle.topAnchor.constraint(equalTo: exportSelector.bottomAnchor, constant: 12).isActive = true
 
-        scaleSelector.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
+        scaleSelector.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
         scaleSelector.topAnchor.constraint(equalTo: scaleTitle.bottomAnchor, constant: 6).isActive = true
+    }
+}
+
+
+class ExportNavigation : UINavigationController {
+    
+    var controller = ProjectExportController()
+    
+    override func viewDidLoad() {
+        navigationBar.prefersLargeTitles = true
+        navigationBar.tintColor = getAppColor(color: .enable)
+        
+        let option = UINavigationBarAppearance()
+        option.backgroundEffect = UIBlurEffect(style: .systemUltraThinMaterial)
+        option.backgroundColor = getAppColor(color: .background).withAlphaComponent(0.75)
+        
+        option.largeTitleTextAttributes = [NSAttributedString.Key.font : UIFont(name: UIFont.appBlack, size: 42)!, NSAttributedString.Key.foregroundColor: getAppColor(color: .enable)]
+        option.titleTextAttributes = [NSAttributedString.Key.font : UIFont(name: UIFont.appBlack, size: 20)!, NSAttributedString.Key.foregroundColor: getAppColor(color: .enable)]
+        navigationBar.standardAppearance = option
+        
+        pushViewController(controller, animated: false)
     }
 }

@@ -21,6 +21,7 @@ class GradientTool : DrawTool {
     
     var delegate: EditorDelegate
     
+    
     private var startPoint : CGPoint = .zero
     private var endPoint : CGPoint = .zero
     

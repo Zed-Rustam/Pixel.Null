@@ -21,15 +21,15 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
     lazy private var layerText : UILabel = {
         let text = UILabel(frame: .zero)
         text.text = NSLocalizedString("Layers", comment: "")
-        text.font = UIFont.systemFont(ofSize: 32, weight: .black)
+        text.font = UIFont(name: UIFont.appBlack, size: 42)
         text.textColor = UIColor(named: "enableColor")
         text.translatesAutoresizingMaskIntoConstraints = false
-        text.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        text.heightAnchor.constraint(equalToConstant: 54).isActive = true
 
         return text
     }()
     
-    lazy private var addButton : UIButton = {
+    lazy var addButton : UIButton = {
         let btn = UIButton()
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
@@ -46,7 +46,7 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
         return btn
     }()
     
-    lazy private var settingsButton : UIButton = {
+    lazy var settingsButton : UIButton = {
         let btn = UIButton()
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
@@ -137,7 +137,7 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
         self.addSubview(addButton)
         self.addSubview(settingsButton)
 
-        layerText.leftAnchor.constraint(equalTo: leftAnchor, constant: 24).isActive = true
+        layerText.leftAnchor.constraint(equalTo: leftAnchor, constant: 12).isActive = true
         layerText.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
         
         list.leftAnchor.constraint(equalTo: leftAnchor, constant: 0).isActive = true
@@ -145,11 +145,11 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
         list.topAnchor.constraint(equalTo: layerText.bottomAnchor, constant: 0).isActive = true
         list.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
         
-        addButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -24).isActive = true
-        addButton.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
+        addButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -12).isActive = true
+        addButton.centerYAnchor.constraint(equalTo: layerText.centerYAnchor, constant: 0).isActive = true
 
         settingsButton.rightAnchor.constraint(equalTo: addButton.leftAnchor, constant: -6).isActive = true
-        settingsButton.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
+        settingsButton.topAnchor.constraint(equalTo: addButton.topAnchor, constant: 0).isActive = true
         
         checkFrame()
     }
@@ -157,16 +157,6 @@ class LayersCollectionView : UIView, UITextFieldDelegate {
     override func layoutSubviews() {
         super.layoutSubviews()
         list.layout.invalidateLayout()
-        addButton.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
-        addButton.layer.shadowPath = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 36, height: 36), cornerRadius: 8).cgPath
-        
-        settingsButton.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
-        settingsButton.layer.shadowPath = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 36, height: 36), cornerRadius: 8).cgPath
-    }
-    
-    override func tintColorDidChange() {
-        addButton.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
-        addButton.layer.shadowPath = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 36, height: 36), cornerRadius: 8).cgPath
     }
     
     required init?(coder: NSCoder) {

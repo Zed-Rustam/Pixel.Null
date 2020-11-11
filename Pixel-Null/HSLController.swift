@@ -49,7 +49,7 @@ class HSLController: UIViewController {
         view.addSubview(transp)
 
         circle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
-        circle.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
+        circle.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
         circle.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -48).isActive = true
         circle.heightAnchor.constraint(equalTo: circle.widthAnchor).isActive = true
         

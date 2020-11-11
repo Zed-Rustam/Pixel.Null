@@ -38,6 +38,7 @@ protocol EditorDelegate {
     var selectLayer : UIImage {get set}
     var actionLayer : UIImage {get set}
     var editorProject : ProjectWork {get}
+    var editorDelegate: ToolsActionDelegate {get}
     func startDrawing()
     func endDrawing()
     func actionCancel()

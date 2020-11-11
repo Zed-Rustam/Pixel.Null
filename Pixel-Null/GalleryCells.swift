@@ -14,7 +14,7 @@ class GalleryCell : UICollectionViewCell {
     lazy private var titleLabel: UILabel = {
         let label = UILabel()
         label.textColor = getAppColor(color: .enable)
-        label.font = UIFont.systemFont(ofSize: 10, weight: .bold)
+        label.font = UIFont(name: UIFont.appBold, size: 10)
         label.textAlignment = .center
         label.lineBreakMode = .byTruncatingMiddle
         

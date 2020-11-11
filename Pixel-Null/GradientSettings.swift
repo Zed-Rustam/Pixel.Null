@@ -19,15 +19,15 @@ class GradientSettings : UIViewController {
         color.widthAnchor.constraint(equalToConstant: 36).isActive = true
         color.heightAnchor.constraint(equalToConstant: 36).isActive = true
         color.delegate = {[unowned self] in
-            let colorPicker = ProjectPallete()
-            colorPicker.project = self.project
-            colorPicker.startColor = color.color
+            let colorPicker = ProjectPalleteNavigation()
+            colorPicker.controller.project = self.delegate2!.editorProject
+            colorPicker.controller.startColor = color.color
             
-            colorPicker.selectDelegate = {res in
+            colorPicker.controller.selectDelegate = {res in
                 color.color = res
                 self.startInfo.startColor = res
                 (self.gradientPreview.subviews[0] as! UIImageView).image = self.makeImageGradient()
-                self.delegate?.setGradientSettings(stepCount: Int(self.setpCountField.text ?? "1")!, startColor: self.startColor.color, endColor: self.endColor.color)
+                self.delegate2?.setGradientSettings(stepCount: Int(self.setpCountField.text ?? "1")!, startColor: self.startColor.color, endColor: self.endColor.color)
             }
             self.show(colorPicker, sender: self)
         }
@@ -42,15 +42,15 @@ class GradientSettings : UIViewController {
            color.widthAnchor.constraint(equalToConstant: 36).isActive = true
            color.heightAnchor.constraint(equalToConstant: 36).isActive = true
            color.delegate = {[unowned self] in
-               let colorPicker = ProjectPallete()
-               colorPicker.project = self.project
-               colorPicker.startColor = color.color
+               let colorPicker = ProjectPalleteNavigation()
+            colorPicker.controller.project = self.delegate2!.editorProject
+            colorPicker.controller.startColor = color.color
             
-               colorPicker.selectDelegate = {res in
+            colorPicker.controller.selectDelegate = {res in
                     color.color = res
                     self.startInfo.endColor = res
                     (self.gradientPreview.subviews[0] as! UIImageView).image = self.makeImageGradient()
-                    self.delegate?.setGradientSettings(stepCount: Int(self.setpCountField.text ?? "1")!, startColor: self.startColor.color, endColor: self.endColor.color)
+                self.delegate2?.setGradientSettings(stepCount: Int(self.setpCountField.text ?? "1")!, startColor: self.startColor.color, endColor: self.endColor.color)
                }
                self.show(colorPicker, sender: self)
            }
@@ -66,7 +66,7 @@ class GradientSettings : UIViewController {
             self.setpCountField.text = "\(Int($0 * 64))"
             self.startInfo.stepCount = Int($0 * 64)
             (self.gradientPreview.subviews[0] as! UIImageView).image = self.makeImageGradient()
-            self.delegate?.setGradientSettings(stepCount: Int(self.setpCountField.text ?? "1")!, startColor: self.startColor.color, endColor: self.endColor.color)
+            self.delegate2?.setGradientSettings(stepCount: Int(self.setpCountField.text ?? "1")!, startColor: self.startColor.color, endColor: self.endColor.color)
         }
         return slider
     }()
@@ -75,15 +75,15 @@ class GradientSettings : UIViewController {
         let field = UITextField()
         field.backgroundColor = getAppColor(color: .backgroundLight)
         field.textColor = getAppColor(color: .enable)
-        field.setCorners(corners: 8)
+        field.setCorners(corners: 12)
         field.delegate = stepCountInputDelegate
         field.textAlignment = .center
         field.keyboardType = .numberPad
-        field.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        field.font = UIFont(name: UIFont.appBold, size: 20)
         
         field.translatesAutoresizingMaskIntoConstraints = false
         field.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        field.widthAnchor.constraint(equalToConstant: 54).isActive = true
+        field.widthAnchor.constraint(equalToConstant: 72).isActive = true
         return field
     }()
     
@@ -106,7 +106,7 @@ class GradientSettings : UIViewController {
                 (self.gradientPreview.subviews[0] as! UIImageView).image = self.makeImageGradient()
             }
             
-            self.delegate?.setGradientSettings(stepCount: Int(self.setpCountField.text ?? "1")!, startColor: self.startColor.color, endColor: self.endColor.color)
+            self.delegate2?.setGradientSettings(stepCount: Int(self.setpCountField.text ?? "1")!, startColor: self.startColor.color, endColor: self.endColor.color)
         }
         return delegate
     }()
@@ -115,7 +115,7 @@ class GradientSettings : UIViewController {
         let text = UILabel()
         text.text = NSLocalizedString("Step's count", comment: "")
         text.textAlignment = .left
-        text.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        text.font = UIFont(name: UIFont.appBold, size: 24)
         text.textColor = getAppColor(color: .enable)
         text.translatesAutoresizingMaskIntoConstraints = false
         text.heightAnchor.constraint(equalToConstant: 36).isActive = true
@@ -126,7 +126,7 @@ class GradientSettings : UIViewController {
         let text = UILabel()
         text.text = NSLocalizedString("Colors", comment: "")
         text.textAlignment = .left
-        text.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        text.font = UIFont(name: UIFont.appBold, size: 24)
         text.textColor = getAppColor(color: .enable)
         text.translatesAutoresizingMaskIntoConstraints = false
         text.heightAnchor.constraint(equalToConstant: 36).isActive = true
@@ -169,7 +169,7 @@ class GradientSettings : UIViewController {
         let title = UILabel()
         title.text = NSLocalizedString("Gradient", comment: "")
         title.textAlignment = .center
-        title.font = UIFont.systemFont(ofSize: 32, weight: .black)
+        title.font = UIFont(name: UIFont.appBlack, size: 42)
         title.textColor = UIColor(named: "enableColor")
         
         return title
@@ -252,8 +252,8 @@ class GradientSettings : UIViewController {
     
     private var scrollView = UIScrollView()
     
-    weak var delegate : ToolSettingsDelegate? = nil
-    
+    weak var delegate2 : ToolsActionDelegate? = nil
+
     var startInfo : (stepCount : Int,startColor : UIColor, endColor : UIColor) = (0,.white,.black)
     
     func setSettings(stepCount : Int,startColor : UIColor, endColor : UIColor) {
@@ -261,7 +261,7 @@ class GradientSettings : UIViewController {
     }
     
     override func viewDidLoad() {
-        view.setCorners(corners: 32)
+        view.setCorners(corners: 24)
         
         view.addSubview(scrollView)
         view.addSubview(bgView)
@@ -283,11 +283,11 @@ class GradientSettings : UIViewController {
         bgView.heightAnchor.constraint(equalToConstant: 48).isActive = true
         
         penTitle.translatesAutoresizingMaskIntoConstraints = false
-        penTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
-        penTitle.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
+        penTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
+        penTitle.topAnchor.constraint(equalTo: view.topAnchor, constant: 48).isActive = true
 
-        colorsView.leftAnchor.constraint(equalTo: scrollView.leftAnchor, constant: 24).isActive = true
-        colorsView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -48).isActive = true
+        colorsView.leftAnchor.constraint(equalTo: scrollView.leftAnchor, constant: 16).isActive = true
+        colorsView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -32).isActive = true
         colorsView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 0).isActive = true
         
         scrollView.contentSize = CGSize(width: 100, height: colorsView.frame.height + 44)
@@ -312,11 +312,5 @@ class GradientSettings : UIViewController {
 
         gradientPreview.layoutIfNeeded()
         (gradientPreview.subviews[0] as! UIImageView).image = makeImageGradient()
-        //penSmoothSlider.setPosition(pos: CGFloat(startInfo.penSmooth) / 64)
-       // penSmoothInput.filed.text = "\(startInfo.penSmooth)"
-        
-       // pixelPerfectToggle.isCheck = startInfo.pixelPerfect
-        
-       // self.penColor.color = startInfo.penColor
     }
 }

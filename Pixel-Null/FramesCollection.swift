@@ -81,7 +81,6 @@ extension FramesCollection : UICollectionViewDataSource {
         
         cell.setSelect(isSelect: indexPath.item == project!.FrameSelected  ? true : false, animate: false)
         
-
         return cell
     }
 }
@@ -91,7 +90,6 @@ extension FramesCollection : UICollectionViewDelegate {
         if project!.FrameSelected != indexPath.item {
             let cell = cellForItem(at: indexPath) as! FramePreviewCell
             cell.setSelect(isSelect: true, animate: true)
-            print("reselect")
             frameDelegate!.changeFrame(from: project!.FrameSelected, to: indexPath.item)
         }
     }
@@ -104,7 +102,7 @@ extension FramesCollection : UICollectionViewDelegate {
         dragIndex = indexPath
         let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider:nil ) {action in
                     let clone = UIAction(title: "Clone",image : UIImage(systemName: "plus.square.on.square", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, handler: {action in
-                            self.project?.addAction(action: ["ToolID" : "\(Actions.frameClone.rawValue)", "frame" : "\(indexPath.item)"])
+                        self.project?.addAction(action: ["ToolID" : "\(Actions.frameClone.rawValue)", "frame" : "\(indexPath.item)"])
                             self.frameDelegate?.cloneFrame(original: indexPath.item)
                     })
                     
@@ -184,14 +182,6 @@ extension FramesCollection : UICollectionViewDropDelegate {
         case .move:
             if let destinationIndexPath = coordinator.destinationIndexPath {
                 let sourceIndexPath = coordinator.items[0].sourceIndexPath!
-                
-                if sourceIndexPath.item < project!.FrameSelected && destinationIndexPath.item >= project!.FrameSelected {
-                    project!.FrameSelected -= 1
-                } else if sourceIndexPath.item  > project!.FrameSelected && destinationIndexPath.item <= project!.FrameSelected {
-                    project!.FrameSelected += 1
-                } else if sourceIndexPath.item == project!.FrameSelected {
-                    project!.FrameSelected = destinationIndexPath.item
-                }
                 
                 if sourceIndexPath.item != destinationIndexPath.item {
                     project?.addAction(action: ["ToolID" : "\(Actions.frameReplace.rawValue)", "from" : "\(sourceIndexPath.item)", "to" : "\(destinationIndexPath.item)"])

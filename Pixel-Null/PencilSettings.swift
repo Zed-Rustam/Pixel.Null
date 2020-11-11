@@ -18,7 +18,7 @@ class PencilSettings : UIViewController {
         slider.delegate = {[unowned self] in
             self.penSizeField.text = "\(Int($0 * 63 + 1))"
             self.startInfo.penSize = Int($0 * 63 + 1)
-            self.delegate?.setPenSettings(penSize: Int(self.penSizeField.text ?? "1")!, pixPerfect: self.pixelPerfectToggle.isCheck)
+            self.delegate2?.setPenSettings(penSize: Int(self.penSizeField.text ?? "1")!, pixPerfect: self.pixelPerfectToggle.isCheck)
         }
         return slider
     }()
@@ -27,11 +27,11 @@ class PencilSettings : UIViewController {
         let field = UITextField()
         field.backgroundColor = getAppColor(color: .backgroundLight)
         field.textColor = getAppColor(color: .enable)
-        field.setCorners(corners: 8)
+        field.setCorners(corners: 12)
         field.delegate = penSizeInputDelegate
         field.textAlignment = .center
         field.keyboardType = .numberPad
-        field.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        field.font = UIFont(name: UIFont.appBold, size: 20)
 
         field.attributedPlaceholder = NSAttributedString(string: "1",attributes: [NSAttributedString.Key.foregroundColor: getAppColor(color: .disable)])
 
@@ -58,7 +58,7 @@ class PencilSettings : UIViewController {
                 self.startInfo.penSize = num
             }
             
-            self.delegate?.setPenSettings(penSize: num, pixPerfect: self.pixelPerfectToggle.isCheck)
+            self.delegate2?.setPenSettings(penSize: num, pixPerfect: self.pixelPerfectToggle.isCheck)
 
         }
         return delegate
@@ -68,8 +68,8 @@ class PencilSettings : UIViewController {
         let text = UILabel()
         text.text = NSLocalizedString("Width", comment: "")
         text.textAlignment = .left
-        text.font = UIFont.systemFont(ofSize: 24, weight: .bold)
-        text.textColor = UIColor(named: "enableColor")
+        text.font = UIFont(name: UIFont.appBold, size: 24)
+        text.textColor = getAppColor(color: .enable)
         text.translatesAutoresizingMaskIntoConstraints = false
         text.heightAnchor.constraint(equalToConstant: 36).isActive = true
         return text
@@ -79,7 +79,7 @@ class PencilSettings : UIViewController {
         let text = UILabel()
         text.text = "Pixel Perfect"
         text.textAlignment = .left
-        text.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        text.font = UIFont(name: UIFont.appBold, size: 24)
         text.textColor = getAppColor(color: .enable)
         text.translatesAutoresizingMaskIntoConstraints = false
         text.heightAnchor.constraint(equalToConstant: 36).isActive = true
@@ -120,7 +120,7 @@ class PencilSettings : UIViewController {
         stack.addArrangedSubview(penSizeTitle)
         stack.setCustomSpacing(0, after: penSizeTitle)
         stack.addArrangedSubview(penSizeStack)
-        stack.setCustomSpacing(12, after: penSizeStack)
+        stack.setCustomSpacing(24, after: penSizeStack)
         stack.addArrangedSubview(pixelPerfectStack)
         stack.setCustomSpacing(12, after: pixelPerfectStack)
 
@@ -131,7 +131,7 @@ class PencilSettings : UIViewController {
         let toggle = ToggleView()
         toggle.delegate = {[unowned self] in
             self.startInfo.pixelPerfect = $0
-            self.delegate?.setPenSettings(penSize: Int(self.penSizeField.text!)!, pixPerfect: self.pixelPerfectToggle.isCheck)
+            self.delegate2?.setPenSettings(penSize: Int(self.penSizeField.text!)!, pixPerfect: self.pixelPerfectToggle.isCheck)
         }
         return toggle
     }()
@@ -140,7 +140,7 @@ class PencilSettings : UIViewController {
         let title = UILabel()
         title.text = NSLocalizedString("Pencil", comment: "")
         title.textAlignment = .center
-        title.font = UIFont.systemFont(ofSize: 32, weight: .black)
+        title.font = UIFont(name: UIFont.appBlack, size: 42)
         title.textColor = getAppColor(color: .enable)
         title.translatesAutoresizingMaskIntoConstraints = false
         title.heightAnchor.constraint(equalToConstant: 36).isActive = true
@@ -155,8 +155,8 @@ class PencilSettings : UIViewController {
     
     private var scrollView = UIScrollView()
     
-    weak var delegate : ToolSettingsDelegate? = nil
-    
+    weak var delegate2 : ToolsActionDelegate? = nil
+
     var startInfo : (penSize : Int, pixelPerfect : Bool) = (1,false)
     
     func setSettings(penSize : Int, pixelPerfect : Bool) {
@@ -169,7 +169,7 @@ class PencilSettings : UIViewController {
         
         view.addSubview(penTitle)
         
-        view.setCorners(corners: 32)
+        view.setCorners(corners: 24)
         
         scrollView.addSubview(colorsView)
         view.backgroundColor = UIColor(named: "backgroundColor")
@@ -182,18 +182,17 @@ class PencilSettings : UIViewController {
         
         bgView.translatesAutoresizingMaskIntoConstraints = false
         bgView.topAnchor.constraint(equalTo: view.topAnchor, constant: 12).isActive = true
-        bgView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 12).isActive = true
-        bgView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -12).isActive = true
+        bgView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 16).isActive = true
+        bgView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -16).isActive = true
         bgView.heightAnchor.constraint(equalToConstant: 48).isActive = true
         
-
         penTitle.translatesAutoresizingMaskIntoConstraints = false
-        penTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
-        penTitle.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
+        penTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
+        penTitle.topAnchor.constraint(equalTo: view.topAnchor, constant: 48).isActive = true
 
-        colorsView.leftAnchor.constraint(equalTo: scrollView.leftAnchor, constant: 24).isActive = true
-        colorsView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -48).isActive = true
-        colorsView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 0).isActive = true
+        colorsView.leftAnchor.constraint(equalTo: scrollView.leftAnchor, constant: 16).isActive = true
+        colorsView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -32).isActive = true
+        colorsView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 12).isActive = true
         
         scrollView.contentSize = CGSize(width: 100, height: colorsView.frame.height + 44)
 

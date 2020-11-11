@@ -31,11 +31,45 @@ class ColorSelector : UIView{
         }
     }
     
+    lazy private var press: UILongPressGestureRecognizer = {
+        let gest = UILongPressGestureRecognizer(target: self, action: #selector(onPress(gesture:)))
+        gest.minimumPressDuration = 0
+        return gest
+    }()
+    
+    @objc func onPress(gesture: UILongPressGestureRecognizer) {
+        switch gesture.state {
+        case .began:
+            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to:nil, from:nil, for:nil)
+
+            UIView.animate(withDuration: 0.25){
+                self.background.transform = CGAffineTransform(scaleX: 0.75, y: 0.75)
+            }
+            
+        case .ended:
+            UIView.animate(withDuration: 0.25){
+                self.background.transform = CGAffineTransform(scaleX: 1, y: 1)
+            }
+            delegate()
+            
+        case .cancelled:
+            UIView.animate(withDuration: 0.25){
+                self.background.transform = CGAffineTransform(scaleX: 1, y: 1)
+            }
+            
+        default:
+            break
+        }
+    }
+    
     override init(frame: CGRect) {
         super.init(frame : frame)
         
         addSubview(background)
         background.addSubview(foreground)
+        
+        addGestureRecognizer(press)
+        
         
     }
     
@@ -51,27 +85,6 @@ class ColorSelector : UIView{
         foreground.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 0).isActive = true
         foreground.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
         foreground.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0).isActive = true
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to:nil, from:nil, for:nil)
-
-        UIView.animate(withDuration: 0.25){
-            self.background.transform = CGAffineTransform(scaleX: 0.75, y: 0.75)
-        }
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        UIView.animate(withDuration: 0.25){
-            self.background.transform = CGAffineTransform(scaleX: 1, y: 1)
-        }
-        delegate()
-    }
-    
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        UIView.animate(withDuration: 0.25){
-            self.background.transform = CGAffineTransform(scaleX: 1, y: 1)
-        }
     }
     
     required init?(coder: NSCoder) {

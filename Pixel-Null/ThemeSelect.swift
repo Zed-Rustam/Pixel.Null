@@ -15,7 +15,8 @@ class ThemeSelect: UIViewController {
         label.text = NSLocalizedString("Use system theme", comment: "")
         label.textColor = getAppColor(color: .enable)
         
-        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        label.font = UIFont(name: UIFont.appBold, size: 20)!
+        
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 36).isActive = true
         label.adjustsFontSizeToFitWidth = true
@@ -152,17 +153,20 @@ class ThemeSelect: UIViewController {
         navigationItem.title = "Theme"
         navigationItem.largeTitleDisplayMode = .always
         
+        navigationController?.navigationBar.backItem?.backBarButtonItem?.tintColor = getAppColor(color: .enable)
+
+        
         view.addSubview(useSystemTheme)
         view.addSubview(toggle)
         view.addSubview(bgThemeSelect)
         view.isUserInteractionEnabled = true
         
-        useSystemTheme.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
+        useSystemTheme.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
         useSystemTheme.rightAnchor.constraint(equalTo: toggle.leftAnchor, constant: -12).isActive = true
         useSystemTheme.centerYAnchor.constraint(equalTo: toggle.centerYAnchor, constant: 0).isActive = true
         
         toggle.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 15).isActive = true
-        toggle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        toggle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
         
         bgThemeSelect.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
         bgThemeSelect.topAnchor.constraint(equalTo: useSystemTheme.bottomAnchor, constant: 12).isActive = true

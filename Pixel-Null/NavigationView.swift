@@ -26,6 +26,7 @@ class NavigationView : UIView {
     private var leadingOffset : Int = 16
     var bottomOffset : Int = 0
     var iconSize : Int = 28
+    var shadowColor = getAppColor(color: .shadow)
     private var topCorners : Int = 16
     private var bottomCorners : Int = 16
     
@@ -93,7 +94,7 @@ class NavigationView : UIView {
         bgView.layer.mask = makeShape(topCorners: topCorners, bottomCorners: bottomCorners)
         
         
-        setShadow(color: getAppColor(color: .shadow), radius: 8, opasity: 1)
+        setShadow(color: shadowColor, radius: 8, opasity: 1)
         layer.shadowPath = makeShape(topCorners: topCorners, bottomCorners: bottomCorners).path
     }
 

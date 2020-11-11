@@ -37,6 +37,7 @@ class ActionInfo: UIView {
         super.init(frame: frame)
         
         translatesAutoresizingMaskIntoConstraints = false
+        isUserInteractionEnabled = false
         heightAnchor.constraint(equalToConstant: 42).isActive = true
         
         backgroundColor = getAppColor(color: .background)
@@ -61,6 +62,10 @@ class ActionInfo: UIView {
     override func tintColorDidChange() {
         setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
         layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: 12).cgPath
+    }
+    
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        return nil
     }
     
     func setAction(action: [String : String], isRedo: Bool, project: ProjectWork){
@@ -143,7 +148,7 @@ class ActionInfo: UIView {
             title.text! += "Uncnown action"
             info.text = "idk what is this"
         }
-        
+                
         UIView.animate(withDuration: 0.2, animations: {
             self.alpha = 1
         },completion: {isEnd in

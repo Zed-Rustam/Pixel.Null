@@ -15,12 +15,14 @@ class PaletteSelectorNavigation: UINavigationController {
         view.setCorners(corners: 24, needMask: true)
         
         navigationBar.prefersLargeTitles = true
-        
-        navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 42, weight: .heavy)]
+        navigationBar.tintColor = getAppColor(color: .enable)
         
         let option = UINavigationBarAppearance()
-        option.backgroundEffect = UIBlurEffect(style: .systemChromeMaterial)
-        option.largeTitleTextAttributes = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 42, weight: .heavy)]
+        option.backgroundEffect = UIBlurEffect(style: .systemUltraThinMaterial)
+        option.backgroundColor = getAppColor(color: .background).withAlphaComponent(0.75)
+        
+        option.largeTitleTextAttributes = [NSAttributedString.Key.font : UIFont(name: UIFont.appBlack, size: 42)!, NSAttributedString.Key.foregroundColor: getAppColor(color: .enable)]
+        option.titleTextAttributes = [NSAttributedString.Key.font : UIFont(name: UIFont.appBlack, size: 20)!, NSAttributedString.Key.foregroundColor: getAppColor(color: .enable)]
         navigationBar.standardAppearance = option
         
         pushViewController(selection, animated: false)

@@ -21,7 +21,7 @@ class ProjectPallete: UIViewController {
         view.setCorners(corners: 12)
         
         view.translatesAutoresizingMaskIntoConstraints = false
-        
+                
         view.addSubview(addBtn)
         view.addSubview(editBtn)
         view.addSubview(cloneBtn)
@@ -29,23 +29,23 @@ class ProjectPallete: UIViewController {
         view.addSubview(color)
         view.addSubview(saveBtn)
         
-        color.topAnchor.constraint(equalTo: view.topAnchor, constant: 3).isActive = true
-        color.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 3).isActive = true
+        color.topAnchor.constraint(equalTo: view.topAnchor, constant: 12).isActive = true
+        color.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
         
-        saveBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 3).isActive = true
+        saveBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 12).isActive = true
         saveBtn.leftAnchor.constraint(equalTo: color.rightAnchor, constant: 6).isActive = true
         
-        addBtn.rightAnchor.constraint(equalTo: editBtn.leftAnchor, constant: 0).isActive = true
-        addBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 3).isActive = true
+        addBtn.rightAnchor.constraint(equalTo: editBtn.leftAnchor, constant: -6).isActive = true
+        addBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 12).isActive = true
         
-        editBtn.rightAnchor.constraint(equalTo: cloneBtn.leftAnchor, constant: 0).isActive = true
-        editBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 3).isActive = true
+        editBtn.rightAnchor.constraint(equalTo: cloneBtn.leftAnchor, constant: -6).isActive = true
+        editBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 12).isActive = true
         
-        cloneBtn.rightAnchor.constraint(equalTo: deleteBtn.leftAnchor, constant: 0).isActive = true
-        cloneBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 3).isActive = true
+        cloneBtn.rightAnchor.constraint(equalTo: deleteBtn.leftAnchor, constant: -6).isActive = true
+        cloneBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 12).isActive = true
         
-        deleteBtn.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -6).isActive = true
-        deleteBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 3).isActive = true
+        deleteBtn.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
+        deleteBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 12).isActive = true
 
         return view
     }()
@@ -99,7 +99,8 @@ class ProjectPallete: UIViewController {
                     self.selectDelegate(self.color.color)
                 }
                 
-                self.show(palleteSelect, sender: self)
+                self.present(palleteSelect, animated: true, completion: nil)
+                //self.show(palleteSelect, sender: self)
             }
         }
         return clr
@@ -173,7 +174,7 @@ class ProjectPallete: UIViewController {
                 self.project!.projectPallete = self.collection.palleteColors
             }
             
-            show(palleteSelector, sender: self)
+            present(palleteSelector, animated: true, completion: nil)
         }
     }
     
@@ -203,7 +204,7 @@ class ProjectPallete: UIViewController {
                 self.project!.projectPallete = self.collection.palleteColors
             }
             
-            show(palleteSelector, sender: self)
+            present(palleteSelector, animated: true, completion: nil)
         }
     }
     
@@ -228,55 +229,94 @@ class ProjectPallete: UIViewController {
             project!.projectPallete = collection.palleteColors
         }
     }
+    
+    @objc func onExit() {
+        dismiss(animated: true, completion: nil)
+    }
 
     @objc func onPress() {
-        let selector = PeletteSelectController()
-        selector.modalPresentationStyle = .formSheet
-        selector.selectDelegate = {[unowned self] palette,name in
+        let selector = PaletteSelectorNavigation()
+        selector.isModalInPresentation = true
+        
+        selector.modalPresentationStyle = .pageSheet
+        selector.selection.selectDelegate = {[unowned self] palette,name in
             self.collection.palleteColors = palette.colors
             self.collection.removeSelection()
             self.collection.setSelect(index: 0)
             self.project!.projectPallete = self.collection.palleteColors
         }
-        self.show(selector, sender: nil)
+        present(selector, animated: true, completion: nil)
     }
     
     override func viewDidLayoutSubviews() {
         toolBar.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
         toolBar.layer.shadowPath = UIBezierPath(roundedRect: toolBar.bounds, cornerRadius: 12).cgPath
     }
+    
+    lazy private var exitBtn: UIBarButtonItem = {
+        let btn = UIBarButtonItem(image: UIImage(systemName: "multiply", withConfiguration: UIImage.SymbolConfiguration.init(weight: .bold)), style: .done, target: self, action: #selector(onExit))
+        return btn
+    }()
+    
+    lazy private var paletteBtn : UIBarButtonItem = {
+        let btn = UIBarButtonItem(image: UIImage(systemName: "paintpalette.fill", withConfiguration: UIImage.SymbolConfiguration.init(weight: .bold)), style: .done, target: self, action: #selector(onPress))
+        return btn
+    }()
 
     override func viewDidLoad() {
-        view.setCorners(corners: 32)
+        view.setCorners(corners: 24)
         
+        navigationItem.title = "Palette"
+        navigationItem.largeTitleDisplayMode = .always
+        navigationItem.leftBarButtonItem = exitBtn
+        navigationItem.rightBarButtonItem = paletteBtn
+
         view.addSubview(collection)
-        view.addSubview(palleteName)
-        view.addSubview(selectBtn)
+        //view.addSubview(selectBtn)
         view.addSubview(toolBar)
         
         toolBar.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         toolBar.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         toolBar.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        toolBar.heightAnchor.constraint(equalToConstant: UIApplication.shared.windows[0].safeAreaInsets.bottom + 48).isActive = true
+        toolBar.heightAnchor.constraint(equalToConstant: UIApplication.shared.windows[0].safeAreaInsets.bottom + 60).isActive = true
         
         
         collection.colorDelegate = {[unowned self] in
             self.color.color = $0
             self.selectDelegate(self.color.color)
         }
-        
-        palleteName.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
-        palleteName.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
-        
-        selectBtn.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
-        selectBtn.centerYAnchor.constraint(equalTo: palleteName.centerYAnchor, constant: 0).isActive = true
 
         collection.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true
-        collection.topAnchor.constraint(equalTo: palleteName.bottomAnchor, constant: 12).isActive = true
+        collection.topAnchor.constraint(equalTo: view.topAnchor, constant: 12).isActive = true
         collection.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0).isActive = true
         collection.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
         
         view.backgroundColor = UIColor(named: "backgroundColor")
         collection.selectItem(at: IndexPath(item: 0, section: 0), animated: true, scrollPosition: .left)
     }
+}
+
+
+class ProjectPalleteNavigation : UINavigationController {
+    
+    var controller = ProjectPallete()
+    
+    override func viewDidLoad() {
+                
+        navigationBar.prefersLargeTitles = true
+        navigationBar.tintColor = getAppColor(color: .enable)
+                
+        let option = UINavigationBarAppearance()
+        option.backgroundEffect = UIBlurEffect(style: .systemUltraThinMaterial)
+        option.backgroundColor = getAppColor(color: .background).withAlphaComponent(0.75)
+        
+        option.largeTitleTextAttributes = [NSAttributedString.Key.font : UIFont(name: UIFont.appBlack, size: 42)!, NSAttributedString.Key.foregroundColor: getAppColor(color: .enable)]
+        option.titleTextAttributes = [NSAttributedString.Key.font : UIFont(name: UIFont.appBlack, size: 20)!, NSAttributedString.Key.foregroundColor: getAppColor(color: .enable)]
+        navigationBar.standardAppearance = option
+        
+        view.setCorners(corners: 24,needMask: true)
+        
+        pushViewController(controller, animated: false)
+    }
+    
 }

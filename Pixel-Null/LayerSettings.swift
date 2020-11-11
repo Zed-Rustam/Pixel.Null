@@ -24,8 +24,8 @@ class LayerSettings: UIViewController {
     lazy private var previewBg: UIImageView = {
         let img = UIImageView(image: #imageLiteral(resourceName: "background"))
         img.translatesAutoresizingMaskIntoConstraints = false
-        img.widthAnchor.constraint(equalToConstant: 128).isActive = true
-        img.heightAnchor.constraint(equalToConstant: 128).isActive = true
+        img.widthAnchor.constraint(equalToConstant: 96).isActive = true
+        img.heightAnchor.constraint(equalToConstant: 96).isActive = true
 
         img.addSubviewFullSize(view: preview)
         
@@ -125,19 +125,19 @@ class LayerSettings: UIViewController {
         view.addSubview(delayLabel)
         view.addSubview(divider)
         
-        previewBg.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
-        previewBg.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
+        previewBg.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
+        previewBg.topAnchor.constraint(equalTo: view.topAnchor, constant: 12).isActive = true
         
-        delayField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        delayField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
         delayField.topAnchor.constraint(equalTo: previewBg.bottomAnchor, constant: 12).isActive = true
         
         delayLabel.topAnchor.constraint(equalTo: previewBg.bottomAnchor,constant: 12).isActive = true
-        delayLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
+        delayLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
         delayLabel.rightAnchor.constraint(equalTo: delayField.leftAnchor, constant: -24).isActive = true
         
         divider.topAnchor.constraint(equalTo: delayLabel.bottomAnchor, constant: 24).isActive = true
-        divider.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 36).isActive = true
-        divider.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -36).isActive = true
+        divider.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
+        divider.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
     }
     
 }

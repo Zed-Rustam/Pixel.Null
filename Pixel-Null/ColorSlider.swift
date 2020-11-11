@@ -121,6 +121,9 @@ class ColorSlider : UIView {
     
     @objc private func tap(sender : UILongPressGestureRecognizer){
         var position : CGPoint = .zero
+        
+        superview!.endEditing(true)
+        
         switch orientation {
             case .horizontal:
                 position = CGPoint(x: sender.location(in: self).x, y: 0)

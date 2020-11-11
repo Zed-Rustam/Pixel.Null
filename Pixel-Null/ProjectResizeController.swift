@@ -25,30 +25,14 @@ class ProjectResizeController : UIViewController {
         let text = UILabel()
         text.translatesAutoresizingMaskIntoConstraints = false
         text.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        text.textColor = UIColor(named: "enableColor")
-        text.font = UIFont.systemFont(ofSize: 32, weight: .black)
+        text.textColor = getAppColor(color: .enable)
+        text.font = UIFont(name: UIFont.appBlack, size: 42)
         text.text = NSLocalizedString("Resize", comment: "")
         text.adjustsFontSizeToFitWidth = true
         text.textAlignment = .center
         
         return text
     }()
-
-//    lazy private var appendBtn : CircleButton = {
-//        let btn = CircleButton(icon: #imageLiteral(resourceName: "select_icon"), frame: .zero,icScale: 0.5)
-//        btn.translatesAutoresizingMaskIntoConstraints = false
-//        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
-//        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
-//        btn.corners = 12
-//        btn.setShadowColor(color: .clear)
-//        btn.delegate = {[unowned self] in
-//            self.project?.resize(newSize: CGSize(width: Int(self.widthTextField.text ?? "\(Int(self.project!.projectSize.width))")!, height: Int(self.heightTextField.text ?? "\(Int(self.project!.projectSize.height))")!), scale: self.scaleToggle.isCheck, alignment: self.alignmentSelector.alignment)
-//            self.delegate(true)
-//            self.dismiss(animated: true, completion: nil)
-//        }
-//
-//        return btn
-//    }()
     
     lazy private var appendBtn : UIButton = {
         let btn = UIButton()
@@ -59,11 +43,11 @@ class ProjectResizeController : UIViewController {
         btn.setTitleColor(getAppColor(color: .background), for: .normal)
         btn.setTitleColor(getAppColor(color: .disable), for: .disabled)
 
-        btn.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .black)
+        btn.titleLabel?.font = UIFont(name: UIFont.appBlack, size: 20)
         
         btn.addTarget(self, action: #selector(onSave), for: .touchUpInside)
 
-        btn.setCorners(corners: 8, needMask: true, curveType: .continuous)
+        btn.setCorners(corners: 12, needMask: true, curveType: .continuous)
         
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
@@ -75,10 +59,10 @@ class ProjectResizeController : UIViewController {
         let field = UITextField()
         field.backgroundColor = getAppColor(color: .backgroundLight)
         field.textColor = getAppColor(color: .enable)
-        field.setCorners(corners: 8)
+        field.setCorners(corners: 12)
         field.delegate = sizedel
         field.keyboardType = .numberPad
-        field.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        field.font = UIFont(name: UIFont.appBold, size: 20)
         
         field.text = "\(Int(project!.projectSize.width))"
         
@@ -99,10 +83,10 @@ class ProjectResizeController : UIViewController {
         let field = UITextField()
         field.backgroundColor = getAppColor(color: .backgroundLight)
         field.textColor = getAppColor(color: .enable)
-        field.setCorners(corners: 8)
+        field.setCorners(corners: 12)
         field.delegate = sizedel
         field.keyboardType = .numberPad
-        field.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        field.font = UIFont(name: UIFont.appBold, size: 20)
         
         field.text = "\(Int(project!.projectSize.height))"
         
@@ -122,7 +106,7 @@ class ProjectResizeController : UIViewController {
     lazy private var AlignmentTitle : UILabel = {
         let text = UILabel()
         text.textColor = getAppColor(color: .enable)
-        text.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        text.font = UIFont(name: UIFont.appBold, size: 20)
         text.text = NSLocalizedString("Alignment", comment: "")
         text.adjustsFontSizeToFitWidth = true
         //text.numberOfLines = 1
@@ -155,7 +139,7 @@ class ProjectResizeController : UIViewController {
     lazy private var WidthTitle : UILabel = {
         let text = UILabel()
         text.textColor = getAppColor(color: .enable)
-        text.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        text.font = UIFont(name: UIFont.appBold, size: 20)
         text.text = NSLocalizedString("Width", comment: "")
         text.translatesAutoresizingMaskIntoConstraints = false
         
@@ -165,7 +149,7 @@ class ProjectResizeController : UIViewController {
     lazy private var HeightTitle : UILabel = {
         let text = UILabel()
         text.textColor = getAppColor(color: .enable)
-        text.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        text.font = UIFont(name: UIFont.appBold, size: 20)
         text.text = NSLocalizedString("Height", comment: "")
         text.translatesAutoresizingMaskIntoConstraints = false
         
@@ -175,7 +159,7 @@ class ProjectResizeController : UIViewController {
     lazy private var ScaleContentTitle : UILabel = {
         let text = UILabel()
         text.textColor = UIColor(named: "enableColor")
-        text.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        text.font = UIFont(name: UIFont.appBold, size: 20)
         text.text = NSLocalizedString("Scale content", comment: "")
         text.adjustsFontSizeToFitWidth = true
 
@@ -219,18 +203,18 @@ class ProjectResizeController : UIViewController {
 
         view.addSubview(alignmentSelector)
 
-        titleText.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
-        titleText.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
+        titleText.topAnchor.constraint(equalTo: view.topAnchor, constant: 48).isActive = true
+        titleText.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
         
         appendBtn.topAnchor.constraint(equalTo: scaleToggle.bottomAnchor, constant: 24).isActive = true
-        appendBtn.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        appendBtn.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
 
-        widthTextField.leftAnchor.constraint(equalTo: alignmentSelector.rightAnchor, constant: 12).isActive = true
-        widthTextField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        widthTextField.leftAnchor.constraint(equalTo: alignmentSelector.rightAnchor, constant: 16).isActive = true
+        widthTextField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
         widthTextField.topAnchor.constraint(equalTo: alignmentSelector.topAnchor, constant: 0).isActive = true
         
-        heightTextField.leftAnchor.constraint(equalTo: alignmentSelector.rightAnchor, constant: 12).isActive = true
-        heightTextField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        heightTextField.leftAnchor.constraint(equalTo: alignmentSelector.rightAnchor, constant: 16).isActive = true
+        heightTextField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
         heightTextField.bottomAnchor.constraint(equalTo: alignmentSelector.bottomAnchor, constant: 0).isActive = true
         
         ScaleContentTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
@@ -240,10 +224,10 @@ class ProjectResizeController : UIViewController {
         scaleToggle.centerYAnchor.constraint(equalTo: ScaleContentTitle.centerYAnchor).isActive = true
         scaleToggle.rightAnchor.constraint(equalTo: view.rightAnchor,constant: -24).isActive = true
 
-        AlignmentTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
-        AlignmentTitle.topAnchor.constraint(equalTo: titleText.bottomAnchor, constant: 12).isActive = true
+        AlignmentTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
+        AlignmentTitle.topAnchor.constraint(equalTo: titleText.bottomAnchor, constant: 24).isActive = true
         
-        alignmentSelector.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
+        alignmentSelector.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
         alignmentSelector.topAnchor.constraint(equalTo: AlignmentTitle.bottomAnchor, constant: 6).isActive = true
         
         WidthTitle.leftAnchor.constraint(equalTo: widthTextField.leftAnchor, constant: 0).isActive = true

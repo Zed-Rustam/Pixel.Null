@@ -32,6 +32,14 @@ class ImportController: UIViewController {
         
         return btn
     }()
+
+    lazy private var cancelBtn: UIBarButtonItem = {
+        let btn = UIBarButtonItem(image: UIImage(systemName: "multiply",withConfiguration: UIImage.SymbolConfiguration.init(weight: .bold)), style: .done, target: self, action: #selector(onCancel))
+        
+        btn.tintColor = getAppColor(color: .enable)
+        return btn
+    }()
+
     
     lazy private var filesTable: UITableView = {
         let tbl = UITableView(frame: .zero, style: .plain)
@@ -96,6 +104,10 @@ class ImportController: UIViewController {
         }
         
         parent!.dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func onCancel() {
+        dismiss(animated: true, completion: nil)
     }
     
     private func renameFiles() {
@@ -296,7 +308,8 @@ class ImportController: UIViewController {
         
         navigationItem.title = "Import"
         navigationItem.setRightBarButton(importBtn, animated: true)
-        
+        navigationItem.setLeftBarButton(cancelBtn, animated: true)
+
         view.addSubview(filesTable)
         
         filesTable.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
@@ -357,14 +370,18 @@ class ImportNavigation: UINavigationController {
         navigationBar.prefersLargeTitles = true
         navigationBar.isTranslucent = true
         
-        navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 42, weight: .heavy)]
-        
         let option = UINavigationBarAppearance()
-        option.backgroundEffect = UIBlurEffect(style: .systemChromeMaterial)
-        option.largeTitleTextAttributes = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 42, weight: .heavy)]
+        option.backgroundEffect = UIBlurEffect(style: .systemUltraThinMaterial)
+        option.backgroundColor = getAppColor(color: .background).withAlphaComponent(0.75)
+        
+        option.largeTitleTextAttributes = [NSAttributedString.Key.font : UIFont(name: UIFont.appBlack, size: 42)!, NSAttributedString.Key.foregroundColor: getAppColor(color: .enable)]
+        option.titleTextAttributes = [NSAttributedString.Key.font : UIFont(name: UIFont.appBlack, size: 20)!, NSAttributedString.Key.foregroundColor: getAppColor(color: .enable)]
         navigationBar.standardAppearance = option
         
         view.setCorners(corners: 24,needMask: true)
+        
+        controller.isModalInPresentation = true
+        
         pushViewController(controller, animated: true)
         
     }

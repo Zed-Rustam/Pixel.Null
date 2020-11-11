@@ -22,6 +22,8 @@ class ProjectWork{
     private var selectedLayer : Int
     private var selectedFrame: Int
     
+    weak var editorDelegate: (FrameActionDelegate & LayerActionDelegate & ToolsActionDelegate)? = nil
+    
     var LayerSelected : Int {
         get{
             return selectedLayer
@@ -408,7 +410,6 @@ class ProjectWork{
     }
     
     func getSmallLayer(frame : Int,layer : Int, size : CGSize) -> UIImage{
-        print("    getting layer : frameID : \(projectInfo.frames[frame].frameID) layerID : \(projectInfo.frames[frame].layers[layer].layerID)")
     let img = UIImage.miniature(imageAt: ProjectWork.getDocumentsDirectoryWithFile().appendingPathComponent(projectName).appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[frame].frameID)").appendingPathComponent("layer-\(projectInfo.frames[frame].layers[layer].layerID).png").absoluteURL, to: size, scale: UIScreen.main.scale).withAlpha(CGFloat(projectInfo.frames[frame].layers[layer].transparent))
 
     return img
@@ -538,11 +539,9 @@ class ProjectWork{
     
     func getFrameFromLayers(frame : Int, size : CGSize) -> UIImage{
         var imgs : [UIImage] = []
-        //print("  start getting Frame :")
         for i in 0..<projectInfo.frames[frame].layers.count {
             imgs.append(getSmallLayer(frame: frame, layer: (projectInfo.frames[frame].layers.count - i - 1),size: size).withAlpha(projectInfo.frames[frame].layers[projectInfo.frames[frame].layers.count - i - 1].visible ? CGFloat(projectInfo.frames[frame].layers[projectInfo.frames[frame].layers.count - i - 1].transparent) : 0))
         }
-        //print("  end getting Frame")
 
         return UIImage.merge(images: imgs)!
     }
@@ -781,98 +780,55 @@ class ProjectWork{
         return onlyColors
     }
     
-    func unDo(delegate : FrameControlDelegate){
+    func unDo() {
         if projectInfo.actionList.lastActiveAction >= 0 {
-            
-            delegate.historyChange(action: projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction], isRedo: false)
-            
+                        
             switch Actions.init(rawValue: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["ToolID"]!)!)! {
             case .drawing:
                 try! loadActionWas(actionNum: projectInfo.actionList.lastActiveAction).pngData()?.write(to: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].frameID)").appendingPathComponent("layer-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!].layerID).png"))
-                
                 
                 if FrameSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)! {
                     
                     savePreview(frame: FrameSelected)
 
-                    let lastSelect = FrameSelected
-                    FrameSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!
-                    LayerSelected = 0
-                    delegate.updateFrameSelect(lastFrame: lastSelect, newFrame: FrameSelected)
-                } else {
-                    delegate.updateFrame(frame: FrameSelected)
-                }
-                
-                if LayerSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)! {
-                    let lastSelect = LayerSelected
                     LayerSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!
-                    delegate.updateLayerSelect(lastLayer: lastSelect, newLayer: LayerSelected)
+                    editorDelegate?.updateFrameSelect(lastFrame: FrameSelected, newFrame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!)
                 } else {
-                    delegate.updateLayer(layer: LayerSelected)
+                    editorDelegate?.updateFrame(frame: FrameSelected)
+                }
+                if LayerSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)! {
+                    editorDelegate?.updateLayerSelect(lastFrame: LayerSelected, newFrame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!)
+                } else {
+                    editorDelegate?.updateLayer(frame: LayerSelected)
                 }
                 
             case .layerAdd:
                 deleteLayer(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!, layer: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!)
 
                 if FrameSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)! {
-                  
                     savePreview(frame: FrameSelected)
-                    
-                    let lastSelect = FrameSelected
-                   FrameSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!
                     LayerSelected = 0
-                   delegate.updateFrameSelect(lastFrame: lastSelect, newFrame: FrameSelected)
+                    
+                    editorDelegate?.updateFrameSelect(lastFrame: FrameSelected, newFrame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!)
                 } else {
-                    delegate.deleteLayer(layer: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!)
+                    editorDelegate?.deleteLayer(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!)
+                    editorDelegate?.updateFrame(frame: FrameSelected)
                 }
-                if LayerSelected == Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)! {
-                   LayerSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)! - 1
-                    delegate.updateLayer(layer: LayerSelected)
-                } else if LayerSelected > Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!  {
-                        LayerSelected -= 1
-                }
-                
-
             
+                
             case .frameAdd:
                 deleteFrame(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!)
-
-                delegate.deleteFrame(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!)
-                
-                if FrameSelected >= Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)! {
+                editorDelegate?.deleteFrame(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!)
             
-                    LayerSelected = 0
-                    FrameSelected -= 1
-                    
-                    delegate.updateFrame(frame: FrameSelected)
-                    delegate.updateLayers()
-                }
-                
             case .frameReplace:
-                
-                if Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["to"]!)!  < FrameSelected && Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["from"]!)! >= FrameSelected {
-                    FrameSelected -= 1
-                } else if Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["to"]!)!  > FrameSelected && Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["from"]!)! <= FrameSelected {
-                    FrameSelected += 1
-                } else if Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["to"]!)! == FrameSelected {
-                    FrameSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["from"]!)!
-                }
-                
                 replaceFrame(from: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["to"]!)!, to: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["from"]!)!)
                 
-                delegate.replaceFrame(from: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["to"]!)!, to: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["from"]!)!)
+                editorDelegate?.replaceFrame(from: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["to"]!)!, to: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["from"]!)!)
+
                 
             case .layerReplace:
                 replaceLayer(frame : Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)! ,from: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["to"]!)!, to: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["from"]!)!)
                 
-                if Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["to"]!)!  < LayerSelected && Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["from"]!)! >= LayerSelected {
-                       LayerSelected -= 1
-                   } else if Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["to"]!)!  > LayerSelected && Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["from"]!)! <= LayerSelected {
-                       LayerSelected += 1
-                   } else if Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["to"]!)! == LayerSelected {
-                       LayerSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["from"]!)!
-                   }
-                
                 if FrameSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)! {
                     let lastSelect = FrameSelected
                     
@@ -880,75 +836,32 @@ class ProjectWork{
                     
                     FrameSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!
                     
-                    delegate.updateFrameSelect(lastFrame: lastSelect, newFrame: FrameSelected)
+                    editorDelegate?.updateFrameSelect(lastFrame: lastSelect, newFrame: FrameSelected)
                 } else {
-                    delegate.replaceLayer(from: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["to"]!)!, to: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["from"]!)!)
-                    delegate.updateFrame(frame: FrameSelected)
+                    editorDelegate?.replaceLayer(from: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["to"]!)!, to: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["from"]!)!)
+                    editorDelegate?.updateFrame(frame: FrameSelected)
                 }
                 
             case .layerClone:
-                
                 deleteLayer(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!, layer: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)! + 1)
                 
                 if FrameSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)! {
-                    let lastSelect = FrameSelected
-                    
                     savePreview(frame: FrameSelected)
                     
-                    FrameSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!
-                    LayerSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!
-
-                    delegate.updateFrameSelect(lastFrame: lastSelect, newFrame: FrameSelected)
-                    delegate.updateLayers()
+                    editorDelegate?.updateFrameSelect(lastFrame: FrameSelected, newFrame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!)
+                    editorDelegate?.updateLayers()
                 } else {
-                    delegate.deleteLayer(layer: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)! + 1)
-
-                    if LayerSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)! + 1 {
-                        let lastselect = LayerSelected
-                        
-                        LayerSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!
-                        
-                        if lastselect > LayerSelected {
-                            delegate.updateLayerSelect(lastLayer: lastselect - 1, newLayer: LayerSelected)
-                        } else if(lastselect < LayerSelected){
-                            delegate.updateLayerSelect(lastLayer: lastselect, newLayer: LayerSelected)
-                        }
-                    } else {
-                        LayerSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!
-                        delegate.updateLayer(layer: LayerSelected)
-                    }
-                    
-                    delegate.updateFrame(frame: FrameSelected)
+                    editorDelegate?.deleteLayer(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)! + 1)
+                    editorDelegate?.updateFrame(frame: FrameSelected)
                 }
                 
             case .frameClone:
                 deleteFrame(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)! + 1)
-                delegate.deleteFrame(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)! + 1)
-
-                if FrameSelected == Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)! + 1 {
-                    FrameSelected -= 1
-                    LayerSelected = 0
-                    delegate.updateFrame(frame: FrameSelected)
-                    delegate.updateLayers()
-                } else if (FrameSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)){
-                    let lastselect = FrameSelected
-                    
-                    FrameSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!
-                    LayerSelected = 0
-                    
-                    if lastselect > FrameSelected {
-                        savePreview(frame: lastselect - 1)
-                        delegate.updateFrameSelect(lastFrame: lastselect - 1, newFrame: FrameSelected)
-                    } else if(lastselect < FrameSelected){
-                        savePreview(frame: lastselect)
-                        delegate.updateFrameSelect(lastFrame: lastselect, newFrame: FrameSelected)
-                    }
-                    
-                }
+                editorDelegate?.deleteFrame(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)! + 1)
+ 
+                
                 
             //MARK: Layer delete
-
-                
             case .layerDelete:
                 addLayer(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!, layerPlace: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!)
                 
@@ -956,29 +869,15 @@ class ProjectWork{
 
                 projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!].visible = Bool(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["wasVisible"]!)!
 
-                
                 try! loadAction(actionNum: projectInfo.actionList.lastActiveAction).pngData()?.write(to: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].frameID)").appendingPathComponent("layer-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!].layerID).png"))
                 
                 if FrameSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)! {
-                    let lastSelect = FrameSelected
-                    
                     savePreview(frame: FrameSelected)
-                    
-                    FrameSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!
-                    LayerSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!
-                    
-                    delegate.updateFrameSelect(lastFrame: lastSelect, newFrame: FrameSelected)
+                                        
+                    editorDelegate?.updateFrameSelect(lastFrame: FrameSelected, newFrame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!)
+                    editorDelegate?.updateLayerSelect(lastFrame: LayerSelected, newFrame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!)
                 } else {
-                    let lastSelect = LayerSelected
-                    LayerSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!
-                    
-                    delegate.addLayer(layer: LayerSelected)
-                    if lastSelect < LayerSelected {
-                        delegate.updateLayerSelect(lastLayer: lastSelect, newLayer: LayerSelected)
-                    } else{
-                        delegate.updateLayerSelect(lastLayer: lastSelect + 1, newLayer: LayerSelected)
-                    }
-                    delegate.updateFrame(frame: FrameSelected)
+                    editorDelegate?.addLayer(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!)
                 }
                 
             //MARK: Frame delete
@@ -988,28 +887,15 @@ class ProjectWork{
                 let frame : ProjectFrame = try! JSONDecoder().decode(ProjectFrame.self, from: projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frameStruct"]!.data(using: .utf8)!)
                 
                 projectInfo.frames.insert(frame, at: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!)
-                
-                print("now frameID : \(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].frameID) and last : \(Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["lastID"]!)!)")
-                
+                                
                 try! FileManager.default.copyItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: projectInfo.actionList.lastActiveAction))"), to: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["lastID"]!)!)"))
                 
-                let lastSelect = FrameSelected
-                FrameSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!
-                
-                delegate.addFrame(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!)
+                editorDelegate?.addFrame(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!)
+                editorDelegate?.updateLayers()
 
-                LayerSelected = 0
-
-                if lastSelect < FrameSelected {
-                    delegate.updateFrameSelect(lastFrame: lastSelect, newFrame: FrameSelected)
-                } else {
-                    delegate.updateFrameSelect(lastFrame: lastSelect + 1, newFrame: FrameSelected)
-                }
-                delegate.updateLayers()
-               
             //MARK: Layers visible change
 
-                
+            
             case .layerVisibleChange:
                 projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!].visible.toggle()
                 
@@ -1017,30 +903,25 @@ class ProjectWork{
                     
                     savePreview(frame: FrameSelected)
 
-                    let lastSelect = FrameSelected
-                    FrameSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!
-                    delegate.updateFrameSelect(lastFrame: lastSelect, newFrame: FrameSelected)
+                    editorDelegate?.updateFrameSelect(lastFrame: FrameSelected, newFrame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!)
                 } else {
-                    delegate.updateFrame(frame: FrameSelected)
+                    editorDelegate?.updateFrame(frame: FrameSelected)
                 }
                 
                 if LayerSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)! {
-                    let lastSelect = LayerSelected
-                    LayerSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!
-                    delegate.updateLayerSelect(lastLayer: lastSelect, newLayer: LayerSelected)
+                    editorDelegate?.updateLayerSelect(lastFrame: LayerSelected, newFrame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!)
                 } else {
-                    delegate.updateLayer(layer: LayerSelected)
+                    editorDelegate?.updateLayer(frame: LayerSelected)
                 }
                 
             //MARK: Selection change
-
-                
             case .selectionChange:
-                delegate.updateSelection(select: loadActionWas(actionNum: projectInfo.actionList.lastActiveAction),isSelected: Bool(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["wasSelected"]!)!)
+                editorDelegate?.updateSelection(selection: loadActionWas(actionNum: projectInfo.actionList.lastActiveAction),isSelected: Bool(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["wasSelected"]!)!)
+                //TODO!!!
+            
+            
             
             //MARK: Frames delay change
-
-                
             case .changeFrameDelay:
                 setFrameDelay(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!, delay: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["from"]!)!)
                 
@@ -1054,28 +935,22 @@ class ProjectWork{
                     
                     savePreview(frame: FrameSelected)
 
-                    let lastSelect = FrameSelected
-                    FrameSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!
-                    LayerSelected = 0
-                    delegate.updateFrameSelect(lastFrame: lastSelect, newFrame: FrameSelected)
+                    editorDelegate?.updateFrameSelect(lastFrame: FrameSelected, newFrame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!)
                 } else {
-                    delegate.updateFrame(frame: FrameSelected)
+                    editorDelegate?.updateFrame(frame: FrameSelected)
                 }
                 
                 if LayerSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)! {
-                    let lastSelect = LayerSelected
-                    LayerSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!
-                    delegate.updateLayerSelect(lastLayer: lastSelect, newLayer: LayerSelected)
+                    editorDelegate?.updateLayerSelect(lastFrame: LayerSelected, newFrame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!)
                 } else {
-                    delegate.updateLayer(layer: LayerSelected)
+                    editorDelegate?.updateLayer(frame: LayerSelected)
                 }
                 
             //MARK: Background change
-
-        
             case .backgroundChange:
                 projectInfo.bgColor = projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["last"]!
-                delegate.updateEditor()
+                editorDelegate?.projectSettingsChange()
+                
             case .resizeProject:
                 try! FileManager.default.removeItem(at: getProjectDirectory().appendingPathComponent("frames"))
                 try! FileManager.default.copyItem(at: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: projectInfo.actionList.lastActiveAction))-was"), to: getProjectDirectory().appendingPathComponent("frames"))
@@ -1083,40 +958,30 @@ class ProjectWork{
                 
                 try! loadImagefromUrl(url: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: projectInfo.actionList.lastActiveAction))-selection-was.png")).pngData()?.write(to: getProjectDirectory().appendingPathComponent("selection.png"))
 
+                editorDelegate?.resizeProject()
                 
-                (delegate as! Editor).resizeProject()
                 
             //MARK: Layers opacity change
 
-                
+
             case .changeLayerOpasity:
                 setLayerOpasity(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!, layer: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!, newOpasity: Int(Float(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["from"]!)! * 100))
                 
                 if FrameSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)! {
-                    
                     savePreview(frame: FrameSelected)
 
-                    let lastSelect = FrameSelected
-                    FrameSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!
-                    LayerSelected = 0
-                    delegate.updateFrameSelect(lastFrame: lastSelect, newFrame: FrameSelected)
+                    editorDelegate?.updateFrameSelect(lastFrame: FrameSelected, newFrame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!)
                 } else {
-                    delegate.updateFrame(frame: FrameSelected)
+                    editorDelegate?.updateFrame(frame: FrameSelected)
                 }
-                
                 if LayerSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)! {
-                    let lastSelect = LayerSelected
-                    LayerSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!
-                    delegate.updateLayerSelect(lastLayer: lastSelect, newLayer: LayerSelected)
+                    editorDelegate?.updateLayerSelect(lastFrame: LayerSelected, newFrame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!)
                 } else {
-                    delegate.updateLayer(layer: LayerSelected)
+                    editorDelegate?.updateLayer(frame: LayerSelected)
                 }
                 
             //MARK: Layers merge
-
-                    
             case .mergeLayers:
-                
                 try! loadActionMerge(actionNum: projectInfo.actionList.lastActiveAction, imageNum: 1).pngData()?.write(to: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].frameID)").appendingPathComponent("layer-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!].layerID).png"))
 
                 addLayer(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!, layerPlace: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)! + 1)
@@ -1132,34 +997,27 @@ class ProjectWork{
                 projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)! + 1].visible = Bool(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["isSecondLayerVisible"]!)!
                 
                 if FrameSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)! {
-                    let lastSelect = FrameSelected
-                    
                     savePreview(frame: FrameSelected)
-                    
-                    FrameSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!
-                    LayerSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!
-                    
-                    delegate.updateFrameSelect(lastFrame: lastSelect, newFrame: FrameSelected)
+                    editorDelegate?.updateFrameSelect(lastFrame: FrameSelected, newFrame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!)
                 } else {
-                    let lastSelect = LayerSelected
-                    LayerSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!
-                    
-                    delegate.addLayer(layer: LayerSelected)
-                    if lastSelect < LayerSelected {
-                        delegate.updateLayerSelect(lastLayer: lastSelect, newLayer: LayerSelected)
-                    } else{
-                        delegate.updateLayerSelect(lastLayer: lastSelect + 1, newLayer: LayerSelected)
-                    }
+                    editorDelegate?.addLayer(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)! + 1)
+                }
+                
+                if LayerSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)! {
+                    editorDelegate?.updateLayerSelect(lastFrame: LayerSelected, newFrame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!)
+                } else {
+                    editorDelegate?.updateLayer(frame: LayerSelected)
                 }
                 break
                 
             case .projectFlipX:
                 self.isFlipX.toggle()
-                (delegate as! Editor).resizeProject()
+                editorDelegate?.resizeProject()
                     
             case .projectFlipY:
                 self.isFlipY.toggle()
-                (delegate as! Editor).resizeProject()
+                editorDelegate?.resizeProject()
+
                 
             case .renameLayer:
                 renameLayer(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["frame"]!)!, layer: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["layer"]!)!, newName: projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction]["oldName"]!)
@@ -1171,10 +1029,12 @@ class ProjectWork{
 //                break
             }
             
-            delegate.updateCanvas()
+            editorDelegate?.updateCanvas()
             
             projectInfo.actionList.lastActiveAction -= 1
             save()
+            
+            editorDelegate?.actionHistoryChange()
         }
     }
     
@@ -1191,14 +1051,11 @@ class ProjectWork{
         return array
     }
     
-    func reDo(delegate : FrameControlDelegate){
+    func reDo(){
         if projectInfo.actionList.lastActiveAction < projectInfo.actionList.actions.count - 1 {
         
-            delegate.historyChange(action: projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1], isRedo: true)
-            
             switch Actions.init(rawValue: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["ToolID"]!)!)! {
             //MARK: Drawing Action
-                
                 
             case .drawing:
                 try! loadAction(actionNum: projectInfo.actionList.lastActiveAction + 1).pngData()?.write(to: getProjectDirectory().appendingPathComponent("frames").appendingPathComponent("frame-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!].frameID)").appendingPathComponent("layer-\(projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!].layerID).png"))
@@ -1207,22 +1064,15 @@ class ProjectWork{
                     
                     savePreview(frame: FrameSelected)
                     
-                    let lastSelect = FrameSelected
-                    FrameSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!
-                    if LayerSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)! {
-                        LayerSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!
-                    }
-                    delegate.updateFrameSelect(lastFrame: lastSelect, newFrame: FrameSelected)
+                    editorDelegate?.updateFrameSelect(lastFrame: FrameSelected, newFrame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!)
                 } else {
-                    delegate.updateFrame(frame: FrameSelected)
-                    
-                    if LayerSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)! {
-                        let lastSelect = LayerSelected
-                        LayerSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!
-                        delegate.updateLayerSelect(lastLayer: lastSelect, newLayer: LayerSelected)
-                    } else {
-                        delegate.updateLayer(layer: LayerSelected)
-                    }
+                    editorDelegate?.updateFrame(frame: FrameSelected)
+                }
+                
+                if LayerSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)! {
+                    editorDelegate?.updateLayerSelect(lastFrame: LayerSelected, newFrame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!)
+                } else {
+                    editorDelegate?.updateLayer(frame: LayerSelected)
                 }
             //MARK: Add layer
                 
@@ -1233,67 +1083,38 @@ class ProjectWork{
                     if FrameSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)! {
                     
                     savePreview(frame: FrameSelected)
-
-                   let lastSelect = FrameSelected
-                   FrameSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!
-                   delegate.updateFrameSelect(lastFrame: lastSelect, newFrame: FrameSelected)
-                    
-                    if LayerSelected != 0 {
-                        LayerSelected = 0
-                        delegate.updateLayer(layer: LayerSelected)
-                    }
+                    editorDelegate?.updateFrameSelect(lastFrame: FrameSelected, newFrame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!)
                 }
                 
-                delegate.addLayer(layer: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!)
+                editorDelegate?.addLayer(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!)
             
             //MARK: Add frame
                 
                 
             case .frameAdd:
                 addFrame()
-                delegate.addFrame(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!)
+                editorDelegate?.addFrame(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!)
                 
             //MARK: Replace frame
                 
                 
             case .frameReplace:
-                if Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["from"]!)!  < FrameSelected && Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["to"]!)! >= FrameSelected {
-                       FrameSelected -= 1
-                   } else if Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["from"]!)!  > FrameSelected && Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["to"]!)! <= FrameSelected {
-                       FrameSelected += 1
-                   } else if Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["from"]!)! == FrameSelected {
-                       FrameSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["to"]!)!
-                   }
-                
-                
                 replaceFrame(from: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["from"]!)!, to: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["to"]!)!)
-                delegate.replaceFrame(from: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["from"]!)!, to: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["to"]!)!)
+                editorDelegate?.replaceFrame(from: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["from"]!)!, to: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["to"]!)!)
             
             //MARK: Replace layer
                 
                 
             case .layerReplace:
                 replaceLayer(frame : Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!,from: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["from"]!)!, to: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["to"]!)!)
-                                
-                 if Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["from"]!)!  < LayerSelected && Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["to"]!)! >= LayerSelected {
-                      LayerSelected -= 1
-                  } else if Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["from"]!)!  > LayerSelected && Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["to"]!)! <= LayerSelected {
-                      LayerSelected += 1
-                  } else if Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["from"]!)! == LayerSelected {
-                      LayerSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["to"]!)!
-                  }
                            
                 if FrameSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)! {
-                    let lastSelect = FrameSelected
-                       
                     savePreview(frame: FrameSelected)
                     
-                    FrameSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!
-                       
-                    delegate.updateFrameSelect(lastFrame: lastSelect, newFrame: FrameSelected)
+                    editorDelegate?.updateFrameSelect(lastFrame: FrameSelected, newFrame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!)
                 } else {
-                    delegate.replaceLayer(from: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["from"]!)!, to: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["to"]!)!)
-                    delegate.updateFrame(frame: FrameSelected)
+                    editorDelegate?.replaceLayer(from: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["from"]!)!, to: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["to"]!)!)
+                    editorDelegate?.updateFrame(frame: FrameSelected)
                 }
                 
             //MARK: Clone layer
@@ -1303,27 +1124,12 @@ class ProjectWork{
                 cloneLayer(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!, layer: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!)
 
                 if FrameSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)! {
-                    let lastSelect = FrameSelected
-                       
                     savePreview(frame: FrameSelected)
-                    
-                    FrameSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!
-                    LayerSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!
 
-                    delegate.updateFrameSelect(lastFrame: lastSelect, newFrame: FrameSelected)
-                    delegate.updateLayers()
+                    editorDelegate?.updateFrameSelect(lastFrame: FrameSelected, newFrame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!)
                 } else {
-                    let lastSelect = LayerSelected
-                    LayerSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!
-                    
-                    delegate.addLayer(layer: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)! + 1)
-                    
-                    if lastSelect < LayerSelected {
-                        delegate.updateLayerSelect(lastLayer: lastSelect, newLayer: LayerSelected)
-                    } else {
-                        delegate.updateLayerSelect(lastLayer: lastSelect + 1, newLayer: LayerSelected)
-                    }
-                    delegate.updateFrame(frame: FrameSelected)
+                    editorDelegate?.addLayer(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)! + 1)
+                    editorDelegate?.updateFrame(frame: FrameSelected)
                 }
                 
             //MARK: Clone frame
@@ -1331,22 +1137,8 @@ class ProjectWork{
                 
             case .frameClone:
                 cloneFrame(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!)
-                delegate.addFrame(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)! + 1)
-
-                if FrameSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)! {
-                    let lastSelect = FrameSelected
-
-                    FrameSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!
-                    LayerSelected = 0
-                    
-                    if lastSelect < FrameSelected {
-                        savePreview(frame: lastSelect)
-                        delegate.updateFrameSelect(lastFrame: lastSelect, newFrame: FrameSelected)
-                    } else {
-                        savePreview(frame: lastSelect + 1)
-                        delegate.updateFrameSelect(lastFrame: lastSelect + 1, newFrame: FrameSelected)
-                    }
-                }
+                
+                editorDelegate?.addFrame(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)! + 1)
                 
             //MARK: Delete layer
                 
@@ -1355,28 +1147,13 @@ class ProjectWork{
                 deleteLayer(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!, layer: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!)
                 
                 if FrameSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)! {
-                    let lastSelect = FrameSelected
-                    
                     savePreview(frame: FrameSelected)
                     
-                    FrameSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!
-                    LayerSelected = 0
+                    editorDelegate?.updateFrameSelect(lastFrame: FrameSelected, newFrame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!)
                     
-                    delegate.updateFrameSelect(lastFrame: lastSelect, newFrame: FrameSelected)
                 } else {
-                    delegate.deleteLayer(layer: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!)
-                    delegate.updateFrame(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!)
-                    
-                    if LayerSelected == Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)! {
-                        LayerSelected -= 1
-                        if LayerSelected < 0 {
-                            LayerSelected = 0
-                        }
-                        
-                        delegate.updateLayer(layer: LayerSelected)
-                    } else if LayerSelected > Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)! {
-                        LayerSelected -= 1
-                    }
+                    editorDelegate?.deleteLayer(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!)
+                    editorDelegate?.updateFrame(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!)
                 }
                 
             //MARK: Delete frame
@@ -1384,20 +1161,8 @@ class ProjectWork{
                 
             case .frameDelete:
                 deleteFrame(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!)
-                delegate.deleteFrame(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!)
                 
-                if FrameSelected == Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)! {
-                    FrameSelected -= 1
-                    LayerSelected = 0
-                    if FrameSelected < 0 {
-                        FrameSelected = 0
-                    }
-                    
-                    delegate.updateFrame(frame: FrameSelected)
-                    delegate.updateLayers()
-                } else if FrameSelected > Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)! {
-                    FrameSelected -= 1
-                }
+                editorDelegate?.deleteFrame(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!)
                 
                 
                 //MARK: Layer visible change
@@ -1407,29 +1172,23 @@ class ProjectWork{
                 projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!].visible.toggle()
                 
                 if FrameSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)! {
-                    
                     savePreview(frame: FrameSelected)
-
-                    let lastSelect = FrameSelected
-                    FrameSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!
-                    delegate.updateFrameSelect(lastFrame: lastSelect, newFrame: FrameSelected)
+                    editorDelegate?.updateFrameSelect(lastFrame: FrameSelected, newFrame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!)
                 } else {
-                    delegate.updateFrame(frame: FrameSelected)
+                    editorDelegate?.updateFrame(frame: FrameSelected)
                 }
                 
                 if LayerSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)! {
-                    let lastSelect = LayerSelected
-                    LayerSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!
-                    delegate.updateLayerSelect(lastLayer: lastSelect, newLayer: LayerSelected)
+                    editorDelegate?.updateLayerSelect(lastFrame: LayerSelected, newFrame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!)
                 } else {
-                    delegate.updateLayer(layer: LayerSelected)
+                    editorDelegate?.updateLayer(frame: LayerSelected)
                 }
                 
             //MARK: Change selection
               
                 
             case .selectionChange:
-                delegate.updateSelection(select: loadAction(actionNum: projectInfo.actionList.lastActiveAction + 1), isSelected: Bool(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["nowSelected"]!)!)
+                editorDelegate?.updateSelection(selection: loadAction(actionNum: projectInfo.actionList.lastActiveAction + 1), isSelected: Bool(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["nowSelected"]!)!)
                 
             //MARK: Change frame delay
               
@@ -1447,31 +1206,23 @@ class ProjectWork{
                  if FrameSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)! {
                      
                      savePreview(frame: FrameSelected)
-                     
-                     let lastSelect = FrameSelected
-                     FrameSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!
-                     if LayerSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)! {
-                         LayerSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!
-                     }
-                     delegate.updateFrameSelect(lastFrame: lastSelect, newFrame: FrameSelected)
+                    
+                    editorDelegate?.updateFrameSelect(lastFrame: FrameSelected, newFrame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!)
                  } else {
-                     delegate.updateFrame(frame: FrameSelected)
-                     
-                     if LayerSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)! {
-                         let lastSelect = LayerSelected
-                         LayerSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!
-                         delegate.updateLayerSelect(lastLayer: lastSelect, newLayer: LayerSelected)
-                     } else {
-                         delegate.updateLayer(layer: LayerSelected)
-                     }
-                 }
+                    editorDelegate?.updateFrame(frame: FrameSelected)
+                }
+                
+                if LayerSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)! {
+                    editorDelegate?.updateLayerSelect(lastFrame: LayerSelected, newFrame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!)
+                    } else {
+                        editorDelegate?.updateLayer(frame: LayerSelected)
+                    }
+                
                 
             //MARK: Change background
-                
-                
             case .backgroundChange:
                 projectInfo.bgColor = projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["now"]!
-                delegate.updateEditor()
+                editorDelegate?.projectSettingsChange()
                
             //MARK: Project resize
                 
@@ -1483,9 +1234,9 @@ class ProjectWork{
                 projectSize = CGSize(width: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["newSizeX"]!)!, height: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["newSizeY"]!)!)
                 try! loadImagefromUrl(url: getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(getActionID(action: projectInfo.actionList.lastActiveAction + 1))-selection.png")).pngData()?.write(to: getProjectDirectory().appendingPathComponent("selection.png"))
                 
-                (delegate as! Editor).resizeProject()
+                editorDelegate?.resizeProject()
                 
-            //MARK: Change layer opasity
+            //MARK: Change layer opasity (TODO)
 
                 
             case .changeLayerOpasity:
@@ -1494,24 +1245,16 @@ class ProjectWork{
                  if FrameSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)! {
                      
                      savePreview(frame: FrameSelected)
-                     
-                     let lastSelect = FrameSelected
-                     FrameSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!
-                     if LayerSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)! {
-                         LayerSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!
-                     }
-                     delegate.updateFrameSelect(lastFrame: lastSelect, newFrame: FrameSelected)
+                    editorDelegate?.updateFrameSelect(lastFrame: FrameSelected, newFrame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!)
                  } else {
-                     delegate.updateFrame(frame: FrameSelected)
-                     
-                     if LayerSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)! {
-                         let lastSelect = LayerSelected
-                         LayerSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!
-                         delegate.updateLayerSelect(lastLayer: lastSelect, newLayer: LayerSelected)
-                     } else {
-                         delegate.updateLayer(layer: LayerSelected)
-                     }
+                    editorDelegate?.updateFrame(frame: FrameSelected)
                  }
+                
+                if LayerSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)! {
+                    editorDelegate?.updateLayerSelect(lastFrame: LayerSelected, newFrame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!)
+                } else {
+                   editorDelegate?.updateLayer(frame: LayerSelected)
+                }
                 
             //MARK: Layers merge
 
@@ -1522,33 +1265,29 @@ class ProjectWork{
                 projectInfo.frames[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!].layers[Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!].visible = true
                 
                 if FrameSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)! {
-                    let lastSelect = FrameSelected
-                    
                     savePreview(frame: FrameSelected)
                     
-                    FrameSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!
-                    LayerSelected = 0
+                    editorDelegate?.updateFrameSelect(lastFrame: FrameSelected, newFrame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!)
                     
-                    delegate.updateFrameSelect(lastFrame: lastSelect, newFrame: FrameSelected)
                 } else {
-                    delegate.deleteLayer(layer: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)! + 1)
-                    delegate.updateLayer(layer: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!)
-
-                    delegate.updateFrame(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!)
-                    
-                    LayerSelected = Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!
-                        
-                    delegate.updateLayer(layer: LayerSelected)
+                    editorDelegate?.deleteLayer(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)! + 1)
+                    editorDelegate?.updateFrame(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!)
+                }
+                
+                if LayerSelected != Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)! {
+                    editorDelegate?.updateLayerSelect(lastFrame: LayerSelected, newFrame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!)
+                } else {
+                    editorDelegate?.updateLayer(frame: LayerSelected)
                 }
                 
             case .projectFlipX:
                 self.isFlipX.toggle()
-                (delegate as! Editor).resizeProject()
+                editorDelegate?.resizeProject()
                 
             case .projectFlipY:
                 self.isFlipY.toggle()
-                (delegate as! Editor).resizeProject()
-                
+                editorDelegate?.resizeProject()
+
             case .renameLayer:
                 renameLayer(frame: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["frame"]!)!, layer: Int(projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["layer"]!)!, newName: projectInfo.actionList.actions[projectInfo.actionList.lastActiveAction + 1]["newName"]!)
                 
@@ -1558,9 +1297,12 @@ class ProjectWork{
 //                break
             }
             
-            delegate.updateCanvas()
+            editorDelegate?.updateCanvas()
             projectInfo.actionList.lastActiveAction += 1
             save()
+            
+            editorDelegate?.actionHistoryChange()
+
         }
     }
     
@@ -1587,7 +1329,8 @@ class ProjectWork{
         for i in 0..<projectInfo.actionList.actions.count {
             actionIDs.append(getActionID(action: i))
         }
-        print("\(actionIDs) : \(projectInfo.actionList.lastActiveAction)")
+        
+        editorDelegate?.actionHistoryChange()
     }
     
     private func removeActionLast(){

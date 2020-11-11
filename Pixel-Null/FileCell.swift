@@ -39,7 +39,7 @@ class FileCell: UITableViewCell {
     lazy private var projectName: UILabel = {
         let title = UILabel()
         title.textColor = getAppColor(color: .enable)
-        title.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        title.font = UIFont(name: UIFont.appBold, size: 20)
         
         title.translatesAutoresizingMaskIntoConstraints = false
         title.heightAnchor.constraint(equalToConstant: 24).isActive = true
@@ -52,7 +52,7 @@ class FileCell: UITableViewCell {
     lazy private var fileInfo: UILabel = {
         let title = UILabel()
         title.textColor = getAppColor(color: .disable)
-        title.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        title.font = UIFont(name: UIFont.appMedium, size: 12)
         
         title.translatesAutoresizingMaskIntoConstraints = false
         title.heightAnchor.constraint(equalToConstant: 16).isActive = true
@@ -63,7 +63,7 @@ class FileCell: UITableViewCell {
     lazy private var error: UILabel = {
         let title = UILabel()
         title.textColor = getAppColor(color: .red)
-        title.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        title.font = UIFont(name: UIFont.appMedium, size: 12)
         
         title.translatesAutoresizingMaskIntoConstraints = false
         title.heightAnchor.constraint(equalToConstant: 16).isActive = true
@@ -73,12 +73,12 @@ class FileCell: UITableViewCell {
     
     private func setupViews() {
         contentView.addSubview(previewBg)
-        previewBg.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 24).isActive = true
+        previewBg.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 16).isActive = true
         previewBg.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0).isActive = true
         
         contentView.addSubview(projectName)
         projectName.leftAnchor.constraint(equalTo: previewBg.rightAnchor, constant: 6).isActive = true
-        projectName.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -24).isActive = true
+        projectName.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -16).isActive = true
         projectName.topAnchor.constraint(equalTo: previewBg.topAnchor).isActive = true
         
         contentView.addSubview(fileInfo)

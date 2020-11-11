@@ -189,12 +189,27 @@ class ARGBController: UIViewController {
         field.attributedPlaceholder = NSAttributedString(string: "FFFFFFFF", attributes: [NSAttributedString.Key.foregroundColor : getAppColor(color: .disable)])
         
         field.delegate = self
+        field.keyboardType = UIKeyboardType.alphabet
+        field.autocapitalizationType = .none
+        field.smartDashesType = .no
+        field.smartQuotesType = .no
+        field.autocorrectionType = .no
+        
+        field.textContentType = .none
         
         return field
     }()
     
     private func getResultColor() -> UIColor {
         return UIColor(r: Int(redSlider.position * 255), g: Int(greenSlider.position * 255), b: Int(blueSlider.position * 255), a: 255)
+    }
+    
+    lazy private var tap: UITapGestureRecognizer = {
+        UITapGestureRecognizer(target: self, action: #selector(onTap))
+    }()
+    
+    @objc func onTap() {
+        view.endEditing(true)
     }
     
     override func viewDidLoad() {
@@ -211,37 +226,39 @@ class ARGBController: UIViewController {
         view.addSubview(alphaInput)
 
         view.addSubview(hexInput)
-
-        redInput.leftAnchor.constraint(equalTo: view.leftAnchor,constant: 24).isActive = true
-        redInput.topAnchor.constraint(equalTo: view.topAnchor,constant: 24).isActive = true
         
-        greenInput.leftAnchor.constraint(equalTo: view.leftAnchor,constant: 24).isActive = true
+        view.addGestureRecognizer(tap)
+
+        redInput.leftAnchor.constraint(equalTo: view.leftAnchor,constant: 12).isActive = true
+        redInput.topAnchor.constraint(equalTo: view.topAnchor,constant: 0).isActive = true
+        
+        greenInput.leftAnchor.constraint(equalTo: view.leftAnchor,constant: 12).isActive = true
         greenInput.topAnchor.constraint(equalTo: redInput.bottomAnchor,constant: 12).isActive = true
         
-        blueInput.leftAnchor.constraint(equalTo: view.leftAnchor,constant: 24).isActive = true
+        blueInput.leftAnchor.constraint(equalTo: view.leftAnchor,constant: 12).isActive = true
         blueInput.topAnchor.constraint(equalTo: greenInput.bottomAnchor,constant: 12).isActive = true
 
-        alphaInput.leftAnchor.constraint(equalTo: view.leftAnchor,constant: 24).isActive = true
+        alphaInput.leftAnchor.constraint(equalTo: view.leftAnchor,constant: 12).isActive = true
         alphaInput.topAnchor.constraint(equalTo: blueInput.bottomAnchor,constant: 12).isActive = true
         
         redSlider.leftAnchor.constraint(equalTo: redInput.rightAnchor,constant: 12).isActive = true
-        redSlider.rightAnchor.constraint(equalTo: view.rightAnchor,constant: -24).isActive = true
-        redSlider.topAnchor.constraint(equalTo: view.topAnchor,constant: 24).isActive = true
+        redSlider.rightAnchor.constraint(equalTo: view.rightAnchor,constant: -12).isActive = true
+        redSlider.topAnchor.constraint(equalTo: view.topAnchor,constant: 0).isActive = true
         
         greenSlider.leftAnchor.constraint(equalTo: greenInput.rightAnchor,constant: 12).isActive = true
-        greenSlider.rightAnchor.constraint(equalTo: view.rightAnchor,constant: -24).isActive = true
+        greenSlider.rightAnchor.constraint(equalTo: view.rightAnchor,constant: -12).isActive = true
         greenSlider.topAnchor.constraint(equalTo: redSlider.bottomAnchor,constant: 12).isActive = true
         
         blueSlider.leftAnchor.constraint(equalTo: blueInput.rightAnchor,constant: 12).isActive = true
-        blueSlider.rightAnchor.constraint(equalTo: view.rightAnchor,constant: -24).isActive = true
+        blueSlider.rightAnchor.constraint(equalTo: view.rightAnchor,constant: -12).isActive = true
         blueSlider.topAnchor.constraint(equalTo: greenSlider.bottomAnchor,constant: 12).isActive = true
         
         alphaSlider.leftAnchor.constraint(equalTo: alphaInput.rightAnchor,constant: 12).isActive = true
-        alphaSlider.rightAnchor.constraint(equalTo: view.rightAnchor,constant: -24).isActive = true
+        alphaSlider.rightAnchor.constraint(equalTo: view.rightAnchor,constant: -12).isActive = true
         alphaSlider.topAnchor.constraint(equalTo: blueSlider.bottomAnchor,constant: 12).isActive = true
         
-        hexInput.leftAnchor.constraint(equalTo: view.leftAnchor,constant: 24).isActive = true
-        hexInput.rightAnchor.constraint(equalTo: view.rightAnchor,constant: -24).isActive = true
+        hexInput.leftAnchor.constraint(equalTo: view.leftAnchor,constant: 12).isActive = true
+        hexInput.rightAnchor.constraint(equalTo: view.rightAnchor,constant: -12).isActive = true
         hexInput.topAnchor.constraint(equalTo: alphaInput.bottomAnchor,constant: 12).isActive = true
     }
     

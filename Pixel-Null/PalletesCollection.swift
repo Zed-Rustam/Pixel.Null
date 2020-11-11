@@ -102,9 +102,6 @@ class PalleteCollection : UIViewController, UICollectionViewDelegate, UICollecti
         let title = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Title", for: indexPath) as! PalettesSectionTitle
         
         title.setText(text: indexPath.section == 0 ? "User's" : "System")
-        
-        //title.frame = CGRect(x: 0, y: 0, width: 100, height: 48)
-        
         return title
     }
     

@@ -17,7 +17,6 @@ class ProjectViewNew : UIView {
         }
         
         set{
-           // print("some mome \(newValue!.projectName)")
             _project = newValue
             contentImage.backgroundColor = _project!.backgroundColor
             contentImage.image = _project?.getFrame(frame: 0, size: _project!.projectSize).flip(xFlip: _project!.isFlipX, yFlip: _project!.isFlipY)
@@ -105,32 +104,11 @@ extension ProjectViewNew : UIContextMenuInteractionDelegate {
         return configuration
     }
     
-//    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, previewForHighlightingMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
-//        let preview = UITargetedPreview(view: interaction.view!, parameters: UIPreviewParameters(), target: UIPreviewTarget(container: self, center: self.center))
-//        preview.parameters.backgroundColor = .black
-//        preview.parameters.visiblePath = UIBezierPath(roundedRect: self.bounds, cornerRadius: 12)
-//
-//        return preview
-//    }
-//
-//    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, previewForDismissingMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
-//        let preview = UITargetedPreview(view: self, parameters: UIPreviewParameters(), target: UIPreviewTarget(container: self, center: self.center))
-//        preview.parameters.backgroundColor = .black
-//        preview.parameters.visiblePath = UIBezierPath(roundedRect: self.bounds, cornerRadius: 12)
-//        return preview
-//    }
-    
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction, willDisplayMenuFor configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionAnimating?) {
         animator?.addAnimations {
             
         }
     }
-//
-//    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, willEndFor configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionAnimating?) {
-//        animator?.addAnimations {
-//            //interaction
-//        }
-//    }
 }
 
 extension ProjectViewNew : UIPointerInteractionDelegate {

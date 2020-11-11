@@ -10,8 +10,8 @@ import UIKit
 
 class ProjectSettingsController : UIViewController {
     weak var project : ProjectWork? = nil
-    weak var editor : Editor? = nil
-    
+    weak var delegate : ToolsActionDelegate? = nil
+
     lazy private var preview : UIView = {
         let img = UIImageView(image: project!.getFrame(frame: 0, size: project!.projectSize).flip(xFlip: project!.isFlipX, yFlip: project!.isFlipY))
         
@@ -197,7 +197,7 @@ class ProjectSettingsController : UIViewController {
                 selector.color = color
                 self.project?.addAction(action: ["ToolID" : "\(Actions.backgroundChange.rawValue)", "last" : "\(UIColor.toHex(color: self.project!.backgroundColor))", "now" : "\(UIColor.toHex(color: color))" ])
                 self.project?.backgroundColor = color
-                self.editor?.updateEditor()
+                self.delegate?.projectSettingsChange()
                 self.preview.subviews[0].backgroundColor = color
             }
             
@@ -246,18 +246,29 @@ class ProjectSettingsController : UIViewController {
         return btn
     }()
     
-    @objc func onResizePress(){
+    @objc func onResizePress() {
         let resize = ProjectResizeController()
         resize.project = self.project
         resize.delegate = {[unowned self] in
             if $0 {
                 (self.preview.subviews[0] as! UIImageView).image = self.project!.getFrame(frame: 0, size: self.project!.projectSize)
-                self.editor?.resizeProject()
+                self.delegate?.resizeProject()
+
                 self.sizeField.text = "\(Int(self.project!.projectSize.width))x\(Int(self.project!.projectSize.height))"
             }
         }
         
-        resize.modalPresentationStyle = .formSheet
+        switch UIDevice.current.userInterfaceIdiom {
+            //если айфон, то просто показываем контроллер
+        case .phone:
+            resize.modalPresentationStyle = .pageSheet
+            //если айпад то немного химичим
+        case .pad:
+            resize.modalPresentationStyle = .currentContext
+        default:
+            break
+        }
+        
         self.show(resize, sender: self)
     }
     
@@ -279,7 +290,8 @@ class ProjectSettingsController : UIViewController {
         project?.addAction(action: ["ToolID" : "\(Actions.projectFlipX.rawValue)"])
         project?.isFlipX.toggle()
         (preview.subviews[0] as! UIImageView).image = project!.getFrame(frame: 0, size: project!.projectSize).flip(xFlip: project!.information.flipX, yFlip: project!.information.flipY)
-        editor?.resizeProject()
+        delegate?.projectSettingsChange()
+
     }
     
     lazy private var flipYBtn: UIButton = {
@@ -302,7 +314,7 @@ class ProjectSettingsController : UIViewController {
         project?.isFlipY.toggle()
         
         (preview.subviews[0] as! UIImageView).image = project!.getFrame(frame: 0, size: project!.projectSize).flip(xFlip: project!.information.flipX, yFlip: project!.information.flipY)
-        editor?.resizeProject()
+        delegate?.projectSettingsChange()
     }
 
     override func viewDidLoad() {
@@ -316,18 +328,18 @@ class ProjectSettingsController : UIViewController {
         view.addSubview(flipXBtn)
         view.addSubview(flipYBtn)
         
-        view.setCorners(corners: 32)
+        view.setCorners(corners: 24)
 
-        preview.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
-        preview.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
-        preview.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
+        preview.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
+        preview.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
+        preview.topAnchor.constraint(equalTo: view.topAnchor, constant: 12).isActive = true
         preview.heightAnchor.constraint(equalTo: preview.widthAnchor, constant: 0).isActive = true
         
-        nameField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
+        nameField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
         nameField.topAnchor.constraint(equalTo: preview.bottomAnchor, constant: 12).isActive = true
         nameField.rightAnchor.constraint(equalTo: NameButton.leftAnchor, constant: -12).isActive = true
 
-        backgroundField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
+        backgroundField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
         backgroundField.topAnchor.constraint(equalTo: nameField.bottomAnchor, constant: 12).isActive = true
         backgroundField.rightAnchor.constraint(equalTo: backgroundColor.leftAnchor, constant: -12).isActive = true
         
@@ -335,15 +347,15 @@ class ProjectSettingsController : UIViewController {
         sizeField.rightAnchor.constraint(equalTo: SizeButton.leftAnchor, constant: -12).isActive = true
         
         backgroundColor.topAnchor.constraint(equalTo: backgroundField.topAnchor, constant: 0).isActive = true
-        backgroundColor.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        backgroundColor.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
         
         NameButton.topAnchor.constraint(equalTo: nameField.topAnchor, constant: 0).isActive = true
-        NameButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        NameButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
         
         SizeButton.topAnchor.constraint(equalTo: sizeField.topAnchor, constant: 0).isActive = true
-        SizeButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        SizeButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
         
-        flipYBtn.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        flipYBtn.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
         flipYBtn.topAnchor.constraint(equalTo: SizeButton.bottomAnchor, constant: 12).isActive = true
         
         flipXBtn.rightAnchor.constraint(equalTo: flipYBtn.leftAnchor, constant: -12).isActive = true

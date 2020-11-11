@@ -99,8 +99,9 @@ class HSLCircle: UIView {
         
         Whiter.frame = bounds
         
+        selector.center = CGPoint(x: bounds.width / 2, y: bounds.height / 2)
+
         setCorners(corners: frame.width / 2,needMask: true, curveType: .circular)
-        print("yes2")
         selector.setShadow(color: .black, radius: 12, opasity: 0.2)
         selector.layer.shadowPath = UIBezierPath(roundedRect: selector.bounds, cornerRadius: 18).cgPath
     }

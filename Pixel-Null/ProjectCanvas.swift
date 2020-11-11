@@ -10,6 +10,10 @@ import UIKit
 
 class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
     
+    var editorDelegate: ToolsActionDelegate {
+        return delegate!
+    }
+    
     //Editor Delegate
     var selecion: UIImage? {
         get{
@@ -67,11 +71,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
         targetImage.image = targetLayer
         actionLayer = UIImage(size: project.projectSize)!
         actionImage.image = actionLayer
-        
-        delegate?.updateFrame(frame: project.FrameSelected)
-        delegate?.updateLayer(layer: project.LayerSelected)
-        
-        barDelegate?.UnDoReDoAction()
+        delegate?.drawingEnd()
     }
     
     //при отмене действия показываем выбранный слой и очищаем эклн слой
@@ -94,6 +94,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
     //слой действия
     private var ActionLayer : UIImage!
     
+    //cлой предыдущих и последующих кадров
     private var framesLayer : UIImage?
 
     var selectionLayer : UIImage!
@@ -127,8 +128,8 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
     private var k : CGFloat = 1.0
     private var animationDelta = 0.05
     
-    weak var barDelegate : ToolBarDelegate? = nil
-    weak var editor : Editor? = nil
+    //weak var barDelegate : ToolBarDelegate? = nil
+    //weak var editor : Editor? = nil
 
     private var isScaling = false
     private var isMoving = false
@@ -163,8 +164,9 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
     var selectedTool : Int = 0
     
     private unowned var project : ProjectWork
-    weak var delegate : FrameControlDelegate? = nil
-    
+    //weak var delegate : FrameControlDelegate? = nil
+    weak var delegate : (EditorDrawDelegate & LayerActionDelegate & FrameActionDelegate & ToolsActionDelegate)? = nil
+
     func updateLayers(){
         var imgs : [UIImage] = []
         
@@ -185,8 +187,8 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
         }
         
         fgLayers = UIImage.merge(images: imgs)
-        imgs.removeAll()
         
+        imgs.removeAll()
         
         for i in project.LayerSelected + 1..<project.layerCount {
             if project.information.frames[project.FrameSelected].layers[project.layerCount - i + project.LayerSelected].visible {
@@ -212,10 +214,10 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
         actionImage?.alpha = project.information.frames[project.FrameSelected].layers[project.LayerSelected].visible ? CGFloat(project.information.frames[project.FrameSelected].layers[project.LayerSelected].transparent) : 0
     }
     
-    func getPreview() -> UIImage{
+    func getPreview() -> UIImage {
         let bg : UIImage = bgLayers ?? UIImage(size : project.projectSize)!
         let fg : UIImage = fgLayers ?? UIImage(size : project.projectSize)!
-
+            
         return UIImage.merge(images: [bg,targetLayer,fg])!
     }
     
@@ -387,7 +389,6 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
             transformView.setRect(image: UIImage.merge(images: [selectionLayer])!, isSelected: isSelected)
             move.setImage(image: targetLayer.inner(image: isSelected ? selectionLayer : nil).getImageFromRect(rect: transformView.position), startpos: .zero, selection: selectionLayer.getImageFromRect(rect: transformView.position),size: project.projectSize, startImg: targetLayer.cut(image: isSelected ? selectionLayer : nil))
             
-            //actionImage.image =
             targetLayer = targetLayer.cut(image: isSelected ? selectionLayer : nil)
             targetImage.image = targetLayer
             
@@ -409,7 +410,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
             transformGest.isEnabled = false
             ActionLayer = UIImage(size: project.projectSize)
             actionImage.image = ActionLayer
-            editor?.showTransform(isShow: false)
+            //editor?.showTransform(isShow: false)
         }
     }
     
@@ -574,20 +575,18 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
             
             ActionLayer = UIImage(size : project.projectSize)
             actionImage.image = ActionLayer
-            delegate?.updateCanvas()
             
             delegate?.updateFrame(frame: project.FrameSelected)
-            if needUpdateControl {
-                delegate?.updateLayer(layer: project.LayerSelected)
-            }
+            delegate?.actionHistoryChange()
             
-            barDelegate?.UnDoReDoAction()
+            if needUpdateControl {
+                delegate?.updateLayer(frame: project.LayerSelected)
+            }
         } else {
-            print("dont changed")
             clearTransform()
         }
         targetImage.isHidden = false
-        editor?.canvas.transformView.isCopyMode = false
+        delegate?.editorCanvas.transformView.isCopyMode = false
     }
     
     func clearTransform() {
@@ -598,8 +597,8 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
         
         ActionLayer = UIImage(size: project.projectSize)
         actionImage.image = ActionLayer
-        editor?.showTransform(isShow: false)
-        editor?.canvas.transformView.isCopyMode = false
+        //editor?.showTransform(isShow: false)
+        delegate?.editorCanvas.transformView.isCopyMode = false
         targetImage.isHidden = false
     }
     
@@ -724,12 +723,12 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
                 
                 CATransaction.begin()
                 CATransaction.setDisableActions(true)
-                (grid.layer as! GridLayer).gridScale = self.scale
+                (grid.layer as! GridLayer).gridScale = scale
                 (grid.layer as! GridLayer).startPos = offset
                 CATransaction.commit()
                 
-                (grid.layer as! GridLayer).add(anim, forKey: nil)
                 (grid.layer as! GridLayer).add(anim2, forKey: nil)
+                (grid.layer as! GridLayer).add(anim, forKey: nil)
                 
                 symmetryView.offset = offset
                 symmetryView.scale = scale
@@ -757,7 +756,6 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
     
     func reverseSelection() {
         if isSelected {
-            
             let nowSelected = !selection.isSelectEmpty(select: selection.reverse(select: selectionLayer))
             project.addAction(action :["ToolID" : "\(Actions.selectionChange.rawValue)", "wasSelected" : "true", "nowSelected" : "\(nowSelected)"])
 
@@ -770,26 +768,24 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
             try! selectionLayer.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("selection.png"))
 
             selectionImage.image = selectionLayer
-            barDelegate?.UnDoReDoAction()
             isSelected = nowSelected
         }
     }
     
     func clearSelect() {
      if isSelected {
-        project.addAction(action :["ToolID" : "\(Actions.selectionChange.rawValue)", "wasSelected" : "true", "nowSelected" : "false"])
-        try! selectionLayer.flip(xFlip: project.isFlipX, yFlip: project.isFlipY).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
-        
-        selectionLayer = UIImage(size: project.projectSize)
-        
-        try! selectionLayer.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID()).png"))
-        
-        selectionImage.image = selectionLayer
-        
-        try! selectionLayer.flip(xFlip: project.isFlipX, yFlip: project.isFlipY).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("selection.png"))
+            project.addAction(action :["ToolID" : "\(Actions.selectionChange.rawValue)", "wasSelected" : "true", "nowSelected" : "false"])
+            try! selectionLayer.flip(xFlip: project.isFlipX, yFlip: project.isFlipY).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID())-was.png"))
+            
+            selectionLayer = UIImage(size: project.projectSize)
+            
+            try! selectionLayer.pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID()).png"))
+            
+            selectionImage.image = selectionLayer
+            
+            try! selectionLayer.flip(xFlip: project.isFlipX, yFlip: project.isFlipY).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("selection.png"))
 
-        isSelected = false
-        barDelegate?.UnDoReDoAction()
+            isSelected = false
         }
     }
     
@@ -806,11 +802,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
             
             targetLayer = newLay.flip(xFlip: project.isFlipX, yFlip: project.isFlipY)
             targetImage.image = targetLayer
-            
-            delegate?.updateFrame(frame: project.FrameSelected)
-            delegate?.updateLayer(layer: project.LayerSelected)
-            
-            barDelegate?.UnDoReDoAction()
+
         }
     }
    
@@ -833,7 +825,6 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
                 isMoving = true
                 actionRecognizer.isEnabled = false
                 transformGest.isEnabled = false
-
                 offset.x += sender.translation(in: self).x
                 offset.y += sender.translation(in: self).y
                 
@@ -988,10 +979,7 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
                     ActionLayer = UIImage(size : project.projectSize)
                     actionImage.image = ActionLayer
                     
-                    delegate?.updateCanvas()
-                    delegate?.updateFrame(frame: project.FrameSelected)
-                    delegate?.updateLayer(layer: project.LayerSelected)
-                    barDelegate?.UnDoReDoAction()
+                    delegate?.drawingEnd()
                 }
             default:
                 break
@@ -1043,8 +1031,6 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
                     try! selectionLayer.flip(xFlip: project.isFlipX, yFlip: project.isFlipY).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("actions").appendingPathComponent("action-\(project.getNextActionID()).png"))
                     
                     try! selectionLayer.flip(xFlip: project.isFlipX, yFlip: project.isFlipY).pngData()?.write(to: project.getProjectDirectory().appendingPathComponent("selection.png"))
-                    
-                    barDelegate?.UnDoReDoAction()
                     isSelected = isselect
                 } else {
                     print("NO")
@@ -1064,8 +1050,13 @@ class ProjectCanvas : UIView,UIGestureRecognizerDelegate, EditorDelegate {
             case .ended:
                 location.y = CGFloat(floor(location.y))
                 if actionImage.bounds.contains(location) {
-                    let color = project.getFrameFromLayers(frame: project.FrameSelected, size: project.projectSize).flip(xFlip: project.isFlipX, yFlip: project.isFlipY).pixelColor(x: Int(location.x), y: Int(location.y))
-                    delegate?.changeMainColor(color: color)
+                    var color = project.getFrameFromLayers(frame: project.FrameSelected, size: project.projectSize).flip(xFlip: project.isFlipX, yFlip: project.isFlipY).pixelColor(x: Int(location.x), y: Int(location.y))
+                    
+                    if color.cgColor.alpha == 0 {
+                        color = project.backgroundColor
+                    }
+                    
+                    editorDelegate.changeColor(newColor: color)
                 }
             default:
                 break

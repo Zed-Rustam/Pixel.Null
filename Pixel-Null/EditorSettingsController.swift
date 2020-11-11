@@ -28,7 +28,7 @@ class EditorSettingsController: UIViewController {
         let label = UILabel()
         label.text = NSLocalizedString("Tools position", comment: "")
         label.textColor = getAppColor(color: .enable)
-        label.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        label.font = UIFont(name: UIFont.appBold, size: 24)!
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .left
         label.adjustsFontSizeToFitWidth = true
@@ -84,8 +84,8 @@ class EditorSettingsController: UIViewController {
         view.addSubview(toolBarBg)
 
         toolsPosition.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24).isActive = true
-        toolsPosition.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
-        toolsPosition.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        toolsPosition.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
+        toolsPosition.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
         
         toolBarBg.topAnchor.constraint(equalTo: toolsPosition.bottomAnchor, constant: 12).isActive = true
         toolBarBg.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0).isActive = true

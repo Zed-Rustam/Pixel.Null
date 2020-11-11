@@ -15,6 +15,8 @@ class GalleryControl : UIViewController {
     weak var parentController: UIViewController? = nil
     var projects : [Any] = []
     
+    var mainController: UISplitViewController? = nil
+    
     lazy private var createButtonNew : UIBarButtonItem = {
         let btn = UIBarButtonItem(image: UIImage(systemName: "plus", withConfiguration: UIImage.SymbolConfiguration.init(weight: .semibold)), style: .done, target: self, action: nil)
         
@@ -38,6 +40,7 @@ class GalleryControl : UIViewController {
                     if let popover = create.popoverPresentationController {
                         //popover.sourceView = self.createButtonNew
                         popover.delegate = self
+                        popover.barButtonItem = btn
                         popover.permittedArrowDirections = .any
                     }
 
@@ -133,12 +136,18 @@ class GalleryControl : UIViewController {
         gallery.reloadData()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        //(navigationItem.titleView as! UILabel).textColor = getAppColor(color: .enable)
+        //(navigationItem.titleView as! UILabel).font = UIFont.systemFont(ofSize: 34, weight: .heavy)
+    }
+    
     override func viewDidLoad() {
                 
         createProject()
         
                 
         navigationItem.title = "Gallery"
+    
         navigationItem.largeTitleDisplayMode = .always
                 
         navigationItem.rightBarButtonItem = createButtonNew
@@ -204,21 +213,34 @@ extension GalleryControl : GalleryProjectDelegate {
 extension GalleryControl : ProjectActions {
     
     func projectExport(proj: ProjectWork) {
-        let exp = ProjectExportController()
-        exp.modalPresentationStyle = .formSheet
-        exp.project = proj
+        let exp = ExportNavigation()
+        exp.controller.modalPresentationStyle = .formSheet
+        exp.controller.project = proj
         
         present(exp, animated: true, completion: nil)
     }
     
+    
     func projectOpen(proj: ProjectWork) {
-        let ed = Editor()
-        ed.setProject(proj: proj)
-        ed.gallery = self
+        
+        //let ed = Editor()
+        let ed = EditorModern(proj: proj,gallery: self)
+        //ed.setProject(proj: proj)
+        //ed.gallery = self
         ed.modalPresentationStyle = .currentContext
         ed.modalTransitionStyle = .coverVertical
         
-        parentController?.present(ed, animated: true, completion: nil)
+        switch UIDevice.current.userInterfaceIdiom {
+        case .phone:
+            parentController?.present(ed, animated: true, completion: nil)
+
+        case .pad:
+            mainController!.present(ed, animated: true, completion: nil)
+
+        default:
+            break
+        }
+        
     }
     
     func projectDublicate(view: ProjectViewNew) {

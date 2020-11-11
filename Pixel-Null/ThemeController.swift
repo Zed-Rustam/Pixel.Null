@@ -26,43 +26,43 @@ enum Theme : String {
 }
 
 extension UIColor {
-    var appDisable : UIColor {
+    static var appDisable : UIColor {
         get{
             return UIColor(named: "disableColor")!
         }
     }
     
-    var appBackground : UIColor {
+    static var appBackground : UIColor {
         get{
             return UIColor(named: "backgroundColor")!
         }
     }
     
-    var appEnable : UIColor {
+    static var appEnable : UIColor {
         get{
             return UIColor(named: "enableColor")!
         }
     }
     
-    var appSelect : UIColor {
+    static var appSelect : UIColor {
         get{
             return UIColor(named: "selectColor")!
         }
     }
     
-    var appShadow : UIColor {
+    static var appShadow : UIColor {
         get{
             return UIColor(named: "shadowColor")!
         }
     }
     
-    var appTextDisable : UIColor {
+    static var appTextDisable : UIColor {
         get{
             return UIColor(named: "textDisableColor")!
         }
     }
     
-    var appRed : UIColor {
+    static var appRed : UIColor {
         get{
             return UIColor(named: "redColor")!
         }

@@ -27,14 +27,14 @@ class PalleteCreateController : UIViewController {
         
         
         text.leftViewMode = .always
-        text.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 42))
+        text.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 36))
         
         text.rightViewMode = .always
-        text.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 42))
+        text.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 36))
         
-        text.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        text.font = UIFont(name: UIFont.appBold, size: 16)
         text.translatesAutoresizingMaskIntoConstraints = false
-        text.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        text.heightAnchor.constraint(equalToConstant: 36).isActive = true
         
         let bar = UIToolbar()
         let done = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneBtn))
@@ -66,11 +66,11 @@ class PalleteCreateController : UIViewController {
         btn.imageView?.tintColor = getAppColor(color: .enable)
         btn.setCorners(corners: 12)
         btn.backgroundColor = getAppColor(color: .background)
-        btn.imageEdgeInsets = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
+        btn.imageEdgeInsets = UIEdgeInsets(top: 11, left: 11, bottom: 11, right: 11)
         
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 42).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
         btn.addTarget(self, action: #selector(onCancelPress), for: .touchUpInside)
         return btn
     }()
@@ -81,11 +81,11 @@ class PalleteCreateController : UIViewController {
         btn.imageView?.tintColor = getAppColor(color: .enable)
         btn.setCorners(corners: 12)
         btn.backgroundColor = getAppColor(color: .background)
-        btn.imageEdgeInsets = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
+        btn.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 42).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
         btn.addTarget(self, action: #selector(onCancelPress), for: .touchUpInside)
         return btn
     }()
@@ -281,7 +281,7 @@ class PalleteCreateController : UIViewController {
         })
         
         view.backgroundColor = getAppColor(color: .background)
-        view.setCorners(corners: 32)
+        view.setCorners(corners: 24)
         
         view.addSubview(colors)
         view.addSubview(name)
@@ -300,15 +300,15 @@ class PalleteCreateController : UIViewController {
         errorText.rightAnchor.constraint(equalTo: name.rightAnchor).isActive = true
         errorText.topAnchor.constraint(equalTo: name.bottomAnchor).isActive = true
 
-        createButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -24).isActive = true
-        createButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
+        createButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -12).isActive = true
+        createButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 12).isActive = true
         
-        cancelButton.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 24).isActive = true
-        cancelButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
+        cancelButton.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 12).isActive = true
+        cancelButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 12).isActive = true
 
         name.leftAnchor.constraint(equalTo: cancelButton.rightAnchor, constant: 12).isActive = true
         name.rightAnchor.constraint(equalTo: createButton.leftAnchor, constant: -12).isActive = true
-        name.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
+        name.topAnchor.constraint(equalTo: view.topAnchor, constant: 12).isActive = true
 
         paletteEditBap.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: 0).isActive = true
         paletteEditBap.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 0).isActive = true

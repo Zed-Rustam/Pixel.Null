@@ -18,7 +18,7 @@ class EraseSettings : UIViewController {
         field.delegate = eraseSizeInputDelegate
         field.textAlignment = .center
         field.keyboardType = .numberPad
-        field.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        field.font = UIFont(name: UIFont.appBold, size: 20)
 
         field.attributedPlaceholder = NSAttributedString(string: "1",attributes: [NSAttributedString.Key.foregroundColor: getAppColor(color: .disable)])
 
@@ -36,7 +36,7 @@ class EraseSettings : UIViewController {
         slider.delegate = {[unowned self] in
             self.eraseSizeField.text = "\(Int($0 * 63 + 1))"
             self.size = Int($0 * 63 + 1)
-            self.delegate?.setEraseSettings(eraseSize : Int(self.eraseSizeField.text ?? "1")!)
+            self.delegate2?.setEraseSettings(eraseSize : Int(self.eraseSizeField.text ?? "1")!)
         }
         return slider
     }()
@@ -69,7 +69,7 @@ class EraseSettings : UIViewController {
                 self.size = num
             }
             
-            self.delegate?.setEraseSettings(eraseSize : Int($0.text == "" ? "1" : $0.text!)!)
+            self.delegate2?.setEraseSettings(eraseSize : Int($0.text == "" ? "1" : $0.text!)!)
         }
         return delegate
     }()
@@ -78,7 +78,7 @@ class EraseSettings : UIViewController {
         let text = UILabel()
         text.text = NSLocalizedString("Width", comment: "")
         text.textAlignment = .left
-        text.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        text.font = UIFont(name: UIFont.appBold, size: 24)
         text.textColor = getAppColor(color: .enable)
         text.translatesAutoresizingMaskIntoConstraints = false
         text.heightAnchor.constraint(equalToConstant: 36).isActive = true
@@ -104,7 +104,7 @@ class EraseSettings : UIViewController {
            let title = UILabel()
            title.text = NSLocalizedString("Eraser", comment: "")
            title.textAlignment = .center
-           title.font = UIFont.systemFont(ofSize: 32, weight: .black)
+           title.font = UIFont(name: UIFont.appBlack, size: 42)
            title.textColor = UIColor(named: "enableColor")
            
            return title
@@ -117,7 +117,7 @@ class EraseSettings : UIViewController {
            return view
        }()
     
-    weak var delegate : ToolSettingsDelegate? = nil
+    weak var delegate2 : ToolsActionDelegate? = nil
 
     private var scrollView = UIScrollView()
     
@@ -133,16 +133,14 @@ class EraseSettings : UIViewController {
     }()
     
     override func viewDidLoad() {
-        view.setCorners(corners: 32)
+        view.setCorners(corners: 24)
         
         view.addSubview(scrollView)
         view.addSubview(bgView)
         view.addSubview(eraseTitle)
-        //topBarBg.addSubview(exitBtn)
-        //topBarBg.addSubview(appendBtn)
         
         scrollView.addSubview(colorsView)
-        //scrollView.addSubview(vStack)
+        
         view.backgroundColor = UIColor(named: "backgroundColor")
         
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -158,11 +156,11 @@ class EraseSettings : UIViewController {
         bgView.heightAnchor.constraint(equalToConstant: 48).isActive = true
 
         eraseTitle.translatesAutoresizingMaskIntoConstraints = false
-        eraseTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
-        eraseTitle.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
+        eraseTitle.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
+        eraseTitle.topAnchor.constraint(equalTo: view.topAnchor, constant: 48).isActive = true
         
-        colorsView.leftAnchor.constraint(equalTo: scrollView.leftAnchor, constant: 24).isActive = true
-        colorsView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -48).isActive = true
+        colorsView.leftAnchor.constraint(equalTo: scrollView.leftAnchor, constant: 16).isActive = true
+        colorsView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -32).isActive = true
         colorsView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 12).isActive = true
         
         scrollView.contentSize = CGSize(width: 100, height: colorsView.frame.height + 44)

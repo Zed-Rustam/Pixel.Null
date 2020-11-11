@@ -23,8 +23,9 @@ class ColorDialogController: UIViewController {
     lazy private var navigation: NavigationView = {
         let nav = NavigationView(ics: [#imageLiteral(resourceName: "color_selector_1_icon"),#imageLiteral(resourceName: "color_selector_2_icon"),#imageLiteral(resourceName: "pallete_collection_item")])
         nav.translatesAutoresizingMaskIntoConstraints = false
-        nav.widthAnchor.constraint(equalToConstant: 164).isActive = true
-        nav.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        nav.widthAnchor.constraint(equalToConstant: 140).isActive = true
+        nav.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        nav.shadowColor = .clear
         nav.listener = self
         return nav
     }()
@@ -37,28 +38,46 @@ class ColorDialogController: UIViewController {
         
         btn.setImage(#imageLiteral(resourceName: "select_icon").withRenderingMode(.alwaysTemplate), for: .normal)
         btn.imageView?.tintColor = getAppColor(color: .enable)
-        btn.imageEdgeInsets = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
+        btn.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 42).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
         
         btn.addTarget(self, action: #selector(onPress), for: .touchUpInside)
+        return btn
+    }()
+    
+    lazy private var cancelButton: UIButton = {
+        let btn = UIButton()
+        
+        btn.backgroundColor = getAppColor(color: .background)
+        btn.setCorners(corners: 12)
+        
+        btn.setImage(#imageLiteral(resourceName: "no").withRenderingMode(.alwaysTemplate), for: .normal)
+        btn.imageView?.tintColor = getAppColor(color: .enable)
+        btn.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        
+        btn.addTarget(self, action: #selector(onCancel), for: .touchUpInside)
         return btn
     }()
     
     lazy private var lastColor: UIView = {
         let last = UIView()
         last.translatesAutoresizingMaskIntoConstraints = false
-        last.widthAnchor.constraint(equalToConstant: 42).isActive = true
-        last.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        last.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        last.heightAnchor.constraint(equalToConstant: 36).isActive = true
         last.setCorners(corners: 12,curveType: .continuous)
 
         let mask = CAShapeLayer()
         
         let path = UIBezierPath()
         path.move(to: .zero)
-        path.addLine(to: CGPoint(x: 0, y: 42))
-        path.addLine(to: CGPoint(x: 42, y: 42))
+        path.addLine(to: CGPoint(x: 18, y: 0))
+        path.addLine(to: CGPoint(x: 18, y: 36))
+        path.addLine(to: CGPoint(x: 0, y: 36))
         path.close()
         
         mask.path = path.cgPath
@@ -71,18 +90,18 @@ class ColorDialogController: UIViewController {
     lazy private var newColor: UIView = {
         let last = UIView()
         last.translatesAutoresizingMaskIntoConstraints = false
-        last.widthAnchor.constraint(equalToConstant: 42).isActive = true
-        last.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        last.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        last.heightAnchor.constraint(equalToConstant: 36).isActive = true
         
         last.setCorners(corners: 12,curveType: .continuous)
-        //last.layer.maskedCorners = [.layerMaxXMinYCorner,.layerMaxXMaxYCorner]
         
         let mask = CAShapeLayer()
         
         let path = UIBezierPath()
-        path.move(to: .zero)
-        path.addLine(to: CGPoint(x: 42, y: 0))
-        path.addLine(to: CGPoint(x: 42, y: 42))
+        path.move(to: CGPoint(x: 36, y: 0))
+        path.addLine(to: CGPoint(x: 18, y: 0))
+        path.addLine(to: CGPoint(x: 18, y: 36))
+        path.addLine(to: CGPoint(x: 36, y: 36))
         path.close()
         
         mask.path = path.cgPath
@@ -98,8 +117,8 @@ class ColorDialogController: UIViewController {
         (controllers[2] as! PaletteSelectController).parentController = self
         
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.widthAnchor.constraint(equalToConstant: 42).isActive = true
-        view.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        view.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        view.heightAnchor.constraint(equalToConstant: 36).isActive = true
         
         view.addSubview(lastColor)
         view.addSubview(newColor)
@@ -112,29 +131,37 @@ class ColorDialogController: UIViewController {
         
         view.setCorners(corners: 12,curveType: .continuous)
         
-        view.backgroundColor = UIColor(patternImage: UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 4.0 / 42.0, orientation: .down))
+        view.backgroundColor = UIColor(patternImage: UIImage(cgImage: #imageLiteral(resourceName: "background").cgImage!, scale: 4.0 / 36.0, orientation: .down))
         view.layer.magnificationFilter = .nearest
 
         return view
     }()
     
+    @objc func onCancel() {
+        dismiss(animated: true, completion: nil)
+    }
+    
     override func viewDidLoad() {
         view.backgroundColor = getAppColor(color: .background)
-        view.setCorners(corners: 32)
+        view.setCorners(corners: 24)
         view.layer.maskedCorners = [.layerMaxXMinYCorner,.layerMinXMinYCorner]
         
         view.addSubview(navigation)
         view.addSubview(selectButton)
+        view.addSubview(cancelButton)
         view.addSubview(colorsView)
 
-        navigation.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
+        navigation.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12).isActive = true
         navigation.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
         
-        selectButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -23).isActive = true
+        selectButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
         selectButton.topAnchor.constraint(equalTo: navigation.topAnchor).isActive = true
         
-        colorsView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
-        colorsView.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
+        cancelButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
+        cancelButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12).isActive = true
+        
+        colorsView.rightAnchor.constraint(equalTo: selectButton.leftAnchor, constant: -12).isActive = true
+        colorsView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12).isActive = true
 
         controllers[0].view.isHidden = false
         controllers[1].view.isHidden = true
@@ -168,6 +195,10 @@ class ColorDialogController: UIViewController {
         
         selectButton.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
         selectButton.layer.shadowPath = UIBezierPath(roundedRect: selectButton.bounds, cornerRadius: 12).cgPath
+        
+        cancelButton.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
+        cancelButton.layer.shadowPath = UIBezierPath(roundedRect: selectButton.bounds, cornerRadius: 12).cgPath
+        
     }
     
     @objc func onPress(){

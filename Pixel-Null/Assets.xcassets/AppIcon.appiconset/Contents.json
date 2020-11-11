@@ -1,109 +1,109 @@
 {
   "images" : [
     {
-      "filename" : "Slice 30@40x.png",
+      "filename" : "Slice 140-2.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "20x20"
     },
     {
-      "filename" : "Slice 30@60x.png",
+      "filename" : "Slice 160.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "20x20"
     },
     {
-      "filename" : "Slice 30@58x.png",
+      "filename" : "Slice 158.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "29x29"
     },
     {
-      "filename" : "Slice 30@87x.png",
+      "filename" : "Slice 187.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "29x29"
     },
     {
-      "filename" : "Slice 30@80x.png",
+      "filename" : "Slice 180-1.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "40x40"
     },
     {
-      "filename" : "Slice 30@120x.png",
+      "filename" : "Slice 1120.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "40x40"
     },
     {
-      "filename" : "Slice 30@120x-1.png",
+      "filename" : "Slice 1120-1.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "60x60"
     },
     {
-      "filename" : "Slice 30@180x.png",
+      "filename" : "Slice 1180.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "60x60"
     },
     {
-      "filename" : "Slice 30@20x.png",
+      "filename" : "Slice 120.png",
       "idiom" : "ipad",
       "scale" : "1x",
       "size" : "20x20"
     },
     {
-      "filename" : "Slice 30@40x-2.png",
+      "filename" : "Slice 140-1.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "20x20"
     },
     {
-      "filename" : "Slice 30@29x.png",
+      "filename" : "Slice 129.png",
       "idiom" : "ipad",
       "scale" : "1x",
       "size" : "29x29"
     },
     {
-      "filename" : "Slice 30@58x-1.png",
+      "filename" : "Slice 158-1.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "29x29"
     },
     {
-      "filename" : "Slice 30@40x-1.png",
+      "filename" : "Slice 140.png",
       "idiom" : "ipad",
       "scale" : "1x",
       "size" : "40x40"
     },
     {
-      "filename" : "Slice 30@80x-1.png",
+      "filename" : "Slice 180.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "40x40"
     },
     {
-      "filename" : "Slice 30@76x.png",
+      "filename" : "Slice 176.png",
       "idiom" : "ipad",
       "scale" : "1x",
       "size" : "76x76"
     },
     {
-      "filename" : "Slice 30@152x.png",
+      "filename" : "Slice 1152.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "76x76"
     },
     {
-      "filename" : "Slice 30@167x.png",
+      "filename" : "Slice 1167.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "83.5x83.5"
     },
     {
-      "filename" : "Slice 30.png",
+      "filename" : "Slice 11024.png",
       "idiom" : "ios-marketing",
       "scale" : "1x",
       "size" : "1024x1024"

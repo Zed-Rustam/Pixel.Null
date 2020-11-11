@@ -21,7 +21,7 @@ class PalleteEditor : UIViewController {
         btn.setImage(#imageLiteral(resourceName: "yes"), for: .normal)
         btn.imageView?.tintColor = getAppColor(color: .enable)
         
-        btn.imageEdgeInsets = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
+        btn.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
 
         btn.backgroundColor = getAppColor(color: .background)
         
@@ -29,8 +29,8 @@ class PalleteEditor : UIViewController {
         
         btn.setCorners(corners: 12)
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.widthAnchor.constraint(equalToConstant: 42).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        btn.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        btn.heightAnchor.constraint(equalToConstant: 36).isActive = true
 
         return btn
     }()
@@ -41,6 +41,7 @@ class PalleteEditor : UIViewController {
         lbl.heightAnchor.constraint(equalToConstant: 24).isActive = true
         
         lbl.textColor = getAppColor(color: .red)
+        
         lbl.font = UIFont.systemFont(ofSize: 10, weight: .bold)
         lbl.text = ""
         return lbl
@@ -48,7 +49,8 @@ class PalleteEditor : UIViewController {
     
     lazy private var palleteName : UITextField = {
         let label = UITextField()
-        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        label.font = UIFont(name: UIFont.appBold, size: 16)
+        
         label.text = pallete.palleteName
         label.setCorners(corners: 12)
         label.textColor = getAppColor(color: .enable)
@@ -56,11 +58,11 @@ class PalleteEditor : UIViewController {
         label.backgroundColor = getAppColor(color: .backgroundLight)
         
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        label.heightAnchor.constraint(equalToConstant: 36).isActive = true
         
         label.delegate = nameDelegate
         
-        let leftView: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 42))
+        let leftView: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 36))
         
         label.leftViewMode = .always
         label.leftView = leftView
@@ -86,7 +88,7 @@ class PalleteEditor : UIViewController {
         bg.translatesAutoresizingMaskIntoConstraints = false
         bg.setCorners(corners: 12)
         bg.layer.maskedCorners = [.layerMinXMinYCorner,.layerMaxXMinYCorner]
-        bg.backgroundColor = UIColor(named : "backgroundColor")
+        bg.backgroundColor = getAppColor(color: .background)
         mainView.addSubviewFullSize(view: bg)
         
         bg.addSubview(addBtn)
@@ -287,8 +289,8 @@ class PalleteEditor : UIViewController {
     }
     
     override func viewDidLoad() {
-        view.backgroundColor = UIColor(named: "backgroundColor")
-        view.setCorners(corners: 32)
+        view.backgroundColor = getAppColor(color: .background)
+        view.setCorners(corners: 24)
         
         view.addSubview(colors)
         view.addSubview(exitButton)
@@ -301,16 +303,16 @@ class PalleteEditor : UIViewController {
         colors.topAnchor.constraint(equalTo: palleteName.bottomAnchor, constant: 24).isActive = true
         colors.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
         
-        palleteName.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 24).isActive = true
+        palleteName.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 12).isActive = true
         palleteName.rightAnchor.constraint(equalTo: exitButton.leftAnchor, constant: -12).isActive = true
-        palleteName.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
+        palleteName.topAnchor.constraint(equalTo: view.topAnchor, constant: 12).isActive = true
 
         errorText.leftAnchor.constraint(equalTo: palleteName.leftAnchor,constant: 12).isActive = true
         errorText.rightAnchor.constraint(equalTo: palleteName.rightAnchor).isActive = true
         errorText.topAnchor.constraint(equalTo: palleteName.bottomAnchor).isActive = true
 
-        exitButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -24).isActive = true
-        exitButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 24).isActive = true
+        exitButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -12).isActive = true
+        exitButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 12).isActive = true
         
         palleteEditBap.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: 0).isActive = true
         palleteEditBap.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 0).isActive = true

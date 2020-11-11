@@ -39,7 +39,7 @@ class PaletteGroup: UICollectionViewCell {
     
     lazy private var paletteName: UILabel = {
         let lbl = UILabel()
-        lbl.font = UIFont.systemFont(ofSize: 10, weight: .bold)
+        lbl.font = UIFont(name: UIFont.appBold, size: 10)
         lbl.textColor = getAppColor(color: .enable)
         lbl.textAlignment = .center
         lbl.lineBreakMode = .byTruncatingMiddle

@@ -16,7 +16,8 @@ class AboutDeveloperController : UIViewController {
         img.heightAnchor.constraint(equalToConstant: 96).isActive = true
         img.image = #imageLiteral(resourceName: "im")
         img.contentMode = .scaleAspectFill
-        img.setCorners(corners: 12,needMask: true)
+        img.setCorners(corners: 12, needMask: true,curveType: .continuous)
+        
         return img
     }()
     
@@ -27,7 +28,7 @@ class AboutDeveloperController : UIViewController {
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 24).isActive = true
-        label.font = UIFont.systemFont(ofSize: 24, weight: .black)
+        label.font = UIFont(name: UIFont.appBlack, size: 24)
         label.adjustsFontSizeToFitWidth = true
         
         return label
@@ -40,7 +41,7 @@ class AboutDeveloperController : UIViewController {
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 24).isActive = true
-        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        label.font = UIFont(name: UIFont.appBold, size: 16)
         
         return label
     }()
@@ -52,7 +53,7 @@ class AboutDeveloperController : UIViewController {
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 24).isActive = true
-        label.font = UIFont.systemFont(ofSize: 24, weight: .black)
+        label.font = UIFont(name: UIFont.appBlack, size: 24)
         
         return label
     }()
@@ -64,7 +65,7 @@ class AboutDeveloperController : UIViewController {
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 24).isActive = true
-        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        label.font = UIFont(name: UIFont.appBold, size: 16)
         
         return label
     }()
@@ -76,7 +77,7 @@ class AboutDeveloperController : UIViewController {
         label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 24).isActive = true
-        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        label.font = UIFont(name: UIFont.appBold, size: 16)
         
         return label
     }()
@@ -88,7 +89,7 @@ class AboutDeveloperController : UIViewController {
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 24).isActive = true
-        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        label.font = UIFont(name: UIFont.appBold, size: 16)
         
         return label
     }()
@@ -100,7 +101,7 @@ class AboutDeveloperController : UIViewController {
         label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 24).isActive = true
-        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        label.font = UIFont(name: UIFont.appBold, size: 16)
         
         return label
     }()
@@ -122,32 +123,32 @@ class AboutDeveloperController : UIViewController {
         view.addSubview(devTelegram)
         view.addSubview(devTelegramInfo)
 
-        devIcon.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
-        devIcon.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24).isActive = true
+        devIcon.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
+        devIcon.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12).isActive = true
         
         devName.leftAnchor.constraint(equalTo: devIcon.rightAnchor, constant: 12).isActive = true
-        devName.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
-        devName.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24).isActive = true
+        devName.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
+        devName.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12).isActive = true
         
         devInfo.leftAnchor.constraint(equalTo: devIcon.rightAnchor, constant: 12).isActive = true
-        devInfo.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        devInfo.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
         devInfo.topAnchor.constraint(equalTo: devName.bottomAnchor, constant: 0).isActive = true
         
-        devContacts.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
+        devContacts.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
         devContacts.topAnchor.constraint(equalTo: devIcon.bottomAnchor, constant: 24).isActive = true
         
-        devEmail.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
+        devEmail.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
         devEmail.topAnchor.constraint(equalTo: devContacts.bottomAnchor, constant: 12).isActive = true
         
-        devEmailInfo.leftAnchor.constraint(equalTo: devEmail.rightAnchor, constant: 24).isActive = true
-        devEmailInfo.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        devEmailInfo.leftAnchor.constraint(equalTo: devEmail.rightAnchor, constant: 12).isActive = true
+        devEmailInfo.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
         devEmailInfo.topAnchor.constraint(equalTo: devContacts.bottomAnchor, constant: 12).isActive = true
         
-        devTelegram.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
+        devTelegram.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12).isActive = true
         devTelegram.topAnchor.constraint(equalTo: devEmail.bottomAnchor, constant: 0).isActive = true
         
-        devTelegramInfo.leftAnchor.constraint(equalTo: devTelegram.rightAnchor, constant: 24).isActive = true
-        devTelegramInfo.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        devTelegramInfo.leftAnchor.constraint(equalTo: devTelegram.rightAnchor, constant: 12).isActive = true
+        devTelegramInfo.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12).isActive = true
         devTelegramInfo.topAnchor.constraint(equalTo: devEmail.bottomAnchor, constant: 0).isActive = true
     }
     

@@ -10,17 +10,22 @@ import UIKit
 
 class GalleryNavigation: UINavigationController {
     weak var parentController: UIViewController? = nil
+    let controller = GalleryControl()
+    
     override func viewDidLoad() {
         navigationBar.prefersLargeTitles = true
-        navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 42, weight: .heavy)]
-        
+ 
         let option = UINavigationBarAppearance()
-        option.backgroundEffect = UIBlurEffect(style: .systemChromeMaterial)
-        option.largeTitleTextAttributes = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 42, weight: .heavy)]
+        option.backgroundEffect = UIBlurEffect(style: .systemUltraThinMaterial)
+        option.backgroundColor = getAppColor(color: .background).withAlphaComponent(0.75)
+        
+        option.largeTitleTextAttributes = [NSAttributedString.Key.font : UIFont(name: UIFont.appBlack, size: 42)!, NSAttributedString.Key.foregroundColor: getAppColor(color: .enable)]
+        option.titleTextAttributes = [NSAttributedString.Key.font : UIFont(name: UIFont.appBlack, size: 20)!, NSAttributedString.Key.foregroundColor: getAppColor(color: .enable)]
         navigationBar.standardAppearance = option
         
-        let control = GalleryControl()
-        control.parentController = parentController
-        pushViewController(control, animated: false)
+        
+        controller.parentController = parentController
+        
+        pushViewController(controller, animated: false)
     }
 }

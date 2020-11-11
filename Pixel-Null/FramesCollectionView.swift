@@ -14,22 +14,23 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
         //ls.selfView = self
         ls.translatesAutoresizingMaskIntoConstraints = false
         ls.heightAnchor.constraint(equalToConstant: 70).isActive = true
-        ls.contentInset = UIEdgeInsets(top: 0, left: 24, bottom: 0, right: 24)
+        ls.contentInset = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
         
         return ls
     }()
     
-    weak var parentController : UIViewController? = nil
+    //weak var parentController : UIViewController? = nil
+    //weak var delegate: ToolsActionDelegate? = nil
     private var isSettingsMode: Bool = false
     
     lazy private var frameText : UILabel = {
-           let text = UILabel(frame: .zero)
-           text.text = NSLocalizedString("Frames", comment: "")
-           text.font = UIFont.systemFont(ofSize: 32, weight: .black)
-           text.textColor = UIColor(named: "enableColor")
-           text.translatesAutoresizingMaskIntoConstraints = false
-           text.heightAnchor.constraint(equalToConstant: 36).isActive = true
-           return text
+            let text = UILabel(frame: .zero)
+            text.text = NSLocalizedString("Frames", comment: "")
+            text.font = UIFont(name: UIFont.appBlack, size: 42)
+            text.textColor = UIColor(named: "enableColor")
+            text.translatesAutoresizingMaskIntoConstraints = false
+            text.heightAnchor.constraint(equalToConstant: 54).isActive = true
+            return text
        }()
     
     lazy private var addButton : UIButton = {
@@ -98,32 +99,23 @@ class FramesCollectionView : UIView, UITextFieldDelegate {
         self.addSubview(addButton)
         self.addSubview(settingsButton)
 
-        frameText.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 24).isActive = true
+        frameText.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 12).isActive = true
         frameText.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
 
         list.topAnchor.constraint(equalTo: frameText.bottomAnchor, constant: 6).isActive = true
         list.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 0).isActive = true
         list.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 0).isActive = true
 
-        addButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -24).isActive = true
-        addButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
+        addButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -12).isActive = true
+        addButton.centerYAnchor.constraint(equalTo: frameText.centerYAnchor, constant: 0).isActive = true
         
         settingsButton.rightAnchor.constraint(equalTo: addButton.leftAnchor, constant: -6).isActive = true
-        settingsButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
+        settingsButton.topAnchor.constraint(equalTo: addButton.topAnchor, constant: 0).isActive = true
         
         settingsButton.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
         settingsButton.layer.shadowPath = UIBezierPath(roundedRect: settingsButton.bounds, cornerRadius: 8).cgPath
     }
-    
-    override func tintColorDidChange() {
-        //list.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
-        
-        settingsButton.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
-        settingsButton.layer.shadowPath = UIBezierPath(roundedRect: settingsButton.bounds, cornerRadius: 8).cgPath
-        
-        addButton.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
-        addButton.layer.shadowPath = UIBezierPath(roundedRect: settingsButton.bounds, cornerRadius: 8).cgPath
-    }
+
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

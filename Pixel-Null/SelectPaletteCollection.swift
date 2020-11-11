@@ -30,12 +30,9 @@ class SelectPaletteCollection : UICollectionView {
         
         register(PaletteGroup.self, forCellWithReuseIdentifier: "Palette")
         register(PalettesSectionTitle.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Title")
-                
-        delegate = self
-        dataSource = self
-        backgroundColor = .clear
-        contentInset = UIEdgeInsets(top: 12, left: 12, bottom: 0, right: 12)
         
+        defaultPalettes.append("Default pallete")
+                
         let f = FileManager()
         do {
             let projs = try f.contentsOfDirectory(at: PalleteWorker.getDocumentsDirectory(),    includingPropertiesForKeys: nil)
@@ -47,16 +44,10 @@ class SelectPaletteCollection : UICollectionView {
             }
         } catch {}
         
-        defaultPalettes.append("Default pallete")
-        
-        contentInset = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
-
-//        addSubview(mainTitle)
-//
-//        mainTitle.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
-//        mainTitle.leftAnchor.constraint(equalTo: leftAnchor, constant: 0).isActive = true
-//        mainTitle.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
-//        mainTitle.transform = CGAffineTransform(translationX: 0, y: -36)
+        delegate = self
+        dataSource = self
+        backgroundColor = .clear
+        contentInset = UIEdgeInsets(top: 12, left: 12, bottom: 0, right: 12)
     }
     
     required init?(coder: NSCoder) {
@@ -70,6 +61,7 @@ extension SelectPaletteCollection : UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section {
         case 0:
+            print("cell here! \(defaultPalettes.count)")
             return defaultPalettes.count
         default:
             return palettes.count
@@ -82,7 +74,8 @@ extension SelectPaletteCollection : UICollectionViewDataSource {
             let cell = dequeueReusableCell(withReuseIdentifier: "Palette", for: indexPath) as! PaletteGroup
             cell.setPalette(newPal: PalleteWorker(name: defaultPalettes[indexPath.row], colors: try! JSONDecoder().decode(Pallete.self, from: NSDataAsset(name: defaultPalettes[indexPath.row])!.data).colors, isSave: false))
             cell.contentView.isUserInteractionEnabled = false
-
+        
+            
             return cell
             
         default:

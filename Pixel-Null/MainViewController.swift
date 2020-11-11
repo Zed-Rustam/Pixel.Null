@@ -84,7 +84,7 @@ class MainViewController: UIViewController {
 extension MainViewController : NavigationProtocol {
     
     func onSelectChange(select: Int, lastSelect: Int) {
-        self.controllers[select].view.transform = CGAffineTransform(translationX: 0, y: 100)
+        self.controllers[select].view.transform = CGAffineTransform(translationX: 0, y: 150)
         self.controllers[select].view.isHidden = false
         self.controllers[select].view.alpha = 0
         
@@ -94,13 +94,13 @@ extension MainViewController : NavigationProtocol {
 
         
         
-        UIView.animate(withDuration: 0.2,delay: 0,options: .curveEaseInOut, animations: {
+        UIView.animate(withDuration: 0.25,delay: 0,options: .curveEaseInOut, animations: {
             self.controllers[lastSelect].view.alpha = 0
             self.controllers[select].view.alpha = 1
         })
         
         UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
-            self.controllers[lastSelect].view.transform = CGAffineTransform(translationX: 0, y: -100)
+            self.controllers[lastSelect].view.transform = CGAffineTransform(translationX: 0, y: -150)
             
             self.controllers[select].view.transform = CGAffineTransform(translationX: 0, y: 0)
         }, completion: {isEnd in

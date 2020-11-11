@@ -76,7 +76,7 @@ class LayersTableCell : UICollectionViewCell {
     lazy private var layerName : UITextField = {
         let label = UITextField()
         label.text = "New layer"
-        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        label.font = UIFont(name: UIFont.appBlack, size: 16)
         label.textColor = getAppColor(color: .enable)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.heightAnchor.constraint(equalToConstant: 36).isActive = true
@@ -116,8 +116,6 @@ class LayersTableCell : UICollectionViewCell {
         contentView.layoutIfNeeded()
         contentView.isUserInteractionEnabled = true
         background.isUserInteractionEnabled = true
-        
-        //self.setShadow(color: getAppColor(color: .shadow), radius: 12, opasity: 1)
     }
     
     func StartRename() {

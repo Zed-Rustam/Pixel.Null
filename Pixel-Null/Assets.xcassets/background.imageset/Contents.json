@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "New project 0.png",
+      "filename" : "Фон.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -12,7 +12,7 @@
           "value" : "light"
         }
       ],
-      "filename" : "New project 0-1.png",
+      "filename" : "Фон-1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },

@@ -13,6 +13,14 @@ class SettingsController : UINavigationController {
     override func viewDidLoad() {
         
         navigationBar.prefersLargeTitles = true
+        
+        let option = UINavigationBarAppearance()
+        option.largeTitleTextAttributes = [NSAttributedString.Key.font : UIFont(name: UIFont.appBlack, size: 42)!, NSAttributedString.Key.foregroundColor: getAppColor(color: .enable)]
+        option.titleTextAttributes = [NSAttributedString.Key.font : UIFont(name: UIFont.appBlack, size: 20)!, NSAttributedString.Key.foregroundColor: getAppColor(color: .enable)]
+        navigationBar.standardAppearance = option
+        
+        navigationBar.tintColor = getAppColor(color: .enable)
+        
         setNavigationBarHidden(true, animated: true)
 
         view.backgroundColor = getAppColor(color: .background)

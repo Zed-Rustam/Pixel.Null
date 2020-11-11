@@ -14,29 +14,40 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     let maincontroller = MainViewController()
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
+
         guard let winscene = (scene as? UIWindowScene) else { return }
         
-        let gallery = GalleryNavigation()
-        let pallete = PaletteNavigation()
-        let settings = SettingsController()
-        //let training = TrainingController()
-        
-        gallery.parentController = maincontroller
+        switch UIDevice.current.userInterfaceIdiom {
+        case .phone:
+            let gallery = GalleryNavigation()
+            let pallete = PaletteNavigation()
+            let settings = SettingsController()
+            //let training = TrainingController()
+            
+            gallery.parentController = maincontroller
 
-        maincontroller.setControllers(menus:
-                                    gallery,
-                                    pallete,
-                                    settings)
-        
-        window = UIWindow(windowScene: winscene)
-        window?.overrideUserInterfaceStyle = UIUserInterfaceStyle.init(rawValue: UserDefaults.standard.integer(forKey: "themeMode"))!
-        print("mode \(window!.overrideUserInterfaceStyle.rawValue)")
-        window?.makeKeyAndVisible()
-        window?.rootViewController = maincontroller
-        
+            maincontroller.setControllers(menus:
+                                        gallery,
+                                        pallete,
+                                        settings)
+            
+            window = UIWindow(windowScene: winscene)
+            window?.overrideUserInterfaceStyle = UIUserInterfaceStyle.init(rawValue: UserDefaults.standard.integer(forKey: "themeMode"))!
+            print("mode \(window!.overrideUserInterfaceStyle.rawValue)")
+            window?.makeKeyAndVisible()
+            window?.rootViewController = maincontroller
+            
+        case .pad:
+            window = UIWindow(windowScene: winscene)
+            window?.overrideUserInterfaceStyle = UIUserInterfaceStyle.init(rawValue: UserDefaults.standard.integer(forKey: "themeMode"))!
+            print("mode \(window!.overrideUserInterfaceStyle.rawValue)")
+            window?.makeKeyAndVisible()
+            window?.rootViewController = IpadMainController()
+
+    
+        default:
+            break
+        }
         
         if connectionOptions.urlContexts.count > 0 {
             var urlArray : [URL] = []

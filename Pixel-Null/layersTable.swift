@@ -95,7 +95,8 @@ extension LayersTable : UICollectionViewDelegate {
         contextingIndex = indexPath.item
             let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider:nil ) {action in
                 let clone = UIAction(title: "Clone",image : UIImage(systemName: "plus.square.on.square", withConfiguration: UIImage.SymbolConfiguration(weight: .semibold)), identifier: nil, handler: {action in
-                    self.project?.addAction(action: ["ToolID" : "\(Actions.layerClone.rawValue)", "frame" : "\(self.project!.FrameSelected)", "layer" : "\(self.project!.LayerSelected)"])
+                    
+                    self.project?.addAction(action: ["ToolID" : "\(Actions.layerClone.rawValue)", "frame" : "\(self.project!.FrameSelected)", "layer" : "\(indexPath.item)"])
 
                     self.frameDelegate?.cloneLayer(frame: self.project!.FrameSelected, original: indexPath.item)
                     self.frameDelegate?.recheckLayersCount()
@@ -235,14 +236,6 @@ extension LayersTable : UICollectionViewDropDelegate {
             if let destinationIndexPath = coordinator.destinationIndexPath {
                 let sourceIndexPath = coordinator.items[0].sourceIndexPath!
                 
-                if sourceIndexPath.item < project!.LayerSelected && destinationIndexPath.item >= project!.LayerSelected {
-                    project!.LayerSelected -= 1
-                } else if sourceIndexPath.item  > project!.LayerSelected && destinationIndexPath.item <= project!.LayerSelected {
-                    project!.LayerSelected += 1
-                } else if sourceIndexPath.item == project!.LayerSelected {
-                    project!.LayerSelected = destinationIndexPath.item
-                }
-                
                 if sourceIndexPath.item != destinationIndexPath.item {
                     project?.addAction(action: ["ToolID" : "\(Actions.layerReplace.rawValue)","frame" : "\(project!.FrameSelected)", "from" : "\(sourceIndexPath.item)", "to" : "\(destinationIndexPath.item)"])
                 }
@@ -292,13 +285,13 @@ class LayersTableLayout : UICollectionViewLayout {
     }
     
     func layout() {
-        let width = collectionView!.frame.width - 48
+        let width = collectionView!.frame.width - 24
         
         for item in 0..<collectionView!.numberOfItems(inSection: 0) {
             let index = IndexPath(item: item, section: 0)
             
             let attribute = UICollectionViewLayoutAttributes(forCellWith: index)
-            attribute.frame = CGRect(x: 24, y: 42 * item, width: Int(width), height: 36)
+            attribute.frame = CGRect(x: 12, y: 42 * item, width: Int(width), height: 36)
             
             attributes.append(attribute)
         }

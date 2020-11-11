@@ -137,9 +137,9 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
         
         label.text = "nanoArt"
         
-        label.textColor = getAppColor(color: .enable)
+        label.textColor = .appEnable
         label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 36, weight: .black)
+        label.font = UIFont(name: UIFont.appBlack, size: 36)!
         
         return label
     }()
@@ -168,13 +168,13 @@ class MainSettingsMenu : UIViewController, UITableViewDelegate, UITableViewDataS
         bgview.addSubview(appTitle)
         
         icon.centerXAnchor.constraint(equalTo: bgview.centerXAnchor, constant: 0).isActive = true
-        icon.topAnchor.constraint(equalTo: bgview.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
+        icon.topAnchor.constraint(equalTo: bgview.safeAreaLayoutGuide.topAnchor, constant: 48).isActive = true
         
         appTitle.leftAnchor.constraint(equalTo: bgview.leftAnchor, constant: 12).isActive = true
         appTitle.rightAnchor.constraint(equalTo: bgview.rightAnchor, constant: -12).isActive = true
         appTitle.topAnchor.constraint(equalTo: icon.bottomAnchor, constant: 0).isActive = true
         
-        bgview.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 164)
+        bgview.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 196 + 32)
         return bgview
     }()
     
